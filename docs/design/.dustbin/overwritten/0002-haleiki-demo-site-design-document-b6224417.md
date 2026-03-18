@@ -1,23 +1,22 @@
 ---
 number: 2
 title: "Haleiki Demo Site — Design Document"
-author: "Duncan McGreggor"
+author: "\"Wikipedia contributors\""
 component: All
 tags: [change-me]
 created: 2026-03-17
 updated: 2026-03-17
-state: Under Review
+state: Overwritten
 supersedes: null
 superseded-by: null
-version: 1.1
+version: 1.0
 ---
-
 
 # Haleiki Demo Site — Design Document
 
 **Wikipedia/Wikimedia-sourced demo content for GitHub Pages**
 
-Version 0.2 · March 2026
+Version 0.1 · March 2026
 
 ---
 
@@ -54,6 +53,7 @@ All use the same REST API pattern: `https://{project}/api/rest_v1/page/html/{tit
 A tightly interlinked CS/systems topic cluster, chosen to exercise the graph features naturally:
 
 **Core cluster (~10–12 articles):**
+
 - Memory management, Garbage collection, Reference counting
 - Stack-based memory allocation, Region-based memory management
 - RAII (Resource acquisition is initialization)
@@ -227,77 +227,9 @@ media:
 
 ---
 
-## 4. CLI Commands
+## 4. Fetch & Convert Pipeline
 
-The demo pipeline is part of the Haleiki CLI, not a separate tool. Everything lives under `haleiki demo`:
-
-```bash
-# ─── Fetch & Convert ─────────────────────────────────
-haleiki demo fetch                   # Fetch all articles from manifest
-haleiki demo fetch --article <slug>  # Fetch/refresh a single article
-haleiki demo fetch --dry-run         # Show what would be fetched, don't write
-
-# ─── Build ────────────────────────────────────────────
-haleiki demo build                   # Wire demo/ into content/, run full build pipeline
-haleiki demo serve                   # Build + local dev server with watch
-
-# ─── Inspection ───────────────────────────────────────
-haleiki demo status                  # Show manifest vs. on-disk state:
-                                     #   which articles are fetched, stale, or missing
-haleiki demo validate                # Run haleiki validate against demo content
-haleiki demo attribution             # Generate/preview the attribution page
-
-# ─── Maintenance ──────────────────────────────────────
-haleiki demo clean                   # Remove all generated demo content (sources/, media/)
-haleiki demo refresh                 # Clean + fetch all — full regeneration
-```
-
-### How `demo build` Works
-
-`haleiki demo build` is a convenience wrapper that does what CI does:
-
-1. Symlink (or copy) `demo/sources/` → `content/sources/`
-2. Symlink (or copy) `demo/concepts/` → `content/concepts/`
-3. Symlink (or copy) `demo/media/` → `content/media/`
-4. Copy `demo/taxonomy.yaml` → `content/taxonomy.yaml`
-5. Run the normal `haleiki build` pipeline (graph, validation, derived data)
-6. Shell out to `cobalt build` and `pagefind` (or print instructions if not installed)
-
-`haleiki demo serve` does the same but watches for changes and serves locally.
-
-### Updated Architecture Doc CLI Section
-
-These commands extend the existing CLI surface from the architecture document:
-
-```bash
-# ─── Existing commands (from architecture doc) ────────
-haleiki build                    # Full pipeline
-haleiki validate                 # Validation only (CI-friendly)
-haleiki stats                    # Graph statistics and health
-haleiki search                   # Search index only
-haleiki dev                      # Serve + watch
-haleiki new source "Title"       # Scaffold source page
-haleiki new concept "Name"       # Scaffold concept card
-haleiki extract <source.md>      # Extract concepts from source (AI)
-haleiki merges --pending         # Review pending merges
-haleiki merges --accept <slug>   # Accept a pending merge
-
-# ─── New: demo subcommands ────────────────────────────
-haleiki demo fetch [--article <slug>] [--dry-run]
-haleiki demo build
-haleiki demo serve
-haleiki demo status
-haleiki demo validate
-haleiki demo attribution
-haleiki demo clean
-haleiki demo refresh
-```
-
----
-
-## 5. Fetch & Convert Pipeline
-
-The `haleiki demo fetch` command reads the manifest and produces Haleiki-ready source pages with local media. All stages run in-process in Rust.
+A Python script (practical choice — good HTTP, HTML parsing, and Pandoc integration) that reads the manifest and produces Haleiki-ready source pages with local media.
 
 ### Pipeline Stages
 
@@ -307,7 +239,6 @@ manifest.yaml
     ▼
 ┌──────────────────┐
 │  1. FETCH HTML   │  Wikimedia REST API → raw HTML per article
-│                  │  (reqwest, async, respects rate limits)
 └────────┬─────────┘
          │
     ▼
@@ -315,7 +246,6 @@ manifest.yaml
 │  2. EXTRACT      │  Walk DOM: identify images, captions, infoboxes,
 │     MEDIA        │  see-also sections, categories. Download images
 │     METADATA     │  from Wikimedia CDN at configured resolution.
-│                  │  (scraper crate for HTML parsing)
 └────────┬─────────┘
          │
     ▼
@@ -331,10 +261,9 @@ manifest.yaml
          │
     ▼
 ┌──────────────────┐
-│  4. CONVERT TO   │  HTML → Markdown conversion.
-│     MARKDOWN     │  Default: htmd crate (pure Rust, no external deps)
-│                  │  Optional: --pandoc flag shells out to pandoc
-│                  │  Post-process: fix image syntax, normalize headings.
+│  4. CONVERT TO   │  Pandoc: cleaned HTML → Markdown
+│     MARKDOWN     │  Post-process: fix image syntax, normalize headings,
+│                  │  clean up Pandoc artifacts.
 └────────┬─────────┘
          │
     ▼
@@ -352,20 +281,6 @@ manifest.yaml
 │                  │  Write/update demo/media/manifest.json
 └──────────────────┘
 ```
-
-### Rust Crate Dependencies (demo-specific)
-
-| Crate | Purpose |
-|-------|---------|
-| `reqwest` (async + rustls) | HTTP client for Wikimedia API + CDN downloads |
-| `tokio` | Async runtime (already likely needed for other CLI features) |
-| `scraper` | HTML parsing and DOM manipulation (CSS selector–based) |
-| `htmd` | HTML → Markdown (pure Rust, avoids Pandoc dependency) |
-| `serde` + `serde_yaml` | Manifest parsing (already in the project) |
-| `globset` | Image skip pattern matching |
-| `indicatif` | Progress bars for fetch operations |
-
-The advantage of pure-Rust HTML→Markdown conversion is that `haleiki demo fetch` just works after `cargo install` — no external tools needed. The tradeoff is that Pandoc's conversion quality is battle-tested. We start with `htmd` and support `--pandoc` as a quality fallback.
 
 ### Link Rewriting Strategy
 
@@ -392,7 +307,7 @@ For each `<img>` / `<figure>` in the fetched HTML:
    - Author/attribution (from Commons file page)
    - Caption text (from the `<figcaption>` or `alt` attribute)
    - Local path
-6. **Rewrite in HTML** (before Markdown conversion): Replace the `src` with a relative path `../media/{slug}/{filename}`
+6. **Rewrite in HTML** (before Pandoc conversion): Replace the `src` with a relative path `../media/{slug}/{filename}`
 
 #### Media Manifest (`demo/media/manifest.json`)
 
@@ -419,7 +334,7 @@ This manifest powers the automated attribution page in the built demo site.
 
 ---
 
-## 6. Directory Structure
+## 5. Directory Structure
 
 ```
 haleiki/
@@ -429,8 +344,8 @@ haleiki/
 │   └── taxonomy.yaml               #   Starter template (not demo-specific)
 │
 ├── demo/                           # Self-contained demo content
-│   ├── manifest.yaml               # What to fetch (checked in, drives the pipeline)
-│   ├── sources/                    # Converted Wikimedia → Haleiki source pages
+│   ├── manifest.yaml               # ⬆ What to fetch (checked in)
+│   ├── sources/                    # Converted Wikipedia → Haleiki source pages
 │   │   ├── memory-management.md
 │   │   ├── garbage-collection.md
 │   │   ├── reference-counting.md
@@ -451,25 +366,15 @@ haleiki/
 │   └── _analysis/                  # Demo extraction records (if AI extraction is run)
 │
 ├── tools/
-│   ├── Cargo.toml
-│   └── src/
-│       ├── main.rs                 # CLI entry point (clap)
-│       ├── parser.rs               # Content parsing (both page types)
-│       ├── graph.rs                # Graph construction + derived data
-│       ├── validator.rs            # Validation including conflict detection
-│       ├── generator.rs            # JSON generation for _data/
-│       ├── merger.rs               # Concept merging logic
-│       ├── search.rs               # Search index generation
-│       └── demo/                   # Demo subcommand module
-│           ├── mod.rs              # Subcommand dispatch
-│           ├── manifest.rs         # Manifest parsing + validation
-│           ├── fetch.rs            # Wikimedia API client + HTML fetching
-│           ├── clean.rs            # HTML cleaning / Wikipedia chrome stripping
-│           ├── media.rs            # Image download, metadata, skip logic
-│           ├── rewrite.rs          # Link rewriting (internal ↔ external)
-│           ├── convert.rs          # HTML → Markdown conversion
-│           ├── frontmatter.rs      # YAML frontmatter injection
-│           └── attribution.rs      # Attribution page generation
+│   ├── demo-fetch/                 # The fetch + convert pipeline
+│   │   ├── fetch.py                # Main script: reads manifest, fetches, converts
+│   │   ├── requirements.txt        # requests, beautifulsoup4, pyyaml, etc.
+│   │   ├── clean.py                # HTML cleaning / Wikipedia chrome stripping
+│   │   ├── media.py                # Image download, metadata extraction, skip logic
+│   │   ├── rewrite.py              # Link rewriting (internal ↔ external)
+│   │   └── frontmatter.py          # YAML frontmatter injection
+│   ├── src/                        # Haleiki CLI (Rust)
+│   └── Cargo.toml
 │
 ├── .github/
 │   └── workflows/
@@ -480,25 +385,23 @@ haleiki/
 
 ### How CI Wires Demo Content Into the Build
 
-`haleiki demo build` handles this automatically. Under the hood it symlinks the demo directories into `content/`:
+The demo content lives in `demo/` but Haleiki expects content in `content/`. At build time, CI symlinks (or copies) the demo directories into place:
 
 ```bash
-# What `haleiki demo build` does internally:
-#   1. Symlink demo/sources/  → content/sources/
-#   2. Symlink demo/concepts/ → content/concepts/
-#   3. Symlink demo/media/    → content/media/
-#   4. Copy    demo/taxonomy.yaml → content/taxonomy.yaml
-#   5. Run haleiki build (graph, validation, derived data)
-#   6. Shell out to cobalt build + pagefind (or print instructions)
+# In CI (or a Makefile target)
+ln -s ../demo/sources content/sources
+ln -s ../demo/concepts content/concepts
+ln -s ../demo/media content/media          # Or wherever the media convention lands
+cp demo/taxonomy.yaml content/taxonomy.yaml
 ```
 
 This keeps the repo structure clean: `content/` stays empty (ready for users who fork), and `demo/` is self-contained.
 
 ---
 
-## 7. Generated Frontmatter
+## 6. Generated Frontmatter
 
-A fetched-and-converted Wikimedia article becomes a Haleiki source page. Here's what the generated frontmatter looks like:
+A fetched-and-converted Wikipedia article becomes a Haleiki source page. Here's what the generated frontmatter looks like:
 
 ```yaml
 ---
@@ -542,19 +445,17 @@ status: "published"
 
 ---
 
-## 8. Licensing & Attribution
+## 7. Licensing & Attribution
 
 All Wikimedia content is CC BY-SA (3.0 or 4.0). The demo site must attribute properly.
 
 ### Automated Attribution Page
 
-`haleiki demo attribution` generates an `attribution.html` page from `demo/media/manifest.json` and the source page frontmatter. It lists:
+The build pipeline generates an `attribution.html` page from `demo/media/manifest.json` and the source page frontmatter. It lists:
 
 - Every source article with its original Wikimedia URL and license
 - Every image with its Commons URL, author, and license
 - A general CC BY-SA notice for the demo content
-
-This page is also generated automatically as part of `haleiki demo build`.
 
 ### Per-Page Attribution
 
@@ -562,7 +463,7 @@ Each source page includes a "Source" line in the taxonomy sidebar linking to the
 
 ---
 
-## 9. CI/CD Pipeline
+## 8. CI/CD Pipeline
 
 ### `.github/workflows/demo-site.yml`
 
@@ -581,7 +482,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # ── Rust toolchain ──
+      # ── Rust toolchain (for Haleiki CLI) ──
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
 
@@ -589,9 +490,18 @@ jobs:
       - name: Build haleiki
         run: cargo build --release --manifest-path tools/Cargo.toml
 
-      # ── Build demo site (wires content + runs full pipeline) ──
-      - name: Build demo
-        run: ./tools/target/release/haleiki demo build
+      # ── Wire demo content into content/ ──
+      - name: Prepare content
+        run: |
+          rm -rf content/sources content/concepts
+          ln -s "$PWD/demo/sources" content/sources
+          ln -s "$PWD/demo/concepts" content/concepts
+          ln -s "$PWD/demo/media" content/media
+          cp demo/taxonomy.yaml content/taxonomy.yaml
+
+      # ── Pre-build: graph, validation, derived data ──
+      - name: Haleiki build
+        run: ./tools/target/release/haleiki build
 
       # ── Static site generation ──
       - name: Install Cobalt
@@ -606,7 +516,7 @@ jobs:
       # ── Integrity checks ──
       - name: Validate demo
         run: |
-          ./tools/target/release/haleiki demo validate
+          ./tools/target/release/haleiki validate
           echo "Graph stats:"
           ./tools/target/release/haleiki stats
 
@@ -621,7 +531,7 @@ jobs:
 
 ### What CI Validates
 
-The `haleiki demo validate` step catches regressions in the demo content:
+The `haleiki validate` step in CI catches regressions in the demo content:
 
 - No broken internal links (all `slug` references resolve)
 - No orphan pages (every page reachable from at least one other)
@@ -632,7 +542,7 @@ The `haleiki demo validate` step catches regressions in the demo content:
 
 ---
 
-## 10. Refresh Strategy
+## 9. Refresh Strategy
 
 Demo content is **committed to the repo**, not fetched during CI. This means:
 
@@ -640,26 +550,21 @@ Demo content is **committed to the repo**, not fetched during CI. This means:
 - Builds are reproducible
 - No risk of Wikipedia edits breaking the demo unexpectedly
 
-To refresh the demo content:
+To refresh the demo content (manually, or on a schedule):
 
 ```bash
-# Refresh all articles
-haleiki demo refresh
-
-# Refresh a single article
-haleiki demo fetch --article garbage-collection
-
-# See what's changed / stale
-haleiki demo status
+cd tools/demo-fetch
+pip install -r requirements.txt
+python fetch.py ../../demo/manifest.yaml --output ../../demo/
 ```
 
 This overwrites `demo/sources/` and `demo/media/`. The diff is reviewed and committed like any other content change. The `revision_id` in each page's frontmatter makes it clear exactly which Wikipedia revision was fetched.
 
-A scheduled GitHub Action could run `haleiki demo refresh` weekly/monthly and open a PR with the diff, but that's a Phase 2 nicety.
+A scheduled GitHub Action could run this weekly/monthly and open a PR with the diff, but that's a Phase 2 nicety.
 
 ---
 
-## 11. Framework Media Convention (Design Decision)
+## 10. Framework Media Convention (Design Decision)
 
 The demo forces us to establish the framework's image/media convention. Proposed:
 
@@ -700,61 +605,10 @@ content/
 
 ---
 
-## 12. Rust Module Design Notes
+## 11. Open Questions
 
-### `tools/src/demo/mod.rs` — Subcommand Dispatch
-
-```rust
-use clap::Subcommand;
-
-#[derive(Subcommand)]
-pub enum DemoCommand {
-    /// Fetch articles from Wikimedia and convert to Haleiki source pages
-    Fetch {
-        /// Fetch only this article (by slug)
-        #[arg(long)]
-        article: Option<String>,
-        /// Show what would be fetched without writing files
-        #[arg(long)]
-        dry_run: bool,
-        /// Use pandoc for HTML→Markdown instead of built-in converter
-        #[arg(long)]
-        pandoc: bool,
-    },
-    /// Wire demo content into content/ and run full build
-    Build,
-    /// Build + serve locally with file watching
-    Serve,
-    /// Show manifest vs. on-disk state
-    Status,
-    /// Validate demo content
-    Validate,
-    /// Generate the attribution page
-    Attribution,
-    /// Remove all generated demo content
-    Clean,
-    /// Clean + fetch all (full regeneration)
-    Refresh,
-}
-```
-
-### Key Design Decisions
-
-**HTML parsing:** `scraper` (CSS selector–based, similar to BeautifulSoup) is the natural choice for the DOM walking we need — identifying images, stripping navboxes, rewriting links. `lol_html` is faster (streaming) but less ergonomic for the kind of multi-pass inspection and transformation this pipeline requires. Start with `scraper`.
-
-**HTML → Markdown:** Default to `htmd` (pure Rust, reasonable quality). If conversion quality is insufficient for certain Wikipedia structures (complex tables, nested lists, math markup), the `--pandoc` flag shells out to Pandoc when available. Goal: zero external dependencies by default, with Pandoc as an optional quality upgrade.
-
-**Async fetching:** Use `reqwest` with `tokio` for concurrent downloads. Respect Wikimedia's rate limits (200 req/s for API, be conservative with media downloads). Use `indicatif` for progress feedback — fetching 12 articles with images should show per-article progress.
-
-**Manifest validation:** `haleiki demo status` cross-references `manifest.yaml` against what's on disk in `demo/sources/` and `demo/media/`, reporting missing articles, stale fetches (revision ID changed upstream — requires an API call), and orphaned files not referenced by any manifest entry.
-
----
-
-## 13. Open Questions
-
-1. **HTML → Markdown quality** — how well do pure-Rust crates (`htmd`, `html2md`) handle Wikipedia's HTML? Particularly: complex tables, citation footnotes, math (`<math>` tags), nested definition lists. Worth a spike early to evaluate before committing to a crate.
+1. **Pandoc availability in CI** — install via apt, or bundle a binary? (`pandoc` is used by the fetch script, but fetch is offline — only the *results* are committed. So Pandoc is a dev dependency, not a CI dependency.)
 2. **SVG theming** — should the build pipeline post-process SVGs to replace hardcoded colors with CSS custom properties? This would let diagrams adapt to day/night theme. Worth prototyping with one or two SVGs.
 3. **Wikipedia infoboxes** — strip entirely, or convert to a structured sidebar? Stripping is simpler; converting exercises the sidebar component.
-4. **Image captions in Markdown** — `![caption](path)` needs to render as `<figure><img><figcaption>` in the final HTML. Verify Cobalt handles this, or add a template helper.
+4. **Image captions in Markdown** — Pandoc produces `![caption](path)` syntax. Cobalt needs to render this as `<figure><img><figcaption>`. Verify this works or add a Cobalt plugin/template helper.
 5. **Demo concept cards** — hand-author 5–8 concept cards for the demo, or run AI extraction? Hand-authoring is more predictable for Phase 1; AI extraction can wait for Phase 3.
-6. **Feature flag** — should `haleiki demo` be behind a cargo feature flag (e.g., `--features demo`) to keep the core CLI lean? The `reqwest`/`tokio` dependencies add compile weight. Users who fork the repo for their own wiki don't need the demo fetch machinery.
