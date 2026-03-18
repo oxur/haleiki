@@ -37,7 +37,7 @@ REMOTE_codeberg := ssh://git@codeberg.org/oxur/$(CODE_NAME).git
 help:
 	@echo ""
 	@echo "$(CYAN)╔══════════════════════════════════════════════════════════╗$(RESET)"
-	@echo "$(CYAN)║$(RESET) $(BLUE)$(PROJECT_NAME) Build System$(RESET)                                 $(CYAN)║$(RESET)"
+	@echo "$(CYAN)║$(RESET) $(BLUE)$(PROJECT_NAME) Build System$(RESET)                                     $(CYAN)║$(RESET)"
 	@echo "$(CYAN)╚══════════════════════════════════════════════════════════╝$(RESET)"
 	@echo ""
 	@echo "$(GREEN)Building:$(RESET)"
@@ -317,14 +317,14 @@ push:
 	done
 
 # Crates in dependency order (leaf crates first, dependent crates later)
-PUBLISH_ORDER := nms-core nms-save nms-compat nms-graph nms-query nms-watch nms-cache nms-cli nms-copilot nms nms-mcp
+PUBLISH_ORDER := $(CODE_NAME)
 # crates.io rate limit delay (seconds)
 PUBLISH_DELAY := 372
 .PHONY: publish
 publish:
 	@echo ""
 	@echo "$(CYAN)╔══════════════════════════════════════════════════════════╗$(RESET)"
-	@echo "$(CYAN)║$(RESET) $(BLUE)Publishing $(PROJECT_NAME) Crates to crates.io$(RESET)               $(CYAN)║$(RESET)"
+	@echo "$(CYAN)║$(RESET) $(BLUE)Publishing $(PROJECT_NAME) Crates to crates.io$(RESET)                   $(CYAN)║$(RESET)"
 	@echo "$(CYAN)╚══════════════════════════════════════════════════════════╝$(RESET)"
 	@echo ""
 	@echo "$(YELLOW)⚠ This will publish all crates in dependency order$(RESET)"
@@ -374,7 +374,7 @@ publish:
 publish-dry-run:
 	@echo ""
 	@echo "$(CYAN)╔══════════════════════════════════════════════════════════╗$(RESET)"
-	@echo "$(CYAN)║$(RESET) $(BLUE)Dry Run: Publishing $(PROJECT_NAME) Crates$(RESET)                   $(CYAN)║$(RESET)"
+	@echo "$(CYAN)║$(RESET) $(BLUE)Dry Run: Publishing $(PROJECT_NAME) Crates$(RESET)                       $(CYAN)║$(RESET)"
 	@echo "$(CYAN)╚══════════════════════════════════════════════════════════╝$(RESET)"
 	@echo ""
 	@echo "$(BLUE)Publishing order (in dependency order):$(RESET)"
