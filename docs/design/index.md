@@ -6,10 +6,15 @@ This index is automatically generated. Do not edit manually.
 
 | Number | Title | State | Updated |
 |--------|-------|-------|----------|
+| 0003 | Haleiki Demo Site — Project Plan | Active | 2026-03-18 |
 | 0002 | Haleiki Demo Site — Design Document | Under Review | 2026-03-18 |
 | 0001 | Haleiki — Architecture Document | Draft | 2026-03-17 |
 
 ## Documents by State
+
+### Active
+
+- [0003 - Haleiki Demo Site — Project Plan](05-active/0003-haleiki-demo-site-project-plan.md)
 
 ### Under Review
 
