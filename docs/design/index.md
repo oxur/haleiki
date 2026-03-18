@@ -6,7 +6,7 @@ This index is automatically generated. Do not edit manually.
 
 | Number | Title | State | Updated |
 |--------|-------|-------|----------|
-| 0002 | Haleiki Demo Site — Design Document | Under Review | 2026-03-17 |
+| 0002 | Haleiki Demo Site — Design Document | Under Review | 2026-03-18 |
 | 0001 | Haleiki — Architecture Document | Draft | 2026-03-17 |
 
 ## Documents by State

@@ -6,18 +6,17 @@ component: All
 tags: [change-me]
 created: 2026-03-17
 updated: 2026-03-18
-state: Under Review
+state: Overwritten
 supersedes: null
 superseded-by: null
-version: 1.2
+version: 1.1
 ---
-
 
 # Haleiki Demo Site — Design Document
 
 **Wikipedia/Wikimedia-sourced demo content for GitHub Pages**
 
-Version 0.3 · March 2026
+Version 0.2 · March 2026
 
 ---
 
@@ -229,17 +228,7 @@ media:
 
 ## 4. CLI Commands
 
-The demo pipeline is part of the Haleiki CLI, gated behind the `demo` cargo feature flag. This keeps the core CLI lean — users who fork the repo for their own knowledge base don't compile `reqwest`, `tokio`, or any of the fetching machinery.
-
-```bash
-# Build with demo support
-cargo build --features demo
-
-# Install with demo support
-cargo install haleiki --features demo
-```
-
-Everything lives under `haleiki demo`:
+The demo pipeline is part of the Haleiki CLI, not a separate tool. Everything lives under `haleiki demo`:
 
 ```bash
 # ─── Fetch & Convert ─────────────────────────────────
@@ -363,47 +352,19 @@ manifest.yaml
 └──────────────────┘
 ```
 
-### Rust Crate Dependencies (demo feature only)
-
-All demo-specific dependencies are gated behind the `demo` cargo feature flag. The core CLI (`haleiki build`, `haleiki validate`, etc.) compiles without any of these.
+### Rust Crate Dependencies (demo-specific)
 
 | Crate | Purpose |
 |-------|---------|
 | `reqwest` (async + rustls) | HTTP client for Wikimedia API + CDN downloads |
-| `tokio` | Async runtime for concurrent fetching |
+| `tokio` | Async runtime (already likely needed for other CLI features) |
 | `scraper` | HTML parsing and DOM manipulation (CSS selector–based) |
 | `htmd` | HTML → Markdown (pure Rust, avoids Pandoc dependency) |
+| `serde` + `serde_yaml` | Manifest parsing (already in the project) |
 | `globset` | Image skip pattern matching |
 | `indicatif` | Progress bars for fetch operations |
 
-Crates already in the core dependency tree (`serde`, `serde_yaml`, `clap`) are shared; no duplication.
-
-The advantage of pure-Rust HTML→Markdown conversion is that `cargo install haleiki --features demo` gives you a fully working fetch pipeline with no external tools required. We start with `htmd` and support `--pandoc` as a quality fallback.
-
-#### `Cargo.toml` Feature Configuration
-
-```toml
-[features]
-default = []
-demo = ["dep:reqwest", "dep:tokio", "dep:scraper", "dep:htmd", "dep:globset", "dep:indicatif"]
-
-[dependencies]
-# ─── Core (always compiled) ───
-clap = { version = "4", features = ["derive"] }
-serde = { version = "1", features = ["derive"] }
-serde_yaml = "0.9"
-serde_json = "1"
-petgraph = "0.6"
-# ...
-
-# ─── Demo feature (optional) ───
-reqwest = { version = "0.12", features = ["rustls-tls", "json"], optional = true }
-tokio = { version = "1", features = ["full"], optional = true }
-scraper = { version = "0.20", optional = true }
-htmd = { version = "0.1", optional = true }
-globset = { version = "0.4", optional = true }
-indicatif = { version = "0.17", optional = true }
-```
+The advantage of pure-Rust HTML→Markdown conversion is that `haleiki demo fetch` just works after `cargo install` — no external tools needed. The tradeoff is that Pandoc's conversion quality is battle-tested. We start with `htmd` and support `--pandoc` as a quality fallback.
 
 ### Link Rewriting Strategy
 
@@ -623,9 +584,9 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
 
-      # ── Build Haleiki CLI (with demo feature) ──
+      # ── Build Haleiki CLI ──
       - name: Build haleiki
-        run: cargo build --release --features demo --manifest-path tools/Cargo.toml
+        run: cargo build --release --manifest-path tools/Cargo.toml
 
       # ── Build demo site (wires content + runs full pipeline) ──
       - name: Build demo
@@ -742,31 +703,7 @@ content/
 
 ### `tools/src/demo/mod.rs` — Subcommand Dispatch
 
-The entire `demo` module is conditionally compiled:
-
 ```rust
-// In main.rs
-#[cfg(feature = "demo")]
-mod demo;
-
-#[derive(Subcommand)]
-pub enum Command {
-    Build,
-    Validate,
-    Stats,
-    // ... other core commands ...
-
-    #[cfg(feature = "demo")]
-    /// Demo site management (fetch from Wikimedia, build, serve)
-    Demo {
-        #[command(subcommand)]
-        command: demo::DemoCommand,
-    },
-}
-```
-
-```rust
-// In demo/mod.rs
 use clap::Subcommand;
 
 #[derive(Subcommand)]
@@ -819,3 +756,4 @@ pub enum DemoCommand {
 3. **Wikipedia infoboxes** — strip entirely, or convert to a structured sidebar? Stripping is simpler; converting exercises the sidebar component.
 4. **Image captions in Markdown** — `![caption](path)` needs to render as `<figure><img><figcaption>` in the final HTML. Verify Cobalt handles this, or add a template helper.
 5. **Demo concept cards** — hand-author 5–8 concept cards for the demo, or run AI extraction? Hand-authoring is more predictable for Phase 1; AI extraction can wait for Phase 3.
+6. **Feature flag** — should `haleiki demo` be behind a cargo feature flag (e.g., `--features demo`) to keep the core CLI lean? The `reqwest`/`tokio` dependencies add compile weight. Users who fork the repo for their own wiki don't need the demo fetch machinery.
