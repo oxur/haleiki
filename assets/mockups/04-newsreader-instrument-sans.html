@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="day">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ownership — Haleiki</title>
+
+<!-- TYPE STACK: Sans display + Serif body + Mono code -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   HALEIKI DESIGN SYSTEM — TOKEN LAYER
+   Principles: Geometric scale (4:3), OKLCH color, semantic naming
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── SCALE: Perfect Fourth (1.333) ── */
+:root {
+  --ratio: 1.333;
+  --step--2: clamp(0.563rem, 0.52rem + 0.18vw, 0.633rem);
+  --step--1: clamp(0.75rem, 0.7rem + 0.22vw, 0.844rem);
+  --step-0:  clamp(1rem, 0.93rem + 0.29vw, 1.125rem);
+  --step-1:  clamp(1.333rem, 1.24rem + 0.39vw, 1.5rem);
+  --step-2:  clamp(1.777rem, 1.65rem + 0.52vw, 2rem);
+  --step-3:  clamp(2.369rem, 2.2rem + 0.69vw, 2.665rem);
+  --step-4:  clamp(3.157rem, 2.93rem + 0.92vw, 3.553rem);
+
+  /* ── SPACING: Same ratio, named ── */
+  --space-3xs: clamp(0.25rem, 0.23rem + 0.1vw, 0.313rem);
+  --space-2xs: clamp(0.5rem, 0.47rem + 0.15vw, 0.563rem);
+  --space-xs:  clamp(0.75rem, 0.7rem + 0.22vw, 0.844rem);
+  --space-s:   clamp(1rem, 0.93rem + 0.29vw, 1.125rem);
+  --space-m:   clamp(1.5rem, 1.4rem + 0.44vw, 1.688rem);
+  --space-l:   clamp(2rem, 1.86rem + 0.58vw, 2.25rem);
+  --space-xl:  clamp(3rem, 2.79rem + 0.88vw, 3.375rem);
+  --space-2xl: clamp(4rem, 3.72rem + 1.17vw, 4.5rem);
+  --space-3xl: clamp(6rem, 5.58rem + 1.76vw, 6.75rem);
+
+  /* ── TYPE FAMILIES ── */
+  --font-display: 'Instrument Sans', system-ui, sans-serif;
+  --font-body:    'Newsreader', Georgia, serif;
+  --font-mono:    'IBM Plex Mono', 'Menlo', monospace;
+
+  /* ── LAYOUT ── */
+  --content-max: 58ch;
+  --sidebar-width: 280px;
+  --nav-width: 220px;
+  --page-max: 1320px;
+  --radius-s: 4px;
+  --radius-m: 6px;
+  --radius-l: 8px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DAY THEME — Warm ochre, sandstone, terracotta
+   OKLCH-derived, perceptually uniform progressions
+   ═══════════════════════════════════════════════════════════════ */
+[data-theme="day"] {
+  --surface-ground:    oklch(0.97 0.01 80);
+  --surface-primary:   oklch(0.99 0.005 80);
+  --surface-secondary: oklch(0.95 0.015 75);
+  --surface-tertiary:  oklch(0.92 0.02 72);
+  --surface-invert:    oklch(0.25 0.03 55);
+
+  --border-subtle:     oklch(0.88 0.025 75);
+  --border-default:    oklch(0.82 0.03 72);
+  --border-strong:     oklch(0.70 0.04 65);
+
+  --text-primary:      oklch(0.22 0.02 55);
+  --text-secondary:    oklch(0.40 0.03 60);
+  --text-tertiary:     oklch(0.55 0.025 65);
+  --text-on-invert:    oklch(0.97 0.01 80);
+
+  --accent-primary:    oklch(0.55 0.14 45);   /* terracotta */
+  --accent-hover:      oklch(0.48 0.15 42);
+  --accent-subtle:     oklch(0.92 0.04 50);
+  --accent-text:       oklch(0.45 0.12 40);
+
+  --info-surface:      oklch(0.94 0.03 80);
+  --info-border:       oklch(0.82 0.05 75);
+  --info-text:         oklch(0.40 0.06 65);
+
+  --code-surface:      oklch(0.95 0.01 80);
+  --code-border:       oklch(0.88 0.02 75);
+  --code-text:         oklch(0.38 0.08 40);
+
+  --shadow-soft: 0 1px 3px oklch(0.5 0.02 60 / 0.08);
+  --shadow-medium: 0 2px 8px oklch(0.4 0.03 55 / 0.1);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NIGHT THEME — Deep oxide, amber accents
+   ═══════════════════════════════════════════════════════════════ */
+[data-theme="night"] {
+  --surface-ground:    oklch(0.16 0.02 55);
+  --surface-primary:   oklch(0.20 0.02 55);
+  --surface-secondary: oklch(0.24 0.025 52);
+  --surface-tertiary:  oklch(0.28 0.03 50);
+  --surface-invert:    oklch(0.92 0.02 75);
+
+  --border-subtle:     oklch(0.30 0.03 50);
+  --border-default:    oklch(0.36 0.035 48);
+  --border-strong:     oklch(0.48 0.04 50);
+
+  --text-primary:      oklch(0.90 0.015 75);
+  --text-secondary:    oklch(0.72 0.02 65);
+  --text-tertiary:     oklch(0.55 0.025 58);
+  --text-on-invert:    oklch(0.20 0.02 55);
+
+  --accent-primary:    oklch(0.72 0.14 70);   /* amber */
+  --accent-hover:      oklch(0.78 0.15 72);
+  --accent-subtle:     oklch(0.28 0.06 60);
+  --accent-text:       oklch(0.78 0.12 72);
+
+  --info-surface:      oklch(0.24 0.03 55);
+  --info-border:       oklch(0.36 0.04 52);
+  --info-text:         oklch(0.72 0.04 68);
+
+  --code-surface:      oklch(0.22 0.02 55);
+  --code-border:       oklch(0.32 0.03 52);
+  --code-text:         oklch(0.78 0.1 72);
+
+  --shadow-soft: 0 1px 3px oklch(0.1 0.02 55 / 0.3);
+  --shadow-medium: 0 2px 8px oklch(0.08 0.02 55 / 0.4);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  font-size: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  font-variation-settings: 'opsz' 14;
+  line-height: 1.65;
+  color: var(--text-primary);
+  background: var(--surface-ground);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TOP NAVIGATION BAR
+   ═══════════════════════════════════════════════════════════════ */
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--surface-primary);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--space-2xs) var(--space-l);
+  display: flex;
+  align-items: center;
+  gap: var(--space-m);
+  backdrop-filter: blur(12px);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.topnav-brand {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.topnav-brand .brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: var(--accent-primary);
+  color: var(--text-on-invert);
+  border-radius: var(--radius-s);
+  font-size: var(--step--1);
+  font-weight: 700;
+  line-height: 1;
+}
+
+[data-theme="night"] .topnav-brand .brand-mark {
+  color: var(--surface-ground);
+}
+
+/* ── SEARCH ── */
+.search-container {
+  flex: 1;
+  max-width: 480px;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: var(--space-2xs) var(--space-s);
+  padding-left: var(--space-l);
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-l);
+  color: var(--text-primary);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.search-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.search-input:focus {
+  border-color: var(--accent-primary);
+  background: var(--surface-primary);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.search-icon {
+  position: absolute;
+  left: var(--space-xs);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+.search-shortcut {
+  position: absolute;
+  right: var(--space-xs);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-s);
+  color: var(--text-tertiary);
+  background: var(--surface-primary);
+  line-height: 1;
+}
+
+/* ── NAV LINKS ── */
+.topnav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.topnav-links a {
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: var(--space-3xs) var(--space-2xs);
+  border-radius: var(--radius-s);
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.topnav-links a:hover {
+  color: var(--text-primary);
+  background: var(--surface-secondary);
+}
+
+/* ── THEME TOGGLE ── */
+.theme-toggle {
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 3px;
+  display: flex;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.theme-toggle-option {
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  line-height: 1;
+  border: none;
+  background: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
+.theme-toggle-option.active {
+  background: var(--accent-primary);
+  color: var(--text-on-invert);
+}
+
+[data-theme="night"] .theme-toggle-option.active {
+  color: var(--surface-ground);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PAGE LAYOUT — Three-column: nav | content | sidebar
+   ═══════════════════════════════════════════════════════════════ */
+.page-layout {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: var(--nav-width) 1fr var(--sidebar-width);
+  gap: var(--space-l);
+  padding: var(--space-l);
+  align-items: start;
+}
+
+/* ── LEFT NAV (Table of Contents) ── */
+.left-nav {
+  position: sticky;
+  top: calc(60px + var(--space-l));
+  font-family: var(--font-display);
+}
+
+.left-nav-title {
+  font-size: var(--step--2);
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--space-xs);
+}
+
+.toc-list {
+  list-style: none;
+}
+
+.toc-list li {
+  margin-bottom: 2px;
+}
+
+.toc-list a {
+  display: block;
+  font-size: var(--step--1);
+  font-weight: 400;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: var(--space-3xs) var(--space-2xs);
+  border-left: 2px solid transparent;
+  border-radius: 0 var(--radius-s) var(--radius-s) 0;
+  transition: all 0.15s ease;
+  line-height: 1.4;
+}
+
+.toc-list a:hover {
+  color: var(--text-primary);
+  background: var(--surface-secondary);
+}
+
+.toc-list a.active {
+  color: var(--accent-text);
+  border-left-color: var(--accent-primary);
+  background: var(--accent-subtle);
+  font-weight: 500;
+}
+
+.toc-list .toc-sub {
+  padding-left: var(--space-s);
+}
+
+.toc-list .toc-sub a {
+  font-size: var(--step--2);
+  color: var(--text-tertiary);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MAIN CONTENT AREA
+   ═══════════════════════════════════════════════════════════════ */
+.article {
+  min-width: 0;
+}
+
+/* ── ARTICLE HEADER ── */
+.article-header {
+  margin-bottom: var(--space-l);
+  padding-bottom: var(--space-m);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.article-overline {
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent-text);
+  margin-bottom: var(--space-3xs);
+}
+
+.article-title {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-2xs);
+}
+
+.article-subtitle {
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  font-variation-settings: 'opsz' 20;
+  color: var(--text-secondary);
+  max-width: var(--content-max);
+  line-height: 1.5;
+  font-weight: 350;
+  margin-bottom: var(--space-xs);
+}
+
+.article-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  align-items: center;
+}
+
+.tag {
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--surface-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.tag:hover {
+  background: var(--accent-subtle);
+  color: var(--accent-text);
+  border-color: var(--accent-primary);
+}
+
+/* ── PROSE ── */
+.prose {
+  max-width: var(--content-max);
+}
+
+.prose p {
+  margin-bottom: var(--space-s);
+}
+
+.prose h2 {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.015em;
+  margin-top: var(--space-xl);
+  margin-bottom: var(--space-xs);
+  line-height: 1.2;
+}
+
+.prose h3 {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: var(--space-l);
+  margin-bottom: var(--space-2xs);
+  line-height: 1.25;
+}
+
+.prose a {
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-decoration-color: var(--accent-subtle);
+  text-underline-offset: 2px;
+  transition: text-decoration-color 0.15s ease;
+}
+
+.prose a:hover {
+  text-decoration-color: var(--accent-primary);
+}
+
+.prose strong {
+  font-weight: 650;
+  color: var(--text-primary);
+}
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--code-surface);
+  border: 1px solid var(--code-border);
+  padding: 1px 5px;
+  border-radius: var(--radius-s);
+  color: var(--code-text);
+}
+
+.prose ul, .prose ol {
+  margin-bottom: var(--space-s);
+  padding-left: var(--space-m);
+}
+
+.prose li {
+  margin-bottom: var(--space-3xs);
+}
+
+/* ── CODE BLOCK ── */
+.code-block {
+  background: var(--code-surface);
+  border: 1px solid var(--code-border);
+  border-radius: var(--radius-m);
+  padding: var(--space-s) var(--space-m);
+  margin-bottom: var(--space-m);
+  overflow-x: auto;
+  position: relative;
+}
+
+.code-block-header {
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  font-weight: 500;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-2xs);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.code-block pre {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  line-height: 1.55;
+  color: var(--code-text);
+  white-space: pre;
+}
+
+.code-block .kw { color: var(--accent-text); font-weight: 500; }
+.code-block .fn { color: var(--text-primary); }
+.code-block .cm { color: var(--text-tertiary); font-style: italic; }
+.code-block .st { color: oklch(0.6 0.12 150); }
+[data-theme="night"] .code-block .st { color: oklch(0.75 0.12 150); }
+.code-block .ty { color: oklch(0.5 0.1 280); }
+[data-theme="night"] .code-block .ty { color: oklch(0.75 0.1 280); }
+
+/* ── NOTE / CALLOUT ── */
+.callout {
+  background: var(--info-surface);
+  border: 1px solid var(--info-border);
+  border-left: 3px solid var(--accent-primary);
+  border-radius: var(--radius-m);
+  padding: var(--space-s) var(--space-m);
+  margin-bottom: var(--space-m);
+}
+
+.callout-title {
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--accent-text);
+  margin-bottom: var(--space-3xs);
+}
+
+.callout p {
+  font-size: var(--step--1);
+  color: var(--info-text);
+  max-width: var(--content-max);
+}
+
+/* ── SEE ALSO ── */
+.see-also {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-m);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.see-also-title {
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.see-also-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-2xs);
+}
+
+.see-also-card {
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-m);
+  padding: var(--space-xs) var(--space-s);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.see-also-card:hover {
+  border-color: var(--accent-primary);
+  background: var(--accent-subtle);
+  box-shadow: var(--shadow-soft);
+}
+
+.see-also-card-title {
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.see-also-card-desc {
+  font-size: var(--step--2);
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RIGHT SIDEBAR — Taxonomy / Info Card
+   ═══════════════════════════════════════════════════════════════ */
+.sidebar {
+  position: sticky;
+  top: calc(60px + var(--space-l));
+}
+
+.info-card {
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-l);
+  overflow: hidden;
+}
+
+.info-card-header {
+  background: var(--accent-primary);
+  color: var(--text-on-invert);
+  padding: var(--space-xs) var(--space-s);
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  text-align: center;
+}
+
+[data-theme="night"] .info-card-header {
+  color: var(--surface-ground);
+}
+
+.info-card-body {
+  padding: var(--space-2xs) 0;
+}
+
+.info-row {
+  display: flex;
+  padding: var(--space-3xs) var(--space-s);
+  font-size: var(--step--1);
+  line-height: 1.4;
+}
+
+.info-row:hover {
+  background: var(--surface-tertiary);
+}
+
+.info-label {
+  flex-shrink: 0;
+  width: 90px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+}
+
+.info-value {
+  color: var(--text-primary);
+  font-size: var(--step--2);
+}
+
+.info-value a {
+  color: var(--accent-text);
+  text-decoration: none;
+}
+
+.info-value a:hover {
+  text-decoration: underline;
+}
+
+.info-card-section {
+  padding: var(--space-3xs) var(--space-s);
+  border-top: 1px solid var(--border-subtle);
+  margin-top: var(--space-3xs);
+}
+
+.info-card-section-title {
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: var(--space-3xs);
+}
+
+.info-card-section .tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.info-card-section .tag {
+  font-size: 0.65rem;
+  padding: 2px 7px;
+}
+
+/* ── BREADCRUMB ── */
+.breadcrumb {
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-xs);
+}
+
+.breadcrumb a {
+  color: var(--text-tertiary);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  color: var(--accent-text);
+}
+
+.breadcrumb .sep {
+  margin: 0 var(--space-3xs);
+  opacity: 0.5;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════════════════ */
+.site-footer {
+  border-top: 1px solid var(--border-subtle);
+  padding: var(--space-m) var(--space-l);
+  margin-top: var(--space-2xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: var(--page-max);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.site-footer .footer-brand {
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.site-footer .footer-meta {
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  color: var(--text-tertiary);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 1100px) {
+  .page-layout {
+    grid-template-columns: 1fr var(--sidebar-width);
+  }
+  .left-nav {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-layout {
+    grid-template-columns: 1fr;
+    padding: var(--space-s);
+    gap: var(--space-m);
+  }
+  .sidebar {
+    position: static;
+    order: -1;
+  }
+  .topnav {
+    padding: var(--space-2xs) var(--space-s);
+    gap: var(--space-xs);
+  }
+  .topnav-links { display: none; }
+  .article-title { font-size: var(--step-2); }
+  .site-footer { flex-direction: column; gap: var(--space-2xs); text-align: center; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- TOP NAVIGATION                                                 -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<nav class="topnav">
+  <a href="#" class="topnav-brand">
+    <span class="brand-mark">H</span>
+    Haleiki
+  </a>
+
+  <div class="search-container">
+    <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="10.5" y1="10.5" x2="15" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <input type="text" class="search-input" placeholder="Search Haleiki…">
+    <span class="search-shortcut">⌘K</span>
+  </div>
+
+  <div class="topnav-links">
+    <a href="#">Browse</a>
+    <a href="#">Categories</a>
+    <a href="#">Random</a>
+  </div>
+
+  <div class="theme-toggle" role="radiogroup" aria-label="Theme">
+    <button class="theme-toggle-option active" data-theme-choice="day" aria-label="Day theme">☀</button>
+    <button class="theme-toggle-option" data-theme-choice="night" aria-label="Night theme">☾</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- PAGE LAYOUT                                                    -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="page-layout">
+
+  <!-- ── LEFT NAV: Table of Contents ── -->
+  <aside class="left-nav">
+    <div class="left-nav-title">Contents</div>
+    <ul class="toc-list">
+      <li><a href="#overview" class="active">Overview</a></li>
+      <li><a href="#the-three-rules">The Three Rules</a></li>
+      <li class="toc-sub"><a href="#each-value-one-owner">Each value, one owner</a></li>
+      <li class="toc-sub"><a href="#ownership-transfers">Ownership transfers</a></li>
+      <li class="toc-sub"><a href="#scope-based-dropping">Scope-based dropping</a></li>
+      <li><a href="#how-the-compiler">How the Compiler Enforces It</a></li>
+      <li><a href="#ownership-vs-gc">Ownership vs. Garbage Collection</a></li>
+      <li><a href="#common-patterns">Common Patterns</a></li>
+      <li><a href="#related-concepts">Related Concepts</a></li>
+      <li><a href="#see-also">See Also</a></li>
+    </ul>
+  </aside>
+
+  <!-- ── MAIN ARTICLE ── -->
+  <main class="article">
+
+    <div class="breadcrumb">
+      <a href="#">Haleiki</a><span class="sep">›</span>
+      <a href="#">Language Concepts</a><span class="sep">›</span>
+      <a href="#">Memory Model</a><span class="sep">›</span>
+      <span>Ownership</span>
+    </div>
+
+    <header class="article-header">
+      <div class="article-overline">Language Concept</div>
+      <h1 class="article-title">Ownership</h1>
+      <p class="article-subtitle">Rust's central mechanism for memory safety without garbage collection — a compile-time discipline that gives every value exactly one owner, ensuring deterministic resource management.</p>
+      <div class="article-meta">
+        <a href="#" class="tag">Memory Model</a>
+        <a href="#" class="tag">Core Concept</a>
+        <a href="#" class="tag">Beginner-Friendly</a>
+        <a href="#" class="tag">Stable since 1.0</a>
+      </div>
+    </header>
+
+    <div class="prose">
+
+      <h2 id="overview">Overview</h2>
+
+      <p><strong>Ownership</strong> is the foundational concept in Rust's approach to memory safety. Where languages like Java and Go rely on a runtime garbage collector, and languages like C and C++ rely on the programmer to manually allocate and free memory, Rust takes a third path: a set of compile-time rules that the compiler enforces statically, with zero runtime cost.</p>
+
+      <p>The ownership system is not a library feature or an optional mode. It is woven into the language at every level — from how variables are bound, to how functions accept arguments, to how values are cleaned up when they go out of scope. Understanding ownership is not just useful for writing Rust; it <em>is</em> understanding Rust.</p>
+
+      <div class="callout">
+        <div class="callout-title">Why this matters</div>
+        <p>Ownership eliminates <em>at compile time</em> entire categories of bugs that other languages only catch at runtime (or don't catch at all): use-after-free, double-free, dangling pointers, and data races in concurrent code.</p>
+      </div>
+
+      <h2 id="the-three-rules">The Three Rules</h2>
+
+      <p>The ownership system can be distilled into three rules. Every interaction with memory in Rust is governed by these rules, and the compiler rejects any program that violates them.</p>
+
+      <h3 id="each-value-one-owner">1. Each value has exactly one owner</h3>
+
+      <p>Every value in Rust is "owned" by a variable. There is no shared ownership by default — when you assign a value to a variable, that variable is its sole owner. This might sound restrictive, but it is precisely this restriction that makes the rest of the system possible.</p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span>Rust — Value binding</span>
+        </div>
+<pre><span class="kw">let</span> s1 = <span class="ty">String</span>::from(<span class="st">"hello"</span>);  <span class="cm">// s1 owns this String</span>
+<span class="kw">let</span> s2 = s1;                       <span class="cm">// ownership MOVES to s2</span>
+<span class="cm">// println!("{}", s1);             // ← compile error: s1 is no longer valid</span>
+println!(<span class="st">"{}"</span>, s2);               <span class="cm">// ✓ s2 is the owner</span></pre>
+      </div>
+
+      <h3 id="ownership-transfers">2. Ownership can be transferred (moved)</h3>
+
+      <p>When you pass a value to a function, assign it to another variable, or return it from a function, ownership <strong>moves</strong>. The previous owner can no longer use the value. This is not a deep copy — the bits stay exactly where they were. Only the compiler's understanding of who is responsible for those bits changes.</p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span>Rust — Move semantics in functions</span>
+        </div>
+<pre><span class="kw">fn</span> <span class="fn">take_ownership</span>(s: <span class="ty">String</span>) {
+    println!(<span class="st">"I own: {s}"</span>);
+}   <span class="cm">// s is dropped here — memory freed</span>
+
+<span class="kw">fn</span> <span class="fn">main</span>() {
+    <span class="kw">let</span> greeting = <span class="ty">String</span>::from(<span class="st">"kia ora"</span>);
+    take_ownership(greeting);         <span class="cm">// greeting moves into the function</span>
+    <span class="cm">// greeting is now invalid here</span>
+}</pre>
+      </div>
+
+      <h3 id="scope-based-dropping">3. When the owner goes out of scope, the value is dropped</h3>
+
+      <p>Rust automatically calls <code>drop</code> on a value when its owner leaves scope. This is deterministic — you know exactly when memory is freed, files are closed, and locks are released. There is no finalizer queue, no GC pause, no ambiguity.</p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span>Rust — Deterministic drop</span>
+        </div>
+<pre>{
+    <span class="kw">let</span> data = <span class="ty">Vec</span>::&lt;<span class="ty">u8</span>&gt;::with_capacity(<span class="st">1024</span>);
+    <span class="cm">// ... use data ...</span>
+}   <span class="cm">// ← data is dropped here: 1024 bytes freed, instantly, deterministically</span></pre>
+      </div>
+
+      <h2 id="how-the-compiler">How the Compiler Enforces It</h2>
+
+      <p>The <strong>borrow checker</strong> is the component of the Rust compiler (<code>rustc</code>) that enforces the ownership rules. It performs a static analysis of your code at compile time, tracking the ownership and lifetime of every value through every possible code path.</p>
+
+      <p>When the borrow checker rejects your code, it is not being pedantic. It has found a path — possibly one you didn't think of — where a value would be used after it was freed, or where two parts of your program would hold mutable access to the same data simultaneously. The error messages are the compiler <em>showing you the bug</em>.</p>
+
+      <h2 id="ownership-vs-gc">Ownership vs. Garbage Collection</h2>
+
+      <p>The tradeoff is straightforward. Garbage-collected languages give you convenience: you don't think about when memory is freed. Ownership gives you <strong>predictability</strong>: you always know when resources are cleaned up, and you pay zero runtime cost for that knowledge.</p>
+
+      <p>In practice, ownership also gives you something subtler: <strong>documentation</strong>. A function signature that takes <code>String</code> (by value) tells you it will consume the string. A signature that takes <code>&str</code> tells you it's just borrowing. The ownership model encodes intent into the type system in a way that garbage-collected languages simply cannot.</p>
+
+      <h2 id="common-patterns">Common Patterns</h2>
+
+      <p>Idiomatic Rust code works <em>with</em> ownership rather than around it. The most common patterns are:</p>
+
+      <ul>
+        <li><strong>Borrowing</strong> — lending access to a value without transferring ownership, via <code>&T</code> (shared) or <code>&mut T</code> (exclusive).</li>
+        <li><strong>Cloning</strong> — explicitly duplicating a value when you genuinely need two independent copies. The <code>.clone()</code> call makes the cost visible.</li>
+        <li><strong>Returning ownership</strong> — a function that needs to create a value and give it to the caller simply returns it; ownership moves to the caller automatically.</li>
+        <li><strong>Using <code>Copy</code> types</strong> — simple stack values (integers, booleans, <code>char</code>) implement <code>Copy</code> and are duplicated implicitly on assignment, because copying them is trivially cheap.</li>
+      </ul>
+
+      <h2 id="related-concepts">Related Concepts</h2>
+
+      <div class="callout">
+        <div class="callout-title">The ownership family</div>
+        <p>Ownership does not exist in isolation. It is one pillar of a triad: <strong>Ownership</strong> governs who is responsible for a value; <a href="#">Borrowing</a> governs how others can access it; and <a href="#">Lifetimes</a> govern how long those access grants are valid. Understanding all three together is essential.</p>
+      </div>
+
+      <!-- ── SEE ALSO ── -->
+      <div class="see-also" id="see-also">
+        <div class="see-also-title">See Also</div>
+        <div class="see-also-grid">
+          <a href="#" class="see-also-card">
+            <div class="see-also-card-title">Borrowing & References</div>
+            <div class="see-also-card-desc">Accessing values without taking ownership, via shared and mutable references.</div>
+          </a>
+          <a href="#" class="see-also-card">
+            <div class="see-also-card-title">Lifetimes</div>
+            <div class="see-also-card-desc">The compiler's system for tracking how long references remain valid.</div>
+          </a>
+          <a href="#" class="see-also-card">
+            <div class="see-also-card-title">The Drop Trait</div>
+            <div class="see-also-card-desc">Custom cleanup logic that runs when a value goes out of scope.</div>
+          </a>
+          <a href="#" class="see-also-card">
+            <div class="see-also-card-title">Clone & Copy</div>
+            <div class="see-also-card-desc">Explicit vs. implicit value duplication and when to use each.</div>
+          </a>
+          <a href="#" class="see-also-card">
+            <div class="see-also-card-title">Smart Pointers</div>
+            <div class="see-also-card-desc">Box, Rc, Arc — extending ownership semantics beyond the stack.</div>
+          </a>
+          <a href="#" class="see-also-card">
+            <div class="see-also-card-title">Move Semantics</div>
+            <div class="see-also-card-desc">How Rust transfers values efficiently without copying underlying data.</div>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ── RIGHT SIDEBAR: Taxonomy Card ── -->
+  <aside class="sidebar">
+    <div class="info-card">
+      <div class="info-card-header">Ownership</div>
+      <div class="info-card-body">
+        <div class="info-row">
+          <span class="info-label">Type</span>
+          <span class="info-value">Language concept</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Domain</span>
+          <span class="info-value"><a href="#">Memory model</a></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Since</span>
+          <span class="info-value">Rust 1.0 (2015)</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Stability</span>
+          <span class="info-value">Stable (foundational)</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Enforced by</span>
+          <span class="info-value"><a href="#">Borrow checker</a></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Runtime cost</span>
+          <span class="info-value">Zero</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Prerequisite</span>
+          <span class="info-value"><a href="#">Variable binding</a></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Leads to</span>
+          <span class="info-value"><a href="#">Borrowing</a>, <a href="#">Lifetimes</a></span>
+        </div>
+
+        <div class="info-card-section">
+          <div class="info-card-section-title">Categories</div>
+          <div class="tag-list">
+            <a href="#" class="tag">Memory Safety</a>
+            <a href="#" class="tag">Core Language</a>
+            <a href="#" class="tag">Compile-Time</a>
+            <a href="#" class="tag">Zero-Cost</a>
+          </div>
+        </div>
+
+        <div class="info-card-section">
+          <div class="info-card-section-title">Analogues</div>
+          <div class="tag-list">
+            <a href="#" class="tag">C++ RAII</a>
+            <a href="#" class="tag">Swift ARC</a>
+            <a href="#" class="tag">Linear Types</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- FOOTER                                                         -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="footer-brand">Haleiki — House of Knowledge</div>
+  <div class="footer-meta">Built with care · Content under CC BY-SA 4.0</div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- THEME TOGGLE SCRIPT                                            -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<script>
+document.querySelectorAll('.theme-toggle-option').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const theme = btn.dataset.themeChoice;
+    document.documentElement.setAttribute('data-theme', theme);
+    document.querySelectorAll('.theme-toggle-option').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>
