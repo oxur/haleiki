@@ -36,6 +36,9 @@ target/llvm-cov/
 *.profraw
 *.profdata
 
+# Demo staging files (intermediate, not committed)
+/demo/.staging/*.html
+
 # OS
 .DS_Store
 Thumbs.db

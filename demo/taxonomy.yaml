@@ -1,0 +1,25 @@
+# Haleiki Demo Site — Taxonomy
+#
+# Categories and tiers used by the demo content cluster.
+# These must match the values used in demo/manifest.yaml.
+
+categories:
+  - name: "memory-management"
+    description: "Memory allocation, deallocation, and management strategies"
+  - name: "type-systems"
+    description: "Type safety, type checking, and type-theoretic concepts"
+  - name: "programming-concepts"
+    description: "General programming concepts and abstractions"
+  - name: "data-structures"
+    description: "Data structures and their implementations"
+
+tiers:
+  - name: "foundational"
+    description: "Core concepts — prerequisites for most other topics"
+    order: 1
+  - name: "intermediate"
+    description: "Builds on foundational knowledge"
+    order: 2
+  - name: "advanced"
+    description: "Specialized or research-level topics"
+    order: 3

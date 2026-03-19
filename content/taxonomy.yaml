@@ -1,0 +1,21 @@
+# Haleiki Content Taxonomy
+#
+# Define your categories and tiers here.
+# The demo site has its own taxonomy in demo/taxonomy.yaml.
+#
+# Example:
+#
+# categories:
+#   - "my-category"
+#   - "another-category"
+#
+# tiers:
+#   - "foundational"
+#   - "intermediate"
+#   - "advanced"
+
+categories: []
+tiers:
+  - "foundational"
+  - "intermediate"
+  - "advanced"

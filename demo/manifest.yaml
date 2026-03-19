@@ -1,0 +1,122 @@
+# Haleiki Demo Site — Content Manifest
+# All content sourced under CC BY-SA 4.0 (or compatible) from Wikimedia projects.
+
+# Default settings (can be overridden per-article)
+defaults:
+  project: "en.wikipedia.org"
+  license: "CC BY-SA 4.0"
+  media:
+    max_width: 1024
+    formats:
+      - "svg"
+      - "png"
+      - "jpg"
+    skip_patterns:
+      - "Flag_of_*"
+      - "Wiki-*.svg"
+      - "Commons-logo*"
+      - "Ambox_*"
+
+# Classification defaults for the demo taxonomy
+taxonomy:
+  categories:
+    - "memory-management"
+    - "type-systems"
+    - "programming-concepts"
+    - "data-structures"
+  tiers:
+    - "foundational"
+    - "intermediate"
+    - "advanced"
+
+# ─── Articles ───────────────────────────────────────────
+
+articles:
+
+  - title: "Memory management"
+    slug: "memory-management"
+    category: "memory-management"
+    tier: "foundational"
+    tags: ["overview", "foundational"]
+    keywords: ["allocation", "deallocation", "memory model"]
+
+  - title: "Garbage collection (computer science)"
+    slug: "garbage-collection"
+    category: "memory-management"
+    tier: "intermediate"
+    tags: ["runtime", "automatic-memory"]
+    keywords: ["GC", "mark-and-sweep", "tracing"]
+
+  - title: "Reference counting"
+    slug: "reference-counting"
+    category: "memory-management"
+    tier: "intermediate"
+    tags: ["runtime", "automatic-memory"]
+    keywords: ["ref count", "weak reference", "cycle detection"]
+
+  - title: "Stack-based memory allocation"
+    slug: "stack-memory"
+    category: "memory-management"
+    tier: "foundational"
+    tags: ["allocation"]
+    keywords: ["stack frame", "LIFO", "automatic storage"]
+
+  - title: "Region-based memory management"
+    slug: "region-based-memory"
+    category: "memory-management"
+    tier: "advanced"
+    tags: ["allocation", "research"]
+    keywords: ["arena", "region inference", "Cyclone"]
+
+  - title: "Resource acquisition is initialization"
+    slug: "raii"
+    category: "memory-management"
+    tier: "intermediate"
+    tags: ["pattern", "C++", "Rust"]
+    keywords: ["RAII", "destructor", "scope-based cleanup"]
+
+  - title: "Smart pointer"
+    slug: "smart-pointer"
+    category: "data-structures"
+    tier: "intermediate"
+    tags: ["pointer", "automatic-memory"]
+    keywords: ["unique_ptr", "shared_ptr", "Box", "Rc"]
+
+  - title: "Pointer (computer programming)"
+    slug: "pointer"
+    category: "programming-concepts"
+    tier: "foundational"
+    tags: ["fundamentals"]
+    keywords: ["address", "dereference", "null pointer"]
+
+  - title: "Dangling pointer"
+    slug: "dangling-pointer"
+    category: "memory-management"
+    tier: "intermediate"
+    tags: ["bug", "safety"]
+    keywords: ["use-after-free", "wild pointer", "stale reference"]
+
+  - title: "Memory safety"
+    slug: "memory-safety"
+    category: "type-systems"
+    tier: "foundational"
+    tags: ["safety", "verification"]
+    keywords: ["buffer overflow", "bounds checking", "spatial safety"]
+
+  - title: "Type safety"
+    slug: "type-safety"
+    category: "type-systems"
+    tier: "foundational"
+    tags: ["safety", "type-theory"]
+    keywords: ["type checking", "strong typing", "soundness"]
+
+  # ─── Cross-project sources ───────────────────────────
+
+  - title: "Introduction to Computer Science/Memory Management"
+    project: "en.wikibooks.org"
+    slug: "wikibooks-memory-management"
+    category: "memory-management"
+    tier: "foundational"
+    tags: ["tutorial", "beginner-friendly"]
+    keywords: ["introduction", "textbook"]
+    license: "CC BY-SA 3.0"
