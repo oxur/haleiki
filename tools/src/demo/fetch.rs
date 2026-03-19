@@ -1,9 +1,17 @@
-//! Wikimedia REST API client for fetching article HTML.
+//! `MediaWiki` API client for fetching article HTML.
 //!
-//! Fetches raw HTML from the Wikimedia REST API and writes it to the staging
-//! directory (`demo/.staging/{slug}.html`). Supports both single-article fetch
-//! and batch fetch with bounded concurrency, rate limiting, and progress bars.
+//! Supports two backends:
+//! - **Wikimedia REST API** (`/api/rest_v1/page/html/{title}`) for Wikimedia
+//!   projects (Wikipedia, Wikibooks, etc.)
+//! - **`MediaWiki` action API** (`/api.php?action=parse`) for generic `MediaWiki`
+//!   sites (e.g., rigpawiki.org)
+//!
+//! Both backends write identical output: raw HTML in `demo/.staging/{slug}.html`
+//! and metadata in `demo/.staging/{slug}.meta.json`. The dispatcher
+//! [`fetch_article_raw`] selects the correct backend based on
+//! [`is_wikimedia_project`].
 
+use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::time::Duration;
@@ -36,6 +44,83 @@ const USER_AGENT_STRING: &str = concat!(
     " (https://github.com/oxur/haleiki; haleiki@oxur.net) reqwest/",
 );
 
+/// Known Wikimedia project domains that support the REST API.
+///
+/// This list covers the major English-language projects and cross-language
+/// sites. Language-variant domains (e.g., `fr.wikipedia.org`) are handled
+/// by suffix matching in [`is_wikimedia_project`].
+const WIKIMEDIA_DOMAINS: &[&str] = &[
+    "en.wikipedia.org",
+    "en.wikibooks.org",
+    "en.wikiversity.org",
+    "en.wikisource.org",
+    "en.wiktionary.org",
+    "en.wikinews.org",
+    "en.wikiquote.org",
+    "commons.wikimedia.org",
+    "simple.wikipedia.org",
+    "meta.wikimedia.org",
+];
+
+/// Determines whether a project domain supports the Wikimedia REST API.
+///
+/// Returns `true` for domains in the [`WIKIMEDIA_DOMAINS`] list as well as
+/// any domain matching a Wikimedia suffix pattern (e.g., `*.wikipedia.org`).
+///
+/// Wikimedia projects use: `/api/rest_v1/page/html/{title}`
+/// Other `MediaWiki` sites use: `/api.php?action=parse&page={title}`
+pub(super) fn is_wikimedia_project(project: &str) -> bool {
+    WIKIMEDIA_DOMAINS.contains(&project)
+        || project.ends_with(".wikipedia.org")
+        || project.ends_with(".wikibooks.org")
+        || project.ends_with(".wikiversity.org")
+        || project.ends_with(".wikisource.org")
+        || project.ends_with(".wiktionary.org")
+        || project.ends_with(".wikimedia.org")
+        || project.ends_with(".wikinews.org")
+        || project.ends_with(".wikiquote.org")
+}
+
+/// URL-encode a title for use in a query parameter.
+///
+/// Unreserved characters ([A-Za-z0-9\-_.~]) pass through unchanged. Spaces
+/// become `+`. All other bytes (including multi-byte UTF-8 sequences) are
+/// percent-encoded as `%XX`.
+pub(super) fn url_encode_title(title: &str) -> String {
+    title
+        .bytes()
+        .map(|b| match b {
+            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'_' | b'.' | b'~' => {
+                String::from(b as char)
+            }
+            b' ' => "+".to_string(),
+            _ => format!("%{b:02X}"),
+        })
+        .collect()
+}
+
+/// Response structure from `MediaWiki` `action=parse` API.
+#[derive(Debug, Deserialize)]
+struct MediaWikiParseResponse {
+    /// The parsed page data.
+    parse: MediaWikiParse,
+}
+
+/// Inner parse result from the `MediaWiki` action API.
+#[derive(Debug, Deserialize)]
+struct MediaWikiParse {
+    /// Page title as displayed (may contain HTML formatting).
+    #[serde(default)]
+    displaytitle: String,
+
+    /// Revision ID of the parsed page.
+    #[serde(default)]
+    revid: Option<u64>,
+
+    /// HTML content. The key is literally `"*"` in the JSON.
+    text: HashMap<String, String>,
+}
+
 /// Metadata captured during a fetch operation.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FetchMeta {
@@ -51,7 +136,7 @@ pub struct FetchMeta {
     /// API URL that was fetched.
     pub api_url: String,
 
-    /// Wikipedia revision ID (from `ETag` header).
+    /// Page revision ID (from Wikimedia `ETag` header or `MediaWiki` `revid` field).
     pub revision_id: Option<String>,
 
     /// ISO 8601 timestamp of when the fetch occurred.
@@ -127,11 +212,28 @@ fn parse_revision_id(etag: Option<&HeaderValue>) -> Option<String> {
     }
 }
 
-/// Fetch a single article given pre-resolved URL and project.
+/// Fetch a single article, dispatching to the correct API based on project type.
 ///
-/// This is the core fetch implementation that does not require a `Manifest`
-/// reference, making it safe to use from spawned tokio tasks.
+/// Wikimedia projects are fetched via the REST API; generic `MediaWiki` sites
+/// use the `action=parse` API. Both paths produce identical output files.
 async fn fetch_article_raw(
+    client: &ClientWithMiddleware,
+    slug: &str,
+    title: &str,
+    api_url: &str,
+    project: &str,
+) -> anyhow::Result<FetchMeta> {
+    if is_wikimedia_project(project) {
+        fetch_wikimedia_article(client, slug, title, api_url, project).await
+    } else {
+        fetch_mediawiki_article(client, slug, title, api_url, project).await
+    }
+}
+
+/// Fetch an article from a Wikimedia project using the REST API.
+///
+/// The response is raw HTML with the revision ID in the `ETag` header.
+async fn fetch_wikimedia_article(
     client: &ClientWithMiddleware,
     slug: &str,
     title: &str,
@@ -156,6 +258,69 @@ async fn fetch_article_raw(
     // Write HTML
     let html_path = staging_html_path(slug);
     std::fs::write(&html_path, &html)?;
+
+    // Build metadata
+    let meta = FetchMeta {
+        slug: slug.to_string(),
+        project: project.to_string(),
+        title: title.to_string(),
+        api_url: api_url.to_string(),
+        revision_id,
+        fetched_at: chrono_now_iso8601(),
+        http_status,
+        html_bytes,
+    };
+
+    // Write metadata
+    let meta_path = staging_meta_path(slug);
+    let meta_json = serde_json::to_string_pretty(&meta)?;
+    std::fs::write(&meta_path, meta_json)?;
+
+    Ok(meta)
+}
+
+/// Fetch an article from a generic `MediaWiki` site using the `action=parse` API.
+///
+/// The response is JSON containing HTML in `text["*"]` and a revision ID in
+/// the `revid` field. The HTML body fragment is wrapped in a full document
+/// for consistency with Wikimedia REST API output.
+async fn fetch_mediawiki_article(
+    client: &ClientWithMiddleware,
+    slug: &str,
+    title: &str,
+    api_url: &str,
+    project: &str,
+) -> anyhow::Result<FetchMeta> {
+    let response = client.get(api_url).send().await?;
+
+    let http_status = response.status().as_u16();
+
+    if !response.status().is_success() {
+        anyhow::bail!("HTTP {http_status} fetching \"{title}\" from {project}: {api_url}");
+    }
+
+    let json: MediaWikiParseResponse = response.json().await.map_err(|e| {
+        anyhow::anyhow!("Failed to parse MediaWiki API response for \"{title}\": {e}")
+    })?;
+
+    // Extract HTML from the text map (key is literally "*")
+    let html = json.parse.text.get("*").ok_or_else(|| {
+        anyhow::anyhow!("MediaWiki API response for \"{title}\" has no text content")
+    })?;
+
+    let html_bytes = html.len();
+    let revision_id = json.parse.revid.map(|id| id.to_string());
+
+    // Ensure staging directory exists
+    std::fs::create_dir_all(STAGING_DIR)?;
+
+    // Wrap the HTML body fragment in a full document for consistency
+    let full_html = format!(
+        "<!DOCTYPE html>\n<html>\n<head><title>{}</title></head>\n<body>\n{}\n</body>\n</html>",
+        json.parse.displaytitle, html,
+    );
+    let html_path = staging_html_path(slug);
+    std::fs::write(&html_path, &full_html)?;
 
     // Build metadata
     let meta = FetchMeta {
@@ -649,5 +814,82 @@ mod tests {
         // Verify that non-existent paths return false
         let path = staging_html_path("nonexistent-article-xyz");
         assert!(!path.exists());
+    }
+
+    // --- Project type detection tests ---
+
+    #[test]
+    fn test_is_wikimedia_project_wikipedia() {
+        assert!(is_wikimedia_project("en.wikipedia.org"));
+    }
+
+    #[test]
+    fn test_is_wikimedia_project_wikibooks() {
+        assert!(is_wikimedia_project("en.wikibooks.org"));
+    }
+
+    #[test]
+    fn test_is_wikimedia_project_french_wikipedia() {
+        assert!(is_wikimedia_project("fr.wikipedia.org"));
+    }
+
+    #[test]
+    fn test_is_wikimedia_project_commons() {
+        assert!(is_wikimedia_project("commons.wikimedia.org"));
+    }
+
+    #[test]
+    fn test_is_wikimedia_project_rigpawiki_is_not() {
+        assert!(!is_wikimedia_project("www.rigpawiki.org"));
+    }
+
+    #[test]
+    fn test_is_wikimedia_project_generic_mediawiki_is_not() {
+        assert!(!is_wikimedia_project("wiki.example.com"));
+    }
+
+    #[test]
+    fn test_is_wikimedia_project_simple_wikipedia() {
+        assert!(is_wikimedia_project("simple.wikipedia.org"));
+    }
+
+    #[test]
+    fn test_is_wikimedia_project_wikiquote() {
+        assert!(is_wikimedia_project("en.wikiquote.org"));
+    }
+
+    #[test]
+    fn test_is_wikimedia_project_german_wikinews() {
+        assert!(is_wikimedia_project("de.wikinews.org"));
+    }
+
+    // --- URL encoding tests ---
+
+    #[test]
+    fn test_url_encode_title_ascii_passthrough() {
+        assert_eq!(url_encode_title("Longchenpa"), "Longchenpa");
+    }
+
+    #[test]
+    fn test_url_encode_title_spaces_become_plus() {
+        assert_eq!(url_encode_title("Jikme Lingpa"), "Jikme+Lingpa");
+    }
+
+    #[test]
+    fn test_url_encode_title_diacritics_percent_encoded() {
+        // "Chögyam Trungpa" — ö is U+00F6, UTF-8 bytes: 0xC3 0xB6
+        let encoded = url_encode_title("Chögyam Trungpa");
+        assert_eq!(encoded, "Ch%C3%B6gyam+Trungpa");
+    }
+
+    #[test]
+    fn test_url_encode_title_unreserved_chars_passthrough() {
+        assert_eq!(url_encode_title("A-B_C.D~E"), "A-B_C.D~E");
+    }
+
+    #[test]
+    fn test_url_encode_title_parentheses_encoded() {
+        let encoded = url_encode_title("Foo (bar)");
+        assert_eq!(encoded, "Foo+%28bar%29");
     }
 }

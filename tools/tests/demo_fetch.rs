@@ -169,6 +169,80 @@ fn test_demo_fetch_batch_live() {
     }
 }
 
+// --- Rigpa Wiki dry-run tests ---
+
+#[test]
+#[cfg(feature = "demo")]
+fn test_demo_fetch_dry_run_rigpawiki_uses_action_parse() {
+    Command::cargo_bin("haleiki")
+        .unwrap()
+        .args(["demo", "fetch", "--article", "longchenpa", "--dry-run"])
+        .current_dir(env!("CARGO_MANIFEST_DIR").to_string() + "/..")
+        .assert()
+        .success()
+        .stdout(
+            predicate::str::contains("api.php?action=parse")
+                .and(predicate::str::contains("www.rigpawiki.org")),
+        );
+}
+
+#[test]
+#[cfg(feature = "demo")]
+fn test_demo_fetch_batch_dry_run_shows_both_api_styles() {
+    Command::cargo_bin("haleiki")
+        .unwrap()
+        .args(["demo", "fetch", "--dry-run"])
+        .current_dir(env!("CARGO_MANIFEST_DIR").to_string() + "/..")
+        .assert()
+        .success()
+        .stdout(
+            predicate::str::contains("api/rest_v1/page/html/")
+                .and(predicate::str::contains("api.php?action=parse")),
+        );
+}
+
+// --- Rigpa Wiki live test ---
+
+#[test]
+#[ignore] // Requires network access
+#[cfg(feature = "demo")]
+fn test_demo_fetch_rigpawiki_article_live() {
+    use std::path::Path;
+
+    let staging_html = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .unwrap()
+        .join("demo/.staging/longchenpa.html");
+
+    // Clean up from previous runs
+    let _ = std::fs::remove_file(&staging_html);
+    let _ = std::fs::remove_file(staging_html.with_extension("meta.json"));
+
+    Command::cargo_bin("haleiki")
+        .unwrap()
+        .args(["demo", "fetch", "--article", "longchenpa"])
+        .current_dir(env!("CARGO_MANIFEST_DIR").to_string() + "/..")
+        .assert()
+        .success();
+
+    let staging_html = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .unwrap()
+        .join("demo/.staging/longchenpa.html");
+    assert!(staging_html.exists(), "Rigpa Wiki HTML was not created");
+
+    let html = std::fs::read_to_string(&staging_html).unwrap();
+    assert!(
+        html.len() > 500,
+        "HTML seems too short: {} bytes",
+        html.len()
+    );
+
+    // Clean up
+    let _ = std::fs::remove_file(&staging_html);
+    let _ = std::fs::remove_file(staging_html.with_extension("meta.json"));
+}
+
 // --- Single-article live test ---
 
 #[test]

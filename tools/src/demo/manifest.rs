@@ -150,11 +150,23 @@ impl Manifest {
         article.license.as_deref().unwrap_or(&self.defaults.license)
     }
 
-    /// Build the Wikimedia REST API URL for an article.
+    /// Build the API URL for fetching an article's HTML.
+    ///
+    /// Wikimedia projects use the REST API: `/api/rest_v1/page/html/{title}`
+    /// Other `MediaWiki` sites use the parse API:
+    /// `/api.php?action=parse&page={title}&format=json&prop=text|revid|displaytitle`
     pub fn api_url(&self, article: &Article) -> String {
         let project = self.effective_project(article);
-        let encoded_title = article.title.replace(' ', "_");
-        format!("https://{project}/api/rest_v1/page/html/{encoded_title}")
+
+        if super::fetch::is_wikimedia_project(project) {
+            let encoded_title = article.title.replace(' ', "_");
+            format!("https://{project}/api/rest_v1/page/html/{encoded_title}")
+        } else {
+            let url_title = super::fetch::url_encode_title(&article.title);
+            format!(
+                "https://{project}/api.php?action=parse&page={url_title}&format=json&prop=text%7Crevid%7Cdisplaytitle"
+            )
+        }
     }
 
     /// Validate the manifest for internal consistency.
@@ -579,6 +591,67 @@ mod tests {
         assert!(
             issues.is_empty(),
             "Real manifest has validation issues: {issues:?}"
+        );
+    }
+
+    // --- API URL dispatch tests ---
+
+    fn sample_manifest_with_rigpawiki() -> Manifest {
+        let mut m = sample_manifest();
+        // Add a Rigpa Wiki article with a project override
+        m.articles.push(Article {
+            title: "Longchenpa".to_string(),
+            slug: "longchenpa".to_string(),
+            category: "memory-management".to_string(), // reuse existing category for test
+            tier: "foundational".to_string(),
+            project: Some("www.rigpawiki.org".to_string()),
+            license: Some("CC BY-NC-SA 3.0".to_string()),
+            tags: vec![],
+            keywords: vec![],
+            media: None,
+        });
+        m
+    }
+
+    #[test]
+    fn test_api_url_wikimedia_uses_rest_api() {
+        let m = sample_manifest_with_rigpawiki();
+        // "Memory management" uses the default en.wikipedia.org project
+        let wp_article = m
+            .articles
+            .iter()
+            .find(|a| a.slug == "memory-management")
+            .unwrap();
+        let url = m.api_url(wp_article);
+        assert!(
+            url.contains("/api/rest_v1/page/html/"),
+            "Expected REST API URL: {url}"
+        );
+    }
+
+    #[test]
+    fn test_api_url_rigpawiki_uses_action_parse() {
+        let m = sample_manifest_with_rigpawiki();
+        let rw_article = m.articles.iter().find(|a| a.slug == "longchenpa").unwrap();
+        let url = m.api_url(rw_article);
+        assert!(
+            url.contains("api.php?action=parse"),
+            "Expected action=parse URL: {url}"
+        );
+        assert!(
+            url.contains("www.rigpawiki.org"),
+            "Expected rigpawiki domain: {url}"
+        );
+    }
+
+    #[test]
+    fn test_api_url_rigpawiki_contains_encoded_title() {
+        let m = sample_manifest_with_rigpawiki();
+        let rw_article = m.articles.iter().find(|a| a.slug == "longchenpa").unwrap();
+        let url = m.api_url(rw_article);
+        assert!(
+            url.contains("page=Longchenpa"),
+            "Expected title in URL: {url}"
         );
     }
 
