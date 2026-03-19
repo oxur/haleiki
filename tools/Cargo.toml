@@ -1,0 +1,59 @@
+[package]
+name = "haleiki"
+version = "0.0.1"
+edition = "2024"
+rust-version = "1.85"
+description = "A wiki-like markdown- and git-powered tool for structured knowledge"
+license = "Apache-2.0 OR MIT"
+repository = "https://github.com/oxur/haleiki"
+homepage = "https://github.com/oxur/haleiki"
+documentation = "https://docs.rs/haleiki"
+readme = "../README.md"
+keywords = ["knowledge-base", "static-site", "wiki", "knowledge-graph", "documentation"]
+categories = ["command-line-utilities", "text-processing", "web-programming"]
+exclude = [
+    "assets/",
+    "docs/",
+    "workbench/",
+    "bin/",
+    ".claude/",
+    "CLAUDE.md",
+    "Makefile",
+    "odm.toml",
+]
+
+[[bin]]
+name = "haleiki"
+path = "src/main.rs"
+
+[features]
+demo = ["dep:reqwest", "dep:tokio", "dep:scraper", "dep:htmd", "dep:globset", "dep:indicatif"]
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive", "cargo", "wrap_help"] }
+petgraph = "0.7"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+thiserror = "2"
+
+# Optional demo dependencies
+globset = { version = "0.4", optional = true }
+htmd = { version = "0.1", optional = true }
+indicatif = { version = "0.17", optional = true }
+reqwest = { version = "0.12", features = ["rustls-tls", "json"], optional = true }
+scraper = { version = "0.22", optional = true }
+tokio = { version = "1", features = ["full"], optional = true }
+
+[dev-dependencies]
+assert_cmd = "2"
+assert_fs = "1"
+predicates = "3"
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+all = { level = "deny", priority = -1 }
+pedantic = { level = "warn", priority = -1 }

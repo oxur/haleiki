@@ -208,17 +208,17 @@ format:
 coverage:
 	@echo "$(BLUE)Generating test coverage report...$(RESET)"
 	@echo "$(CYAN)• Running tests with coverage ($(CODE_NAME) crate only)...$(RESET)"
-	@cd crates/$(CODE_NAME) && cargo llvm-cov --lib --no-default-features
+	@cd tools && cargo llvm-cov --lib --no-default-features
 	@echo "$(GREEN)✓ Coverage report generated$(RESET)"
-	@echo "$(YELLOW)→ For detailed HTML report, run: cd crates/$(CODE_NAME) && cargo llvm-cov --html --lib --no-default-features$(RESET)"
+	@echo "$(YELLOW)→ For detailed HTML report, run: cd tools && cargo llvm-cov --html --lib --no-default-features$(RESET)"
 
 .PHONY: coverage-html
 coverage-html:
 	@echo "$(BLUE)Generating HTML coverage report...$(RESET)"
 	@echo "$(CYAN)• Running tests with coverage ($(CODE_NAME) crate only)...$(RESET)"
-	@cd crates/$(CODE_NAME) && cargo llvm-cov --html --lib --no-default-features
+	@cd tools && cargo llvm-cov --html --lib --no-default-features
 	@echo "$(GREEN)✓ HTML coverage report generated$(RESET)"
-	@echo "$(CYAN)→ Report: crates/$(CODE_NAME)/target/llvm-cov/html/index.html$(RESET)"
+	@echo "$(CYAN)→ Report: tools/target/llvm-cov/html/index.html$(RESET)"
 
 # Common checks
 .PHONY: common-checks
