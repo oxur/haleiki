@@ -1,10 +1,17 @@
 # Haleiki
 
-**House of Knowledge** · For read-only knowledge-sharing
+[![][build-badge]][build]
+[![][crate-badge]][crate]
+[![][tag-badge]][tag]
+[![][docs-badge]][docs]
+
+[![][logo]][logo-large]
+
+*A beautiful house of knowledge*
 
 ---
 
-Haleiki (*hale* "house" + *ʻike* "knowledge," Hawaiian) is a static-site knowledge base framework — a beautifully designed, searchable, interlinked wiki for structured knowledge. No logins, no edits, no comments. Content goes in as source pages and concept cards; a navigable knowledge base comes out.
+Haleiki (*hale* "house" + *ʻike* "knowledge," Hawaiian) is a static-site wiki-like knowledge-sharing tool — beautifully designed, searchable, and interlinked. There are no logins, no in-page edits, no comments. Content goes in as source pages and concept cards; a navigable knowledge base comes out.
 
 Closer to an encyclopedia than a wiki in philosophy. Closer to a wiki than an encyclopedia in navigation.
 
@@ -49,3 +56,16 @@ Early development. See the [architecture document](./haleiki-architecture.md) fo
 ## License
 
 Licensed under either of [Apache License, Version 2.0](LICENSE-APACHE) or [MIT License](LICENSE-MIT), at your option.
+
+[//]: ---Named-Links---
+
+[logo]: assets/images/logo/v1-x250.png
+[logo-large]: assets/images/logo/v1.png
+[build]: https://github.com/oxur/haleiki/actions/workflows/cicd.yml
+[build-badge]: https://github.com/oxur/haleiki/actions/workflows/cicd.yml/badge.svg
+[crate]: https://crates.io/crates/haleiki
+[crate-badge]: https://img.shields.io/crates/v/haleiki.svg
+[docs]: https://docs.rs/haleiki/
+[docs-badge]: https://img.shields.io/badge/rust-documentation-blue.svg
+[tag-badge]: https://img.shields.io/github/tag/oxur/haleiki.svg
+[tag]: https://github.com/oxur/haleiki/tags
