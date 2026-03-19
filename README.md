@@ -1,4 +1,4 @@
-# Haleiki
+# Hale'iki
 
 [![][build-badge]][build]
 [![][crate-badge]][crate]
@@ -11,7 +11,7 @@
 
 ## About
 
-Haleiki (*hale* "house" + *ʻike* "knowledge," Hawaiian) is a static-site wiki-like knowledge-sharing tool — beautifully designed, searchable, and interlinked. There are no logins, no in-page edits, no comments. Content goes in as source pages and concept cards; a navigable knowledge base comes out.
+Hale'iki (*hale* "house" + *ʻike* "knowledge," Hawaiian) is a static-site wiki-like knowledge-sharing tool — beautifully designed, searchable, and interlinked. There are no logins, no in-page edits, no comments. Content goes in as source pages and concept cards; a navigable knowledge base comes out.
 
 Closer to an encyclopedia than a wiki in philosophy. Closer to a wiki than an encyclopedia in navigation. You can view a [demo here](TBA).
 
@@ -52,9 +52,11 @@ Warm/cool dual-theme aesthetic built on a semantic design token architecture. DM
 ## Project Status
 
 This project is in early development. Formal design docs are managed here:
+
 - [haleiki/blob/main/docs/design/](https://github.com/oxur/haleiki/blob/main/docs/design/index.md)
 
 Development plan docs are here:
+
 - [haleiki/blob/main/docs/dev](https://github.com/oxur/haleiki/tree/main/docs/dev/)
 
 Design mockups for key page types in the wiki are availale for viewing here:
