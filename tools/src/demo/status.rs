@@ -69,10 +69,10 @@ pub fn run() -> anyhow::Result<()> {
     // Print article table
     println!();
     println!(
-        "  {:<35} {:<25} {:<15} {:<10}",
+        "  {:<35} {:<35} {:<15} {:<10}",
         "SLUG", "CATEGORY", "TIER", "STATUS"
     );
-    println!("  {}", "-".repeat(85));
+    println!("  {}", "-".repeat(95));
 
     let mut converted_count = 0;
     let mut staged_count = 0;
@@ -95,13 +95,18 @@ pub fn run() -> anyhow::Result<()> {
             format!(" ({project})")
         };
 
+        let category_display = match &article.subcategory {
+            Some(subcat) => format!("{}/{}", article.category, subcat),
+            None => article.category.clone(),
+        };
+
         println!(
-            "  {:<35} {:<25} {:<15} {}{}",
-            article.slug, article.category, article.tier, state, project_indicator,
+            "  {:<35} {:<35} {:<15} {}{}",
+            article.slug, category_display, article.tier, state, project_indicator,
         );
     }
 
-    println!("  {}", "-".repeat(85));
+    println!("  {}", "-".repeat(95));
     println!(
         "  Total: {} articles ({} converted, {} staged, {} missing)",
         manifest.articles.len(),

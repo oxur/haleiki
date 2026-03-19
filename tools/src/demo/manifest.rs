@@ -3,7 +3,7 @@
 //! Deserializes `demo/manifest.yaml` and validates article entries
 //! against the embedded taxonomy.
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::path::Path;
 
 use serde::{Deserialize, Serialize};
@@ -68,6 +68,10 @@ pub struct Article {
 
     /// Content category (must match taxonomy).
     pub category: String,
+
+    /// Optional subcategory within the category.
+    #[serde(default)]
+    pub subcategory: Option<String>,
 
     /// Knowledge tier (must match taxonomy).
     pub tier: String,
@@ -172,6 +176,7 @@ impl Manifest {
     /// Validate the manifest for internal consistency.
     ///
     /// Returns a list of issues found. An empty list means the manifest is valid.
+    #[allow(clippy::too_many_lines)] // validation logic is inherently sequential
     pub fn validate(&self) -> Vec<ValidationIssue> {
         let mut issues = Vec::new();
 
@@ -252,6 +257,22 @@ impl Manifest {
                 });
             }
 
+            // Validate subcategory format (kebab-case)
+            if let Some(ref subcat) = article.subcategory {
+                if subcat != &subcat.to_lowercase() {
+                    issues.push(ValidationIssue {
+                        article: Some(article.slug.clone()),
+                        message: "subcategory contains uppercase characters".to_string(),
+                    });
+                }
+                if subcat.contains(' ') {
+                    issues.push(ValidationIssue {
+                        article: Some(article.slug.clone()),
+                        message: "subcategory contains spaces (use hyphens)".to_string(),
+                    });
+                }
+            }
+
             // Check required fields are non-empty
             if article.title.is_empty() {
                 issues.push(ValidationIssue {
@@ -264,6 +285,26 @@ impl Manifest {
                     article: None,
                     message: "article has empty slug".to_string(),
                 });
+            }
+        }
+
+        // Check subcategory consistency: warn if the same subcategory appears in different categories
+        let mut subcategory_to_category: HashMap<&str, &str> = HashMap::new();
+        for article in &self.articles {
+            if let Some(ref subcat) = article.subcategory {
+                if let Some(&existing_cat) = subcategory_to_category.get(subcat.as_str()) {
+                    if existing_cat != article.category.as_str() {
+                        issues.push(ValidationIssue {
+                            article: Some(article.slug.clone()),
+                            message: format!(
+                                "subcategory \"{}\" used in both \"{}\" and \"{}\" categories",
+                                subcat, existing_cat, article.category,
+                            ),
+                        });
+                    }
+                } else {
+                    subcategory_to_category.insert(subcat.as_str(), article.category.as_str());
+                }
             }
         }
 
@@ -299,6 +340,7 @@ mod tests {
                     title: "Memory management".to_string(),
                     slug: "memory-management".to_string(),
                     category: "memory-management".to_string(),
+                    subcategory: None,
                     tier: "foundational".to_string(),
                     project: None,
                     license: None,
@@ -310,6 +352,7 @@ mod tests {
                     title: "Garbage collection (computer science)".to_string(),
                     slug: "garbage-collection".to_string(),
                     category: "memory-management".to_string(),
+                    subcategory: None,
                     tier: "intermediate".to_string(),
                     project: None,
                     license: None,
@@ -588,9 +631,15 @@ mod tests {
     fn test_validate_real_manifest_passes() {
         let manifest = Manifest::from_file(&manifest_path()).unwrap();
         let issues = manifest.validate();
+        // Filter out expected cross-category subcategory warnings (e.g., "foundations"
+        // is intentionally used in both mathematics and theoretical-physics).
+        let non_subcategory_issues: Vec<_> = issues
+            .iter()
+            .filter(|i| !i.message.contains("subcategory"))
+            .collect();
         assert!(
-            issues.is_empty(),
-            "Real manifest has validation issues: {issues:?}"
+            non_subcategory_issues.is_empty(),
+            "Real manifest has validation issues: {non_subcategory_issues:?}"
         );
     }
 
@@ -603,6 +652,7 @@ mod tests {
             title: "Longchenpa".to_string(),
             slug: "longchenpa".to_string(),
             category: "memory-management".to_string(), // reuse existing category for test
+            subcategory: None,
             tier: "foundational".to_string(),
             project: Some("www.rigpawiki.org".to_string()),
             license: Some("CC BY-NC-SA 3.0".to_string()),
@@ -673,6 +723,88 @@ mod tests {
             message: "manifest-level problem".to_string(),
         };
         assert_eq!(format!("{issue}"), "manifest-level problem");
+    }
+
+    // --- Subcategory tests ---
+
+    #[test]
+    fn test_article_subcategory_optional() {
+        let yaml = r#"
+defaults:
+  project: "en.wikipedia.org"
+  license: "CC BY-SA 4.0"
+  media:
+    max_width: 1024
+    formats: ["png"]
+    skip_patterns: []
+taxonomy:
+  categories: ["music"]
+  tiers: ["foundational"]
+articles:
+  - title: "Jazz"
+    slug: "jazz"
+    category: "music"
+    tier: "foundational"
+"#;
+        let m: Manifest = serde_yaml::from_str(yaml).unwrap();
+        assert_eq!(m.articles[0].subcategory, None);
+    }
+
+    #[test]
+    fn test_article_subcategory_present() {
+        let yaml = r#"
+defaults:
+  project: "en.wikipedia.org"
+  license: "CC BY-SA 4.0"
+  media:
+    max_width: 1024
+    formats: ["png"]
+    skip_patterns: []
+taxonomy:
+  categories: ["music"]
+  tiers: ["foundational"]
+articles:
+  - title: "Jazz"
+    slug: "jazz"
+    category: "music"
+    subcategory: "genres"
+    tier: "foundational"
+"#;
+        let m: Manifest = serde_yaml::from_str(yaml).unwrap();
+        assert_eq!(m.articles[0].subcategory, Some("genres".to_string()));
+    }
+
+    #[test]
+    fn test_validate_subcategory_cross_category_warns() {
+        let mut m = sample_manifest();
+        m.articles[0].subcategory = Some("overlap".to_string());
+        m.articles[0].category = "cat-a".to_string();
+        m.articles[1].subcategory = Some("overlap".to_string());
+        m.articles[1].category = "cat-b".to_string();
+        // Add both categories to taxonomy so they pass category validation
+        m.taxonomy.categories.push("cat-a".to_string());
+        m.taxonomy.categories.push("cat-b".to_string());
+
+        let issues = m.validate();
+        assert!(
+            issues
+                .iter()
+                .any(|i| i.message.contains("subcategory") && i.message.contains("both")),
+            "Expected cross-category subcategory warning, got: {issues:?}"
+        );
+    }
+
+    #[test]
+    fn test_validate_subcategory_uppercase_warns() {
+        let mut m = sample_manifest();
+        m.articles[0].subcategory = Some("BadCase".to_string());
+        let issues = m.validate();
+        assert!(
+            issues
+                .iter()
+                .any(|i| i.message.contains("subcategory") && i.message.contains("uppercase")),
+            "Expected uppercase warning, got: {issues:?}"
+        );
     }
 
     // --- Serde round-trip test ---
