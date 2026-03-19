@@ -38,4 +38,5 @@ pub enum Error {
 }
 
 /// Convenience alias used throughout the crate.
+#[allow(dead_code)]
 pub type Result<T> = std::result::Result<T, Error>;
