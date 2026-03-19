@@ -3,7 +3,7 @@
 //! Walks the DOM to find images, applies skip patterns, selects
 //! appropriate resolution, and downloads to `demo/media/{slug}/`.
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::path::Path;
 
 use globset::{Glob, GlobSet, GlobSetBuilder};
@@ -657,6 +657,189 @@ pub async fn process_article_media(
     Ok(result)
 }
 
+// ─── Image source rewriting (milestone 4.3) ────────────────────────
+
+/// Build a lookup from original src URLs to their local paths.
+///
+/// Returns two maps:
+/// - `downloaded`: `original_src` -> local relative path (for rewriting)
+/// - `skipped`: `original_src` -> skip reason (for removal)
+pub fn build_image_lookup(
+    result: &MediaResult,
+) -> (HashMap<String, String>, HashMap<String, String>) {
+    let mut downloaded = HashMap::new();
+    let mut skipped_map = HashMap::new();
+
+    for image in &result.images {
+        if image.skipped {
+            let reason = image
+                .skip_reason
+                .clone()
+                .unwrap_or_else(|| "skipped".to_string());
+            skipped_map.insert(image.original_src.clone(), reason);
+        } else if let Some(ref local_path) = image.local_path {
+            // Local path is relative to demo/media/, e.g. "dzogchen/Diagram.svg"
+            // In the final HTML, image references need to be relative to the
+            // source page location. Since source pages are in demo/sources/
+            // and media is in demo/media/, the relative path is:
+            //   ../media/{local_path}
+            let relative = format!("../media/{local_path}");
+            downloaded.insert(image.original_src.clone(), relative);
+        }
+    }
+
+    (downloaded, skipped_map)
+}
+
+/// Path where the final (media-rewritten) HTML is written.
+pub fn staging_final_path(slug: &str) -> std::path::PathBuf {
+    Path::new("demo/.staging").join(format!("{slug}.final.html"))
+}
+
+/// Rewrite image sources in HTML and remove skipped images.
+///
+/// - Downloaded images: `src` rewritten to `../media/{slug}/{filename}`
+/// - Skipped/failed images: `<img>` removed; if inside `<figure>`, entire `<figure>` removed
+///
+/// This is the core function, separated from I/O for testability.
+pub fn rewrite_image_sources(
+    html: &str,
+    downloaded: &HashMap<String, String>,
+    skipped: &HashMap<String, String>,
+) -> String {
+    let mut result = html.to_string();
+
+    // Pass 1: Remove skipped images (including parent <figure> elements)
+    // Process removals before rewrites to avoid modifying removed content.
+    for src in skipped.keys() {
+        remove_image_from_html(&mut result, src);
+    }
+
+    // Pass 2: Rewrite downloaded image sources
+    for (original_src, local_path) in downloaded {
+        // Simple string replacement of the src attribute value
+        let old_attr = format!("src=\"{original_src}\"");
+        let new_attr = format!("src=\"{local_path}\"");
+        result = result.replace(&old_attr, &new_attr);
+
+        // Also handle single-quoted attributes (rare but possible)
+        let old_attr_sq = format!("src='{original_src}'");
+        let new_attr_sq = format!("src='{local_path}'");
+        result = result.replace(&old_attr_sq, &new_attr_sq);
+    }
+
+    // Pass 3: Clean up empty <figure> elements left after image removal
+    remove_empty_figures(&mut result);
+
+    result
+}
+
+/// Remove an `<img>` with the given `src` from the HTML.
+///
+/// If the `<img>` is inside a `<figure>`, removes the entire `<figure>`.
+/// Otherwise, removes just the `<img>` tag.
+fn remove_image_from_html(html: &mut String, src: &str) {
+    let src_pattern = format!("src=\"{src}\"");
+
+    // Check if this src exists in the HTML at all
+    let Some(src_pos) = html.find(&src_pattern) else {
+        return;
+    };
+
+    // Walk backwards from src_pos to find the start of the <img or <figure tag
+    let before = &html[..src_pos];
+
+    // Check if we're inside a <figure>
+    let last_figure_open = before.rfind("<figure");
+    let last_figure_close = before.rfind("</figure>");
+    let inside_figure = match (last_figure_open, last_figure_close) {
+        (Some(open), Some(close)) => open > close,
+        (Some(_), None) => true,
+        _ => false,
+    };
+
+    if inside_figure {
+        // Remove the entire <figure>...</figure> block
+        if let Some(fig_start) = last_figure_open {
+            if let Some(fig_end_offset) = html[src_pos..].find("</figure>") {
+                let fig_end = src_pos + fig_end_offset + "</figure>".len();
+                html.replace_range(fig_start..fig_end, "");
+                return;
+            }
+        }
+    }
+
+    // Not in a figure -- remove just the <img .../> tag
+    if let Some(img_start) = before.rfind("<img") {
+        let after_img_start = &html[img_start..];
+        if let Some(img_end_offset) = after_img_start.find('>') {
+            let img_end = img_start + img_end_offset + 1;
+            html.replace_range(img_start..img_end, "");
+        }
+    }
+}
+
+/// Remove any `<figure>` elements that are now empty (no `<img>` inside).
+fn remove_empty_figures(html: &mut String) {
+    // Iteratively remove empty figures until no more are found
+    loop {
+        let document = Html::parse_fragment(html);
+        let figure_selector = Selector::parse("figure").expect("valid selector");
+        let img_selector = Selector::parse("img").expect("valid selector");
+
+        let mut found_empty = false;
+
+        for figure in document.select(&figure_selector) {
+            let has_img = figure.select(&img_selector).next().is_some();
+            if !has_img {
+                // This figure has no images -- get its outer HTML and remove it
+                let figure_html = figure.html();
+                if let Some(pos) = html.find(&figure_html) {
+                    html.replace_range(pos..pos + figure_html.len(), "");
+                    found_empty = true;
+                    break; // Restart since positions changed
+                }
+            }
+        }
+
+        if !found_empty {
+            break;
+        }
+    }
+}
+
+/// Rewrite image sources for a single article.
+///
+/// Reads `demo/.staging/{slug}.rewritten.html`, applies image rewrites,
+/// writes `demo/.staging/{slug}.final.html`.
+///
+/// # Errors
+///
+/// Returns an error if the rewritten HTML file is missing or cannot be read,
+/// or if the final HTML file cannot be written.
+pub fn rewrite_article_images(
+    slug: &str,
+    media_result: &MediaResult,
+) -> anyhow::Result<std::path::PathBuf> {
+    let input_path = super::rewrite::staging_rewritten_path(slug);
+    if !input_path.exists() {
+        anyhow::bail!(
+            "rewritten HTML not found at {}. Run link rewriting first.",
+            input_path.display(),
+        );
+    }
+
+    let html = std::fs::read_to_string(&input_path)?;
+    let (downloaded, skipped) = build_image_lookup(media_result);
+
+    let rewritten = rewrite_image_sources(&html, &downloaded, &skipped);
+
+    let output_path = staging_final_path(slug);
+    std::fs::write(&output_path, &rewritten)?;
+
+    Ok(output_path)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1129,6 +1312,273 @@ mod tests {
         assert_eq!(deserialized.total_images, 1);
         assert_eq!(deserialized.images[0].local_path, "test/Photo.png");
         assert_eq!(deserialized.images[0].caption, Some("A photo".to_string()));
+    }
+
+    // ─── Image lookup tests ─────────────────────────────
+
+    #[test]
+    fn test_build_image_lookup_separates_downloaded_and_skipped() {
+        let result = MediaResult {
+            slug: "test".to_string(),
+            images_found: 3,
+            images_downloaded: 1,
+            images_skipped: 1,
+            images_failed: 1,
+            total_bytes: 5000,
+            images: vec![
+                ExtractedImage {
+                    original_src: "//example.com/downloaded.png".to_string(),
+                    download_url: "https://example.com/downloaded.png".to_string(),
+                    filename: "downloaded.png".to_string(),
+                    caption: None,
+                    skipped: false,
+                    skip_reason: None,
+                    is_svg: false,
+                    local_path: Some("test/downloaded.png".to_string()),
+                    size_bytes: Some(5000),
+                },
+                ExtractedImage {
+                    original_src: "//example.com/skipped.png".to_string(),
+                    download_url: String::new(),
+                    filename: "skipped.png".to_string(),
+                    caption: None,
+                    skipped: true,
+                    skip_reason: Some("matched skip pattern".to_string()),
+                    is_svg: false,
+                    local_path: None,
+                    size_bytes: None,
+                },
+                ExtractedImage {
+                    original_src: "//example.com/failed.png".to_string(),
+                    download_url: "https://example.com/failed.png".to_string(),
+                    filename: "failed.png".to_string(),
+                    caption: None,
+                    skipped: true,
+                    skip_reason: Some("download failed: timeout".to_string()),
+                    is_svg: false,
+                    local_path: None,
+                    size_bytes: None,
+                },
+            ],
+        };
+
+        let (downloaded, skipped) = build_image_lookup(&result);
+
+        assert_eq!(downloaded.len(), 1);
+        assert!(downloaded.contains_key("//example.com/downloaded.png"));
+        assert_eq!(
+            downloaded["//example.com/downloaded.png"],
+            "../media/test/downloaded.png",
+        );
+
+        assert_eq!(skipped.len(), 2);
+        assert!(skipped.contains_key("//example.com/skipped.png"));
+        assert!(skipped.contains_key("//example.com/failed.png"));
+    }
+
+    // ─── Image rewriting tests ──────────────────────────
+
+    #[test]
+    fn test_rewrite_image_sources_rewrites_downloaded() {
+        let html = r#"<p>Text</p><img src="//cdn.example.com/photo.png" alt="photo" /><p>More</p>"#;
+
+        let mut downloaded = HashMap::new();
+        downloaded.insert(
+            "//cdn.example.com/photo.png".to_string(),
+            "../media/test/photo.png".to_string(),
+        );
+        let skipped = HashMap::new();
+
+        let result = rewrite_image_sources(html, &downloaded, &skipped);
+
+        assert!(
+            result.contains("src=\"../media/test/photo.png\""),
+            "Image src not rewritten: {result}",
+        );
+        assert!(
+            !result.contains("cdn.example.com"),
+            "Original src still present: {result}",
+        );
+    }
+
+    #[test]
+    fn test_rewrite_image_sources_removes_skipped_img() {
+        let html =
+            r#"<p>Before</p><img src="//cdn.example.com/flag.svg" alt="flag" /><p>After</p>"#;
+
+        let downloaded = HashMap::new();
+        let mut skipped = HashMap::new();
+        skipped.insert(
+            "//cdn.example.com/flag.svg".to_string(),
+            "matched skip pattern".to_string(),
+        );
+
+        let result = rewrite_image_sources(html, &downloaded, &skipped);
+
+        assert!(
+            !result.contains("<img"),
+            "Skipped <img> should be removed: {result}",
+        );
+        assert!(
+            result.contains("Before"),
+            "Surrounding content should remain"
+        );
+        assert!(
+            result.contains("After"),
+            "Surrounding content should remain"
+        );
+    }
+
+    #[test]
+    fn test_rewrite_image_sources_removes_skipped_figure() {
+        let html = r#"
+        <p>Before</p>
+        <figure>
+            <img src="//cdn.example.com/flag.svg" alt="flag" />
+            <figcaption>A flag</figcaption>
+        </figure>
+        <p>After</p>
+    "#;
+
+        let downloaded = HashMap::new();
+        let mut skipped = HashMap::new();
+        skipped.insert(
+            "//cdn.example.com/flag.svg".to_string(),
+            "matched skip pattern".to_string(),
+        );
+
+        let result = rewrite_image_sources(html, &downloaded, &skipped);
+
+        assert!(
+            !result.contains("<figure>"),
+            "Parent <figure> should be removed: {result}",
+        );
+        assert!(
+            !result.contains("<figcaption>"),
+            "Figcaption should be removed with figure: {result}",
+        );
+        assert!(result.contains("Before"));
+        assert!(result.contains("After"));
+    }
+
+    #[test]
+    fn test_rewrite_image_sources_mixed_downloaded_and_skipped() {
+        let html = r#"
+        <img src="//cdn.example.com/keep.png" alt="keep" />
+        <img src="//cdn.example.com/skip.svg" alt="skip" />
+        <img src="//cdn.example.com/also-keep.jpg" alt="also keep" />
+    "#;
+
+        let mut downloaded = HashMap::new();
+        downloaded.insert(
+            "//cdn.example.com/keep.png".to_string(),
+            "../media/test/keep.png".to_string(),
+        );
+        downloaded.insert(
+            "//cdn.example.com/also-keep.jpg".to_string(),
+            "../media/test/also-keep.jpg".to_string(),
+        );
+
+        let mut skipped = HashMap::new();
+        skipped.insert(
+            "//cdn.example.com/skip.svg".to_string(),
+            "skipped".to_string(),
+        );
+
+        let result = rewrite_image_sources(html, &downloaded, &skipped);
+
+        assert!(
+            result.contains("../media/test/keep.png"),
+            "First image not rewritten",
+        );
+        assert!(
+            result.contains("../media/test/also-keep.jpg"),
+            "Third image not rewritten",
+        );
+        assert!(!result.contains("skip.svg"), "Skipped image not removed");
+        // Count remaining <img> tags
+        let img_count = result.matches("<img").count();
+        assert_eq!(
+            img_count, 2,
+            "Should have exactly 2 images remaining, got {img_count}",
+        );
+    }
+
+    #[test]
+    fn test_rewrite_image_sources_no_changes_when_maps_empty() {
+        let html = r#"<img src="//cdn.example.com/photo.png" />"#;
+        let downloaded = HashMap::new();
+        let skipped = HashMap::new();
+
+        let result = rewrite_image_sources(html, &downloaded, &skipped);
+        assert_eq!(result, html, "Empty maps should leave HTML unchanged");
+    }
+
+    #[test]
+    fn test_rewrite_image_sources_preserves_non_image_content() {
+        let html = r#"
+        <h2>Section</h2>
+        <p>Paragraph with <a href="/source/raii/">a link</a>.</p>
+        <img src="//cdn.example.com/photo.png" />
+        <table><tr><td>Data</td></tr></table>
+    "#;
+
+        let mut downloaded = HashMap::new();
+        downloaded.insert(
+            "//cdn.example.com/photo.png".to_string(),
+            "../media/test/photo.png".to_string(),
+        );
+        let skipped = HashMap::new();
+
+        let result = rewrite_image_sources(html, &downloaded, &skipped);
+
+        assert!(result.contains("<h2>Section</h2>"));
+        assert!(result.contains("<a href=\"/source/raii/\">"));
+        assert!(result.contains("<table>"));
+    }
+
+    // ─── Staging path tests ─────────────────────────────
+
+    #[test]
+    fn test_staging_final_path() {
+        let path = staging_final_path("dzogchen");
+        assert_eq!(
+            path,
+            std::path::PathBuf::from("demo/.staging/dzogchen.final.html"),
+        );
+    }
+
+    // ─── Real article test ──────────────────────────────
+
+    #[test]
+    #[ignore] // Requires full pipeline: fetch + clean + rewrite + media download
+    fn test_rewrite_article_images_real() {
+        // This test requires:
+        // 1. demo/.staging/dzogchen.rewritten.html (from milestone 3.2)
+        // 2. A MediaResult for dzogchen (from milestone 4.1)
+        //
+        // Run manually after the full pipeline has been executed for at least
+        // one article.
+
+        let final_path = staging_final_path("dzogchen");
+        if final_path.exists() {
+            let html = std::fs::read_to_string(&final_path).unwrap();
+
+            // Should not contain any Wikimedia CDN URLs in img src
+            assert!(
+                !html.contains("upload.wikimedia.org"),
+                "Found unrewritten Wikimedia image URL in final HTML",
+            );
+
+            // Should contain local media paths
+            // (only if the article actually has images)
+            if html.contains("<img") {
+                assert!(
+                    html.contains("../media/"),
+                    "Images should point to local media paths",
+                );
+            }
+        }
     }
 
     /// Minimal manifest for testing.

@@ -15,8 +15,10 @@ pub enum FetchState {
     Staged,
     /// Cleaned HTML exists but not yet rewritten.
     Cleaned,
-    /// Rewritten HTML exists but not yet converted to Markdown.
+    /// Rewritten HTML exists but not yet finalized.
     Rewritten,
+    /// All HTML transforms done (links + media rewritten) -- ready for Markdown conversion.
+    Final,
     /// Converted source Markdown exists.
     Converted,
 }
@@ -28,6 +30,7 @@ impl std::fmt::Display for FetchState {
             Self::Staged => write!(f, "staged"),
             Self::Cleaned => write!(f, "cleaned"),
             Self::Rewritten => write!(f, "rewritten"),
+            Self::Final => write!(f, "ready"),
             Self::Converted => write!(f, "converted"),
         }
     }
@@ -38,6 +41,10 @@ fn fetch_state(slug: &str) -> FetchState {
     let source_path = Path::new("demo/sources").join(format!("{slug}.md"));
     if source_path.exists() {
         return FetchState::Converted;
+    }
+    let final_path = Path::new("demo/.staging").join(format!("{slug}.final.html"));
+    if final_path.exists() {
+        return FetchState::Final;
     }
     let rewritten_path = Path::new("demo/.staging").join(format!("{slug}.rewritten.html"));
     if rewritten_path.exists() {
@@ -91,6 +98,7 @@ pub fn run() -> anyhow::Result<()> {
     println!("  {}", "-".repeat(95));
 
     let mut converted_count = 0;
+    let mut final_count = 0;
     let mut rewritten_count = 0;
     let mut cleaned_count = 0;
     let mut staged_count = 0;
@@ -102,6 +110,7 @@ pub fn run() -> anyhow::Result<()> {
 
         match state {
             FetchState::Converted => converted_count += 1,
+            FetchState::Final => final_count += 1,
             FetchState::Rewritten => rewritten_count += 1,
             FetchState::Cleaned => cleaned_count += 1,
             FetchState::Staged => staged_count += 1,
@@ -128,9 +137,10 @@ pub fn run() -> anyhow::Result<()> {
 
     println!("  {}", "-".repeat(95));
     println!(
-        "  Total: {} articles ({} converted, {} rewritten, {} cleaned, {} staged, {} missing)",
+        "  Total: {} articles ({} converted, {} ready, {} rewritten, {} cleaned, {} staged, {} missing)",
         manifest.articles.len(),
         converted_count,
+        final_count,
         rewritten_count,
         cleaned_count,
         staged_count,
