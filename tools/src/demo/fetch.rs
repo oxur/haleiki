@@ -560,7 +560,7 @@ fn print_batch_summary(result: &BatchResult) {
 ///
 /// Uses `std::time::SystemTime` and formats manually. If you need more
 /// sophisticated date handling later, consider adding the `chrono` crate.
-fn chrono_now_iso8601() -> String {
+pub(crate) fn chrono_now_iso8601() -> String {
     use std::time::SystemTime;
     let duration = SystemTime::now()
         .duration_since(SystemTime::UNIX_EPOCH)
@@ -606,7 +606,7 @@ fn chrono_now_iso8601() -> String {
     )
 }
 
-fn is_leap_year(y: u64) -> bool {
+pub(crate) fn is_leap_year(y: u64) -> bool {
     (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0)
 }
 

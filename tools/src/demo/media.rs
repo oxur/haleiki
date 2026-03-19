@@ -17,6 +17,205 @@ use super::manifest::{Article, Manifest};
 /// Base directory for downloaded media.
 const MEDIA_DIR: &str = "demo/media";
 
+/// Path to the media manifest file.
+pub const MEDIA_MANIFEST_PATH: &str = "demo/media/manifest.json";
+
+/// The full media manifest written to `demo/media/manifest.json`.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MediaManifest {
+    /// ISO 8601 timestamp when this manifest was generated.
+    pub generated_at: String,
+
+    /// Total number of images across all articles.
+    pub total_images: usize,
+
+    /// Total size of all downloaded images in bytes.
+    pub total_bytes: u64,
+
+    /// Number of articles that have media.
+    pub articles_with_media: usize,
+
+    /// Per-image metadata.
+    pub images: Vec<MediaEntry>,
+}
+
+/// Metadata for a single downloaded image.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MediaEntry {
+    /// Local path relative to `demo/media/` (e.g., "dzogchen/Diagram.svg").
+    pub local_path: String,
+
+    /// Original URL from the source HTML.
+    pub original_url: String,
+
+    /// The URL we actually downloaded from (may differ for thumbnails/SVGs).
+    pub download_url: String,
+
+    /// Original filename on Wikimedia Commons (or source wiki).
+    pub commons_filename: String,
+
+    /// License for this image.
+    /// Inherited from the article's license unless Commons API provides one.
+    pub license: String,
+
+    /// Author or attribution string.
+    /// Best-effort: from Commons API if available, otherwise generic.
+    pub author: String,
+
+    /// Caption text from `<figcaption>` or `alt` attribute.
+    pub caption: Option<String>,
+
+    /// The article this image belongs to (by slug).
+    pub source_article: String,
+
+    /// Image format ("svg", "png", "jpg", "gif").
+    pub format: String,
+
+    /// File size in bytes on disk.
+    pub size_bytes: u64,
+}
+
+impl MediaEntry {
+    /// Construct a `MediaEntry` from a successfully downloaded `ExtractedImage`.
+    ///
+    /// Requires the article slug and the effective license for the article.
+    /// Returns `None` for skipped or failed images (those without a `local_path`
+    /// or `size_bytes`).
+    pub fn from_extracted(
+        image: &ExtractedImage,
+        article_slug: &str,
+        article_license: &str,
+    ) -> Option<Self> {
+        // Only create entries for downloaded (non-skipped) images
+        let local_path = image.local_path.as_ref()?;
+        let size_bytes = image.size_bytes?;
+
+        let format = detect_format(&image.filename);
+
+        Some(Self {
+            local_path: local_path.clone(),
+            original_url: image.original_src.clone(),
+            download_url: image.download_url.clone(),
+            commons_filename: image.filename.clone(),
+            license: article_license.to_string(),
+            author: "Wikimedia Commons contributor".to_string(),
+            caption: image.caption.clone(),
+            source_article: article_slug.to_string(),
+            format,
+            size_bytes,
+        })
+    }
+}
+
+/// Detect image format from filename extension.
+fn detect_format(filename: &str) -> String {
+    let ext = Path::new(filename)
+        .extension()
+        .and_then(|e| e.to_str())
+        .unwrap_or("")
+        .to_lowercase();
+    match ext.as_str() {
+        "svg" => "svg",
+        "png" => "png",
+        "jpg" | "jpeg" => "jpg",
+        "gif" => "gif",
+        "webp" => "webp",
+        _ => "unknown",
+    }
+    .to_string()
+}
+
+/// Construct the Wikimedia Commons file page URL from the image source.
+///
+/// For Wikimedia images, the Commons page is:
+///   `https://commons.wikimedia.org/wiki/File:{filename}`
+///
+/// For non-Wikimedia sources (e.g., Rigpa Wiki), use the original URL.
+fn build_commons_url(original_src: &str, filename: &str) -> String {
+    if original_src.contains("wikimedia.org") || original_src.contains("wikipedia.org") {
+        format!(
+            "https://commons.wikimedia.org/wiki/File:{}",
+            filename.replace(' ', "_"),
+        )
+    } else {
+        // Non-Wikimedia source — use original URL as-is
+        if original_src.starts_with("//") {
+            format!("https:{original_src}")
+        } else {
+            original_src.to_string()
+        }
+    }
+}
+
+/// Write the consolidated media manifest to `demo/media/manifest.json`.
+///
+/// Collects entries from all `MediaResult`s and writes a single JSON file.
+///
+/// # Errors
+///
+/// Returns an error if the manifest cannot be serialized or written to disk.
+pub fn write_media_manifest(results: &[MediaResult], manifest: &Manifest) -> anyhow::Result<()> {
+    let mut entries = Vec::new();
+    let mut articles_with_media = 0;
+
+    for result in results {
+        let article = manifest.articles.iter().find(|a| a.slug == result.slug);
+
+        let license = article.map_or(manifest.defaults.license.as_str(), |a| {
+            manifest.effective_license(a)
+        });
+
+        let article_entries: Vec<MediaEntry> = result
+            .images
+            .iter()
+            .filter_map(|img| MediaEntry::from_extracted(img, &result.slug, license))
+            .collect();
+
+        if !article_entries.is_empty() {
+            articles_with_media += 1;
+        }
+
+        entries.extend(article_entries);
+    }
+
+    let total_bytes: u64 = entries.iter().map(|e| e.size_bytes).sum();
+
+    let media_manifest = MediaManifest {
+        generated_at: super::fetch::chrono_now_iso8601(),
+        total_images: entries.len(),
+        total_bytes,
+        articles_with_media,
+        images: entries,
+    };
+
+    let json = serde_json::to_string_pretty(&media_manifest)?;
+    std::fs::write(MEDIA_MANIFEST_PATH, json)?;
+
+    eprintln!(
+        "Wrote media manifest: {} images from {} articles ({} bytes total)",
+        media_manifest.total_images, media_manifest.articles_with_media, media_manifest.total_bytes,
+    );
+
+    Ok(())
+}
+
+/// Load an existing media manifest from disk.
+///
+/// Returns `Ok(None)` if the manifest file does not exist.
+///
+/// # Errors
+///
+/// Returns an error if the file exists but cannot be read or parsed.
+pub fn load_media_manifest() -> anyhow::Result<Option<MediaManifest>> {
+    let path = Path::new(MEDIA_MANIFEST_PATH);
+    if !path.exists() {
+        return Ok(None);
+    }
+    let content = std::fs::read_to_string(path)?;
+    let manifest: MediaManifest = serde_json::from_str(&content)?;
+    Ok(Some(manifest))
+}
+
 /// An image found in the article HTML.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ExtractedImage {
@@ -762,6 +961,174 @@ mod tests {
 
         assert_eq!(images.len(), 1);
         assert_eq!(images[0].caption, Some("A beautiful photo".to_string()));
+    }
+
+    // --- Format detection tests ---
+
+    #[test]
+    fn test_detect_format_svg() {
+        assert_eq!(detect_format("Diagram.svg"), "svg");
+    }
+
+    #[test]
+    fn test_detect_format_png() {
+        assert_eq!(detect_format("Photo.png"), "png");
+    }
+
+    #[test]
+    fn test_detect_format_jpg() {
+        assert_eq!(detect_format("Photo.jpg"), "jpg");
+    }
+
+    #[test]
+    fn test_detect_format_jpeg() {
+        assert_eq!(detect_format("Photo.jpeg"), "jpg");
+    }
+
+    #[test]
+    fn test_detect_format_case_insensitive() {
+        assert_eq!(detect_format("PHOTO.PNG"), "png");
+    }
+
+    #[test]
+    fn test_detect_format_unknown() {
+        assert_eq!(detect_format("file.bmp"), "unknown");
+    }
+
+    // --- Commons URL construction tests ---
+
+    #[test]
+    fn test_build_commons_url_wikimedia_image() {
+        let url = build_commons_url(
+            "//upload.wikimedia.org/wikipedia/commons/a/ab/Example.png",
+            "Example.png",
+        );
+        assert_eq!(url, "https://commons.wikimedia.org/wiki/File:Example.png");
+    }
+
+    #[test]
+    fn test_build_commons_url_filename_with_spaces() {
+        let url = build_commons_url(
+            "//upload.wikimedia.org/wikipedia/commons/a/ab/My Image.png",
+            "My Image.png",
+        );
+        assert_eq!(url, "https://commons.wikimedia.org/wiki/File:My_Image.png");
+    }
+
+    #[test]
+    fn test_build_commons_url_non_wikimedia() {
+        let url = build_commons_url("/images/a/ab/Photo.jpg", "Photo.jpg");
+        assert_eq!(url, "/images/a/ab/Photo.jpg");
+    }
+
+    #[test]
+    fn test_build_commons_url_protocol_relative_non_wikimedia() {
+        let url = build_commons_url("//www.rigpawiki.org/images/a/ab/Photo.jpg", "Photo.jpg");
+        assert_eq!(url, "https://www.rigpawiki.org/images/a/ab/Photo.jpg");
+    }
+
+    // --- MediaEntry construction tests ---
+
+    #[test]
+    fn test_media_entry_from_extracted_downloaded() {
+        let image = ExtractedImage {
+            original_src: "//upload.wikimedia.org/commons/a/ab/Photo.png".to_string(),
+            download_url:
+                "https://upload.wikimedia.org/commons/thumb/a/ab/Photo.png/1024px-Photo.png"
+                    .to_string(),
+            filename: "Photo.png".to_string(),
+            caption: Some("A photo".to_string()),
+            skipped: false,
+            skip_reason: None,
+            is_svg: false,
+            local_path: Some("test-article/Photo.png".to_string()),
+            size_bytes: Some(5000),
+        };
+
+        let entry = MediaEntry::from_extracted(&image, "test-article", "CC BY-SA 4.0");
+        assert!(entry.is_some());
+        let entry = entry.unwrap();
+
+        assert_eq!(entry.local_path, "test-article/Photo.png");
+        assert_eq!(entry.commons_filename, "Photo.png");
+        assert_eq!(entry.license, "CC BY-SA 4.0");
+        assert_eq!(entry.source_article, "test-article");
+        assert_eq!(entry.format, "png");
+        assert_eq!(entry.size_bytes, 5000);
+        assert_eq!(entry.caption, Some("A photo".to_string()));
+    }
+
+    #[test]
+    fn test_media_entry_from_extracted_skipped_returns_none() {
+        let image = ExtractedImage {
+            original_src: "//upload.wikimedia.org/commons/a/ab/Flag.svg".to_string(),
+            download_url: String::new(),
+            filename: "Flag.svg".to_string(),
+            caption: None,
+            skipped: true,
+            skip_reason: Some("matched skip pattern".to_string()),
+            is_svg: true,
+            local_path: None,
+            size_bytes: None,
+        };
+
+        let entry = MediaEntry::from_extracted(&image, "test", "CC BY-SA 4.0");
+        assert!(
+            entry.is_none(),
+            "Skipped images should not produce MediaEntry"
+        );
+    }
+
+    #[test]
+    fn test_media_entry_from_extracted_no_local_path_returns_none() {
+        let image = ExtractedImage {
+            original_src: "//example.com/broken.png".to_string(),
+            download_url: String::new(),
+            filename: "broken.png".to_string(),
+            caption: None,
+            skipped: false,
+            skip_reason: None,
+            is_svg: false,
+            local_path: None, // Download failed
+            size_bytes: None,
+        };
+
+        let entry = MediaEntry::from_extracted(&image, "test", "CC BY-SA 4.0");
+        assert!(
+            entry.is_none(),
+            "Images without local_path should not produce MediaEntry"
+        );
+    }
+
+    // --- Media manifest round-trip test ---
+
+    #[test]
+    fn test_media_manifest_serialization_roundtrip() {
+        let manifest = MediaManifest {
+            generated_at: "2026-03-18T12:00:00Z".to_string(),
+            total_images: 1,
+            total_bytes: 5000,
+            articles_with_media: 1,
+            images: vec![MediaEntry {
+                local_path: "test/Photo.png".to_string(),
+                original_url: "//upload.wikimedia.org/commons/a/ab/Photo.png".to_string(),
+                download_url: "https://upload.wikimedia.org/commons/a/ab/Photo.png".to_string(),
+                commons_filename: "Photo.png".to_string(),
+                license: "CC BY-SA 4.0".to_string(),
+                author: "Wikimedia Commons contributor".to_string(),
+                caption: Some("A photo".to_string()),
+                source_article: "test".to_string(),
+                format: "png".to_string(),
+                size_bytes: 5000,
+            }],
+        };
+
+        let json = serde_json::to_string_pretty(&manifest).unwrap();
+        let deserialized: MediaManifest = serde_json::from_str(&json).unwrap();
+
+        assert_eq!(deserialized.total_images, 1);
+        assert_eq!(deserialized.images[0].local_path, "test/Photo.png");
+        assert_eq!(deserialized.images[0].caption, Some("A photo".to_string()));
     }
 
     /// Minimal manifest for testing.

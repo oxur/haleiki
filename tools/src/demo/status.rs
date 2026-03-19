@@ -1,8 +1,10 @@
 //! Implementation of `haleiki demo status`.
 
+use std::collections::HashMap;
 use std::path::Path;
 
 use super::manifest::Manifest;
+use super::media;
 
 /// The fetch state of an article on disk.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -136,5 +138,101 @@ pub fn run() -> anyhow::Result<()> {
     );
     println!();
 
+    print_media_summary();
+
     Ok(())
+}
+
+/// Print media statistics if the media manifest exists.
+fn print_media_summary() {
+    let manifest = match media::load_media_manifest() {
+        Ok(Some(m)) => m,
+        Ok(None) => {
+            println!("  Media: no manifest (run fetch + media pipeline first)");
+            return;
+        }
+        Err(e) => {
+            eprintln!("  Media manifest error: {e}");
+            return;
+        }
+    };
+
+    println!("  Media:");
+    println!(
+        "    Total: {} images across {} articles",
+        manifest.total_images, manifest.articles_with_media,
+    );
+    println!(
+        "    Size: {} ({})",
+        format_bytes(manifest.total_bytes),
+        manifest.total_bytes,
+    );
+
+    // Per-format breakdown
+    let mut by_format: HashMap<&str, (usize, u64)> = HashMap::new();
+    for entry in &manifest.images {
+        let (count, bytes) = by_format.entry(&entry.format).or_insert((0, 0));
+        *count += 1;
+        *bytes += entry.size_bytes;
+    }
+    let mut formats: Vec<_> = by_format.into_iter().collect();
+    formats.sort_by_key(|(_, (count, _))| std::cmp::Reverse(*count));
+    for (format, (count, bytes)) in &formats {
+        println!("      {format}: {count} files ({})", format_bytes(*bytes));
+    }
+
+    // Top 5 articles by media count
+    let mut by_article: HashMap<&str, (usize, u64)> = HashMap::new();
+    for entry in &manifest.images {
+        let (count, bytes) = by_article.entry(&entry.source_article).or_insert((0, 0));
+        *count += 1;
+        *bytes += entry.size_bytes;
+    }
+    let mut articles: Vec<_> = by_article.into_iter().collect();
+    articles.sort_by_key(|(_, (count, _))| std::cmp::Reverse(*count));
+
+    if !articles.is_empty() {
+        println!("    Top articles by image count:");
+        for (slug, (count, bytes)) in articles.iter().take(5) {
+            println!("      {slug}: {count} images ({})", format_bytes(*bytes));
+        }
+    }
+
+    println!();
+}
+
+/// Format a byte count as a human-readable string.
+#[allow(clippy::cast_precision_loss)] // byte sizes are always well within f64 mantissa range
+fn format_bytes(bytes: u64) -> String {
+    if bytes < 1024 {
+        format!("{bytes} B")
+    } else if bytes < 1024 * 1024 {
+        format!("{:.1} KB", bytes as f64 / 1024.0)
+    } else if bytes < 1024 * 1024 * 1024 {
+        format!("{:.1} MB", bytes as f64 / (1024.0 * 1024.0))
+    } else {
+        format!("{:.1} GB", bytes as f64 / (1024.0 * 1024.0 * 1024.0))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // --- format_bytes tests ---
+
+    #[test]
+    fn test_format_bytes_bytes() {
+        assert_eq!(format_bytes(512), "512 B");
+    }
+
+    #[test]
+    fn test_format_bytes_kilobytes() {
+        assert_eq!(format_bytes(1536), "1.5 KB");
+    }
+
+    #[test]
+    fn test_format_bytes_megabytes() {
+        assert_eq!(format_bytes(5_242_880), "5.0 MB");
+    }
 }

@@ -26,6 +26,19 @@ fn test_demo_status_prints_article_table() {
 
 #[test]
 #[cfg(feature = "demo")]
+fn test_demo_status_shows_media_section() {
+    // This test only shows the "no manifest" message unless media has been downloaded
+    Command::cargo_bin("haleiki")
+        .unwrap()
+        .args(["demo", "status"])
+        .current_dir(env!("CARGO_MANIFEST_DIR").to_string() + "/..")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Media:"));
+}
+
+#[test]
+#[cfg(feature = "demo")]
 fn test_demo_status_shows_rigpawiki_project() {
     Command::cargo_bin("haleiki")
         .unwrap()
