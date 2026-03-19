@@ -151,7 +151,6 @@ impl Manifest {
     }
 
     /// Build the Wikimedia REST API URL for an article.
-    #[allow(dead_code)] // used in tests; will be used by fetch pipeline
     pub fn api_url(&self, article: &Article) -> String {
         let project = self.effective_project(article);
         let encoded_title = article.title.replace(' ', "_");

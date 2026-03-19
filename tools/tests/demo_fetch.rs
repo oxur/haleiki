@@ -50,6 +50,127 @@ fn test_demo_fetch_dry_run_rigpawiki_shows_project() {
         .stdout(predicate::str::contains("www.rigpawiki.org"));
 }
 
+// --- Batch dry-run tests ---
+
+#[test]
+#[cfg(feature = "demo")]
+fn test_demo_fetch_batch_dry_run() {
+    Command::cargo_bin("haleiki")
+        .unwrap()
+        .args(["demo", "fetch", "--dry-run"])
+        .current_dir(env!("CARGO_MANIFEST_DIR").to_string() + "/..")
+        .assert()
+        .success()
+        .stdout(
+            predicate::str::contains("Dry run")
+                .and(predicate::str::contains("articles"))
+                .and(predicate::str::contains("dzogchen"))
+                .and(predicate::str::contains("quantum-mechanics"))
+                .and(predicate::str::contains("group-theory")),
+        );
+}
+
+#[test]
+#[cfg(feature = "demo")]
+fn test_demo_fetch_batch_dry_run_shows_urls() {
+    Command::cargo_bin("haleiki")
+        .unwrap()
+        .args(["demo", "fetch", "--dry-run"])
+        .current_dir(env!("CARGO_MANIFEST_DIR").to_string() + "/..")
+        .assert()
+        .success()
+        .stdout(
+            predicate::str::contains("api/rest_v1/page/html/Dzogchen")
+                .and(predicate::str::contains(
+                    "api/rest_v1/page/html/Quantum_mechanics",
+                ))
+                .and(predicate::str::contains(
+                    "api/rest_v1/page/html/Group_theory",
+                )),
+        );
+}
+
+#[test]
+#[cfg(feature = "demo")]
+fn test_demo_fetch_batch_dry_run_shows_would_fetch_count() {
+    Command::cargo_bin("haleiki")
+        .unwrap()
+        .args(["demo", "fetch", "--dry-run"])
+        .current_dir(env!("CARGO_MANIFEST_DIR").to_string() + "/..")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Would fetch:"));
+}
+
+#[test]
+#[ignore] // Requires network access, takes ~60s
+#[cfg(feature = "demo")]
+fn test_demo_fetch_batch_live() {
+    use std::path::Path;
+
+    let staging_dir = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .unwrap()
+        .join("demo/.staging");
+
+    // Clean staging directory
+    if staging_dir.exists() {
+        for entry in std::fs::read_dir(&staging_dir).unwrap() {
+            let entry = entry.unwrap();
+            let path = entry.path();
+            if path
+                .extension()
+                .map_or(false, |e| e == "html" || e == "json")
+            {
+                let _ = std::fs::remove_file(&path);
+            }
+        }
+    }
+
+    Command::cargo_bin("haleiki")
+        .unwrap()
+        .args(["demo", "fetch"])
+        .current_dir(env!("CARGO_MANIFEST_DIR").to_string() + "/..")
+        .timeout(std::time::Duration::from_secs(300))
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Fetched:"));
+
+    // Spot-check a few expected files
+    let spot_check_slugs = ["dzogchen", "quantum-mechanics", "group-theory"];
+    for slug in &spot_check_slugs {
+        let html = staging_dir.join(format!("{slug}.html"));
+        assert!(html.exists(), "Missing: {}", html.display());
+        let meta = staging_dir.join(format!("{slug}.meta.json"));
+        assert!(meta.exists(), "Missing: {}", meta.display());
+    }
+
+    // Second run should skip all (cached)
+    Command::cargo_bin("haleiki")
+        .unwrap()
+        .args(["demo", "fetch"])
+        .current_dir(env!("CARGO_MANIFEST_DIR").to_string() + "/..")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Skipped:"));
+
+    // Clean up
+    if staging_dir.exists() {
+        for entry in std::fs::read_dir(&staging_dir).unwrap() {
+            let entry = entry.unwrap();
+            let path = entry.path();
+            if path
+                .extension()
+                .map_or(false, |e| e == "html" || e == "json")
+            {
+                let _ = std::fs::remove_file(&path);
+            }
+        }
+    }
+}
+
+// --- Single-article live test ---
+
 #[test]
 #[ignore] // Requires network access
 #[cfg(feature = "demo")]

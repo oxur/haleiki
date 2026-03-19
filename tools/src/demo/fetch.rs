@@ -1,16 +1,20 @@
 //! Wikimedia REST API client for fetching article HTML.
 //!
 //! Fetches raw HTML from the Wikimedia REST API and writes it to the staging
-//! directory (`demo/.staging/{slug}.html`).
+//! directory (`demo/.staging/{slug}.html`). Supports both single-article fetch
+//! and batch fetch with bounded concurrency, rate limiting, and progress bars.
 
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
 use std::time::Duration;
 
+use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
 use reqwest::header::{HeaderMap, HeaderValue, USER_AGENT};
 use reqwest_middleware::ClientWithMiddleware;
 use reqwest_retry::RetryTransientMiddleware;
 use reqwest_retry::policies::ExponentialBackoff;
 use serde::{Deserialize, Serialize};
+use tokio::sync::Semaphore;
 
 use super::manifest::{Article, Manifest};
 
@@ -18,8 +22,10 @@ use super::manifest::{Article, Manifest};
 const STAGING_DIR: &str = "demo/.staging";
 
 /// Delay between API requests to respect Wikimedia rate limits.
-#[allow(dead_code)] // used in batch fetch (milestone 2.2)
 const REQUEST_DELAY: Duration = Duration::from_millis(500);
+
+/// Maximum number of concurrent HTTP requests.
+const MAX_CONCURRENT_FETCHES: usize = 4;
 
 /// User-Agent string -- Wikimedia API requires a descriptive User-Agent.
 /// See: <https://meta.wikimedia.org/wiki/User-Agent_policy>
@@ -121,9 +127,60 @@ fn parse_revision_id(etag: Option<&HeaderValue>) -> Option<String> {
     }
 }
 
+/// Fetch a single article given pre-resolved URL and project.
+///
+/// This is the core fetch implementation that does not require a `Manifest`
+/// reference, making it safe to use from spawned tokio tasks.
+async fn fetch_article_raw(
+    client: &ClientWithMiddleware,
+    slug: &str,
+    title: &str,
+    api_url: &str,
+    project: &str,
+) -> anyhow::Result<FetchMeta> {
+    let response = client.get(api_url).send().await?;
+
+    let http_status = response.status().as_u16();
+
+    if !response.status().is_success() {
+        anyhow::bail!("HTTP {http_status} fetching \"{title}\": {api_url}");
+    }
+
+    let revision_id = parse_revision_id(response.headers().get(reqwest::header::ETAG));
+    let html = response.text().await?;
+    let html_bytes = html.len();
+
+    // Ensure staging directory exists
+    std::fs::create_dir_all(STAGING_DIR)?;
+
+    // Write HTML
+    let html_path = staging_html_path(slug);
+    std::fs::write(&html_path, &html)?;
+
+    // Build metadata
+    let meta = FetchMeta {
+        slug: slug.to_string(),
+        project: project.to_string(),
+        title: title.to_string(),
+        api_url: api_url.to_string(),
+        revision_id,
+        fetched_at: chrono_now_iso8601(),
+        http_status,
+        html_bytes,
+    };
+
+    // Write metadata
+    let meta_path = staging_meta_path(slug);
+    let meta_json = serde_json::to_string_pretty(&meta)?;
+    std::fs::write(&meta_path, meta_json)?;
+
+    Ok(meta)
+}
+
 /// Fetch a single article's HTML from the Wikimedia REST API.
 ///
-/// Returns the fetch metadata on success.
+/// High-level wrapper around [`fetch_article_raw`] that resolves the API URL
+/// and project from the manifest and prints progress to stderr.
 pub async fn fetch_article(
     client: &ClientWithMiddleware,
     manifest: &Manifest,
@@ -134,59 +191,204 @@ pub async fn fetch_article(
 
     eprintln!("  Fetching: {} ({})", article.title, project);
 
-    let response = client.get(&api_url).send().await?;
-
-    let http_status = response.status().as_u16();
-
-    if !response.status().is_success() {
-        anyhow::bail!(
-            "HTTP {} fetching \"{}\": {}",
-            http_status,
-            article.title,
-            api_url,
-        );
-    }
-
-    // Extract revision ID from `ETag` header before consuming the response body
-    let revision_id = parse_revision_id(response.headers().get(reqwest::header::ETAG));
-
-    let html = response.text().await?;
-    let html_bytes = html.len();
-
-    // Ensure staging directory exists
-    let staging_dir = Path::new(STAGING_DIR);
-    std::fs::create_dir_all(staging_dir)?;
-
-    // Write raw HTML
-    let html_path = staging_html_path(&article.slug);
-    std::fs::write(&html_path, &html)?;
-
-    // Build fetch metadata
-    let now = chrono_now_iso8601();
-    let meta = FetchMeta {
-        slug: article.slug.clone(),
-        project,
-        title: article.title.clone(),
-        api_url,
-        revision_id,
-        fetched_at: now,
-        http_status,
-        html_bytes,
-    };
-
-    // Write metadata JSON
-    let meta_path = staging_meta_path(&article.slug);
-    let meta_json = serde_json::to_string_pretty(&meta)?;
-    std::fs::write(&meta_path, meta_json)?;
+    let meta = fetch_article_raw(client, &article.slug, &article.title, &api_url, &project).await?;
 
     eprintln!(
         "  Wrote: {} ({} bytes, rev: {})",
-        html_path.display(),
-        html_bytes,
+        staging_html_path(&article.slug).display(),
+        meta.html_bytes,
         meta.revision_id.as_deref().unwrap_or("unknown"),
     );
 
     Ok(meta)
+}
+
+/// Results from a batch fetch operation.
+#[derive(Debug)]
+struct BatchResult {
+    /// Articles that were successfully fetched.
+    fetched: Vec<String>,
+    /// Articles that were skipped (already cached).
+    skipped: Vec<String>,
+    /// Articles that failed with their error messages.
+    failed: Vec<(String, String)>,
+}
+
+/// Fetch all articles in the manifest with bounded parallelism and progress.
+#[allow(clippy::too_many_lines)] // orchestrator function; splitting would obscure the flow
+async fn batch_fetch(manifest: &Manifest, dry_run: bool, force: bool) -> anyhow::Result<()> {
+    let articles = &manifest.articles;
+    let total = articles.len();
+
+    if dry_run {
+        println!("Dry run — would fetch {total} articles:\n");
+        for article in articles {
+            let url = manifest.api_url(article);
+            let cached = staging_html_path(&article.slug).exists();
+            let cache_note = if cached && !force {
+                " [cached, would skip]"
+            } else {
+                ""
+            };
+            println!("  {:<35} {url}{cache_note}", article.slug);
+        }
+        println!();
+
+        let would_fetch = if force {
+            total
+        } else {
+            articles
+                .iter()
+                .filter(|a| !staging_html_path(&a.slug).exists())
+                .count()
+        };
+        let would_skip = total - would_fetch;
+        println!("Would fetch: {would_fetch}, would skip: {would_skip}");
+        return Ok(());
+    }
+
+    // Set up progress display
+    let multi_progress = MultiProgress::new();
+    let overall_style =
+        ProgressStyle::with_template("{msg} [{bar:40.cyan/blue}] {pos}/{len} ({eta})")
+            .expect("valid progress template")
+            .progress_chars("##-");
+
+    let overall_bar = multi_progress.add(ProgressBar::new(total as u64));
+    overall_bar.set_style(overall_style);
+    overall_bar.set_message("Fetching articles");
+
+    let item_style =
+        ProgressStyle::with_template("  {spinner:.green} {msg}").expect("valid spinner template");
+
+    // Build HTTP client (shared across all fetches)
+    let client = Arc::new(build_client()?);
+    let semaphore = Arc::new(Semaphore::new(MAX_CONCURRENT_FETCHES));
+
+    let mut handles = Vec::new();
+    let mut result = BatchResult {
+        fetched: Vec::new(),
+        skipped: Vec::new(),
+        failed: Vec::new(),
+    };
+
+    // Partition into skip/fetch lists first
+    let mut to_fetch = Vec::new();
+    for article in articles {
+        let html_path = staging_html_path(&article.slug);
+        if html_path.exists() && !force {
+            result.skipped.push(article.slug.clone());
+            let bar = multi_progress.add(ProgressBar::new_spinner());
+            bar.set_style(item_style.clone());
+            bar.set_message(format!("{}: skipped (cached)", article.slug));
+            bar.finish();
+            overall_bar.inc(1);
+        } else {
+            to_fetch.push(article);
+        }
+    }
+
+    if to_fetch.is_empty() {
+        overall_bar.finish_with_message("All articles already cached");
+        print_batch_summary(&result);
+        return Ok(());
+    }
+
+    // Spawn concurrent fetch tasks.
+    // Pre-resolve API URLs and project domains BEFORE spawning to avoid
+    // sending the Manifest across threads.
+    for article in &to_fetch {
+        let client = Arc::clone(&client);
+        let semaphore = Arc::clone(&semaphore);
+        let slug = article.slug.clone();
+        let title = article.title.clone();
+        let api_url = manifest.api_url(article);
+        let project = manifest.effective_project(article).to_string();
+
+        let bar = multi_progress.add(ProgressBar::new_spinner());
+        bar.set_style(item_style.clone());
+        bar.set_message(format!("{slug}: waiting..."));
+        bar.enable_steady_tick(Duration::from_millis(100));
+
+        let overall_bar = overall_bar.clone();
+
+        let handle = tokio::spawn(async move {
+            // Acquire semaphore permit (bounds concurrency)
+            let _permit = semaphore
+                .acquire()
+                .await
+                .expect("semaphore should not be closed");
+
+            bar.set_message(format!("{slug}: fetching..."));
+
+            // Rate-limit delay
+            tokio::time::sleep(REQUEST_DELAY).await;
+
+            let fetch_result = fetch_article_raw(&client, &slug, &title, &api_url, &project).await;
+
+            match fetch_result {
+                Ok(meta) => {
+                    bar.set_message(format!(
+                        "{slug}: done ({} bytes, rev: {})",
+                        meta.html_bytes,
+                        meta.revision_id.as_deref().unwrap_or("?"),
+                    ));
+                    bar.finish();
+                    overall_bar.inc(1);
+                    Ok(slug)
+                }
+                Err(e) => {
+                    bar.set_message(format!("{slug}: FAILED -- {e}"));
+                    bar.finish();
+                    overall_bar.inc(1);
+                    Err((slug, e.to_string()))
+                }
+            }
+        });
+
+        handles.push(handle);
+    }
+
+    // Collect results
+    for handle in handles {
+        match handle.await? {
+            Ok(slug) => result.fetched.push(slug),
+            Err((slug, msg)) => result.failed.push((slug, msg)),
+        }
+    }
+
+    overall_bar.finish_with_message("Fetch complete");
+    multi_progress.clear()?;
+
+    print_batch_summary(&result);
+
+    if !result.failed.is_empty() {
+        anyhow::bail!("{} article(s) failed to fetch", result.failed.len());
+    }
+
+    Ok(())
+}
+
+/// Print a summary of the batch fetch operation.
+fn print_batch_summary(result: &BatchResult) {
+    println!();
+    println!("Fetch summary:");
+    println!(
+        "  Fetched: {}  Skipped: {}  Failed: {}",
+        result.fetched.len(),
+        result.skipped.len(),
+        result.failed.len(),
+    );
+
+    if !result.failed.is_empty() {
+        println!();
+        println!("Failed articles:");
+        for (slug, msg) in &result.failed {
+            println!("  {slug}: {msg}");
+        }
+    }
+
+    println!();
 }
 
 /// ISO 8601 timestamp for "now" without pulling in the chrono crate.
@@ -245,8 +447,8 @@ fn is_leap_year(y: u64) -> bool {
 
 /// Entry point for `haleiki demo fetch`.
 ///
-/// In this milestone, only `--article <slug>` is implemented.
-/// Batch fetching (no `--article`) is milestone 2.2.
+/// When `article_slug` is `Some`, fetches a single article. When `None`,
+/// fetches all manifest articles with bounded concurrency and progress bars.
 pub async fn run(
     article_slug: Option<&str>,
     dry_run: bool,
@@ -319,10 +521,8 @@ pub async fn run(
             eprintln!("Done.");
         }
         None => {
-            // Batch fetch -- stub for now, implemented in milestone 2.2
-            eprintln!(
-                "Batch fetch not yet implemented. Use --article <slug> to fetch a single article."
-            );
+            // Batch fetch all articles
+            batch_fetch(&manifest, dry_run, force).await?;
         }
     }
 
@@ -440,5 +640,14 @@ mod tests {
         let meta2: FetchMeta = serde_json::from_str(&json).unwrap();
         assert_eq!(meta.slug, meta2.slug);
         assert_eq!(meta.revision_id, meta2.revision_id);
+    }
+
+    // --- Batch caching logic tests ---
+
+    #[test]
+    fn test_staging_html_path_exists_check() {
+        // Verify that non-existent paths return false
+        let path = staging_html_path("nonexistent-article-xyz");
+        assert!(!path.exists());
     }
 }
