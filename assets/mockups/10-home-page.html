@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="day">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Haleiki — House of Knowledge</title>
+
+<!-- TYPE STACK: Sans display + Serif body + Mono code -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<style>
+@layer tokens, reset, base, layout, components, utilities;
+
+@layer tokens {
+/* ═══════════════════════════════════════════════════════════════
+   HALEIKI DESIGN SYSTEM — TOKEN LAYER
+   Principles: Geometric scale (4:3), OKLCH color, semantic naming
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── SCALE: Perfect Fourth (1.333) ── */
+:root {
+  --ratio: 1.333;
+  --step--2: clamp(0.563rem, 0.52rem + 0.18vi, 0.633rem);
+  --step--1: clamp(0.75rem, 0.7rem + 0.22vi, 0.844rem);
+  --step-0:  clamp(1rem, 0.93rem + 0.29vi, 1.125rem);
+  --step-1:  clamp(1.333rem, 1.24rem + 0.39vi, 1.5rem);
+  --step-2:  clamp(1.777rem, 1.65rem + 0.52vi, 2rem);
+  --step-3:  clamp(2.369rem, 2.2rem + 0.69vi, 2.665rem);
+  --step-4:  clamp(3.157rem, 2.93rem + 0.92vi, 3.553rem);
+
+  /* ── SPACING: Same ratio, named ── */
+  --space-3xs: clamp(0.25rem, 0.23rem + 0.1vi, 0.313rem);
+  --space-2xs: clamp(0.5rem, 0.47rem + 0.15vi, 0.563rem);
+  --space-xs:  clamp(0.75rem, 0.7rem + 0.22vi, 0.844rem);
+  --space-s:   clamp(1rem, 0.93rem + 0.29vi, 1.125rem);
+  --space-m:   clamp(1.5rem, 1.4rem + 0.44vi, 1.688rem);
+  --space-l:   clamp(2rem, 1.86rem + 0.58vi, 2.25rem);
+  --space-xl:  clamp(3rem, 2.79rem + 0.88vi, 3.375rem);
+  --space-2xl: clamp(4rem, 3.72rem + 1.17vi, 4.5rem);
+  --space-3xl: clamp(6rem, 5.58rem + 1.76vi, 6.75rem);
+
+  /* ── SPACE PAIRS: Steeper interpolation between two tokens ── */
+  --space-s-m:  clamp(1rem, 0.75rem + 1.24vi, 1.688rem);
+  --space-s-l:  clamp(1rem, 0.5rem + 2.48vi, 2.25rem);
+  --space-m-l:  clamp(1.5rem, 1.26rem + 1.18vi, 2.25rem);
+  --space-m-xl: clamp(1.5rem, 0.93rem + 2.82vi, 3.375rem);
+  --space-l-xl: clamp(2rem, 1.49rem + 2.53vi, 3.375rem);
+
+  /* ── TYPE FAMILIES ── */
+  --font-display: 'Red Hat Display', system-ui, sans-serif;
+  --font-body:    'Newsreader', Georgia, serif;
+  --font-mono:    'IBM Plex Mono', 'Menlo', monospace;
+
+  /* ── LAYOUT ── */
+  --content-max: 58ch;
+  --sidebar-width: 280px;
+  --nav-width: 220px;
+  --page-max: 1320px;
+  --radius-s: 4px;
+  --radius-m: 6px;
+  --radius-l: 8px;
+  --radius-pill: 100vmax;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DAY THEME — Warm ochre, sandstone, terracotta
+   OKLCH-derived, perceptually uniform progressions
+   ═══════════════════════════════════════════════════════════════ */
+[data-theme="day"] {
+  --surface-ground:    oklch(0.97 0.01 80);
+  --surface-primary:   oklch(0.99 0.005 80);
+  --surface-secondary: oklch(0.95 0.015 75);
+  --surface-tertiary:  oklch(0.92 0.02 72);
+  --surface-invert:    oklch(0.25 0.03 55);
+
+  --border-subtle:     oklch(0.88 0.025 75);
+  --border-default:    oklch(0.82 0.03 72);
+  --border-strong:     oklch(0.70 0.04 65);
+
+  --text-primary:      oklch(0.22 0.02 55);
+  --text-secondary:    oklch(0.40 0.03 60);
+  --text-tertiary:     oklch(0.55 0.025 65);
+  --text-on-invert:    oklch(0.97 0.01 80);
+
+  --accent-primary:    oklch(0.55 0.14 45);   /* terracotta */
+  --accent-hover:      oklch(0.48 0.15 42);
+  --accent-subtle:     oklch(0.92 0.04 50);
+  --accent-text:       oklch(0.45 0.12 40);
+
+  --info-surface:      oklch(0.94 0.03 80);
+  --info-border:       oklch(0.82 0.05 75);
+  --info-text:         oklch(0.40 0.06 65);
+
+  --code-surface:      oklch(0.95 0.01 80);
+  --code-border:       oklch(0.88 0.02 75);
+  --code-text:         oklch(0.38 0.08 40);
+
+  --footer-surface:    oklch(0.22 0.025 55);
+  --footer-text:       oklch(0.75 0.015 70);
+  --footer-text-dim:   oklch(0.55 0.015 65);
+  --footer-heading:    oklch(0.90 0.01 75);
+  --footer-link:       oklch(0.75 0.015 70);
+  --footer-link-hover: oklch(0.92 0.01 75);
+  --footer-border:     oklch(0.32 0.025 55);
+  --footer-accent:     oklch(0.65 0.12 50);
+
+  --shadow-soft: 0 1px 3px oklch(0.5 0.02 60 / 0.08);
+  --shadow-medium: 0 2px 8px oklch(0.4 0.03 55 / 0.1);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NIGHT THEME — Deep oxide, amber accents
+   ═══════════════════════════════════════════════════════════════ */
+[data-theme="night"] {
+  --surface-ground:    oklch(0.16 0.02 55);
+  --surface-primary:   oklch(0.20 0.02 55);
+  --surface-secondary: oklch(0.24 0.025 52);
+  --surface-tertiary:  oklch(0.28 0.03 50);
+  --surface-invert:    oklch(0.92 0.02 75);
+
+  --border-subtle:     oklch(0.30 0.03 50);
+  --border-default:    oklch(0.36 0.035 48);
+  --border-strong:     oklch(0.48 0.04 50);
+
+  --text-primary:      oklch(0.90 0.015 75);
+  --text-secondary:    oklch(0.72 0.02 65);
+  --text-tertiary:     oklch(0.55 0.025 58);
+  --text-on-invert:    oklch(0.20 0.02 55);
+
+  --accent-primary:    oklch(0.72 0.14 70);   /* amber */
+  --accent-hover:      oklch(0.78 0.15 72);
+  --accent-subtle:     oklch(0.28 0.06 60);
+  --accent-text:       oklch(0.78 0.12 72);
+
+  --info-surface:      oklch(0.24 0.03 55);
+  --info-border:       oklch(0.36 0.04 52);
+  --info-text:         oklch(0.72 0.04 68);
+
+  --code-surface:      oklch(0.22 0.02 55);
+  --code-border:       oklch(0.32 0.03 52);
+  --code-text:         oklch(0.78 0.1 72);
+
+  --footer-surface:    oklch(0.22 0.02 55);
+  --footer-text:       oklch(0.65 0.015 65);
+  --footer-text-dim:   oklch(0.45 0.015 60);
+  --footer-heading:    oklch(0.82 0.01 70);
+  --footer-link:       oklch(0.65 0.015 65);
+  --footer-link-hover: oklch(0.85 0.01 72);
+  --footer-border:     oklch(0.30 0.025 55);
+  --footer-accent:     oklch(0.72 0.12 70);
+
+  --shadow-soft: 0 1px 3px oklch(0.1 0.02 55 / 0.3);
+  --shadow-medium: 0 2px 8px oklch(0.08 0.02 55 / 0.4);
+}
+} /* end @layer tokens */
+
+@layer reset {
+/* ═══════════════════════════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  font-size: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  font-variation-settings: 'opsz' 14;
+  line-height: 1.65;
+  color: var(--text-primary);
+  background: var(--surface-ground);
+  transition: background 0.3s ease, color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+} /* end @layer reset */
+
+@layer layout {
+/* ═══════════════════════════════════════════════════════════════
+   TOP NAVIGATION BAR
+   ═══════════════════════════════════════════════════════════════ */
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--surface-primary);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--space-2xs) var(--space-s-l);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2xs) var(--space-m);
+  backdrop-filter: blur(12px);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.topnav-brand {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.topnav-brand .brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75em;
+  height: 1.75em;
+  background: var(--accent-primary);
+  color: var(--text-on-invert);
+  border-radius: var(--radius-s);
+  font-size: var(--step--1);
+  font-weight: 700;
+  line-height: 1;
+}
+
+[data-theme="night"] .topnav-brand .brand-mark {
+  color: var(--surface-ground);
+}
+
+/* ── SEARCH (topnav) ── */
+.search-container {
+  flex: 1;
+  max-width: 36ch;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: var(--space-2xs) var(--space-s);
+  padding-left: var(--space-l);
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-l);
+  color: var(--text-primary);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.search-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.search-input:focus {
+  border-color: var(--accent-primary);
+  background: var(--surface-primary);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.search-icon {
+  position: absolute;
+  left: var(--space-xs);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+.search-shortcut {
+  position: absolute;
+  right: var(--space-xs);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  padding: 0.125em var(--space-3xs);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-s);
+  color: var(--text-tertiary);
+  background: var(--surface-primary);
+  line-height: 1;
+}
+
+/* ── NAV LINKS ── */
+.topnav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.topnav-links a {
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: var(--space-3xs) var(--space-2xs);
+  border-radius: var(--radius-s);
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.topnav-links a:hover {
+  color: var(--text-primary);
+  background: var(--surface-secondary);
+}
+
+/* ── THEME TOGGLE ── */
+.theme-toggle {
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  padding: var(--space-3xs);
+  display: flex;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.theme-toggle-option {
+  padding: var(--space-3xs) var(--space-xs);
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  line-height: 1;
+  border: none;
+  background: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
+.theme-toggle-option.active {
+  background: var(--accent-primary);
+  color: var(--text-on-invert);
+}
+
+[data-theme="night"] .theme-toggle-option.active {
+  color: var(--surface-ground);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PAGE LAYOUT — Single-column centered for home page
+   ═══════════════════════════════════════════════════════════════ */
+.home-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 var(--space-s-l);
+  flex: 1;
+  width: 100%;
+}
+} /* end @layer layout */
+
+@layer components {
+/* ═══════════════════════════════════════════════════════════════
+   SECTION OVERLINE — Consistent section labelling
+   ═══════════════════════════════════════════════════════════════ */
+.section-overline {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-xs);
+}
+
+.section-heading {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  margin-bottom: var(--space-m);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HERO / WELCOME SECTION
+   ═══════════════════════════════════════════════════════════════ */
+.hero {
+  padding-top: var(--space-2xl);
+  padding-bottom: var(--space-xl);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--surface-ground);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  background: var(--accent-primary);
+  color: var(--text-on-invert);
+  border-radius: var(--radius-m);
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: var(--space-s);
+}
+
+[data-theme="night"] .hero-brand-mark {
+  color: var(--surface-ground);
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: var(--step-4);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: var(--space-3xs);
+}
+
+.hero-subtitle {
+  font-family: var(--font-body);
+  font-size: var(--step-1);
+  font-style: italic;
+  color: var(--text-secondary);
+  font-variation-settings: 'opsz' 24;
+  margin-bottom: var(--space-l);
+}
+
+/* ── HERO SEARCH ── */
+.hero-search {
+  position: relative;
+  width: 100%;
+  max-width: 50ch;
+  margin-bottom: var(--space-s);
+}
+
+.hero-search-input {
+  width: 100%;
+  padding: var(--space-xs) var(--space-m);
+  padding-left: var(--space-xl);
+  padding-right: 4.5rem;
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  background: var(--surface-primary);
+  border: 2px solid var(--border-default);
+  border-radius: var(--radius-l);
+  color: var(--text-primary);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.hero-search-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.hero-search-input:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 4px var(--accent-subtle);
+}
+
+.hero-search-icon {
+  position: absolute;
+  left: var(--space-m);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+.hero-search-shortcut {
+  position: absolute;
+  right: var(--space-s);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  padding: 0.2em var(--space-2xs);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-s);
+  color: var(--text-tertiary);
+  background: var(--surface-secondary);
+  line-height: 1;
+}
+
+.hero-stats {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--text-tertiary);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CATEGORY MAP
+   ═══════════════════════════════════════════════════════════════ */
+.category-section {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-xl);
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-m);
+}
+
+.category-card {
+  background: var(--surface-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-m);
+  padding: var(--space-m);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.category-card:hover {
+  box-shadow: var(--shadow-soft);
+  border-color: var(--accent-primary);
+}
+
+.category-card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-2xs);
+}
+
+.category-card-title {
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a.category-card-title:hover {
+  color: var(--accent-text);
+}
+
+.category-card-count {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--text-tertiary);
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  padding: 0.15em var(--space-xs);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.category-card-desc {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: var(--space-xs);
+}
+
+.category-card-articles {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+}
+
+.category-card-articles a {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--accent-text);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.category-card-articles a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--accent-primary);
+  text-underline-offset: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FEATURED ARTICLES — "Start Here"
+   ═══════════════════════════════════════════════════════════════ */
+.featured-section {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-xl);
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-m);
+}
+
+.featured-card {
+  background: var(--surface-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-m);
+  padding: var(--space-m);
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.featured-card:hover {
+  box-shadow: var(--shadow-soft);
+  border-color: var(--accent-primary);
+}
+
+.featured-card-title {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  margin-bottom: var(--space-2xs);
+  line-height: 1.25;
+}
+
+.featured-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3xs);
+  margin-bottom: var(--space-xs);
+}
+
+.featured-tag {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  padding: 0.15em var(--space-xs);
+  border-radius: var(--radius-pill);
+  background: var(--surface-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+.featured-tier {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  padding: 0.15em var(--space-xs);
+  border-radius: var(--radius-pill);
+  background: var(--accent-subtle);
+  color: var(--accent-text);
+  border: 1px solid transparent;
+}
+
+.featured-card-teaser {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-bottom: var(--space-xs);
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.featured-card-link {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--accent-text);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.featured-card-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   KNOWLEDGE TIERS
+   ═══════════════════════════════════════════════════════════════ */
+.tiers-section {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-xl);
+}
+
+.tiers-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-m);
+}
+
+.tier-card {
+  flex: 1;
+  min-width: 260px;
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--accent-primary);
+  border-radius: 0 var(--radius-m) var(--radius-m) 0;
+  padding: var(--space-s) var(--space-m);
+  transition: box-shadow 0.2s ease;
+}
+
+.tier-card:hover {
+  box-shadow: var(--shadow-soft);
+}
+
+.tier-card-title {
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3xs);
+}
+
+.tier-card-desc {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: var(--space-2xs);
+}
+
+.tier-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xs);
+}
+
+.tier-card-count {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--text-tertiary);
+}
+
+.tier-card-link {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--accent-text);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.tier-card-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   QUICK LINKS ROW
+   ═══════════════════════════════════════════════════════════════ */
+.quick-links {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-2xl);
+  text-align: center;
+}
+
+.quick-links-row {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--text-tertiary);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-3xs) 0;
+}
+
+.quick-links-row a {
+  color: var(--text-tertiary);
+  text-decoration: none;
+  padding: var(--space-3xs) var(--space-2xs);
+  transition: color 0.15s ease;
+}
+
+.quick-links-row a:hover {
+  color: var(--accent-text);
+}
+
+.quick-links-sep {
+  color: var(--border-default);
+  user-select: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SITE FOOTER — Columnar, dark-surface, warm
+   ═══════════════════════════════════════════════════════════════ */
+.site-footer {
+  background: var(--footer-surface);
+  color: var(--footer-text);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.footer-inner {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-s-l) var(--space-l);
+}
+
+/* ── FOOTER TOP: Brand + Columns ── */
+.footer-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-l) var(--space-xl);
+  padding-bottom: var(--space-l);
+}
+
+/* Brand column — wider than the link columns */
+.footer-brand-col {
+  flex-basis: 260px;
+  flex-grow: 1;
+  max-width: 320px;
+}
+
+.footer-brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  text-decoration: none;
+  color: var(--footer-heading);
+  margin-bottom: var(--space-xs);
+  transition: color 0.15s ease;
+}
+
+.footer-brand-link:hover {
+  color: var(--footer-accent);
+}
+
+.footer-brand-link .brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25em;
+  height: 2.25em;
+  background: var(--footer-accent);
+  color: var(--footer-surface);
+  border-radius: var(--radius-m);
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  font-weight: 800;
+  line-height: 1;
+  transition: background 0.15s ease;
+}
+
+.footer-brand-link:hover .brand-mark {
+  background: var(--footer-link-hover);
+}
+
+.footer-brand-link .brand-name {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.footer-tagline {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-variation-settings: 'opsz' 10;
+  color: var(--footer-text-dim);
+  line-height: 1.5;
+  max-width: 30ch;
+}
+
+/* ── LINK COLUMNS ── */
+.footer-columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-l) var(--space-xl);
+  flex: 1;
+  min-width: 0;
+}
+
+.footer-col {
+  min-width: 140px;
+  flex: 1;
+}
+
+.footer-col-title {
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  font-weight: 600;
+  color: var(--footer-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--space-xs);
+}
+
+.footer-col-list {
+  list-style: none;
+}
+
+.footer-col-list li {
+  margin-bottom: var(--space-3xs);
+}
+
+.footer-col-list a {
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 400;
+  color: var(--footer-link);
+  text-decoration: none;
+  transition: color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+}
+
+.footer-col-list a:hover {
+  color: var(--footer-link-hover);
+}
+
+/* External link indicator */
+.footer-col-list a .ext {
+  font-size: 0.75em;
+  opacity: 0.5;
+  transition: opacity 0.15s ease;
+}
+
+.footer-col-list a:hover .ext {
+  opacity: 0.8;
+}
+
+/* ── CONTENT NOTICE ── */
+.footer-content-notice {
+  font-family: var(--font-mono);
+  font-size: calc((var(--step--1) + var(--step--2)) / 2);
+  color: var(--footer-text-dim);
+  text-align: center;
+  padding-top: var(--space-m);
+  padding-bottom: var(--space-m);
+  border-bottom: 1px solid var(--footer-border);
+}
+
+/* ── FOOTER BOTTOM: Copyright + Meta ── */
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2xs) var(--space-l);
+  padding-top: var(--space-m);
+}
+
+.footer-copyright {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--footer-text-dim);
+}
+
+.footer-meta-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-m);
+  list-style: none;
+}
+
+.footer-meta-links a {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--footer-text-dim);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.footer-meta-links a:hover {
+  color: var(--footer-link-hover);
+}
+
+.footer-meta-links .sep {
+  color: var(--footer-border);
+}
+} /* end @layer components */
+
+@layer utilities {
+/* On very narrow viewports, let footer brand col take full width */
+@media (max-width: 40rem) {
+  .footer-brand-col {
+    max-width: none;
+    flex-basis: 100%;
+    margin-bottom: var(--space-xs);
+  }
+
+  .footer-bottom {
+    justify-content: center;
+    text-align: center;
+  }
+}
+} /* end @layer utilities */
+</style>
+</head>
+
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- TOP NAVIGATION                                                 -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<nav class="topnav">
+  <a href="#" class="topnav-brand">
+    <span class="brand-mark">H</span>
+    Haleiki
+  </a>
+
+  <div class="search-container">
+    <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="10.5" y1="10.5" x2="15" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <input type="text" class="search-input" placeholder="Search Haleiki...">
+    <span class="search-shortcut">&#8984;K</span>
+  </div>
+
+  <div class="topnav-links">
+    <a href="#">Browse</a>
+    <a href="#">Categories</a>
+    <a href="#">Random</a>
+  </div>
+
+  <div class="theme-toggle" role="radiogroup" aria-label="Theme">
+    <button class="theme-toggle-option active" data-theme-choice="day" aria-label="Day theme">&#9728;</button>
+    <button class="theme-toggle-option" data-theme-choice="night" aria-label="Night theme">&#9790;</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- MAIN CONTENT                                                    -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<main class="home-content">
+
+  <!-- ── HERO / WELCOME ── -->
+  <section class="hero">
+    <div class="hero-brand-mark">H</div>
+    <h1 class="hero-title">Haleiki</h1>
+    <p class="hero-subtitle">House of Knowledge</p>
+
+    <div class="hero-search">
+      <svg class="hero-search-icon" width="20" height="20" viewBox="0 0 16 16" fill="none">
+        <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="10.5" y1="10.5" x2="15" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <input type="text" class="hero-search-input" placeholder="Search 90 articles across 10 categories...">
+      <span class="hero-search-shortcut">&#8984;K</span>
+    </div>
+
+    <p class="hero-stats">90 articles &middot; 10 categories &middot; 3 tiers</p>
+  </section>
+
+  <!-- ── CATEGORY MAP ── -->
+  <section class="category-section">
+    <div class="section-overline">Explore by Category</div>
+    <h2 class="section-heading">Category Map</h2>
+
+    <div class="category-grid">
+
+      <article class="category-card">
+        <div class="category-card-header">
+          <a href="#" class="category-card-title">Tibetan Buddhism</a>
+          <span class="category-card-count">16</span>
+        </div>
+        <p class="category-card-desc">Tibetan Buddhist philosophy, practices, teachers, and lineages</p>
+        <ul class="category-card-articles">
+          <li><a href="#">Dzogchen</a></li>
+          <li><a href="#">Padmasambhava</a></li>
+          <li><a href="#">Nyingma</a></li>
+        </ul>
+      </article>
+
+      <article class="category-card">
+        <div class="category-card-header">
+          <a href="#" class="category-card-title">Music</a>
+          <span class="category-card-count">17</span>
+        </div>
+        <p class="category-card-desc">Music theory, history, composers, and genres</p>
+        <ul class="category-card-articles">
+          <li><a href="#">Johann Sebastian Bach</a></li>
+          <li><a href="#">Jazz</a></li>
+          <li><a href="#">Music Theory</a></li>
+        </ul>
+      </article>
+
+      <article class="category-card">
+        <div class="category-card-header">
+          <a href="#" class="category-card-title">Linguistics</a>
+          <span class="category-card-count">10</span>
+        </div>
+        <p class="category-card-desc">Languages, writing systems, scripts, and historical linguistics</p>
+        <ul class="category-card-articles">
+          <li><a href="#">Sanskrit</a></li>
+          <li><a href="#">Writing System</a></li>
+          <li><a href="#">Proto-Indo-European</a></li>
+        </ul>
+      </article>
+
+      <article class="category-card">
+        <div class="category-card-header">
+          <a href="#" class="category-card-title">Theoretical Physics</a>
+          <span class="category-card-count">9</span>
+        </div>
+        <p class="category-card-desc">Fundamental physics, quantum mechanics, and unification theories</p>
+        <ul class="category-card-articles">
+          <li><a href="#">Quantum Mechanics</a></li>
+          <li><a href="#">General Relativity</a></li>
+          <li><a href="#">String Theory</a></li>
+        </ul>
+      </article>
+
+      <article class="category-card">
+        <div class="category-card-header">
+          <a href="#" class="category-card-title">Mathematics</a>
+          <span class="category-card-count">9</span>
+        </div>
+        <p class="category-card-desc">Pure mathematics: algebra, topology, and foundations</p>
+        <ul class="category-card-articles">
+          <li><a href="#">Category Theory</a></li>
+          <li><a href="#">Homotopy Type Theory</a></li>
+          <li><a href="#">Group Theory</a></li>
+        </ul>
+      </article>
+
+      <article class="category-card">
+        <div class="category-card-header">
+          <a href="#" class="category-card-title">Geology</a>
+          <span class="category-card-count">8</span>
+        </div>
+        <p class="category-card-desc">Earth's structure, tectonics, and geophysics</p>
+        <ul class="category-card-articles">
+          <li><a href="#">Earth</a></li>
+          <li><a href="#">Tectonics</a></li>
+          <li><a href="#">Internal Structure of Earth</a></li>
+        </ul>
+      </article>
+
+      <article class="category-card">
+        <div class="category-card-header">
+          <a href="#" class="category-card-title">Botany</a>
+          <span class="category-card-count">7</span>
+        </div>
+        <p class="category-card-desc">Plants, fungi, lichens, and symbiotic relationships</p>
+        <ul class="category-card-articles">
+          <li><a href="#">Mycorrhiza</a></li>
+          <li><a href="#">Fungus</a></li>
+          <li><a href="#">Lichen</a></li>
+        </ul>
+      </article>
+
+      <article class="category-card">
+        <div class="category-card-header">
+          <a href="#" class="category-card-title">Programming Languages</a>
+          <span class="category-card-count">5</span>
+        </div>
+        <p class="category-card-desc">Language design, history, and notable figures</p>
+        <ul class="category-card-articles">
+          <li><a href="#">Rust</a></li>
+          <li><a href="#">Lisp</a></li>
+          <li><a href="#">Erlang</a></li>
+        </ul>
+      </article>
+
+      <article class="category-card">
+        <div class="category-card-header">
+          <a href="#" class="category-card-title">Philosophy of Mind</a>
+          <span class="category-card-count">5</span>
+        </div>
+        <p class="category-card-desc">Consciousness, cognition, and the mind-body problem</p>
+        <ul class="category-card-articles">
+          <li><a href="#">Philosophy of Mind</a></li>
+          <li><a href="#">Artificial Consciousness</a></li>
+          <li><a href="#">Perception</a></li>
+        </ul>
+      </article>
+
+      <article class="category-card">
+        <div class="category-card-header">
+          <a href="#" class="category-card-title">Artificial Intelligence</a>
+          <span class="category-card-count">4</span>
+        </div>
+        <p class="category-card-desc">AI history, theory, systems, and key figures</p>
+        <ul class="category-card-articles">
+          <li><a href="#">Artificial Intelligence</a></li>
+          <li><a href="#">Claude</a></li>
+          <li><a href="#">Dartmouth Workshop</a></li>
+        </ul>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ── FEATURED ARTICLES — "Start Here" ── -->
+  <section class="featured-section">
+    <div class="section-overline">Start Here</div>
+    <h2 class="section-heading">Featured Articles</h2>
+
+    <div class="featured-grid">
+
+      <article class="featured-card">
+        <h3 class="featured-card-title">Dzogchen</h3>
+        <div class="featured-card-meta">
+          <span class="featured-tag">Tibetan Buddhism</span>
+          <span class="featured-tier">Foundational</span>
+        </div>
+        <p class="featured-card-teaser">The Great Perfection tradition within Tibetan Buddhism, representing the pinnacle of the nine yanas in the Nyingma school.</p>
+        <a href="#" class="featured-card-link">Read more &#8594;</a>
+      </article>
+
+      <article class="featured-card">
+        <h3 class="featured-card-title">Quantum Mechanics</h3>
+        <div class="featured-card-meta">
+          <span class="featured-tag">Theoretical Physics</span>
+          <span class="featured-tier">Foundational</span>
+        </div>
+        <p class="featured-card-teaser">The fundamental theory describing nature at the smallest scales of energy levels of atoms and subatomic particles.</p>
+        <a href="#" class="featured-card-link">Read more &#8594;</a>
+      </article>
+
+      <article class="featured-card">
+        <h3 class="featured-card-title">Johann Sebastian Bach</h3>
+        <div class="featured-card-meta">
+          <span class="featured-tag">Music</span>
+          <span class="featured-tier">Foundational</span>
+        </div>
+        <p class="featured-card-teaser">German composer and musician of the late Baroque period, widely considered one of the greatest composers in the history of Western music.</p>
+        <a href="#" class="featured-card-link">Read more &#8594;</a>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ── KNOWLEDGE TIERS ── -->
+  <section class="tiers-section">
+    <div class="section-overline">Knowledge Tiers</div>
+    <h2 class="section-heading">Browse by Tier</h2>
+
+    <div class="tiers-row">
+
+      <div class="tier-card">
+        <h3 class="tier-card-title">Foundational</h3>
+        <p class="tier-card-desc">Core concepts -- prerequisites for most other topics</p>
+        <div class="tier-card-footer">
+          <span class="tier-card-count">42 articles</span>
+          <a href="#" class="tier-card-link">Start here &#8594;</a>
+        </div>
+      </div>
+
+      <div class="tier-card">
+        <h3 class="tier-card-title">Intermediate</h3>
+        <p class="tier-card-desc">Builds on foundational knowledge</p>
+        <div class="tier-card-footer">
+          <span class="tier-card-count">31 articles</span>
+          <a href="#" class="tier-card-link">Explore &#8594;</a>
+        </div>
+      </div>
+
+      <div class="tier-card">
+        <h3 class="tier-card-title">Advanced</h3>
+        <p class="tier-card-desc">Specialized or research-level topics</p>
+        <div class="tier-card-footer">
+          <span class="tier-card-count">17 articles</span>
+          <a href="#" class="tier-card-link">Deep dive &#8594;</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── QUICK LINKS ── -->
+  <nav class="quick-links" aria-label="Quick links">
+    <div class="quick-links-row">
+      <a href="#">Random Article</a>
+      <span class="quick-links-sep">&middot;</span>
+      <a href="#">Browse All</a>
+      <span class="quick-links-sep">&middot;</span>
+      <a href="#">About This Wiki</a>
+      <span class="quick-links-sep">&middot;</span>
+      <a href="#">Attribution</a>
+      <span class="quick-links-sep">&middot;</span>
+      <a href="https://github.com/oxur/haleiki">GitHub &#8599;</a>
+    </div>
+  </nav>
+
+</main>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SITE FOOTER                                                     -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="footer-inner">
+
+    <!-- ── TOP: Brand + Link Columns ── -->
+    <div class="footer-top">
+
+      <!-- Brand column -->
+      <div class="footer-brand-col">
+        <a href="/" class="footer-brand-link">
+          <span class="brand-mark">H</span>
+          <span class="brand-name">Haleiki</span>
+        </a>
+        <p class="footer-tagline">House of Knowledge -- a read-only wiki for structured knowledge.</p>
+      </div>
+
+      <!-- Link columns -->
+      <div class="footer-columns">
+
+        <div class="footer-col">
+          <div class="footer-col-title">Knowledge Base</div>
+          <ul class="footer-col-list">
+            <li><a href="/">Front Page</a></li>
+            <li><a href="/browse">Browse</a></li>
+            <li><a href="/categories">Categories</a></li>
+            <li><a href="/random">Random</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">About</div>
+          <ul class="footer-col-list">
+            <li><a href="/about">About This Wiki</a></li>
+            <li><a href="/about/haleiki">About Haleiki</a></li>
+            <li><a href="/design">Design</a></li>
+            <li><a href="/license">License</a></li>
+            <li><a href="/privacy">Privacy Policy</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">Development</div>
+          <ul class="footer-col-list">
+            <li><a href="https://github.com/oxur/haleiki">GitHub <span class="ext">&#8599;</span></a></li>
+            <li><a href="https://github.com/oxur/haleiki/issues/new">Submit Issue <span class="ext">&#8599;</span></a></li>
+            <li><a href="https://github.com/oxur/haleiki/discussions">Discussions <span class="ext">&#8599;</span></a></li>
+            <li><a href="https://github.com/oxur/haleiki/blob/main/CHANGELOG.md">Changelog <span class="ext">&#8599;</span></a></li>
+          </ul>
+        </div>
+
+      </div><!-- end .footer-columns -->
+    </div><!-- end .footer-top -->
+
+    <!-- ── CONTENT NOTICE ── -->
+    <div class="footer-content-notice">
+      Wiki content CC0, unless otherwise stated.
+    </div>
+
+    <!-- ── BOTTOM: Copyright + meta ── -->
+    <div class="footer-bottom">
+      <div class="footer-copyright">&copy; 2026 Oxur Contributors &middot; Apache-2.0 / MIT</div>
+      <ul class="footer-meta-links">
+        <li><a href="/about/haleiki">Built with Haleiki</a></li>
+        <li><a href="https://cobalt-org.github.io/">Powered by Cobalt</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+      </ul>
+    </div>
+
+  </div><!-- end .footer-inner -->
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- THEME TOGGLE SCRIPT                                            -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<script>
+document.querySelectorAll('.theme-toggle-option').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const theme = btn.dataset.themeChoice;
+    document.documentElement.setAttribute('data-theme', theme);
+    document.querySelectorAll('.theme-toggle-option').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>

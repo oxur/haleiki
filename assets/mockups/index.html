@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="day">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup Gallery — Haleiki Design System</title>
+
+<!-- TYPE STACK: Sans display + Serif body + Mono code -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<style>
+@layer tokens, reset, base, layout, components, utilities;
+
+@layer tokens {
+/* ═══════════════════════════════════════════════════════════════
+   HALEIKI DESIGN SYSTEM — TOKEN LAYER
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── SCALE: Perfect Fourth (1.333) ── */
+:root {
+  --ratio: 1.333;
+  --step--2: clamp(0.563rem, 0.52rem + 0.18vi, 0.633rem);
+  --step--1: clamp(0.75rem, 0.7rem + 0.22vi, 0.844rem);
+  --step-0:  clamp(1rem, 0.93rem + 0.29vi, 1.125rem);
+  --step-1:  clamp(1.333rem, 1.24rem + 0.39vi, 1.5rem);
+  --step-2:  clamp(1.777rem, 1.65rem + 0.52vi, 2rem);
+  --step-3:  clamp(2.369rem, 2.2rem + 0.69vi, 2.665rem);
+  --step-4:  clamp(3.157rem, 2.93rem + 0.92vi, 3.553rem);
+
+  /* ── SPACING ── */
+  --space-3xs: clamp(0.25rem, 0.23rem + 0.1vi, 0.313rem);
+  --space-2xs: clamp(0.5rem, 0.47rem + 0.15vi, 0.563rem);
+  --space-xs:  clamp(0.75rem, 0.7rem + 0.22vi, 0.844rem);
+  --space-s:   clamp(1rem, 0.93rem + 0.29vi, 1.125rem);
+  --space-m:   clamp(1.5rem, 1.4rem + 0.44vi, 1.688rem);
+  --space-l:   clamp(2rem, 1.86rem + 0.58vi, 2.25rem);
+  --space-xl:  clamp(3rem, 2.79rem + 0.88vi, 3.375rem);
+  --space-2xl: clamp(4rem, 3.72rem + 1.17vi, 4.5rem);
+  --space-3xl: clamp(6rem, 5.58rem + 1.76vi, 6.75rem);
+
+  /* ── SPACE PAIRS ── */
+  --space-s-m:  clamp(1rem, 0.75rem + 1.24vi, 1.688rem);
+  --space-s-l:  clamp(1rem, 0.5rem + 2.48vi, 2.25rem);
+  --space-m-l:  clamp(1.5rem, 1.26rem + 1.18vi, 2.25rem);
+  --space-m-xl: clamp(1.5rem, 0.93rem + 2.82vi, 3.375rem);
+  --space-l-xl: clamp(2rem, 1.49rem + 2.53vi, 3.375rem);
+
+  /* ── TYPE FAMILIES ── */
+  --font-display: 'Red Hat Display', system-ui, sans-serif;
+  --font-body:    'Newsreader', Georgia, serif;
+  --font-mono:    'IBM Plex Mono', 'Menlo', monospace;
+
+  /* ── LAYOUT ── */
+  --content-max: 58ch;
+  --sidebar-width: 280px;
+  --nav-width: 220px;
+  --page-max: 1320px;
+  --radius-s: 4px;
+  --radius-m: 6px;
+  --radius-l: 8px;
+  --radius-pill: 100vmax;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DAY THEME
+   ═══════════════════════════════════════════════════════════════ */
+[data-theme="day"] {
+  --surface-ground:    oklch(0.97 0.01 80);
+  --surface-primary:   oklch(0.99 0.005 80);
+  --surface-secondary: oklch(0.95 0.015 75);
+  --surface-tertiary:  oklch(0.92 0.02 72);
+  --surface-invert:    oklch(0.25 0.03 55);
+
+  --border-subtle:     oklch(0.88 0.025 75);
+  --border-default:    oklch(0.82 0.03 72);
+  --border-strong:     oklch(0.70 0.04 65);
+
+  --text-primary:      oklch(0.22 0.02 55);
+  --text-secondary:    oklch(0.40 0.03 60);
+  --text-tertiary:     oklch(0.55 0.025 65);
+  --text-on-invert:    oklch(0.97 0.01 80);
+
+  --accent-primary:    oklch(0.55 0.14 45);
+  --accent-hover:      oklch(0.48 0.15 42);
+  --accent-subtle:     oklch(0.92 0.04 50);
+  --accent-text:       oklch(0.45 0.12 40);
+
+  --info-surface:      oklch(0.94 0.03 80);
+  --info-border:       oklch(0.82 0.05 75);
+  --info-text:         oklch(0.40 0.06 65);
+
+  --code-surface:      oklch(0.95 0.01 80);
+  --code-border:       oklch(0.88 0.02 75);
+  --code-text:         oklch(0.38 0.08 40);
+
+  --footer-surface:    oklch(0.22 0.025 55);
+  --footer-text:       oklch(0.75 0.015 70);
+  --footer-text-dim:   oklch(0.55 0.015 65);
+  --footer-heading:    oklch(0.90 0.01 75);
+  --footer-link:       oklch(0.75 0.015 70);
+  --footer-link-hover: oklch(0.92 0.01 75);
+  --footer-border:     oklch(0.32 0.025 55);
+  --footer-accent:     oklch(0.65 0.12 50);
+
+  --shadow-soft: 0 1px 3px oklch(0.5 0.02 60 / 0.08);
+  --shadow-medium: 0 2px 8px oklch(0.4 0.03 55 / 0.1);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NIGHT THEME
+   ═══════════════════════════════════════════════════════════════ */
+[data-theme="night"] {
+  --surface-ground:    oklch(0.16 0.02 55);
+  --surface-primary:   oklch(0.20 0.02 55);
+  --surface-secondary: oklch(0.24 0.025 52);
+  --surface-tertiary:  oklch(0.28 0.03 50);
+  --surface-invert:    oklch(0.92 0.02 75);
+
+  --border-subtle:     oklch(0.30 0.03 50);
+  --border-default:    oklch(0.36 0.035 48);
+  --border-strong:     oklch(0.48 0.04 50);
+
+  --text-primary:      oklch(0.90 0.015 75);
+  --text-secondary:    oklch(0.72 0.02 65);
+  --text-tertiary:     oklch(0.55 0.025 58);
+  --text-on-invert:    oklch(0.20 0.02 55);
+
+  --accent-primary:    oklch(0.72 0.14 70);
+  --accent-hover:      oklch(0.78 0.15 72);
+  --accent-subtle:     oklch(0.28 0.06 60);
+  --accent-text:       oklch(0.78 0.12 72);
+
+  --info-surface:      oklch(0.24 0.03 55);
+  --info-border:       oklch(0.36 0.04 52);
+  --info-text:         oklch(0.72 0.04 68);
+
+  --code-surface:      oklch(0.22 0.02 55);
+  --code-border:       oklch(0.32 0.03 52);
+  --code-text:         oklch(0.78 0.1 72);
+
+  --footer-surface:    oklch(0.22 0.02 55);
+  --footer-text:       oklch(0.65 0.015 65);
+  --footer-text-dim:   oklch(0.45 0.015 60);
+  --footer-heading:    oklch(0.82 0.01 70);
+  --footer-link:       oklch(0.65 0.015 65);
+  --footer-link-hover: oklch(0.85 0.01 72);
+  --footer-border:     oklch(0.30 0.025 55);
+  --footer-accent:     oklch(0.72 0.12 70);
+
+  --shadow-soft: 0 1px 3px oklch(0.1 0.02 55 / 0.3);
+  --shadow-medium: 0 2px 8px oklch(0.08 0.02 55 / 0.4);
+}
+} /* end @layer tokens */
+
+@layer reset {
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  font-size: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  font-variation-settings: 'opsz' 14;
+  line-height: 1.65;
+  color: var(--text-primary);
+  background: var(--surface-ground);
+  transition: background 0.3s ease, color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+} /* end @layer reset */
+
+@layer layout {
+/* ═══════════════════════════════════════════════════════════════
+   TOP NAVIGATION BAR — Minimal version
+   ═══════════════════════════════════════════════════════════════ */
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--surface-primary);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--space-2xs) var(--space-s-l);
+  display: flex;
+  align-items: center;
+  gap: var(--space-m);
+  backdrop-filter: blur(12px);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.topnav-brand {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.topnav-brand .brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75em;
+  height: 1.75em;
+  background: var(--accent-primary);
+  color: var(--text-on-invert);
+  border-radius: var(--radius-s);
+  font-size: var(--step--1);
+  font-weight: 700;
+  line-height: 1;
+}
+
+[data-theme="night"] .topnav-brand .brand-mark {
+  color: var(--surface-ground);
+}
+
+.topnav-spacer {
+  flex: 1;
+}
+
+/* ── THEME TOGGLE ── */
+.theme-toggle {
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  padding: var(--space-3xs);
+  display: flex;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.theme-toggle-option {
+  padding: var(--space-3xs) var(--space-xs);
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  line-height: 1;
+  border: none;
+  background: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
+.theme-toggle-option.active {
+  background: var(--accent-primary);
+  color: var(--text-on-invert);
+}
+
+[data-theme="night"] .theme-toggle-option.active {
+  color: var(--surface-ground);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PAGE LAYOUT — Single-column centered
+   ═══════════════════════════════════════════════════════════════ */
+.gallery-content {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 0 var(--space-s-l);
+  width: 100%;
+  flex: 1;
+}
+} /* end @layer layout */
+
+@layer components {
+/* ═══════════════════════════════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════════════════════════════ */
+.hero {
+  text-align: center;
+  padding: var(--space-2xl) 0 var(--space-xl);
+}
+
+.hero-overline {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  margin-bottom: var(--space-xs);
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-bottom: var(--space-xs);
+}
+
+.hero-subtitle {
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  font-variation-settings: 'opsz' 24;
+  color: var(--text-secondary);
+  max-width: 50ch;
+  margin: 0 auto var(--space-m);
+  line-height: 1.6;
+}
+
+.hero-stats {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--text-tertiary);
+  letter-spacing: 0.03em;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MOCKUP CARDS GRID
+   ═══════════════════════════════════════════════════════════════ */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--space-m);
+  margin-bottom: var(--space-2xl);
+}
+
+.mockup-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-l);
+  padding: var(--space-m);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  position: relative;
+}
+
+.mockup-card:hover {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-2px);
+}
+
+.mockup-card:active {
+  transform: translateY(0);
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-xs);
+}
+
+.card-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.2em;
+  height: 2.2em;
+  background: var(--accent-primary);
+  color: var(--text-on-invert);
+  border-radius: var(--radius-m);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+[data-theme="night"] .card-number {
+  color: var(--surface-ground);
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.card-description {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-variation-settings: 'opsz' 14;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-bottom: var(--space-s);
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.card-layout-label {
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  font-weight: 500;
+  color: var(--accent-text);
+  background: var(--accent-subtle);
+  padding: var(--space-3xs) var(--space-2xs);
+  border-radius: var(--radius-s);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.card-filename {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--text-tertiary);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LAYOUT LEGEND
+   ═══════════════════════════════════════════════════════════════ */
+.legend-section {
+  max-width: 900px;
+  margin: 0 auto var(--space-2xl);
+}
+
+.legend-title {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-s);
+  letter-spacing: -0.01em;
+}
+
+.legend-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--step--1);
+}
+
+.legend-table th {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--step--2);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-align: left;
+  padding: var(--space-2xs) var(--space-xs);
+  border-bottom: 2px solid var(--border-default);
+}
+
+.legend-table td {
+  font-family: var(--font-body);
+  font-variation-settings: 'opsz' 14;
+  color: var(--text-primary);
+  padding: var(--space-2xs) var(--space-xs);
+  border-bottom: 1px solid var(--border-subtle);
+  vertical-align: top;
+}
+
+.legend-table td:first-child {
+  font-family: var(--font-display);
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--text-primary);
+}
+
+.legend-table td:last-child {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--text-tertiary);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FOOTER — Simple dev page version
+   ═══════════════════════════════════════════════════════════════ */
+.gallery-footer {
+  border-top: 1px solid var(--border-subtle);
+  padding: var(--space-m) var(--space-s-l);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--text-tertiary);
+  letter-spacing: 0.02em;
+}
+} /* end @layer components */
+
+@layer utilities {
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+} /* end @layer utilities */
+</style>
+</head>
+
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- TOP NAVIGATION — Minimal: brand mark + name + theme toggle    -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<nav class="topnav" aria-label="Site navigation">
+  <a href="index.html" class="topnav-brand">
+    <span class="brand-mark" aria-hidden="true">H</span>
+    Haleiki
+  </a>
+  <div class="topnav-spacer"></div>
+  <div class="theme-toggle" role="radiogroup" aria-label="Theme">
+    <button class="theme-toggle-option active" data-theme-choice="day" aria-label="Day theme">&#9728;</button>
+    <button class="theme-toggle-option" data-theme-choice="night" aria-label="Night theme">&#9790;</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- HERO                                                          -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<main class="gallery-content">
+  <header class="hero">
+    <p class="hero-overline">Design System</p>
+    <h1 class="hero-title">Mockup Gallery</h1>
+    <p class="hero-subtitle">Every page type in the Haleiki wiki, designed in HTML and CSS. Click any card to preview.</p>
+    <p class="hero-stats">9 mockups &middot; 8 page types &middot; 2 themes</p>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- MOCKUP CARDS GRID                                              -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="cards-grid" aria-label="Mockup gallery">
+
+    <!-- 07 — Source Page -->
+    <a href="07-newsreader-red-hat-display.html" class="mockup-card">
+      <div class="card-header">
+        <span class="card-number">07</span>
+        <h2 class="card-title">Source Page</h2>
+      </div>
+      <p class="card-description">The primary article page for authored source content. Three-column layout with left TOC nav, article prose, and right taxonomy sidebar. Features code blocks, callouts, see-also grid, and the full Haleiki design system.</p>
+      <div class="card-meta">
+        <span class="card-layout-label">Three-column</span>
+        <span class="card-filename">07-newsreader-red-hat-display.html</span>
+      </div>
+    </a>
+
+    <!-- 08 — Footer -->
+    <a href="08-footer.html" class="mockup-card">
+      <div class="card-header">
+        <span class="card-number">08</span>
+        <h2 class="card-title">Footer</h2>
+      </div>
+      <p class="card-description">The site-wide columnar footer component. Dark surface with brand column, three link columns, content notice, and copyright bar. Designed to work on both day and night themes.</p>
+      <div class="card-meta">
+        <span class="card-layout-label">Component</span>
+        <span class="card-filename">08-footer.html</span>
+      </div>
+    </a>
+
+    <!-- 09 — Brand Guidelines -->
+    <a href="09-brand-guidelines.html" class="mockup-card">
+      <div class="card-header">
+        <span class="card-number">09</span>
+        <h2 class="card-title">Brand Guidelines</h2>
+      </div>
+      <p class="card-description">The complete Haleiki design system reference. Brand mark, OKLCH colour palettes for both themes, typography specimens, spacing system, layout tokens, and implementation notes.</p>
+      <div class="card-meta">
+        <span class="card-layout-label">Single-column</span>
+        <span class="card-filename">09-brand-guidelines.html</span>
+      </div>
+    </a>
+
+    <!-- 10 — Home Page -->
+    <a href="10-home-page.html" class="mockup-card">
+      <div class="card-header">
+        <span class="card-number">10</span>
+        <h2 class="card-title">Home Page</h2>
+      </div>
+      <p class="card-description">The wiki's front door. Hero with prominent search, category card grid with real article links, featured articles, knowledge tier browsing, and quick links. Designed as a library entrance.</p>
+      <div class="card-meta">
+        <span class="card-layout-label">Single-column (wide)</span>
+        <span class="card-filename">10-home-page.html</span>
+      </div>
+    </a>
+
+    <!-- 11 — Category Listing -->
+    <a href="11-category-page.html" class="mockup-card">
+      <div class="card-header">
+        <span class="card-number">11</span>
+        <h2 class="card-title">Category Listing</h2>
+      </div>
+      <p class="card-description">Articles within a single category, organized by tier and subcategory. Uses Tibetan Buddhism as the example with 16 articles across 5 subcategories. Right sidebar with category metadata.</p>
+      <div class="card-meta">
+        <span class="card-layout-label">Two-column (right sidebar)</span>
+        <span class="card-filename">11-category-page.html</span>
+      </div>
+    </a>
+
+    <!-- 12 — Browse / Index -->
+    <a href="12-browse-page.html" class="mockup-card">
+      <div class="card-header">
+        <span class="card-number">12</span>
+        <h2 class="card-title">Browse / Index</h2>
+      </div>
+      <p class="card-description">The complete card catalog. All 90 articles organized by category and subcategory with a sticky left nav for category jump links. IntersectionObserver tracks scroll position.</p>
+      <div class="card-meta">
+        <span class="card-layout-label">Two-column (left nav)</span>
+        <span class="card-filename">12-browse-page.html</span>
+      </div>
+    </a>
+
+    <!-- 13 — Concept Page -->
+    <a href="13-concept-page.html" class="mockup-card">
+      <div class="card-header">
+        <span class="card-number">13</span>
+        <h2 class="card-title">Concept Page</h2>
+      </div>
+      <p class="card-description">Structured knowledge article with standardized sections. Features Quick Definition callout, prerequisite cards, example panels, common error warnings, and two-column confusion contrast grid. Mark-and-Sweep as example.</p>
+      <div class="card-meta">
+        <span class="card-layout-label">Three-column</span>
+        <span class="card-filename">13-concept-page.html</span>
+      </div>
+    </a>
+
+    <!-- 14 — Attribution -->
+    <a href="14-attribution-page.html" class="mockup-card">
+      <div class="card-header">
+        <span class="card-number">14</span>
+        <h2 class="card-title">Attribution</h2>
+      </div>
+      <p class="card-description">CC BY-SA compliance page listing all 90 source articles and media with full provenance. Grouped by source project (Wikipedia, Rigpa Wiki) and category. License text summaries.</p>
+      <div class="card-meta">
+        <span class="card-layout-label">Single-column</span>
+        <span class="card-filename">14-attribution-page.html</span>
+      </div>
+    </a>
+
+    <!-- 15 — Search Results -->
+    <a href="15-search-page.html" class="mockup-card">
+      <div class="card-header">
+        <span class="card-number">15</span>
+        <h2 class="card-title">Search Results</h2>
+      </div>
+      <p class="card-description">Dedicated search results page with faceted filtering. Left sidebar filters by page type, category, and tier. Eight mock results for 'ownership' with highlighted query terms.</p>
+      <div class="card-meta">
+        <span class="card-layout-label">Two-column (left nav)</span>
+        <span class="card-filename">15-search-page.html</span>
+      </div>
+    </a>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- LAYOUT LEGEND                                                  -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="legend-section" aria-label="Layout legend">
+    <h2 class="legend-title">Layout Types</h2>
+    <table class="legend-table">
+      <thead>
+        <tr>
+          <th>Layout</th>
+          <th>Description</th>
+          <th>Used By</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Three-column</td>
+          <td>Left TOC + article + right sidebar</td>
+          <td>Source page, Concept page</td>
+        </tr>
+        <tr>
+          <td>Two-column (right sidebar)</td>
+          <td>Article + right sidebar</td>
+          <td>Category listing</td>
+        </tr>
+        <tr>
+          <td>Two-column (left nav)</td>
+          <td>Left filter/nav + main content</td>
+          <td>Browse, Search results</td>
+        </tr>
+        <tr>
+          <td>Single-column (centered)</td>
+          <td>Centered content, max ~900px</td>
+          <td>Brand guidelines, Attribution</td>
+        </tr>
+        <tr>
+          <td>Single-column (wide)</td>
+          <td>Centered content, max ~1100px</td>
+          <td>Home page</td>
+        </tr>
+        <tr>
+          <td>Component</td>
+          <td>Isolated component design</td>
+          <td>Footer</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- FOOTER — Simple dev page version                              -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<footer class="gallery-footer">
+  Haleiki Design System &middot; Mockup Gallery &middot; 2026
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- THEME TOGGLE SCRIPT                                            -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<script>
+document.querySelectorAll('.theme-toggle-option').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const theme = btn.dataset.themeChoice;
+    document.documentElement.setAttribute('data-theme', theme);
+    document.querySelectorAll('.theme-toggle-option').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>

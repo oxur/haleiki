@@ -1,0 +1,1740 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="day">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attribution &amp; Licensing — Haleiki</title>
+
+<!-- TYPE STACK: Sans display + Serif body + Mono code -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<style>
+@layer tokens, reset, base, layout, components, utilities;
+
+@layer tokens {
+/* ═══════════════════════════════════════════════════════════════
+   HALEIKI DESIGN SYSTEM — TOKEN LAYER
+   Principles: Geometric scale (4:3), OKLCH color, semantic naming
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── SCALE: Perfect Fourth (1.333) ── */
+:root {
+  --ratio: 1.333;
+  --step--2: clamp(0.563rem, 0.52rem + 0.18vi, 0.633rem);
+  --step--1: clamp(0.75rem, 0.7rem + 0.22vi, 0.844rem);
+  --step-0:  clamp(1rem, 0.93rem + 0.29vi, 1.125rem);
+  --step-1:  clamp(1.333rem, 1.24rem + 0.39vi, 1.5rem);
+  --step-2:  clamp(1.777rem, 1.65rem + 0.52vi, 2rem);
+  --step-3:  clamp(2.369rem, 2.2rem + 0.69vi, 2.665rem);
+  --step-4:  clamp(3.157rem, 2.93rem + 0.92vi, 3.553rem);
+
+  /* ── SPACING: Same ratio, named ── */
+  --space-3xs: clamp(0.25rem, 0.23rem + 0.1vi, 0.313rem);
+  --space-2xs: clamp(0.5rem, 0.47rem + 0.15vi, 0.563rem);
+  --space-xs:  clamp(0.75rem, 0.7rem + 0.22vi, 0.844rem);
+  --space-s:   clamp(1rem, 0.93rem + 0.29vi, 1.125rem);
+  --space-m:   clamp(1.5rem, 1.4rem + 0.44vi, 1.688rem);
+  --space-l:   clamp(2rem, 1.86rem + 0.58vi, 2.25rem);
+  --space-xl:  clamp(3rem, 2.79rem + 0.88vi, 3.375rem);
+  --space-2xl: clamp(4rem, 3.72rem + 1.17vi, 4.5rem);
+  --space-3xl: clamp(6rem, 5.58rem + 1.76vi, 6.75rem);
+
+  /* ── SPACE PAIRS ── */
+  --space-s-m:  clamp(1rem, 0.75rem + 1.24vi, 1.688rem);
+  --space-s-l:  clamp(1rem, 0.5rem + 2.48vi, 2.25rem);
+  --space-m-l:  clamp(1.5rem, 1.26rem + 1.18vi, 2.25rem);
+  --space-m-xl: clamp(1.5rem, 0.93rem + 2.82vi, 3.375rem);
+  --space-l-xl: clamp(2rem, 1.49rem + 2.53vi, 3.375rem);
+
+  /* ── TYPE FAMILIES ── */
+  --font-display: 'Red Hat Display', system-ui, sans-serif;
+  --font-body:    'Newsreader', Georgia, serif;
+  --font-mono:    'IBM Plex Mono', 'Menlo', monospace;
+
+  /* ── LAYOUT ── */
+  --content-max: 58ch;
+  --page-max: 1320px;
+  --radius-s: 4px;
+  --radius-m: 6px;
+  --radius-l: 8px;
+  --radius-pill: 100vmax;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DAY THEME — Warm ochre, sandstone, terracotta
+   ═══════════════════════════════════════════════════════════════ */
+[data-theme="day"] {
+  --surface-ground:    oklch(0.97 0.01 80);
+  --surface-primary:   oklch(0.99 0.005 80);
+  --surface-secondary: oklch(0.95 0.015 75);
+  --surface-tertiary:  oklch(0.92 0.02 72);
+  --surface-invert:    oklch(0.25 0.03 55);
+
+  --border-subtle:     oklch(0.88 0.025 75);
+  --border-default:    oklch(0.82 0.03 72);
+  --border-strong:     oklch(0.70 0.04 65);
+
+  --text-primary:      oklch(0.22 0.02 55);
+  --text-secondary:    oklch(0.40 0.03 60);
+  --text-tertiary:     oklch(0.55 0.025 65);
+  --text-on-invert:    oklch(0.97 0.01 80);
+
+  --accent-primary:    oklch(0.55 0.14 45);   /* terracotta */
+  --accent-hover:      oklch(0.48 0.15 42);
+  --accent-subtle:     oklch(0.92 0.04 50);
+  --accent-text:       oklch(0.45 0.12 40);
+
+  --info-surface:      oklch(0.94 0.03 80);
+  --info-border:       oklch(0.82 0.05 75);
+  --info-text:         oklch(0.40 0.06 65);
+
+  --code-surface:      oklch(0.95 0.01 80);
+  --code-border:       oklch(0.88 0.02 75);
+  --code-text:         oklch(0.38 0.08 40);
+
+  --footer-surface:    oklch(0.22 0.025 55);
+  --footer-text:       oklch(0.75 0.015 70);
+  --footer-text-dim:   oklch(0.55 0.015 65);
+  --footer-heading:    oklch(0.90 0.01 75);
+  --footer-link:       oklch(0.75 0.015 70);
+  --footer-link-hover: oklch(0.92 0.01 75);
+  --footer-border:     oklch(0.32 0.025 55);
+  --footer-accent:     oklch(0.65 0.12 50);
+
+  --shadow-soft: 0 1px 3px oklch(0.5 0.02 60 / 0.08);
+  --shadow-medium: 0 2px 8px oklch(0.4 0.03 55 / 0.1);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NIGHT THEME — Deep oxide, amber accents
+   ═══════════════════════════════════════════════════════════════ */
+[data-theme="night"] {
+  --surface-ground:    oklch(0.16 0.02 55);
+  --surface-primary:   oklch(0.20 0.02 55);
+  --surface-secondary: oklch(0.24 0.025 52);
+  --surface-tertiary:  oklch(0.28 0.03 50);
+  --surface-invert:    oklch(0.92 0.02 75);
+
+  --border-subtle:     oklch(0.30 0.03 50);
+  --border-default:    oklch(0.36 0.035 48);
+  --border-strong:     oklch(0.48 0.04 50);
+
+  --text-primary:      oklch(0.90 0.015 75);
+  --text-secondary:    oklch(0.72 0.02 65);
+  --text-tertiary:     oklch(0.55 0.025 58);
+  --text-on-invert:    oklch(0.20 0.02 55);
+
+  --accent-primary:    oklch(0.72 0.14 70);   /* amber */
+  --accent-hover:      oklch(0.78 0.15 72);
+  --accent-subtle:     oklch(0.28 0.06 60);
+  --accent-text:       oklch(0.78 0.12 72);
+
+  --info-surface:      oklch(0.24 0.03 55);
+  --info-border:       oklch(0.36 0.04 52);
+  --info-text:         oklch(0.72 0.04 68);
+
+  --code-surface:      oklch(0.22 0.02 55);
+  --code-border:       oklch(0.32 0.03 52);
+  --code-text:         oklch(0.78 0.1 72);
+
+  --footer-surface:    oklch(0.22 0.02 55);
+  --footer-text:       oklch(0.65 0.015 65);
+  --footer-text-dim:   oklch(0.45 0.015 60);
+  --footer-heading:    oklch(0.82 0.01 70);
+  --footer-link:       oklch(0.65 0.015 65);
+  --footer-link-hover: oklch(0.85 0.01 72);
+  --footer-border:     oklch(0.30 0.025 55);
+  --footer-accent:     oklch(0.72 0.12 70);
+
+  --shadow-soft: 0 1px 3px oklch(0.1 0.02 55 / 0.3);
+  --shadow-medium: 0 2px 8px oklch(0.08 0.02 55 / 0.4);
+}
+} /* end @layer tokens */
+
+@layer reset {
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  font-size: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  font-variation-settings: 'opsz' 14;
+  line-height: 1.65;
+  color: var(--text-primary);
+  background: var(--surface-ground);
+  transition: background 0.3s ease, color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+} /* end @layer reset */
+
+@layer layout {
+/* ═══════════════════════════════════════════════════════════════
+   TOP NAVIGATION BAR
+   ═══════════════════════════════════════════════════════════════ */
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--surface-primary);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--space-2xs) var(--space-s-l);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2xs) var(--space-m);
+  backdrop-filter: blur(12px);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.topnav-brand {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.topnav-brand .brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75em;
+  height: 1.75em;
+  background: var(--accent-primary);
+  color: var(--text-on-invert);
+  border-radius: var(--radius-s);
+  font-size: var(--step--1);
+  font-weight: 700;
+  line-height: 1;
+}
+
+[data-theme="night"] .topnav-brand .brand-mark {
+  color: var(--surface-ground);
+}
+
+/* ── SEARCH ── */
+.search-container {
+  flex: 1;
+  max-width: 36ch;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: var(--space-2xs) var(--space-s);
+  padding-left: var(--space-l);
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-l);
+  color: var(--text-primary);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.search-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.search-input:focus {
+  border-color: var(--accent-primary);
+  background: var(--surface-primary);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.search-icon {
+  position: absolute;
+  left: var(--space-xs);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+.search-shortcut {
+  position: absolute;
+  right: var(--space-xs);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  padding: 0.125em var(--space-3xs);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-s);
+  color: var(--text-tertiary);
+  background: var(--surface-primary);
+  line-height: 1;
+}
+
+/* ── NAV LINKS ── */
+.topnav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.topnav-links a {
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: var(--space-3xs) var(--space-2xs);
+  border-radius: var(--radius-s);
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.topnav-links a:hover {
+  color: var(--text-primary);
+  background: var(--surface-secondary);
+}
+
+/* ── THEME TOGGLE ── */
+.theme-toggle {
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  padding: var(--space-3xs);
+  display: flex;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.theme-toggle-option {
+  padding: var(--space-3xs) var(--space-xs);
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  line-height: 1;
+  border: none;
+  background: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
+.theme-toggle-option.active {
+  background: var(--accent-primary);
+  color: var(--text-on-invert);
+}
+
+[data-theme="night"] .theme-toggle-option.active {
+  color: var(--surface-ground);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ATTRIBUTION PAGE — Single-Column Layout
+   ═══════════════════════════════════════════════════════════════ */
+.attribution-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-s-l);
+  flex: 1;
+}
+
+/* ── BREADCRUMB ── */
+.breadcrumb {
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-xs);
+  padding-top: var(--space-m);
+}
+
+.breadcrumb a {
+  color: var(--text-tertiary);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  color: var(--accent-text);
+}
+
+.breadcrumb .sep {
+  margin: 0 var(--space-3xs);
+  opacity: 0.5;
+}
+
+/* ── PAGE HEADER ── */
+.page-header {
+  margin-bottom: var(--space-l);
+  padding-bottom: var(--space-s-m);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.page-overline {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent-text);
+  margin-bottom: var(--space-3xs);
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-2xs);
+}
+
+.page-desc {
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  font-variation-settings: 'opsz' 14;
+  color: var(--text-secondary);
+  max-width: 60ch;
+  line-height: 1.65;
+}
+
+/* ── SECTION STRUCTURE ── */
+.section {
+  margin-bottom: var(--space-2xl);
+}
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-3xs);
+}
+
+.section h2 {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  margin-bottom: var(--space-3xs);
+}
+
+.section h3 {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: var(--space-l);
+  margin-bottom: var(--space-2xs);
+  line-height: 1.25;
+}
+
+.desc {
+  font-size: var(--step-0);
+  font-variation-settings: 'opsz' 14;
+  color: var(--text-secondary);
+  max-width: 60ch;
+  line-height: 1.65;
+  margin-bottom: var(--space-m);
+}
+
+.section p {
+  max-width: 60ch;
+  line-height: 1.65;
+  margin-bottom: var(--space-xs);
+  color: var(--text-primary);
+}
+
+.section p:last-child {
+  margin-bottom: 0;
+}
+
+.section strong {
+  font-weight: 650;
+  color: var(--text-primary);
+}
+
+.section a {
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-decoration-color: var(--accent-subtle);
+  text-underline-offset: 2px;
+  transition: text-decoration-color 0.15s ease;
+}
+
+.section a:hover {
+  text-decoration-color: var(--accent-primary);
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border-subtle);
+  margin: var(--space-xl) 0;
+}
+} /* end @layer layout */
+
+@layer components {
+/* ═══════════════════════════════════════════════════════════════
+   LICENSE CALLOUT — Prominent notice box
+   ═══════════════════════════════════════════════════════════════ */
+.license-callout {
+  background: var(--info-surface);
+  border: 1px solid var(--info-border);
+  border-left: 3px solid var(--accent-primary);
+  border-radius: var(--radius-m);
+  padding: var(--space-s) var(--space-m);
+  margin-bottom: var(--space-l);
+}
+
+.license-callout-title {
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--accent-text);
+  margin-bottom: var(--space-3xs);
+}
+
+.license-callout p {
+  font-size: var(--step--1);
+  font-variation-settings: 'opsz' 10;
+  color: var(--info-text);
+  max-width: 60ch;
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ATTRIBUTION TABLE
+   ═══════════════════════════════════════════════════════════════ */
+.attr-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-s) 0;
+  font-size: var(--step--1);
+}
+
+.attr-table th {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  text-align: left;
+  padding: var(--space-2xs) var(--space-xs);
+  border-bottom: 2px solid var(--border-default);
+  font-weight: 500;
+}
+
+.attr-table td {
+  padding: var(--space-2xs) var(--space-xs);
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  vertical-align: top;
+}
+
+.attr-table td:first-child {
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 500;
+}
+
+.attr-table td a {
+  color: var(--accent-text);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.attr-table td a:hover {
+  text-decoration: underline;
+}
+
+.attr-table .ext {
+  font-size: 0.75em;
+  opacity: 0.5;
+  transition: opacity 0.15s ease;
+}
+
+.attr-table a:hover .ext {
+  opacity: 0.8;
+}
+
+/* Category sub-heading row within the table */
+.attr-table .category-row td {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  padding-top: var(--space-s);
+  border-bottom: 1px solid var(--border-default);
+  background: var(--surface-secondary);
+}
+
+/* ── SOURCE HEADING ── */
+.source-heading {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: var(--space-l);
+  margin-bottom: var(--space-3xs);
+  line-height: 1.25;
+}
+
+.source-meta {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-s);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LICENSE CARDS
+   ═══════════════════════════════════════════════════════════════ */
+.license-card {
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-m);
+  padding: var(--space-s) var(--space-m);
+  margin-bottom: var(--space-s);
+}
+
+.license-card-title {
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3xs);
+}
+
+.license-card ul {
+  list-style: none;
+  margin-bottom: var(--space-2xs);
+}
+
+.license-card li {
+  font-size: var(--step--1);
+  color: var(--text-secondary);
+  padding: var(--space-3xs) 0;
+  padding-left: var(--space-s);
+  position: relative;
+  line-height: 1.5;
+}
+
+.license-card li::before {
+  content: "\2022";
+  color: var(--accent-primary);
+  position: absolute;
+  left: 0;
+}
+
+.license-card .license-link {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--accent-text);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  transition: color 0.15s ease;
+}
+
+.license-card .license-link:hover {
+  text-decoration: underline;
+}
+
+.license-card .license-link .ext {
+  font-size: 0.75em;
+  opacity: 0.5;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MEDIA TABLE — slightly different from article table
+   ═══════════════════════════════════════════════════════════════ */
+.media-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-s) 0;
+  font-size: var(--step--1);
+}
+
+.media-table th {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  text-align: left;
+  padding: var(--space-2xs) var(--space-xs);
+  border-bottom: 2px solid var(--border-default);
+  font-weight: 500;
+}
+
+.media-table td {
+  padding: var(--space-2xs) var(--space-xs);
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  vertical-align: top;
+  font-size: var(--step--1);
+}
+
+.media-table td:first-child {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--text-secondary);
+  word-break: break-all;
+}
+
+.media-table td a {
+  color: var(--accent-text);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.media-table td a:hover {
+  text-decoration: underline;
+}
+
+.media-table .ext {
+  font-size: 0.75em;
+  opacity: 0.5;
+}
+
+/* ── MANIFEST NOTE ── */
+.manifest-note {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--text-tertiary);
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-m);
+  padding: var(--space-xs) var(--space-s);
+  margin-top: var(--space-s);
+  text-align: center;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SITE FOOTER — Columnar, dark-surface, warm
+   ═══════════════════════════════════════════════════════════════ */
+.site-footer {
+  background: var(--footer-surface);
+  color: var(--footer-text);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.footer-inner {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-s-l) var(--space-l);
+}
+
+.footer-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-l) var(--space-xl);
+  padding-bottom: var(--space-l);
+}
+
+.footer-brand-col {
+  flex-basis: 260px;
+  flex-grow: 1;
+  max-width: 320px;
+}
+
+.footer-brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  text-decoration: none;
+  color: var(--footer-heading);
+  margin-bottom: var(--space-xs);
+  transition: color 0.15s ease;
+}
+
+.footer-brand-link:hover {
+  color: var(--footer-accent);
+}
+
+.footer-brand-link .brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25em;
+  height: 2.25em;
+  background: var(--footer-accent);
+  color: var(--footer-surface);
+  border-radius: var(--radius-m);
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  font-weight: 800;
+  line-height: 1;
+  transition: background 0.15s ease;
+}
+
+.footer-brand-link:hover .brand-mark {
+  background: var(--footer-link-hover);
+}
+
+.footer-brand-link .brand-name {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.footer-tagline {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-variation-settings: 'opsz' 10;
+  color: var(--footer-text-dim);
+  line-height: 1.5;
+  max-width: 30ch;
+}
+
+.footer-columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-l) var(--space-xl);
+  flex: 1;
+  min-width: 0;
+}
+
+.footer-col {
+  min-width: 140px;
+  flex: 1;
+}
+
+.footer-col-title {
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  font-weight: 600;
+  color: var(--footer-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--space-xs);
+}
+
+.footer-col-list {
+  list-style: none;
+}
+
+.footer-col-list li {
+  margin-bottom: var(--space-3xs);
+}
+
+.footer-col-list a {
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 400;
+  color: var(--footer-link);
+  text-decoration: none;
+  transition: color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+}
+
+.footer-col-list a:hover {
+  color: var(--footer-link-hover);
+}
+
+.footer-col-list a .ext {
+  font-size: 0.75em;
+  opacity: 0.5;
+  transition: opacity 0.15s ease;
+}
+
+.footer-col-list a:hover .ext {
+  opacity: 0.8;
+}
+
+.footer-content-notice {
+  font-family: var(--font-mono);
+  font-size: calc((var(--step--1) + var(--step--2)) / 2);
+  color: var(--footer-text-dim);
+  text-align: center;
+  padding-top: var(--space-m);
+  padding-bottom: var(--space-m);
+  border-bottom: 1px solid var(--footer-border);
+}
+
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2xs) var(--space-l);
+  padding-top: var(--space-m);
+}
+
+.footer-copyright {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--footer-text-dim);
+}
+
+.footer-meta-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-m);
+  list-style: none;
+}
+
+.footer-meta-links a {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--footer-text-dim);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.footer-meta-links a:hover {
+  color: var(--footer-link-hover);
+}
+} /* end @layer components */
+
+@layer utilities {
+@media (max-width: 40rem) {
+  .footer-brand-col {
+    max-width: none;
+    flex-basis: 100%;
+    margin-bottom: var(--space-xs);
+  }
+
+  .footer-bottom {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .attr-table,
+  .media-table {
+    font-size: var(--step--2);
+  }
+
+  .attr-table th,
+  .attr-table td,
+  .media-table th,
+  .media-table td {
+    padding: var(--space-3xs) var(--space-2xs);
+  }
+}
+} /* end @layer utilities */
+</style>
+</head>
+
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- TOP NAVIGATION                                                 -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<nav class="topnav">
+  <a href="#" class="topnav-brand">
+    <span class="brand-mark">H</span>
+    Haleiki
+  </a>
+
+  <div class="search-container">
+    <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="10.5" y1="10.5" x2="15" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <input type="text" class="search-input" placeholder="Search Haleiki...">
+    <span class="search-shortcut">&#8984;K</span>
+  </div>
+
+  <div class="topnav-links">
+    <a href="#">Browse</a>
+    <a href="#">Categories</a>
+    <a href="#">Random</a>
+  </div>
+
+  <div class="theme-toggle" role="radiogroup" aria-label="Theme">
+    <button class="theme-toggle-option active" data-theme-choice="day" aria-label="Day theme">&#9728;</button>
+    <button class="theme-toggle-option" data-theme-choice="night" aria-label="Night theme">&#9790;</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ATTRIBUTION PAGE                                                -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<main class="attribution-page">
+
+  <!-- ── BREADCRUMB ── -->
+  <div class="breadcrumb">
+    <a href="#">Haleiki</a><span class="sep">&#8250;</span>
+    <span>Attribution</span>
+  </div>
+
+  <!-- ── PAGE HEADER ── -->
+  <header class="page-header">
+    <div class="page-overline">Legal</div>
+    <h1 class="page-title">Attribution &amp; Licensing</h1>
+    <p class="page-desc">This knowledge base includes content adapted from Wikipedia, Wikibooks, and Rigpa Wiki under Creative Commons licenses. This page provides complete attribution for all source content and media.</p>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- LICENSE SUMMARY                                                 -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div class="license-callout">
+    <div class="license-callout-title">License Summary</div>
+    <p>All article content in this wiki is adapted from Wikimedia Foundation projects and Rigpa Wiki under Creative Commons Attribution-ShareAlike licenses (CC BY-SA 3.0 and CC BY-SA 4.0). The Haleiki framework itself is dual-licensed under Apache 2.0 / MIT.</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- SOURCE ARTICLES                                                  -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div class="section" id="source-articles">
+    <div class="section-label">Content Sources</div>
+    <h2>Source Articles <span style="font-weight: 400; font-size: var(--step-0); color: var(--text-tertiary);">(90 articles)</span></h2>
+    <p class="desc">Every article in this wiki is adapted from a publicly available source. The table below lists each article, its category, and a link to the original.</p>
+
+    <!-- ── WIKIPEDIA ── -->
+    <h3 class="source-heading">Wikipedia (en.wikipedia.org)</h3>
+    <div class="source-meta">CC BY-SA 4.0 &mdash; 84 articles</div>
+
+    <table class="attr-table">
+      <thead>
+        <tr>
+          <th>Article</th>
+          <th>Category</th>
+          <th>Original</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Tibetan Buddhism -->
+        <tr class="category-row"><td colspan="3">Tibetan Buddhism</td></tr>
+        <tr>
+          <td><a href="#">Dzogchen</a></td>
+          <td>Tibetan Buddhism</td>
+          <td><a href="https://en.wikipedia.org/wiki/Dzogchen">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Chagdud Tulku Rinpoche</a></td>
+          <td>Tibetan Buddhism</td>
+          <td><a href="https://en.wikipedia.org/wiki/Chagdud_Tulku_Rinpoche">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Dilgo Khyentse</a></td>
+          <td>Tibetan Buddhism</td>
+          <td><a href="https://en.wikipedia.org/wiki/Dilgo_Khyentse">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Dudjom Jigdral Yeshe Dorje</a></td>
+          <td>Tibetan Buddhism</td>
+          <td><a href="https://en.wikipedia.org/wiki/Dudjom_Jigdral_Yeshe_Dorje">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Jamgon Kongtrul</a></td>
+          <td>Tibetan Buddhism</td>
+          <td><a href="https://en.wikipedia.org/wiki/Jamgon_Kongtrul">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Vajrayana</a></td>
+          <td>Tibetan Buddhism</td>
+          <td><a href="https://en.wikipedia.org/wiki/Vajrayana">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Vimalamitra</a></td>
+          <td>Tibetan Buddhism</td>
+          <td><a href="https://en.wikipedia.org/wiki/Vimalamitra">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Padmasambhava</a></td>
+          <td>Tibetan Buddhism</td>
+          <td><a href="https://en.wikipedia.org/wiki/Padmasambhava">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Nyingma</a></td>
+          <td>Tibetan Buddhism</td>
+          <td><a href="https://en.wikipedia.org/wiki/Nyingma">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Kagyu</a></td>
+          <td>Tibetan Buddhism</td>
+          <td><a href="https://en.wikipedia.org/wiki/Kagyu">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+
+        <!-- Theoretical Physics -->
+        <tr class="category-row"><td colspan="3">Theoretical Physics</td></tr>
+        <tr>
+          <td><a href="#">M-theory</a></td>
+          <td>Theoretical Physics</td>
+          <td><a href="https://en.wikipedia.org/wiki/M-theory">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Edward Witten</a></td>
+          <td>Theoretical Physics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Edward_Witten">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">String theory</a></td>
+          <td>Theoretical Physics</td>
+          <td><a href="https://en.wikipedia.org/wiki/String_theory">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Topological quantum field theory</a></td>
+          <td>Theoretical Physics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Topological_quantum_field_theory">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Supersymmetry</a></td>
+          <td>Theoretical Physics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Supersymmetry">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">AdS/CFT correspondence</a></td>
+          <td>Theoretical Physics</td>
+          <td><a href="https://en.wikipedia.org/wiki/AdS/CFT_correspondence">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Quantum mechanics</a></td>
+          <td>Theoretical Physics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Quantum_mechanics">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">General relativity</a></td>
+          <td>Theoretical Physics</td>
+          <td><a href="https://en.wikipedia.org/wiki/General_relativity">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Physics</a></td>
+          <td>Theoretical Physics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Physics">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+
+        <!-- Mathematics -->
+        <tr class="category-row"><td colspan="3">Mathematics</td></tr>
+        <tr>
+          <td><a href="#">Group theory</a></td>
+          <td>Mathematics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Group_theory">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Abstract algebra</a></td>
+          <td>Mathematics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Abstract_algebra">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Algebraic structure</a></td>
+          <td>Mathematics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Algebraic_structure">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Group (mathematics)</a></td>
+          <td>Mathematics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Group_(mathematics)">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">History of group theory</a></td>
+          <td>Mathematics</td>
+          <td><a href="https://en.wikipedia.org/wiki/History_of_group_theory">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Category theory</a></td>
+          <td>Mathematics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Category_theory">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Homotopy</a></td>
+          <td>Mathematics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Homotopy">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Homotopy type theory</a></td>
+          <td>Mathematics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Homotopy_type_theory">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Type theory</a></td>
+          <td>Mathematics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Type_theory">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+
+        <!-- Music -->
+        <tr class="category-row"><td colspan="3">Music</td></tr>
+        <tr>
+          <td><a href="#">Music theory</a></td>
+          <td>Music</td>
+          <td><a href="https://en.wikipedia.org/wiki/Music_theory">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">History of music</a></td>
+          <td>Music</td>
+          <td><a href="https://en.wikipedia.org/wiki/History_of_music">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Olivier Messiaen</a></td>
+          <td>Music</td>
+          <td><a href="https://en.wikipedia.org/wiki/Olivier_Messiaen">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Claude Debussy</a></td>
+          <td>Music</td>
+          <td><a href="https://en.wikipedia.org/wiki/Claude_Debussy">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Arvo P&auml;rt</a></td>
+          <td>Music</td>
+          <td><a href="https://en.wikipedia.org/wiki/Arvo_P%C3%A4rt">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Philip Glass</a></td>
+          <td>Music</td>
+          <td><a href="https://en.wikipedia.org/wiki/Philip_Glass">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Max Richter</a></td>
+          <td>Music</td>
+          <td><a href="https://en.wikipedia.org/wiki/Max_Richter">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">&Oacute;lafur Arnalds</a></td>
+          <td>Music</td>
+          <td><a href="https://en.wikipedia.org/wiki/%C3%93lafur_Arnalds">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">David Lewin</a></td>
+          <td>Music</td>
+          <td><a href="https://en.wikipedia.org/wiki/David_Lewin">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Johann Sebastian Bach</a></td>
+          <td>Music</td>
+          <td><a href="https://en.wikipedia.org/wiki/Johann_Sebastian_Bach">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Giovanni Pierluigi da Palestrina</a></td>
+          <td>Music</td>
+          <td><a href="https://en.wikipedia.org/wiki/Giovanni_Pierluigi_da_Palestrina">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Renaissance music</a></td>
+          <td>Music</td>
+          <td><a href="https://en.wikipedia.org/wiki/Renaissance_music">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Medieval music</a></td>
+          <td>Music</td>
+          <td><a href="https://en.wikipedia.org/wiki/Medieval_music">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Jazz</a></td>
+          <td>Music</td>
+          <td><a href="https://en.wikipedia.org/wiki/Jazz">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Miles Davis</a></td>
+          <td>Music</td>
+          <td><a href="https://en.wikipedia.org/wiki/Miles_Davis">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">John Coltrane</a></td>
+          <td>Music</td>
+          <td><a href="https://en.wikipedia.org/wiki/John_Coltrane">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Cool jazz</a></td>
+          <td>Music</td>
+          <td><a href="https://en.wikipedia.org/wiki/Cool_jazz">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+
+        <!-- Programming Languages -->
+        <tr class="category-row"><td colspan="3">Programming Languages</td></tr>
+        <tr>
+          <td><a href="#">Rust (programming language)</a></td>
+          <td>Programming Languages</td>
+          <td><a href="https://en.wikipedia.org/wiki/Rust_(programming_language)">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Erlang (programming language)</a></td>
+          <td>Programming Languages</td>
+          <td><a href="https://en.wikipedia.org/wiki/Erlang_(programming_language)">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">LFE (programming language)</a></td>
+          <td>Programming Languages</td>
+          <td><a href="https://en.wikipedia.org/wiki/LFE_(programming_language)">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Lisp (programming language)</a></td>
+          <td>Programming Languages</td>
+          <td><a href="https://en.wikipedia.org/wiki/Lisp_(programming_language)">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">John McCarthy (computer scientist)</a></td>
+          <td>Programming Languages</td>
+          <td><a href="https://en.wikipedia.org/wiki/John_McCarthy_(computer_scientist)">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+
+        <!-- Artificial Intelligence -->
+        <tr class="category-row"><td colspan="3">Artificial Intelligence</td></tr>
+        <tr>
+          <td><a href="#">Dartmouth workshop</a></td>
+          <td>Artificial Intelligence</td>
+          <td><a href="https://en.wikipedia.org/wiki/Dartmouth_workshop">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Artificial intelligence</a></td>
+          <td>Artificial Intelligence</td>
+          <td><a href="https://en.wikipedia.org/wiki/Artificial_intelligence">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Amanda Askell</a></td>
+          <td>Artificial Intelligence</td>
+          <td><a href="https://en.wikipedia.org/wiki/Amanda_Askell">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Claude (language model)</a></td>
+          <td>Artificial Intelligence</td>
+          <td><a href="https://en.wikipedia.org/wiki/Claude_(language_model)">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+
+        <!-- Philosophy of Mind -->
+        <tr class="category-row"><td colspan="3">Philosophy of Mind</td></tr>
+        <tr>
+          <td><a href="#">Artificial consciousness</a></td>
+          <td>Philosophy of Mind</td>
+          <td><a href="https://en.wikipedia.org/wiki/Artificial_consciousness">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Philosophy of mind</a></td>
+          <td>Philosophy of Mind</td>
+          <td><a href="https://en.wikipedia.org/wiki/Philosophy_of_mind">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Cognitive science</a></td>
+          <td>Philosophy of Mind</td>
+          <td><a href="https://en.wikipedia.org/wiki/Cognitive_science">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Perception</a></td>
+          <td>Philosophy of Mind</td>
+          <td><a href="https://en.wikipedia.org/wiki/Perception">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Eye</a></td>
+          <td>Philosophy of Mind</td>
+          <td><a href="https://en.wikipedia.org/wiki/Eye">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+
+        <!-- Linguistics -->
+        <tr class="category-row"><td colspan="3">Linguistics</td></tr>
+        <tr>
+          <td><a href="#">Writing system</a></td>
+          <td>Linguistics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Writing_system">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Language</a></td>
+          <td>Linguistics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Language">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Classical Tibetan</a></td>
+          <td>Linguistics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Classical_Tibetan">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Proto-Indo-European language</a></td>
+          <td>Linguistics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Proto-Indo-European_language">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Sanskrit</a></td>
+          <td>Linguistics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Sanskrit">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Avestan</a></td>
+          <td>Linguistics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Avestan">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Proto-Sinaitic script</a></td>
+          <td>Linguistics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Proto-Sinaitic_script">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Edicts of Ashoka</a></td>
+          <td>Linguistics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Edicts_of_Ashoka">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Kharosthi</a></td>
+          <td>Linguistics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Kharosthi">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Gandhara</a></td>
+          <td>Linguistics</td>
+          <td><a href="https://en.wikipedia.org/wiki/Gandhara">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+
+        <!-- Botany -->
+        <tr class="category-row"><td colspan="3">Botany</td></tr>
+        <tr>
+          <td><a href="#">Fungus</a></td>
+          <td>Botany</td>
+          <td><a href="https://en.wikipedia.org/wiki/Fungus">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Moss</a></td>
+          <td>Botany</td>
+          <td><a href="https://en.wikipedia.org/wiki/Moss">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Lichen</a></td>
+          <td>Botany</td>
+          <td><a href="https://en.wikipedia.org/wiki/Lichen">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Flowering plant</a></td>
+          <td>Botany</td>
+          <td><a href="https://en.wikipedia.org/wiki/Flowering_plant">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Sequoioideae</a></td>
+          <td>Botany</td>
+          <td><a href="https://en.wikipedia.org/wiki/Sequoioideae">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Eucalyptus</a></td>
+          <td>Botany</td>
+          <td><a href="https://en.wikipedia.org/wiki/Eucalyptus">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Mycorrhiza</a></td>
+          <td>Botany</td>
+          <td><a href="https://en.wikipedia.org/wiki/Mycorrhiza">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+
+        <!-- Geology -->
+        <tr class="category-row"><td colspan="3">Geology</td></tr>
+        <tr>
+          <td><a href="#">Tectonics</a></td>
+          <td>Geology</td>
+          <td><a href="https://en.wikipedia.org/wiki/Tectonics">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Mantle (geology)</a></td>
+          <td>Geology</td>
+          <td><a href="https://en.wikipedia.org/wiki/Mantle_(geology)">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Earth's internal heat budget</a></td>
+          <td>Geology</td>
+          <td><a href="https://en.wikipedia.org/wiki/Earth%27s_internal_heat_budget">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Earth</a></td>
+          <td>Geology</td>
+          <td><a href="https://en.wikipedia.org/wiki/Earth">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Earth's crust</a></td>
+          <td>Geology</td>
+          <td><a href="https://en.wikipedia.org/wiki/Earth%27s_crust">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Internal structure of Earth</a></td>
+          <td>Geology</td>
+          <td><a href="https://en.wikipedia.org/wiki/Internal_structure_of_Earth">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Earth's outer core</a></td>
+          <td>Geology</td>
+          <td><a href="https://en.wikipedia.org/wiki/Earth%27s_outer_core">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Earth's inner core</a></td>
+          <td>Geology</td>
+          <td><a href="https://en.wikipedia.org/wiki/Earth%27s_inner_core">en.wikipedia.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ── RIGPA WIKI ── -->
+    <h3 class="source-heading">Rigpa Wiki (www.rigpawiki.org)</h3>
+    <div class="source-meta">CC BY-SA 3.0 &mdash; 6 articles</div>
+
+    <table class="attr-table">
+      <thead>
+        <tr>
+          <th>Article</th>
+          <th>Category</th>
+          <th>Original</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="#">Yangthang Rinpoche</a></td>
+          <td>Tibetan Buddhism</td>
+          <td><a href="https://www.rigpawiki.org/index.php?title=Yangthang_Rinpoche">rigpawiki.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Gyatrul Rinpoche</a></td>
+          <td>Tibetan Buddhism</td>
+          <td><a href="https://www.rigpawiki.org/index.php?title=Gyatrul_Rinpoche">rigpawiki.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Chogyam Trungpa</a></td>
+          <td>Tibetan Buddhism</td>
+          <td><a href="https://www.rigpawiki.org/index.php?title=Chogyam_Trungpa">rigpawiki.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Longchen Nyingtik</a></td>
+          <td>Tibetan Buddhism</td>
+          <td><a href="https://www.rigpawiki.org/index.php?title=Longchen_Nyingtik">rigpawiki.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Jikme Lingpa</a></td>
+          <td>Tibetan Buddhism</td>
+          <td><a href="https://www.rigpawiki.org/index.php?title=Jikme_Lingpa">rigpawiki.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#">Longchenpa</a></td>
+          <td>Tibetan Buddhism</td>
+          <td><a href="https://www.rigpawiki.org/index.php?title=Longchenpa">rigpawiki.org <span class="ext">&#8599;</span></a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- MEDIA & IMAGES                                                   -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div class="section" id="media">
+    <div class="section-label">Media Sources</div>
+    <h2>Media &amp; Images</h2>
+    <p class="desc">Images are sourced from Wikimedia Commons and downloaded at reduced resolution for web display. Original high-resolution files are available at the linked Commons URLs.</p>
+
+    <table class="media-table">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Source Article</th>
+          <th>License</th>
+          <th>Original</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Mark-and-sweep.svg</td>
+          <td>Garbage Collection</td>
+          <td>CC BY-SA 3.0</td>
+          <td><a href="https://commons.wikimedia.org/wiki/File:Mark-and-sweep.svg">Commons <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td>Quantum-states.png</td>
+          <td>Quantum Mechanics</td>
+          <td>CC BY-SA 4.0</td>
+          <td><a href="https://commons.wikimedia.org/wiki/File:Quantum-states.png">Commons <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td>Padmasambhava.jpg</td>
+          <td>Padmasambhava</td>
+          <td>CC BY-SA 4.0</td>
+          <td><a href="https://commons.wikimedia.org/wiki/File:ثانگکای_پدماسمباوا.jpg">Commons <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td>String-theory-manifold.svg</td>
+          <td>String Theory</td>
+          <td>CC BY-SA 3.0</td>
+          <td><a href="https://commons.wikimedia.org/wiki/File:Calabi-Yau.png">Commons <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td>Group-theory-symmetry.svg</td>
+          <td>Group Theory</td>
+          <td>CC BY-SA 4.0</td>
+          <td><a href="https://commons.wikimedia.org/wiki/File:Rubik%27s_cube.svg">Commons <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td>Mycorrhiza-cross-section.jpg</td>
+          <td>Mycorrhiza</td>
+          <td>CC BY-SA 3.0</td>
+          <td><a href="https://commons.wikimedia.org/wiki/File:Mycorrhizal_root_tips.jpg">Commons <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td>Earth-internal-structure.svg</td>
+          <td>Internal Structure of Earth</td>
+          <td>CC BY-SA 4.0</td>
+          <td><a href="https://commons.wikimedia.org/wiki/File:Earth-crust-cutaway-english.svg">Commons <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td>Miles-Davis-1971.jpg</td>
+          <td>Miles Davis</td>
+          <td>CC BY-SA 3.0</td>
+          <td><a href="https://commons.wikimedia.org/wiki/File:Miles_Davis_by_Palumbo.jpg">Commons <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td>Proto-Sinaitic-inscription.svg</td>
+          <td>Proto-Sinaitic Script</td>
+          <td>CC BY-SA 4.0</td>
+          <td><a href="https://commons.wikimedia.org/wiki/File:Proto-Sinaitic.svg">Commons <span class="ext">&#8599;</span></a></td>
+        </tr>
+        <tr>
+          <td>Rust-logo.svg</td>
+          <td>Rust (programming language)</td>
+          <td>CC BY-SA 4.0</td>
+          <td><a href="https://commons.wikimedia.org/wiki/File:Rust_programming_language_black_logo.svg">Commons <span class="ext">&#8599;</span></a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="manifest-note">
+      Full media manifest with complete attribution data is available at <strong>demo/media/manifest.json</strong>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- LICENSE TEXTS                                                     -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div class="section" id="licenses">
+    <div class="section-label">License Details</div>
+    <h2>License Texts</h2>
+    <p class="desc">The following licenses govern the content and software in this project. Each license grants specific freedoms and imposes specific obligations.</p>
+
+    <div class="license-card">
+      <div class="license-card-title">Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)</div>
+      <ul>
+        <li>You are free to share (copy, redistribute) and adapt (remix, transform, build upon) the material for any purpose, including commercially.</li>
+        <li>You must give appropriate credit, provide a link to the license, and indicate if changes were made.</li>
+        <li>If you remix, transform, or build upon the material, you must distribute your contributions under the same license.</li>
+      </ul>
+      <a class="license-link" href="https://creativecommons.org/licenses/by-sa/4.0/">Full license text at creativecommons.org <span class="ext">&#8599;</span></a>
+    </div>
+
+    <div class="license-card">
+      <div class="license-card-title">Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)</div>
+      <ul>
+        <li>You are free to share and adapt the material for any purpose, including commercially.</li>
+        <li>You must give appropriate credit, provide a link to the license, and indicate if changes were made.</li>
+        <li>If you remix, transform, or build upon the material, you must distribute your contributions under the same license.</li>
+      </ul>
+      <a class="license-link" href="https://creativecommons.org/licenses/by-sa/3.0/">Full license text at creativecommons.org <span class="ext">&#8599;</span></a>
+    </div>
+
+    <div class="license-card">
+      <div class="license-card-title">Apache License 2.0 / MIT License (Framework)</div>
+      <ul>
+        <li>The Haleiki software framework is dual-licensed under Apache 2.0 and MIT at your option.</li>
+        <li>Both licenses are permissive, allowing free use, modification, and distribution.</li>
+        <li>Apache 2.0 includes an express patent grant; MIT is more minimal.</li>
+      </ul>
+      <a class="license-link" href="https://www.apache.org/licenses/LICENSE-2.0" style="margin-right: var(--space-m);">Apache 2.0 <span class="ext">&#8599;</span></a>
+      <a class="license-link" href="https://opensource.org/licenses/MIT">MIT License <span class="ext">&#8599;</span></a>
+    </div>
+  </div>
+
+</main>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SITE FOOTER                                                     -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="footer-inner">
+
+    <!-- ── TOP: Brand + Link Columns ── -->
+    <div class="footer-top">
+
+      <!-- Brand column -->
+      <div class="footer-brand-col">
+        <a href="/" class="footer-brand-link">
+          <span class="brand-mark">H</span>
+          <span class="brand-name">Haleiki</span>
+        </a>
+        <p class="footer-tagline">House of Knowledge — a read-only wiki for structured exploration of interconnected ideas.</p>
+      </div>
+
+      <!-- Link columns -->
+      <div class="footer-columns">
+
+        <div class="footer-col">
+          <div class="footer-col-title">Knowledge Base</div>
+          <ul class="footer-col-list">
+            <li><a href="/">Front Page</a></li>
+            <li><a href="/browse">Browse</a></li>
+            <li><a href="/categories">Categories</a></li>
+            <li><a href="/random">Random</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">About</div>
+          <ul class="footer-col-list">
+            <li><a href="/about">About This Wiki</a></li>
+            <li><a href="/about/haleiki">About Haleiki</a></li>
+            <li><a href="/design">Design</a></li>
+            <li><a href="/license">License</a></li>
+            <li><a href="/privacy">Privacy Policy</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">Development</div>
+          <ul class="footer-col-list">
+            <li><a href="https://github.com/oxur/haleiki">GitHub <span class="ext">&#8599;</span></a></li>
+            <li><a href="https://github.com/oxur/haleiki/issues/new">Submit Issue <span class="ext">&#8599;</span></a></li>
+            <li><a href="https://github.com/oxur/haleiki/discussions">Discussions <span class="ext">&#8599;</span></a></li>
+            <li><a href="https://github.com/oxur/haleiki/blob/main/CHANGELOG.md">Changelog <span class="ext">&#8599;</span></a></li>
+          </ul>
+        </div>
+
+      </div><!-- end .footer-columns -->
+    </div><!-- end .footer-top -->
+
+    <!-- ── CONTENT NOTICE ── -->
+    <div class="footer-content-notice">
+      Wiki content adapted under CC BY-SA. Framework code Apache-2.0 / MIT.
+    </div>
+
+    <!-- ── BOTTOM: Copyright + meta ── -->
+    <div class="footer-bottom">
+      <div class="footer-copyright">&copy; 2026 Oxur Contributors &middot; Apache-2.0 / MIT</div>
+      <ul class="footer-meta-links">
+        <li><a href="/about/haleiki">Built with Haleiki</a></li>
+        <li><a href="https://cobalt-org.github.io/">Powered by Cobalt</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+      </ul>
+    </div>
+
+  </div><!-- end .footer-inner -->
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- THEME TOGGLE SCRIPT                                            -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<script>
+document.querySelectorAll('.theme-toggle-option').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const theme = btn.dataset.themeChoice;
+    document.documentElement.setAttribute('data-theme', theme);
+    document.querySelectorAll('.theme-toggle-option').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>

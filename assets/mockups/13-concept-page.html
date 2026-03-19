@@ -1,0 +1,1934 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="day">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mark-and-Sweep — Haleiki</title>
+
+<!-- TYPE STACK: Sans display + Serif body + Mono code -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<style>
+@layer tokens, reset, base, layout, components, utilities;
+
+@layer tokens {
+/* ═══════════════════════════════════════════════════════════════
+   HALEIKI DESIGN SYSTEM — TOKEN LAYER
+   Principles: Geometric scale (4:3), OKLCH color, semantic naming
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── SCALE: Perfect Fourth (1.333) ── */
+:root {
+  --ratio: 1.333;
+  --step--2: clamp(0.563rem, 0.52rem + 0.18vi, 0.633rem);
+  --step--1: clamp(0.75rem, 0.7rem + 0.22vi, 0.844rem);
+  --step-0:  clamp(1rem, 0.93rem + 0.29vi, 1.125rem);
+  --step-1:  clamp(1.333rem, 1.24rem + 0.39vi, 1.5rem);
+  --step-2:  clamp(1.777rem, 1.65rem + 0.52vi, 2rem);
+  --step-3:  clamp(2.369rem, 2.2rem + 0.69vi, 2.665rem);
+  --step-4:  clamp(3.157rem, 2.93rem + 0.92vi, 3.553rem);
+
+  /* ── SPACING: Same ratio, named ── */
+  --space-3xs: clamp(0.25rem, 0.23rem + 0.1vi, 0.313rem);
+  --space-2xs: clamp(0.5rem, 0.47rem + 0.15vi, 0.563rem);
+  --space-xs:  clamp(0.75rem, 0.7rem + 0.22vi, 0.844rem);
+  --space-s:   clamp(1rem, 0.93rem + 0.29vi, 1.125rem);
+  --space-m:   clamp(1.5rem, 1.4rem + 0.44vi, 1.688rem);
+  --space-l:   clamp(2rem, 1.86rem + 0.58vi, 2.25rem);
+  --space-xl:  clamp(3rem, 2.79rem + 0.88vi, 3.375rem);
+  --space-2xl: clamp(4rem, 3.72rem + 1.17vi, 4.5rem);
+  --space-3xl: clamp(6rem, 5.58rem + 1.76vi, 6.75rem);
+
+  /* ── SPACE PAIRS: Steeper interpolation between two tokens ── */
+  --space-s-m:  clamp(1rem, 0.75rem + 1.24vi, 1.688rem);
+  --space-s-l:  clamp(1rem, 0.5rem + 2.48vi, 2.25rem);
+  --space-m-l:  clamp(1.5rem, 1.26rem + 1.18vi, 2.25rem);
+  --space-m-xl: clamp(1.5rem, 0.93rem + 2.82vi, 3.375rem);
+  --space-l-xl: clamp(2rem, 1.49rem + 2.53vi, 3.375rem);
+
+  /* ── TYPE FAMILIES ── */
+  --font-display: 'Red Hat Display', system-ui, sans-serif;
+  --font-body:    'Newsreader', Georgia, serif;
+  --font-mono:    'IBM Plex Mono', 'Menlo', monospace;
+
+  /* ── LAYOUT ── */
+  --content-max: 58ch;
+  --sidebar-width: 280px;
+  --nav-width: 220px;
+  --page-max: 1320px;
+  --radius-s: 4px;
+  --radius-m: 6px;
+  --radius-l: 8px;
+  --radius-pill: 100vmax;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DAY THEME — Warm ochre, sandstone, terracotta
+   OKLCH-derived, perceptually uniform progressions
+   ═══════════════════════════════════════════════════════════════ */
+[data-theme="day"] {
+  --surface-ground:    oklch(0.97 0.01 80);
+  --surface-primary:   oklch(0.99 0.005 80);
+  --surface-secondary: oklch(0.95 0.015 75);
+  --surface-tertiary:  oklch(0.92 0.02 72);
+  --surface-invert:    oklch(0.25 0.03 55);
+
+  --border-subtle:     oklch(0.88 0.025 75);
+  --border-default:    oklch(0.82 0.03 72);
+  --border-strong:     oklch(0.70 0.04 65);
+
+  --text-primary:      oklch(0.22 0.02 55);
+  --text-secondary:    oklch(0.40 0.03 60);
+  --text-tertiary:     oklch(0.55 0.025 65);
+  --text-on-invert:    oklch(0.97 0.01 80);
+
+  --accent-primary:    oklch(0.55 0.14 45);   /* terracotta */
+  --accent-hover:      oklch(0.48 0.15 42);
+  --accent-subtle:     oklch(0.92 0.04 50);
+  --accent-text:       oklch(0.45 0.12 40);
+
+  --info-surface:      oklch(0.94 0.03 80);
+  --info-border:       oklch(0.82 0.05 75);
+  --info-text:         oklch(0.40 0.06 65);
+
+  --code-surface:      oklch(0.95 0.01 80);
+  --code-border:       oklch(0.88 0.02 75);
+  --code-text:         oklch(0.38 0.08 40);
+
+  --footer-surface:    oklch(0.22 0.025 55);
+  --footer-text:       oklch(0.75 0.015 70);
+  --footer-text-dim:   oklch(0.55 0.015 65);
+  --footer-heading:    oklch(0.90 0.01 75);
+  --footer-link:       oklch(0.75 0.015 70);
+  --footer-link-hover: oklch(0.92 0.01 75);
+  --footer-border:     oklch(0.32 0.025 55);
+  --footer-accent:     oklch(0.65 0.12 50);
+
+  --error-border:      oklch(0.60 0.15 25);
+
+  --shadow-soft: 0 1px 3px oklch(0.5 0.02 60 / 0.08);
+  --shadow-medium: 0 2px 8px oklch(0.4 0.03 55 / 0.1);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NIGHT THEME — Deep oxide, amber accents
+   ═══════════════════════════════════════════════════════════════ */
+[data-theme="night"] {
+  --surface-ground:    oklch(0.16 0.02 55);
+  --surface-primary:   oklch(0.20 0.02 55);
+  --surface-secondary: oklch(0.24 0.025 52);
+  --surface-tertiary:  oklch(0.28 0.03 50);
+  --surface-invert:    oklch(0.92 0.02 75);
+
+  --border-subtle:     oklch(0.30 0.03 50);
+  --border-default:    oklch(0.36 0.035 48);
+  --border-strong:     oklch(0.48 0.04 50);
+
+  --text-primary:      oklch(0.90 0.015 75);
+  --text-secondary:    oklch(0.72 0.02 65);
+  --text-tertiary:     oklch(0.55 0.025 58);
+  --text-on-invert:    oklch(0.20 0.02 55);
+
+  --accent-primary:    oklch(0.72 0.14 70);   /* amber */
+  --accent-hover:      oklch(0.78 0.15 72);
+  --accent-subtle:     oklch(0.28 0.06 60);
+  --accent-text:       oklch(0.78 0.12 72);
+
+  --info-surface:      oklch(0.24 0.03 55);
+  --info-border:       oklch(0.36 0.04 52);
+  --info-text:         oklch(0.72 0.04 68);
+
+  --code-surface:      oklch(0.22 0.02 55);
+  --code-border:       oklch(0.32 0.03 52);
+  --code-text:         oklch(0.78 0.1 72);
+
+  --footer-surface:    oklch(0.22 0.02 55);
+  --footer-text:       oklch(0.65 0.015 65);
+  --footer-text-dim:   oklch(0.45 0.015 60);
+  --footer-heading:    oklch(0.82 0.01 70);
+  --footer-link:       oklch(0.65 0.015 65);
+  --footer-link-hover: oklch(0.85 0.01 72);
+  --footer-border:     oklch(0.30 0.025 55);
+  --footer-accent:     oklch(0.72 0.12 70);
+
+  --error-border:      oklch(0.70 0.13 30);
+
+  --shadow-soft: 0 1px 3px oklch(0.1 0.02 55 / 0.3);
+  --shadow-medium: 0 2px 8px oklch(0.08 0.02 55 / 0.4);
+}
+} /* end @layer tokens */
+
+@layer reset {
+/* ═══════════════════════════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  font-size: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  font-variation-settings: 'opsz' 14;
+  line-height: 1.65;
+  color: var(--text-primary);
+  background: var(--surface-ground);
+  transition: background 0.3s ease, color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+} /* end @layer reset */
+
+@layer layout {
+/* ═══════════════════════════════════════════════════════════════
+   TOP NAVIGATION BAR
+   ═══════════════════════════════════════════════════════════════ */
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--surface-primary);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--space-2xs) var(--space-s-l);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2xs) var(--space-m);
+  backdrop-filter: blur(12px);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.topnav-brand {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.topnav-brand .brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75em;
+  height: 1.75em;
+  background: var(--accent-primary);
+  color: var(--text-on-invert);
+  border-radius: var(--radius-s);
+  font-size: var(--step--1);
+  font-weight: 700;
+  line-height: 1;
+}
+
+[data-theme="night"] .topnav-brand .brand-mark {
+  color: var(--surface-ground);
+}
+
+/* ── SEARCH ── */
+.search-container {
+  flex: 1;
+  max-width: 36ch;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: var(--space-2xs) var(--space-s);
+  padding-left: var(--space-l);
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-l);
+  color: var(--text-primary);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.search-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.search-input:focus {
+  border-color: var(--accent-primary);
+  background: var(--surface-primary);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.search-icon {
+  position: absolute;
+  left: var(--space-xs);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+.search-shortcut {
+  position: absolute;
+  right: var(--space-xs);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  padding: 0.125em var(--space-3xs);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-s);
+  color: var(--text-tertiary);
+  background: var(--surface-primary);
+  line-height: 1;
+}
+
+/* ── NAV LINKS ── */
+.topnav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.topnav-links a {
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: var(--space-3xs) var(--space-2xs);
+  border-radius: var(--radius-s);
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.topnav-links a:hover {
+  color: var(--text-primary);
+  background: var(--surface-secondary);
+}
+
+/* ── THEME TOGGLE ── */
+.theme-toggle {
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  padding: var(--space-3xs);
+  display: flex;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.theme-toggle-option {
+  padding: var(--space-3xs) var(--space-xs);
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  line-height: 1;
+  border: none;
+  background: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
+.theme-toggle-option.active {
+  background: var(--accent-primary);
+  color: var(--text-on-invert);
+}
+
+[data-theme="night"] .theme-toggle-option.active {
+  color: var(--surface-ground);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PAGE LAYOUT — Intrinsic: nested Sidebar primitives
+   No media queries for column arrangement
+   ═══════════════════════════════════════════════════════════════ */
+.page-layout {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-m-l);
+  padding: var(--space-s-l);
+  align-items: start;
+  flex: 1;
+}
+
+/* Left nav: Sidebar primitive — collapses when content would be < 65% */
+.left-nav {
+  flex-basis: var(--nav-width);
+  flex-grow: 0;
+  flex-shrink: 1;
+}
+
+/* Main + sidebar wrapper: takes remaining space */
+.content-area {
+  flex-basis: 0;
+  flex-grow: 999;
+  min-inline-size: 65%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-m-l);
+  align-items: start;
+}
+
+/* Article: Sidebar primitive — sidebar wraps above when content < 60% */
+.article {
+  flex-basis: 0;
+  flex-grow: 999;
+  min-inline-size: 60%;
+}
+
+.sidebar {
+  flex-basis: var(--sidebar-width);
+  flex-grow: 0;
+  flex-shrink: 1;
+}
+
+/* ── LEFT NAV (Table of Contents) ── */
+.left-nav {
+  position: sticky;
+  top: calc(3.5rem + var(--space-l));
+  font-family: var(--font-display);
+}
+
+.left-nav-title {
+  font-size: var(--step--2);
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--space-xs);
+}
+
+.toc-list {
+  list-style: none;
+}
+
+.toc-list li {
+  margin-bottom: 0.125em;
+}
+
+.toc-list a {
+  display: block;
+  font-size: var(--step--1);
+  font-weight: 400;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: var(--space-3xs) var(--space-2xs);
+  border-left: 2px solid transparent;
+  border-radius: 0 var(--radius-s) var(--radius-s) 0;
+  transition: all 0.15s ease;
+  line-height: 1.4;
+}
+
+.toc-list a:hover {
+  color: var(--text-primary);
+  background: var(--surface-secondary);
+}
+
+.toc-list a.active {
+  color: var(--accent-text);
+  border-left-color: var(--accent-primary);
+  background: var(--accent-subtle);
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MAIN CONTENT AREA
+   ═══════════════════════════════════════════════════════════════ */
+/* ── BREADCRUMB ── */
+.breadcrumb {
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-xs);
+}
+
+.breadcrumb a {
+  color: var(--text-tertiary);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  color: var(--accent-text);
+}
+
+.breadcrumb .sep {
+  margin: 0 var(--space-3xs);
+  opacity: 0.5;
+}
+
+/* ── ARTICLE HEADER ── */
+.article-header {
+  margin-bottom: var(--space-m-l);
+  padding-bottom: var(--space-s-m);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.article-overline {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent-text);
+  margin-bottom: var(--space-3xs);
+}
+
+.article-title {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-xs);
+}
+
+.article-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  align-items: center;
+}
+
+.tag {
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  font-weight: 500;
+  padding: var(--space-3xs) var(--space-xs);
+  border-radius: var(--radius-pill);
+  background: var(--surface-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.tag:hover {
+  background: var(--accent-subtle);
+  color: var(--accent-text);
+  border-color: var(--accent-primary);
+}
+} /* end @layer layout */
+
+@layer components {
+/* ═══════════════════════════════════════════════════════════════
+   PROSE
+   ═══════════════════════════════════════════════════════════════ */
+.prose {
+  max-width: var(--content-max);
+}
+
+.prose p {
+  margin-bottom: var(--space-s);
+}
+
+.prose h2 {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.015em;
+  margin-top: var(--space-m-xl);
+  margin-bottom: var(--space-xs);
+  line-height: 1.2;
+}
+
+.prose h3 {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: var(--space-m-l);
+  margin-bottom: var(--space-2xs);
+  line-height: 1.25;
+}
+
+.prose a {
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-decoration-color: var(--accent-subtle);
+  text-underline-offset: 2px;
+  transition: text-decoration-color 0.15s ease;
+}
+
+.prose a:hover {
+  text-decoration-color: var(--accent-primary);
+}
+
+.prose strong {
+  font-weight: 650;
+  color: var(--text-primary);
+}
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--code-surface);
+  border: 1px solid var(--code-border);
+  padding: 0.1em 0.35em;
+  border-radius: var(--radius-s);
+  color: var(--code-text);
+}
+
+.prose ul, .prose ol {
+  margin-bottom: var(--space-s);
+  padding-left: var(--space-m);
+}
+
+.prose li {
+  margin-bottom: var(--space-3xs);
+}
+
+.prose em {
+  font-style: italic;
+}
+
+/* ── CODE BLOCK ── */
+.code-block {
+  background: var(--code-surface);
+  border: 1px solid var(--code-border);
+  border-radius: var(--radius-m);
+  padding: var(--space-s) var(--space-m);
+  margin-bottom: var(--space-m);
+  overflow-x: auto;
+  position: relative;
+}
+
+.code-block-header {
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  font-weight: 500;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-2xs);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.code-block pre {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  line-height: 1.55;
+  color: var(--code-text);
+  white-space: pre;
+}
+
+.code-block .kw { color: var(--accent-text); font-weight: 500; }
+.code-block .fn { color: var(--text-primary); }
+.code-block .cm { color: var(--text-tertiary); font-style: italic; }
+.code-block .st { color: oklch(0.6 0.12 150); }
+[data-theme="night"] .code-block .st { color: oklch(0.75 0.12 150); }
+.code-block .ty { color: oklch(0.5 0.1 280); }
+[data-theme="night"] .code-block .ty { color: oklch(0.75 0.1 280); }
+
+/* ── NOTE / CALLOUT ── */
+.callout {
+  background: var(--info-surface);
+  border: 1px solid var(--info-border);
+  border-left: 3px solid var(--accent-primary);
+  border-radius: var(--radius-m);
+  padding: var(--space-s) var(--space-m);
+  margin-bottom: var(--space-m);
+}
+
+.callout-title {
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--accent-text);
+  margin-bottom: var(--space-3xs);
+}
+
+.callout p {
+  font-size: var(--step--1);
+  font-variation-settings: 'opsz' 10;
+  color: var(--info-text);
+  max-width: var(--content-max);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   QUICK DEFINITION — Top-of-page definition box
+   ═══════════════════════════════════════════════════════════════ */
+.quick-definition {
+  background: var(--surface-secondary);
+  border-left: 4px solid var(--accent-primary);
+  border-radius: var(--radius-m);
+  padding: var(--space-m);
+  margin-bottom: var(--space-m);
+}
+
+.quick-definition-label {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent-text);
+  margin-bottom: var(--space-2xs);
+}
+
+.quick-definition p {
+  font-family: var(--font-body);
+  font-size: var(--step-1);
+  font-variation-settings: 'opsz' 20;
+  color: var(--text-primary);
+  line-height: 1.5;
+  max-width: var(--content-max);
+  margin: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PREREQUISITES — Linked card list
+   ═══════════════════════════════════════════════════════════════ */
+.prerequisites {
+  margin-top: var(--space-m-xl);
+  margin-bottom: var(--space-s);
+}
+
+.prerequisites h2 {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.015em;
+  margin-bottom: var(--space-xs);
+  line-height: 1.2;
+}
+
+.prereq-list {
+  max-width: var(--content-max);
+}
+
+.prereq-item {
+  display: block;
+  padding: var(--space-xs) var(--space-s);
+  border-bottom: 1px solid var(--border-subtle);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.prereq-item:first-child {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.prereq-item:hover {
+  background: var(--surface-secondary);
+  border-left-color: var(--accent-primary);
+}
+
+.prereq-name {
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  font-weight: 600;
+  color: var(--accent-text);
+  display: block;
+}
+
+.prereq-rationale {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--text-secondary);
+  display: block;
+  margin-top: 2px;
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   KEY PROPERTIES — Numbered definition list
+   ═══════════════════════════════════════════════════════════════ */
+.key-properties {
+  margin-top: var(--space-m-xl);
+  margin-bottom: var(--space-s);
+}
+
+.key-properties h2 {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.015em;
+  margin-bottom: var(--space-xs);
+  line-height: 1.2;
+}
+
+.property-list {
+  max-width: var(--content-max);
+  padding-left: var(--space-m);
+  margin-bottom: var(--space-s);
+}
+
+.property-list li {
+  margin-bottom: var(--space-2xs);
+  line-height: 1.6;
+}
+
+.property-list strong {
+  font-weight: 650;
+  color: var(--text-primary);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   EXAMPLE PANELS — Distinct background treatment
+   ═══════════════════════════════════════════════════════════════ */
+.example-panel {
+  background: var(--info-surface);
+  border: 1px solid var(--info-border);
+  border-radius: var(--radius-m);
+  padding: var(--space-m);
+  margin-bottom: var(--space-m);
+}
+
+.example-label {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  color: var(--info-text);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: var(--space-xs);
+}
+
+.example-content {
+  max-width: var(--content-max);
+}
+
+.example-content p {
+  margin-bottom: var(--space-2xs);
+  line-height: 1.6;
+}
+
+.example-content .code-block {
+  margin-top: var(--space-xs);
+}
+
+.example-source {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--text-tertiary);
+  border-top: 1px solid var(--info-border);
+  padding-top: var(--space-xs);
+  margin-top: var(--space-s);
+}
+
+.example-source a {
+  color: var(--accent-text);
+  text-decoration: none;
+}
+
+.example-source a:hover {
+  text-decoration: underline;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RELATIONSHIPS — Structured cards by type
+   ═══════════════════════════════════════════════════════════════ */
+.relationships {
+  margin-top: var(--space-m-xl);
+  margin-bottom: var(--space-s);
+}
+
+.relationships h2 {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.015em;
+  margin-bottom: var(--space-xs);
+  line-height: 1.2;
+}
+
+.relationship-group {
+  margin-bottom: var(--space-m);
+  max-width: var(--content-max);
+}
+
+.relationship-type {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-text);
+  margin-bottom: var(--space-3xs);
+}
+
+.relationship-group p {
+  margin-bottom: var(--space-2xs);
+  line-height: 1.6;
+}
+
+.relationship-group a {
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-decoration-color: var(--accent-subtle);
+  text-underline-offset: 2px;
+  transition: text-decoration-color 0.15s ease;
+}
+
+.relationship-group a:hover {
+  text-decoration-color: var(--accent-primary);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   COMMON ERRORS — Warning-style cards
+   ═══════════════════════════════════════════════════════════════ */
+.common-errors {
+  margin-top: var(--space-m-xl);
+  margin-bottom: var(--space-s);
+}
+
+.common-errors h2 {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.015em;
+  margin-bottom: var(--space-xs);
+  line-height: 1.2;
+}
+
+.error-card {
+  background: var(--surface-secondary);
+  border-left: 3px solid var(--error-border);
+  border-radius: var(--radius-m);
+  padding: var(--space-s) var(--space-m);
+  margin-bottom: var(--space-s);
+  max-width: var(--content-max);
+}
+
+.error-title {
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3xs);
+}
+
+.error-card p {
+  font-size: var(--step--1);
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   COMMON CONFUSIONS — Two-column contrast pattern
+   ═══════════════════════════════════════════════════════════════ */
+.common-confusions {
+  margin-top: var(--space-m-xl);
+  margin-bottom: var(--space-s);
+}
+
+.common-confusions h2 {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.015em;
+  margin-bottom: var(--space-xs);
+  line-height: 1.2;
+}
+
+.confusion-pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-s);
+  margin-bottom: var(--space-m);
+}
+
+.confusion-wrong {
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-m);
+  padding: var(--space-s);
+}
+
+.confusion-right {
+  background: var(--accent-subtle);
+  border: 1px solid oklch(from var(--accent-primary) l c h / 0.3);
+  border-radius: var(--radius-m);
+  padding: var(--space-s);
+}
+
+/* Fallback for browsers that don't support relative color syntax */
+[data-theme="day"] .confusion-right {
+  border-color: oklch(0.55 0.14 45 / 0.3);
+}
+
+[data-theme="night"] .confusion-right {
+  border-color: oklch(0.72 0.14 70 / 0.3);
+}
+
+.confusion-label {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: var(--space-2xs);
+}
+
+.confusion-wrong .confusion-label {
+  color: var(--text-tertiary);
+}
+
+.confusion-right .confusion-label {
+  color: var(--accent-text);
+}
+
+.confusion-wrong p,
+.confusion-right p {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  line-height: 1.6;
+}
+
+/* ── SEE ALSO ── */
+.see-also {
+  margin-top: var(--space-m-xl);
+  padding-top: var(--space-s-m);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.see-also-title {
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.see-also-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-2xs);
+}
+
+.see-also-card {
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-m);
+  padding: var(--space-xs) var(--space-s);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.see-also-card:hover {
+  border-color: var(--accent-primary);
+  background: var(--accent-subtle);
+  box-shadow: var(--shadow-soft);
+}
+
+.see-also-card-title {
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.125em;
+}
+
+.see-also-card-desc {
+  font-size: var(--step--2);
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RIGHT SIDEBAR — Taxonomy / Info Card
+   ═══════════════════════════════════════════════════════════════ */
+.sidebar {
+  position: sticky;
+  top: calc(3.5rem + var(--space-l));
+}
+
+.info-card {
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-l);
+  overflow: hidden;
+}
+
+.info-card-header {
+  background: var(--accent-primary);
+  color: var(--text-on-invert);
+  padding: var(--space-xs) var(--space-s);
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  text-align: center;
+}
+
+[data-theme="night"] .info-card-header {
+  color: var(--surface-ground);
+}
+
+.info-card-body {
+  padding: var(--space-2xs) 0;
+}
+
+.info-row {
+  display: flex;
+  padding: var(--space-3xs) var(--space-s);
+  font-size: var(--step--1);
+  line-height: 1.4;
+}
+
+.info-row:hover {
+  background: var(--surface-tertiary);
+}
+
+.info-label {
+  flex-shrink: 0;
+  width: 10ch;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+}
+
+.info-value {
+  color: var(--text-primary);
+  font-size: var(--step--2);
+}
+
+.info-value a {
+  color: var(--accent-text);
+  text-decoration: none;
+}
+
+.info-value a:hover {
+  text-decoration: underline;
+}
+
+.info-card-section {
+  padding: var(--space-3xs) var(--space-s);
+  border-top: 1px solid var(--border-subtle);
+  margin-top: var(--space-3xs);
+}
+
+.info-card-section-title {
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: var(--space-3xs);
+}
+
+.info-card-section .tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3xs);
+}
+
+.info-card-section .tag {
+  font-size: var(--step--2);
+  padding: 0.125em var(--space-2xs);
+}
+
+.info-card-section p {
+  font-size: var(--step--2);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-3xs);
+  line-height: 1.4;
+}
+
+.info-card-section p a {
+  color: var(--accent-text);
+  text-decoration: none;
+}
+
+.info-card-section p a:hover {
+  text-decoration: underline;
+}
+
+.alias-list {
+  list-style: none;
+}
+
+.alias-list li {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--text-secondary);
+  padding: 0.125em 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SITE FOOTER — Columnar, dark-surface, warm
+   ═══════════════════════════════════════════════════════════════ */
+.site-footer {
+  background: var(--footer-surface);
+  color: var(--footer-text);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.footer-inner {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-s-l) var(--space-l);
+}
+
+/* ── FOOTER TOP: Brand + Columns ── */
+.footer-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-l) var(--space-xl);
+  padding-bottom: var(--space-l);
+}
+
+.footer-brand-col {
+  flex-basis: 260px;
+  flex-grow: 1;
+  max-width: 320px;
+}
+
+.footer-brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  text-decoration: none;
+  color: var(--footer-heading);
+  margin-bottom: var(--space-xs);
+  transition: color 0.15s ease;
+}
+
+.footer-brand-link:hover {
+  color: var(--footer-accent);
+}
+
+.footer-brand-link .brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25em;
+  height: 2.25em;
+  background: var(--footer-accent);
+  color: var(--footer-surface);
+  border-radius: var(--radius-m);
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  font-weight: 800;
+  line-height: 1;
+  transition: background 0.15s ease;
+}
+
+.footer-brand-link:hover .brand-mark {
+  background: var(--footer-link-hover);
+}
+
+.footer-brand-link .brand-name {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.footer-tagline {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-variation-settings: 'opsz' 10;
+  color: var(--footer-text-dim);
+  line-height: 1.5;
+  max-width: 30ch;
+}
+
+/* ── LINK COLUMNS ── */
+.footer-columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-l) var(--space-xl);
+  flex: 1;
+  min-width: 0;
+}
+
+.footer-col {
+  min-width: 140px;
+  flex: 1;
+}
+
+.footer-col-title {
+  font-family: var(--font-display);
+  font-size: var(--step--2);
+  font-weight: 600;
+  color: var(--footer-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--space-xs);
+}
+
+.footer-col-list {
+  list-style: none;
+}
+
+.footer-col-list li {
+  margin-bottom: var(--space-3xs);
+}
+
+.footer-col-list a {
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 400;
+  color: var(--footer-link);
+  text-decoration: none;
+  transition: color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+}
+
+.footer-col-list a:hover {
+  color: var(--footer-link-hover);
+}
+
+.footer-col-list a .ext {
+  font-size: 0.75em;
+  opacity: 0.5;
+  transition: opacity 0.15s ease;
+}
+
+.footer-col-list a:hover .ext {
+  opacity: 0.8;
+}
+
+/* ── CONTENT NOTICE ── */
+.footer-content-notice {
+  font-family: var(--font-mono);
+  font-size: calc((var(--step--1) + var(--step--2)) / 2);
+  color: var(--footer-text-dim);
+  text-align: center;
+  padding-top: var(--space-m);
+  padding-bottom: var(--space-m);
+  border-bottom: 1px solid var(--footer-border);
+}
+
+/* ── FOOTER BOTTOM ── */
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2xs) var(--space-l);
+  padding-top: var(--space-m);
+}
+
+.footer-copyright {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--footer-text-dim);
+}
+
+.footer-meta-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-m);
+  list-style: none;
+}
+
+.footer-meta-links a {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--footer-text-dim);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.footer-meta-links a:hover {
+  color: var(--footer-link-hover);
+}
+} /* end @layer components */
+
+@layer utilities {
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Left nav hides on narrow viewports — content decision, not layout */
+@media (max-width: 60rem) {
+  .left-nav {
+    display: none;
+  }
+}
+
+/* Footer brand col takes full width on narrow viewports */
+@media (max-width: 40rem) {
+  .footer-brand-col {
+    max-width: none;
+    flex-basis: 100%;
+    margin-bottom: var(--space-xs);
+  }
+
+  .footer-bottom {
+    justify-content: center;
+    text-align: center;
+  }
+}
+} /* end @layer utilities */
+</style>
+</head>
+
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- TOP NAVIGATION                                                 -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<nav class="topnav">
+  <a href="#" class="topnav-brand">
+    <span class="brand-mark">H</span>
+    Haleiki
+  </a>
+
+  <div class="search-container">
+    <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="10.5" y1="10.5" x2="15" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <input type="text" class="search-input" placeholder="Search Haleiki...">
+    <span class="search-shortcut">&#8984;K</span>
+  </div>
+
+  <div class="topnav-links">
+    <a href="#">Browse</a>
+    <a href="#">Categories</a>
+    <a href="#">Random</a>
+  </div>
+
+  <div class="theme-toggle" role="radiogroup" aria-label="Theme">
+    <button class="theme-toggle-option active" data-theme-choice="day" aria-label="Day theme">&#9788;</button>
+    <button class="theme-toggle-option" data-theme-choice="night" aria-label="Night theme">&#9790;</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- PAGE LAYOUT                                                    -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="page-layout">
+
+  <!-- ── LEFT NAV: Table of Contents ── -->
+  <aside class="left-nav">
+    <div class="left-nav-title">Contents</div>
+    <ul class="toc-list">
+      <li><a href="#quick-definition" class="active">Quick Definition</a></li>
+      <li><a href="#core-definition">Core Definition</a></li>
+      <li><a href="#prerequisites">Prerequisites</a></li>
+      <li><a href="#key-properties">Key Properties</a></li>
+      <li><a href="#context-application">Context &amp; Application</a></li>
+      <li><a href="#examples">Examples</a></li>
+      <li><a href="#relationships">Relationships</a></li>
+      <li><a href="#common-errors">Common Errors</a></li>
+      <li><a href="#common-confusions">Common Confusions</a></li>
+      <li><a href="#see-also">See Also</a></li>
+    </ul>
+  </aside>
+
+  <!-- ── CONTENT AREA: Article + Sidebar ── -->
+  <div class="content-area">
+
+  <!-- ── MAIN ARTICLE ── -->
+  <main class="article">
+
+    <div class="breadcrumb">
+      <a href="#">Haleiki</a><span class="sep">&#8250;</span>
+      <a href="#">Memory Management</a><span class="sep">&#8250;</span>
+      <span>Mark-and-Sweep</span>
+    </div>
+
+    <header class="article-header">
+      <div class="article-overline">Concept</div>
+      <h1 class="article-title">Mark-and-Sweep</h1>
+      <div class="article-meta">
+        <a href="#" class="tag">Memory Management</a>
+        <a href="#" class="tag">Garbage Collection</a>
+        <a href="#" class="tag">Algorithm</a>
+        <a href="#" class="tag">Intermediate</a>
+      </div>
+    </header>
+
+    <!-- ── QUICK DEFINITION ── -->
+    <div class="quick-definition" id="quick-definition">
+      <div class="quick-definition-label">Quick Definition</div>
+      <p>Mark-and-sweep is a garbage collection algorithm that reclaims memory in two phases: first marking all reachable objects by tracing from root references, then sweeping through the heap to free any unmarked (unreachable) objects.</p>
+    </div>
+
+    <div class="prose">
+
+      <!-- ── CORE DEFINITION ── -->
+      <h2 id="core-definition">Core Definition</h2>
+
+      <p>Mark-and-sweep was first described by John McCarthy in 1960 as part of the Lisp garbage collector -- the first automatic memory management system. It remains the conceptual foundation upon which nearly all modern tracing garbage collectors are built.</p>
+
+      <p>The algorithm operates on the assumption that any object not reachable from a set of "root" references (stack variables, global variables, CPU registers) is garbage and can be safely reclaimed. This is a conservative but correct assumption: an unreachable object cannot possibly be used by the program again.</p>
+
+      <p>The two phases are:</p>
+
+      <ol>
+        <li><strong>Mark phase:</strong> Starting from root references, traverse all reachable objects via pointer-following. Each visited object is marked (typically by setting a bit in the object header).</li>
+        <li><strong>Sweep phase:</strong> Walk the entire heap linearly. Any object without a mark bit is unreachable -- free its memory. Clear all mark bits for the next cycle.</li>
+      </ol>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <span>Pseudocode -- Mark-and-Sweep Algorithm</span>
+        </div>
+<pre><span class="kw">function</span> <span class="fn">mark_and_sweep</span>(roots, heap):
+    <span class="cm">// Phase 1: Mark</span>
+    worklist = roots.copy()
+    <span class="kw">while</span> worklist <span class="kw">is not</span> empty:
+        obj = worklist.pop()
+        <span class="kw">if not</span> obj.marked:
+            obj.marked = <span class="kw">true</span>
+            <span class="kw">for</span> ref <span class="kw">in</span> obj.references():
+                worklist.push(ref)
+
+    <span class="cm">// Phase 2: Sweep</span>
+    <span class="kw">for</span> obj <span class="kw">in</span> heap.all_objects():
+        <span class="kw">if</span> obj.marked:
+            obj.marked = <span class="kw">false</span>   <span class="cm">// reset for next cycle</span>
+        <span class="kw">else</span>:
+            heap.free(obj)             <span class="cm">// unreachable -- reclaim</span></pre>
+      </div>
+
+    </div><!-- end .prose -->
+
+    <!-- ── PREREQUISITES ── -->
+    <div class="prerequisites" id="prerequisites">
+      <h2>Prerequisites</h2>
+      <div class="prereq-list">
+        <a href="#" class="prereq-item">
+          <span class="prereq-name">Heap Memory</span>
+          <span class="prereq-rationale">Mark-and-sweep operates on heap-allocated objects; understanding heap vs. stack is essential.</span>
+        </a>
+        <a href="#" class="prereq-item">
+          <span class="prereq-name">Pointer / Reference</span>
+          <span class="prereq-rationale">The mark phase follows pointers between objects -- the reachability graph is a pointer graph.</span>
+        </a>
+        <a href="#" class="prereq-item">
+          <span class="prereq-name">Memory Allocation</span>
+          <span class="prereq-rationale">The sweep phase frees memory blocks; understanding allocation helps understand what "freeing" means.</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── KEY PROPERTIES ── -->
+    <div class="key-properties" id="key-properties">
+      <h2>Key Properties</h2>
+      <ol class="property-list">
+        <li>
+          <strong>Tracing-based:</strong> Determines liveness by tracing the object graph from roots, as opposed to reference counting which tracks individual reference operations.
+        </li>
+        <li>
+          <strong>Stop-the-world:</strong> In its basic form, the mutator (application) must pause during collection. Concurrent and incremental variants relax this constraint.
+        </li>
+        <li>
+          <strong>Non-moving:</strong> Basic mark-and-sweep does not relocate objects -- they stay at their original addresses. This simplifies pointer management but causes fragmentation.
+        </li>
+        <li>
+          <strong>Complete:</strong> Correctly reclaims all unreachable objects, including cycles -- unlike reference counting, which leaks cyclic structures without supplementary cycle detection.
+        </li>
+        <li>
+          <strong>Latency cost:</strong> Collection pauses are proportional to heap size (mark phase visits all live objects; sweep phase touches the entire heap).
+        </li>
+      </ol>
+    </div>
+
+    <div class="prose">
+
+      <!-- ── CONTEXT & APPLICATION ── -->
+      <h2 id="context-application">Context &amp; Application</h2>
+
+      <p>Mark-and-sweep is the foundation of garbage collection in most managed runtimes. The JVM's G1 and ZGC collectors, .NET's CLR, Go's concurrent GC, and JavaScript engines like V8's Orinoco are all sophisticated descendants of the basic mark-and-sweep algorithm. Understanding mark-and-sweep illuminates the tradeoffs in all of these implementations.</p>
+
+      <p>The algorithm's strength is its simplicity and correctness. It handles cyclic references naturally (unlike reference counting), and its two-phase structure maps cleanly onto hardware capabilities: the mark phase exercises the memory hierarchy through pointer chasing, while the sweep phase benefits from sequential access patterns.</p>
+
+      <div class="callout">
+        <div class="callout-title">Why it matters</div>
+        <p>Mark-and-sweep's simplicity makes it the pedagogical foundation -- every modern GC algorithm is either a refinement of mark-and-sweep or a deliberate alternative to it.</p>
+      </div>
+
+    </div><!-- end .prose -->
+
+    <!-- ── EXAMPLES ── -->
+    <div class="prose" id="examples">
+      <h2>Examples</h2>
+    </div>
+
+    <div class="example-panel">
+      <div class="example-label">Example 1 -- Basic Collection Cycle</div>
+      <div class="example-content">
+        <p>Consider a heap with objects A, B, C, D, E. Root references point to A and D.</p>
+        <p>A references B. B references C. D references nothing. E is unreferenced.</p>
+        <p><strong>Mark phase:</strong> Starting from roots, mark A -- follow to B -- mark B -- follow to C -- mark C. Then mark D. Marked set: {A, B, C, D}.</p>
+        <p><strong>Sweep phase:</strong> Walk heap. E is unmarked -- free E. Clear all marks.</p>
+        <p><em>Result: E is reclaimed. A, B, C, D survive.</em></p>
+      </div>
+      <div class="example-source">
+        Source: <a href="#">Garbage Collection (Computer Science)</a>
+      </div>
+    </div>
+
+    <div class="example-panel">
+      <div class="example-label">Example 2 -- Cycle Reclamation</div>
+      <div class="example-content">
+        <p>Objects X and Y reference each other (a cycle), but neither is reachable from any root.</p>
+        <p><strong>Mark phase:</strong> No root reaches X or Y, so neither is marked.</p>
+        <p><strong>Sweep phase:</strong> Both X and Y are unmarked -- both are freed.</p>
+        <p><em>Result: The cycle is reclaimed correctly. Reference counting would leak this cycle.</em></p>
+
+        <div class="code-block">
+          <div class="code-block-header">
+            <span>Python -- Demonstrating cycle collection</span>
+          </div>
+<pre><span class="kw">import</span> gc
+
+<span class="kw">class</span> <span class="ty">Node</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name):
+        self.name = name
+        self.ref = <span class="kw">None</span>
+
+<span class="cm"># Create a cycle</span>
+x = <span class="ty">Node</span>(<span class="st">"X"</span>)
+y = <span class="ty">Node</span>(<span class="st">"Y"</span>)
+x.ref = y
+y.ref = x
+
+<span class="cm"># Remove root references</span>
+<span class="kw">del</span> x
+<span class="kw">del</span> y
+
+<span class="cm"># CPython's refcount won't free these,</span>
+<span class="cm"># but the cycle collector (mark-and-sweep variant) will:</span>
+gc.collect()  <span class="cm"># X and Y are now reclaimed</span></pre>
+        </div>
+      </div>
+      <div class="example-source">
+        Source: <a href="#">Garbage Collection (Computer Science)</a>
+      </div>
+    </div>
+
+    <!-- ── RELATIONSHIPS ── -->
+    <div class="relationships" id="relationships">
+      <h2>Relationships</h2>
+
+      <div class="relationship-group">
+        <div class="relationship-type">Extends</div>
+        <p><a href="#">Garbage Collection</a> -- mark-and-sweep is the canonical tracing garbage collection algorithm.</p>
+      </div>
+
+      <div class="relationship-group">
+        <div class="relationship-type">Contrasts With</div>
+        <p><a href="#">Reference Counting</a> -- the other major automatic memory management strategy. Reference counting is incremental but cannot handle cycles without supplementary detection; mark-and-sweep handles cycles naturally but requires stop-the-world pauses.</p>
+      </div>
+
+      <div class="relationship-group">
+        <div class="relationship-type">Related</div>
+        <p><a href="#">Tri-color Marking</a> -- an abstraction that enables concurrent and incremental variants of mark-and-sweep.</p>
+        <p><a href="#">Compacting Collection</a> -- extends sweep with object relocation to eliminate fragmentation.</p>
+        <p><a href="#">Generational GC</a> -- exploits the generational hypothesis to reduce the portion of the heap that mark-and-sweep must traverse.</p>
+      </div>
+    </div>
+
+    <!-- ── COMMON ERRORS ── -->
+    <div class="common-errors" id="common-errors">
+      <h2>Common Errors</h2>
+
+      <div class="error-card">
+        <div class="error-title">Forgetting to mark from all root sets</div>
+        <p>The mark phase must start from every root -- not just stack variables but also global/static variables, CPU registers, and any runtime-internal references. Missing a root set causes live objects to be incorrectly swept.</p>
+      </div>
+
+      <div class="error-card">
+        <div class="error-title">Sweeping during concurrent mutation</div>
+        <p>If the application modifies object references during the sweep phase, the collector may free objects that became reachable after marking. This is the fundamental challenge that concurrent GC algorithms address with write barriers.</p>
+      </div>
+
+      <div class="error-card">
+        <div class="error-title">Not clearing mark bits after sweep</div>
+        <p>If mark bits are not reset during the sweep phase, the next collection cycle will treat previously-marked (but now potentially unreachable) objects as live, causing a memory leak that grows with each GC cycle.</p>
+      </div>
+    </div>
+
+    <!-- ── COMMON CONFUSIONS ── -->
+    <div class="common-confusions" id="common-confusions">
+      <h2>Common Confusions</h2>
+
+      <div class="confusion-pair">
+        <div class="confusion-wrong">
+          <div class="confusion-label">Common Misconception</div>
+          <p>"Mark-and-sweep is slow because it traverses the entire heap twice."</p>
+        </div>
+        <div class="confusion-right">
+          <div class="confusion-label">Clarification</div>
+          <p>The mark phase traverses only <em>live</em> objects (following pointers from roots). The sweep phase does walk the entire heap, but this is a linear scan -- fast and cache-friendly. The cost is proportional to heap size, not to the complexity of the object graph.</p>
+        </div>
+      </div>
+
+      <div class="confusion-pair">
+        <div class="confusion-wrong">
+          <div class="confusion-label">Common Misconception</div>
+          <p>"Mark-and-sweep and reference counting are equivalent -- they both find garbage."</p>
+        </div>
+        <div class="confusion-right">
+          <div class="confusion-label">Clarification</div>
+          <p>They are fundamentally different. Mark-and-sweep identifies <em>live</em> objects (everything reachable) and infers garbage as the complement. Reference counting identifies garbage <em>directly</em> (refcount reaches zero). This means mark-and-sweep handles cyclic references naturally, while reference counting cannot without supplementary cycle detection.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SEE ALSO ── -->
+    <div class="see-also" id="see-also">
+      <div class="see-also-title">See Also</div>
+      <div class="see-also-grid">
+        <a href="#" class="see-also-card">
+          <div class="see-also-card-title">Garbage Collection</div>
+          <div class="see-also-card-desc">The family of automatic memory management techniques.</div>
+        </a>
+        <a href="#" class="see-also-card">
+          <div class="see-also-card-title">Reference Counting</div>
+          <div class="see-also-card-desc">The alternative approach: counting references instead of tracing.</div>
+        </a>
+        <a href="#" class="see-also-card">
+          <div class="see-also-card-title">Tri-color Marking</div>
+          <div class="see-also-card-desc">Abstraction enabling concurrent mark-and-sweep.</div>
+        </a>
+        <a href="#" class="see-also-card">
+          <div class="see-also-card-title">Memory Safety</div>
+          <div class="see-also-card-desc">The broader goal that garbage collection serves.</div>
+        </a>
+        <a href="#" class="see-also-card">
+          <div class="see-also-card-title">RAII</div>
+          <div class="see-also-card-desc">Rust and C++'s compile-time alternative to GC.</div>
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── RIGHT SIDEBAR: Concept Info Card ── -->
+  <aside class="sidebar">
+    <div class="info-card">
+      <div class="info-card-header">Mark-and-Sweep</div>
+      <div class="info-card-body">
+        <div class="info-row">
+          <span class="info-label">Type</span>
+          <span class="info-value">Algorithm</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Domain</span>
+          <span class="info-value"><a href="#">Memory Management</a></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Tier</span>
+          <span class="info-value">Intermediate</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">First desc.</span>
+          <span class="info-value">1960 (John McCarthy)</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Used in</span>
+          <span class="info-value">JVM, CLR, V8, Go</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Complexity</span>
+          <span class="info-value">O(H) where H = heap size</span>
+        </div>
+
+        <div class="info-card-section">
+          <div class="info-card-section-title">Derived From</div>
+          <p><a href="#">Garbage Collection (Computer Science)</a></p>
+        </div>
+
+        <div class="info-card-section">
+          <div class="info-card-section-title">Categories</div>
+          <div class="tag-list">
+            <a href="#" class="tag">Memory Management</a>
+            <a href="#" class="tag">Garbage Collection</a>
+            <a href="#" class="tag">Algorithm</a>
+          </div>
+        </div>
+
+        <div class="info-card-section">
+          <div class="info-card-section-title">Aliases</div>
+          <ul class="alias-list">
+            <li>"mark and sweep"</li>
+            <li>"tracing GC"</li>
+            <li>"mark-sweep"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  </div><!-- end .content-area -->
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SITE FOOTER                                                     -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="footer-inner">
+
+    <!-- ── TOP: Brand + Link Columns ── -->
+    <div class="footer-top">
+
+      <!-- Brand column -->
+      <div class="footer-brand-col">
+        <a href="/" class="footer-brand-link">
+          <span class="brand-mark">H</span>
+          <span class="brand-name">Haleiki</span>
+        </a>
+        <p class="footer-tagline">House of Knowledge -- a read-only wiki for structured knowledge about Rust.</p>
+      </div>
+
+      <!-- Link columns -->
+      <div class="footer-columns">
+
+        <div class="footer-col">
+          <div class="footer-col-title">Knowledge Base</div>
+          <ul class="footer-col-list">
+            <li><a href="/">Front Page</a></li>
+            <li><a href="/browse">Browse</a></li>
+            <li><a href="/categories">Categories</a></li>
+            <li><a href="/random">Random</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">About</div>
+          <ul class="footer-col-list">
+            <li><a href="/about">About This Wiki</a></li>
+            <li><a href="/about/haleiki">About Haleiki</a></li>
+            <li><a href="/design">Design</a></li>
+            <li><a href="/license">License</a></li>
+            <li><a href="/privacy">Privacy Policy</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">Development</div>
+          <ul class="footer-col-list">
+            <li><a href="https://github.com/oxur/haleiki">GitHub <span class="ext">&#8599;</span></a></li>
+            <li><a href="https://github.com/oxur/haleiki/issues/new">Submit Issue <span class="ext">&#8599;</span></a></li>
+            <li><a href="https://github.com/oxur/haleiki/discussions">Discussions <span class="ext">&#8599;</span></a></li>
+            <li><a href="https://github.com/oxur/haleiki/blob/main/CHANGELOG.md">Changelog <span class="ext">&#8599;</span></a></li>
+          </ul>
+        </div>
+
+      </div><!-- end .footer-columns -->
+    </div><!-- end .footer-top -->
+
+    <!-- ── CONTENT NOTICE ── -->
+    <div class="footer-content-notice">
+      Wiki content CC0, unless otherwise stated.
+    </div>
+
+    <!-- ── BOTTOM: Copyright + meta ── -->
+    <div class="footer-bottom">
+      <div class="footer-copyright">&#169; 2026 Oxur Contributors &#183; Apache-2.0 / MIT</div>
+      <ul class="footer-meta-links">
+        <li><a href="/about/haleiki">Built with Haleiki</a></li>
+        <li><a href="https://cobalt-org.github.io/">Powered by Cobalt</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+      </ul>
+    </div>
+
+  </div><!-- end .footer-inner -->
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- THEME TOGGLE + INTERSECTION OBSERVER SCRIPTS                   -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<script>
+// Theme toggle
+document.querySelectorAll('.theme-toggle-option').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const theme = btn.dataset.themeChoice;
+    document.documentElement.setAttribute('data-theme', theme);
+    document.querySelectorAll('.theme-toggle-option').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// IntersectionObserver for scroll-aware left nav highlighting
+(function() {
+  const tocLinks = document.querySelectorAll('.toc-list a');
+  const sectionIds = Array.from(tocLinks).map(link => link.getAttribute('href').replace('#', ''));
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+  if (sections.length === 0) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    // Find the topmost visible section
+    let currentId = null;
+    const scrollY = window.scrollY;
+
+    for (const section of sections) {
+      const rect = section.getBoundingClientRect();
+      // Consider a section "current" if its top is at or above 120px from viewport top
+      if (rect.top <= 120) {
+        currentId = section.id;
+      }
+    }
+
+    // If no section has scrolled past the threshold, highlight the first
+    if (!currentId && sections.length > 0) {
+      currentId = sections[0].id;
+    }
+
+    if (currentId) {
+      tocLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + currentId);
+      });
+    }
+  }, {
+    rootMargin: '-80px 0px -60% 0px',
+    threshold: [0, 0.25, 0.5, 0.75, 1]
+  });
+
+  sections.forEach(section => observer.observe(section));
+
+  // Also update on scroll for better accuracy
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        let currentId = null;
+        for (const section of sections) {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= 120) {
+            currentId = section.id;
+          }
+        }
+        if (!currentId && sections.length > 0) {
+          currentId = sections[0].id;
+        }
+        if (currentId) {
+          tocLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + currentId);
+          });
+        }
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
