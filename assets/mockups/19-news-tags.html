@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Haleiki — House of Knowledge</title>
+    <title>News Tags — Haleiki</title>
 
     <!-- TYPE STACK: Sans display + Serif body + Mono code -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,10 +17,8 @@
         @layer tokens {
             /* ═══════════════════════════════════════════════════════════════
    HALEIKI DESIGN SYSTEM — TOKEN LAYER
-   Principles: Geometric scale (4:3), OKLCH color, semantic naming
    ═══════════════════════════════════════════════════════════════ */
 
-            /* ── SCALE: Perfect Fourth (1.333) ── */
             :root {
                 --ratio: 1.333;
                 --step--2: clamp(0.563rem, 0.52rem + 0.18vi, 0.633rem);
@@ -31,7 +29,6 @@
                 --step-3: clamp(2.369rem, 2.2rem + 0.69vi, 2.665rem);
                 --step-4: clamp(3.157rem, 2.93rem + 0.92vi, 3.553rem);
 
-                /* ── SPACING: Same ratio, named ── */
                 --space-3xs: clamp(0.25rem, 0.23rem + 0.1vi, 0.313rem);
                 --space-2xs: clamp(0.5rem, 0.47rem + 0.15vi, 0.563rem);
                 --space-xs: clamp(0.75rem, 0.7rem + 0.22vi, 0.844rem);
@@ -42,19 +39,16 @@
                 --space-2xl: clamp(4rem, 3.72rem + 1.17vi, 4.5rem);
                 --space-3xl: clamp(6rem, 5.58rem + 1.76vi, 6.75rem);
 
-                /* ── SPACE PAIRS: Steeper interpolation between two tokens ── */
                 --space-s-m: clamp(1rem, 0.75rem + 1.24vi, 1.688rem);
                 --space-s-l: clamp(1rem, 0.5rem + 2.48vi, 2.25rem);
                 --space-m-l: clamp(1.5rem, 1.26rem + 1.18vi, 2.25rem);
                 --space-m-xl: clamp(1.5rem, 0.93rem + 2.82vi, 3.375rem);
                 --space-l-xl: clamp(2rem, 1.49rem + 2.53vi, 3.375rem);
 
-                /* ── TYPE FAMILIES ── */
                 --font-display: 'Red Hat Display', system-ui, sans-serif;
                 --font-body: 'Newsreader', Georgia, serif;
                 --font-mono: 'IBM Plex Mono', 'Menlo', monospace;
 
-                /* ── LAYOUT ── */
                 --content-max: 58ch;
                 --sidebar-width: 280px;
                 --nav-width: 220px;
@@ -65,10 +59,6 @@
                 --radius-pill: 100vmax;
             }
 
-            /* ═══════════════════════════════════════════════════════════════
-   DAY THEME — Warm ochre, sandstone, terracotta
-   OKLCH-derived, perceptually uniform progressions
-   ═══════════════════════════════════════════════════════════════ */
             [data-theme="day"] {
                 --surface-ground: oklch(0.97 0.01 80);
                 --surface-primary: oklch(0.99 0.005 80);
@@ -86,7 +76,6 @@
                 --text-on-invert: oklch(0.97 0.01 80);
 
                 --accent-primary: oklch(0.55 0.14 45);
-                /* terracotta */
                 --accent-hover: oklch(0.48 0.15 42);
                 --accent-subtle: oklch(0.92 0.04 50);
                 --accent-text: oklch(0.45 0.12 40);
@@ -112,9 +101,6 @@
                 --shadow-medium: 0 2px 8px oklch(0.4 0.03 55 / 0.1);
             }
 
-            /* ═══════════════════════════════════════════════════════════════
-   NIGHT THEME — Deep oxide, amber accents
-   ═══════════════════════════════════════════════════════════════ */
             [data-theme="night"] {
                 --surface-ground: oklch(0.16 0.02 55);
                 --surface-primary: oklch(0.20 0.02 55);
@@ -132,7 +118,6 @@
                 --text-on-invert: oklch(0.20 0.02 55);
 
                 --accent-primary: oklch(0.72 0.14 70);
-                /* amber */
                 --accent-hover: oklch(0.78 0.15 72);
                 --accent-subtle: oklch(0.28 0.06 60);
                 --accent-text: oklch(0.78 0.12 72);
@@ -163,9 +148,6 @@
 
         @layer reset {
 
-            /* ═══════════════════════════════════════════════════════════════
-   RESET & BASE
-   ═══════════════════════════════════════════════════════════════ */
             *,
             *::before,
             *::after {
@@ -248,7 +230,6 @@
                 color: var(--surface-ground);
             }
 
-            /* ── SEARCH (topnav) ── */
             .search-container {
                 flex: 1;
                 max-width: 36ch;
@@ -303,7 +284,6 @@
                 line-height: 1;
             }
 
-            /* ── NAV LINKS ── */
             .topnav-links {
                 display: flex;
                 align-items: center;
@@ -328,7 +308,12 @@
                 background: var(--surface-secondary);
             }
 
-            /* ── THEME TOGGLE ── */
+            .topnav-links a.active {
+                color: var(--accent-text);
+                background: var(--accent-subtle);
+                font-weight: 600;
+            }
+
             .theme-toggle {
                 background: var(--surface-secondary);
                 border: 1px solid var(--border-subtle);
@@ -364,14 +349,34 @@
             }
 
             /* ═══════════════════════════════════════════════════════════════
-   PAGE LAYOUT — Single-column centered for home page
+   PAGE LAYOUT — Single-column centered
    ═══════════════════════════════════════════════════════════════ */
-            .home-content {
-                max-width: 1100px;
+            .page-container {
+                max-width: 900px;
                 margin: 0 auto;
-                padding: 0 var(--space-s-l);
+                padding: var(--space-s-l);
                 flex: 1;
-                width: 100%;
+            }
+
+            .breadcrumb {
+                font-family: var(--font-display);
+                font-size: var(--step--2);
+                color: var(--text-tertiary);
+                margin-bottom: var(--space-xs);
+            }
+
+            .breadcrumb a {
+                color: var(--text-tertiary);
+                text-decoration: none;
+            }
+
+            .breadcrumb a:hover {
+                color: var(--accent-text);
+            }
+
+            .breadcrumb .sep {
+                margin: 0 var(--space-3xs);
+                opacity: 0.5;
             }
         }
 
@@ -380,435 +385,180 @@
         @layer components {
 
             /* ═══════════════════════════════════════════════════════════════
-   SECTION OVERLINE — Consistent section labelling
+   PAGE HEADER
    ═══════════════════════════════════════════════════════════════ */
-            .section-overline {
+            .page-header {
+                margin-bottom: var(--space-m-l);
+                padding-bottom: var(--space-s-m);
+                border-bottom: 1px solid var(--border-subtle);
+            }
+
+            .page-overline {
                 font-family: var(--font-mono);
                 font-size: var(--step--2);
                 font-weight: 500;
                 text-transform: uppercase;
                 letter-spacing: 0.1em;
-                color: var(--text-tertiary);
-                margin-bottom: var(--space-xs);
-            }
-
-            .section-heading {
-                font-family: var(--font-display);
-                font-size: var(--step-2);
-                font-weight: 700;
-                color: var(--text-primary);
-                letter-spacing: -0.015em;
-                line-height: 1.2;
-                margin-bottom: var(--space-m);
-            }
-
-            /* ═══════════════════════════════════════════════════════════════
-   HERO / WELCOME SECTION
-   ═══════════════════════════════════════════════════════════════ */
-            .hero {
-                padding-top: var(--space-2xl);
-                padding-bottom: var(--space-xl);
-                border-bottom: 1px solid var(--border-subtle);
-                background: var(--surface-ground);
-                text-align: center;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .hero-brand-mark {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                width: 64px;
-                height: 64px;
-                background: var(--accent-primary);
-                color: var(--text-on-invert);
-                border-radius: var(--radius-m);
-                font-family: var(--font-display);
-                font-size: 2rem;
-                font-weight: 800;
-                line-height: 1;
-                margin-bottom: var(--space-s);
-            }
-
-            [data-theme="night"] .hero-brand-mark {
-                color: var(--surface-ground);
-            }
-
-            .hero-title {
-                font-family: var(--font-display);
-                font-size: var(--step-4);
-                font-weight: 700;
-                color: var(--text-primary);
-                letter-spacing: -0.02em;
-                line-height: 1.1;
+                color: var(--accent-text);
                 margin-bottom: var(--space-3xs);
             }
 
-            .hero-subtitle {
-                font-family: var(--font-body);
-                font-size: var(--step-1);
-                font-style: italic;
+            .page-title {
+                font-family: var(--font-display);
+                font-size: var(--step-3);
+                font-weight: 700;
+                color: var(--text-primary);
+                line-height: 1.15;
+                letter-spacing: -0.02em;
+                margin-bottom: var(--space-3xs);
+            }
+
+            .page-stats {
+                font-family: var(--font-mono);
+                font-size: var(--step--2);
+                color: var(--text-tertiary);
+            }
+
+            /* ═══════════════════════════════════════════════════════════════
+   TAG CLOUD
+   ═══════════════════════════════════════════════════════════════ */
+            .tag-cloud {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: var(--space-2xs);
+                padding: var(--space-m) 0;
+                margin-bottom: var(--space-l);
+                border-bottom: 1px solid var(--border-subtle);
+            }
+
+            .tag-pill {
+                font-family: var(--font-display);
+                padding: var(--space-3xs) var(--space-xs);
+                border-radius: var(--radius-pill);
+                background: var(--surface-secondary);
                 color: var(--text-secondary);
-                font-variation-settings: 'opsz' 24;
+                border: 1px solid var(--border-subtle);
+                text-decoration: none;
+                transition: all 0.15s ease;
+                white-space: nowrap;
+            }
+
+            .tag-pill:hover {
+                background: var(--accent-subtle);
+                color: var(--accent-text);
+                border-color: var(--accent-primary);
+            }
+
+            .tag-pill.size-large {
+                font-size: var(--step-0);
+                font-weight: 600;
+            }
+
+            .tag-pill.size-medium {
+                font-size: var(--step--1);
+                font-weight: 500;
+            }
+
+            .tag-pill.size-small {
+                font-size: var(--step--2);
+                font-weight: 400;
+            }
+
+            .tag-pill .tag-count {
+                font-family: var(--font-mono);
+                font-size: 0.75em;
+                color: var(--text-tertiary);
+                margin-left: 0.25em;
+            }
+
+            /* ═══════════════════════════════════════════════════════════════
+   TAG SECTIONS
+   ═══════════════════════════════════════════════════════════════ */
+            .tag-section {
                 margin-bottom: var(--space-l);
             }
 
-            /* ── HERO SEARCH ── */
-            .hero-search {
-                position: relative;
-                width: 100%;
-                max-width: 50ch;
-                margin-bottom: var(--space-s);
-            }
-
-            .hero-search-input {
-                width: 100%;
-                padding: var(--space-xs) var(--space-m);
-                padding-left: var(--space-xl);
-                padding-right: 4.5rem;
-                font-family: var(--font-body);
-                font-size: var(--step-0);
-                background: var(--surface-primary);
-                border: 2px solid var(--border-default);
-                border-radius: var(--radius-l);
-                color: var(--text-primary);
-                outline: none;
-                transition: all 0.2s ease;
-            }
-
-            .hero-search-input::placeholder {
-                color: var(--text-tertiary);
-            }
-
-            .hero-search-input:focus {
-                border-color: var(--accent-primary);
-                box-shadow: 0 0 0 4px var(--accent-subtle);
-            }
-
-            .hero-search-icon {
-                position: absolute;
-                left: var(--space-m);
-                top: 50%;
-                transform: translateY(-50%);
-                color: var(--text-tertiary);
-                pointer-events: none;
-            }
-
-            .hero-search-shortcut {
-                position: absolute;
-                right: var(--space-s);
-                top: 50%;
-                transform: translateY(-50%);
-                font-family: var(--font-mono);
-                font-size: var(--step--2);
-                padding: 0.2em var(--space-2xs);
-                border: 1px solid var(--border-subtle);
-                border-radius: var(--radius-s);
-                color: var(--text-tertiary);
-                background: var(--surface-secondary);
-                line-height: 1;
-            }
-
-            .hero-stats {
-                font-family: var(--font-mono);
-                font-size: var(--step--2);
-                color: var(--text-tertiary);
-            }
-
-            /* ═══════════════════════════════════════════════════════════════
-   CATEGORY MAP
-   ═══════════════════════════════════════════════════════════════ */
-            .category-section {
-                padding-top: var(--space-xl);
-                padding-bottom: var(--space-xl);
-            }
-
-            .category-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                gap: var(--space-m);
-            }
-
-            .category-card {
-                background: var(--surface-primary);
-                border: 1px solid var(--border-subtle);
-                border-radius: var(--radius-m);
-                padding: var(--space-m);
-                transition: box-shadow 0.2s ease, border-color 0.2s ease;
-            }
-
-            .category-card:hover {
-                box-shadow: var(--shadow-soft);
-                border-color: var(--accent-primary);
-            }
-
-            .category-card-header {
+            .tag-section-header {
                 display: flex;
                 align-items: baseline;
-                justify-content: space-between;
-                gap: var(--space-xs);
+                gap: var(--space-2xs);
+                padding-bottom: var(--space-3xs);
+                border-bottom: 1px solid var(--border-subtle);
                 margin-bottom: var(--space-2xs);
             }
 
-            .category-card-title {
+            .tag-section-name {
                 font-family: var(--font-display);
                 font-size: var(--step-0);
                 font-weight: 600;
                 color: var(--text-primary);
-                text-decoration: none;
-                transition: color 0.15s ease;
             }
 
-            a.category-card-title:hover {
+            .tag-section-name .hash {
                 color: var(--accent-text);
             }
 
-            .category-card-count {
+            .tag-section-count {
                 font-family: var(--font-mono);
                 font-size: var(--step--2);
                 color: var(--text-tertiary);
+            }
+
+            /* ── POST ROWS (shared with archive) ── */
+            .post-row {
+                display: flex;
+                align-items: baseline;
+                gap: var(--space-s);
+                padding: var(--space-3xs) 0;
+                transition: background 0.1s ease;
+            }
+
+            .post-row:hover {
                 background: var(--surface-secondary);
-                border: 1px solid var(--border-subtle);
-                border-radius: var(--radius-pill);
-                padding: 0.15em var(--space-xs);
-                white-space: nowrap;
+                margin-left: calc(-1 * var(--space-2xs));
+                margin-right: calc(-1 * var(--space-2xs));
+                padding-left: var(--space-2xs);
+                padding-right: var(--space-2xs);
+                border-radius: var(--radius-s);
+            }
+
+            .post-date {
+                font-family: var(--font-mono);
+                font-size: var(--step--2);
+                color: var(--text-tertiary);
                 flex-shrink: 0;
+                width: 5ch;
             }
 
-            .category-card-desc {
-                font-family: var(--font-body);
-                font-size: var(--step--1);
-                color: var(--text-secondary);
-                line-height: 1.5;
-                margin-bottom: var(--space-xs);
-            }
-
-            .category-card-articles {
-                list-style: none;
-                display: flex;
-                flex-direction: column;
-                gap: var(--space-3xs);
-            }
-
-            .category-card-articles a {
-                font-family: var(--font-body);
-                font-size: var(--step--1);
-                color: var(--accent-text);
-                text-decoration: none;
-                transition: color 0.15s ease;
-            }
-
-            .category-card-articles a:hover {
-                text-decoration: underline;
-                text-decoration-color: var(--accent-primary);
-                text-underline-offset: 2px;
-            }
-
-            /* ═══════════════════════════════════════════════════════════════
-   FEATURED ARTICLES — "Start Here"
-   ═══════════════════════════════════════════════════════════════ */
-            .featured-section {
-                padding-top: var(--space-xl);
-                padding-bottom: var(--space-xl);
-            }
-
-            .featured-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-                gap: var(--space-m);
-            }
-
-            .featured-card {
-                background: var(--surface-primary);
-                border: 1px solid var(--border-subtle);
-                border-radius: var(--radius-m);
-                padding: var(--space-m);
-                display: flex;
-                flex-direction: column;
-                transition: box-shadow 0.2s ease, border-color 0.2s ease;
-            }
-
-            .featured-card:hover {
-                box-shadow: var(--shadow-soft);
-                border-color: var(--accent-primary);
-            }
-
-            .featured-card-title {
+            .post-title {
                 font-family: var(--font-display);
-                font-size: var(--step-1);
-                font-weight: 600;
-                color: var(--text-primary);
-                letter-spacing: -0.01em;
-                margin-bottom: var(--space-2xs);
-                line-height: 1.25;
-            }
-
-            .featured-card-meta {
-                display: flex;
-                flex-wrap: wrap;
-                gap: var(--space-3xs);
-                margin-bottom: var(--space-xs);
-            }
-
-            .featured-tag {
-                font-family: var(--font-mono);
-                font-size: var(--step--2);
-                padding: 0.15em var(--space-xs);
-                border-radius: var(--radius-pill);
-                background: var(--surface-secondary);
-                color: var(--text-secondary);
-                border: 1px solid var(--border-subtle);
-            }
-
-            .featured-tier {
-                font-family: var(--font-mono);
-                font-size: var(--step--2);
-                padding: 0.15em var(--space-xs);
-                border-radius: var(--radius-pill);
-                background: var(--accent-subtle);
-                color: var(--accent-text);
-                border: 1px solid transparent;
-            }
-
-            .featured-card-teaser {
-                font-family: var(--font-body);
                 font-size: var(--step--1);
-                color: var(--text-secondary);
-                line-height: 1.55;
-                margin-bottom: var(--space-xs);
-                flex: 1;
-                display: -webkit-box;
-                -webkit-line-clamp: 3;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-            }
-
-            .featured-card-link {
-                font-family: var(--font-body);
-                font-size: var(--step--1);
-                color: var(--accent-text);
-                text-decoration: none;
                 font-weight: 500;
-                transition: color 0.15s ease;
-            }
-
-            .featured-card-link:hover {
-                text-decoration: underline;
-                text-underline-offset: 2px;
-            }
-
-            /* ═══════════════════════════════════════════════════════════════
-   KNOWLEDGE TIERS
-   ═══════════════════════════════════════════════════════════════ */
-            .tiers-section {
-                padding-top: var(--space-xl);
-                padding-bottom: var(--space-xl);
-            }
-
-            .tiers-row {
-                display: flex;
-                flex-wrap: wrap;
-                gap: var(--space-m);
-            }
-
-            .tier-card {
                 flex: 1;
-                min-width: 260px;
-                background: var(--surface-secondary);
-                border: 1px solid var(--border-subtle);
-                border-left: 3px solid var(--accent-primary);
-                border-radius: 0 var(--radius-m) var(--radius-m) 0;
-                padding: var(--space-s) var(--space-m);
-                transition: box-shadow 0.2s ease;
+                min-width: 0;
             }
 
-            .tier-card:hover {
-                box-shadow: var(--shadow-soft);
-            }
-
-            .tier-card-title {
-                font-family: var(--font-display);
-                font-size: var(--step-0);
-                font-weight: 600;
-                color: var(--text-primary);
-                margin-bottom: var(--space-3xs);
-            }
-
-            .tier-card-desc {
-                font-family: var(--font-body);
-                font-size: var(--step--1);
-                color: var(--text-secondary);
-                line-height: 1.5;
-                margin-bottom: var(--space-2xs);
-            }
-
-            .tier-card-footer {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: var(--space-xs);
-            }
-
-            .tier-card-count {
-                font-family: var(--font-mono);
-                font-size: var(--step--2);
-                color: var(--text-tertiary);
-            }
-
-            .tier-card-link {
-                font-family: var(--font-body);
-                font-size: var(--step--1);
+            .post-title a {
                 color: var(--accent-text);
                 text-decoration: none;
-                font-weight: 500;
                 transition: color 0.15s ease;
             }
 
-            .tier-card-link:hover {
-                text-decoration: underline;
-                text-underline-offset: 2px;
+            .post-title a:hover {
+                color: var(--accent-hover);
             }
 
-            /* ═══════════════════════════════════════════════════════════════
-   QUICK LINKS ROW
-   ═══════════════════════════════════════════════════════════════ */
-            .quick-links {
-                padding-top: var(--space-xl);
-                padding-bottom: var(--space-2xl);
-                text-align: center;
-            }
-
-            .quick-links-row {
+            .post-category {
                 font-family: var(--font-mono);
                 font-size: var(--step--2);
                 color: var(--text-tertiary);
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                align-items: center;
-                gap: var(--space-3xs) 0;
-            }
-
-            .quick-links-row a {
-                color: var(--text-tertiary);
-                text-decoration: none;
-                padding: var(--space-3xs) var(--space-2xs);
-                transition: color 0.15s ease;
-            }
-
-            .quick-links-row a:hover {
-                color: var(--accent-text);
-            }
-
-            .quick-links-sep {
-                color: var(--border-default);
-                user-select: none;
+                flex-shrink: 0;
+                text-align: right;
             }
 
             /* ═══════════════════════════════════════════════════════════════
-   SITE FOOTER — Columnar, dark-surface, warm
+   FOOTER
    ═══════════════════════════════════════════════════════════════ */
             .site-footer {
                 background: var(--footer-surface);
@@ -822,7 +572,6 @@
                 padding: var(--space-xl) var(--space-s-l) var(--space-l);
             }
 
-            /* ── FOOTER TOP: Brand + Columns ── */
             .footer-top {
                 display: flex;
                 flex-wrap: wrap;
@@ -830,7 +579,6 @@
                 padding-bottom: var(--space-l);
             }
 
-            /* Brand column — wider than the link columns */
             .footer-brand-col {
                 flex-basis: 260px;
                 flex-grow: 1;
@@ -887,7 +635,6 @@
                 max-width: 30ch;
             }
 
-            /* ── LINK COLUMNS ── */
             .footer-columns {
                 display: flex;
                 flex-wrap: wrap;
@@ -935,7 +682,6 @@
                 color: var(--footer-link-hover);
             }
 
-            /* External link indicator */
             .footer-col-list a .ext {
                 font-size: 0.75em;
                 opacity: 0.5;
@@ -946,7 +692,6 @@
                 opacity: 0.8;
             }
 
-            /* ── CONTENT NOTICE ── */
             .footer-content-notice {
                 font-family: var(--font-mono);
                 font-size: calc((var(--step--1) + var(--step--2)) / 2);
@@ -957,7 +702,6 @@
                 border-bottom: 1px solid var(--footer-border);
             }
 
-            /* ── FOOTER BOTTOM: Copyright + Meta ── */
             .footer-bottom {
                 display: flex;
                 flex-wrap: wrap;
@@ -991,17 +735,11 @@
             .footer-meta-links a:hover {
                 color: var(--footer-link-hover);
             }
-
-            .footer-meta-links .sep {
-                color: var(--footer-border);
-            }
         }
 
         /* end @layer components */
 
         @layer utilities {
-
-            /* On very narrow viewports, let footer brand col take full width */
             @media (max-width: 40rem) {
                 .footer-brand-col {
                     max-width: none;
@@ -1012,6 +750,10 @@
                 .footer-bottom {
                     justify-content: center;
                     text-align: center;
+                }
+
+                .post-category {
+                    display: none;
                 }
             }
         }
@@ -1043,6 +785,7 @@
         <div class="topnav-links">
             <a href="#">Browse</a>
             <a href="#">Categories</a>
+            <a href="#" class="active">News</a>
             <a href="#">Random</a>
         </div>
 
@@ -1053,261 +796,315 @@
     </nav>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!-- MAIN CONTENT                                                    -->
+    <!-- PAGE CONTENT                                                    -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <main class="home-content">
+    <div class="page-container">
 
-        <!-- ── HERO / WELCOME ── -->
-        <section class="hero">
-            <div class="hero-brand-mark">H</div>
-            <h1 class="hero-title">Haleiki</h1>
-            <p class="hero-subtitle">House of Knowledge</p>
+        <div class="breadcrumb">
+            <a href="#">Haleiki</a><span class="sep">&#8250;</span>
+            <a href="#">News</a><span class="sep">&#8250;</span>
+            <span>Tags</span>
+        </div>
 
-            <div class="hero-search">
-                <svg class="hero-search-icon" width="20" height="20" viewBox="0 0 16 16" fill="none">
-                    <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.5" />
-                    <line x1="10.5" y1="10.5" x2="15" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                </svg>
-                <input type="text" class="hero-search-input" placeholder="Search 90 articles across 10 categories...">
-                <span class="hero-search-shortcut">&#8984;K</span>
+        <header class="page-header">
+            <div class="page-overline">Tags</div>
+            <h1 class="page-title">Posts by Tag</h1>
+            <div class="page-stats">24 tags across 42 posts</div>
+        </header>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+       TAG CLOUD
+       ═══════════════════════════════════════════════════════════════ -->
+        <div class="tag-cloud">
+            <!-- Large (6+ posts) -->
+            <a href="#tag-design-system" class="tag-pill size-large">design-system <span class="tag-count">8</span></a>
+            <a href="#tag-architecture" class="tag-pill size-large">architecture <span class="tag-count">7</span></a>
+            <a href="#tag-content" class="tag-pill size-large">content <span class="tag-count">6</span></a>
+
+            <!-- Medium (3-5 posts) -->
+            <a href="#tag-oklch" class="tag-pill size-medium">OKLCH <span class="tag-count">4</span></a>
+            <a href="#tag-cobalt" class="tag-pill size-medium">Cobalt <span class="tag-count">4</span></a>
+            <a href="#tag-templates" class="tag-pill size-medium">templates <span class="tag-count">3</span></a>
+            <a href="#tag-graph" class="tag-pill size-medium">graph <span class="tag-count">3</span></a>
+            <a href="#tag-typography" class="tag-pill size-medium">typography <span class="tag-count">3</span></a>
+
+            <!-- Small (1-2 posts) -->
+            <a href="#tag-search" class="tag-pill size-small">search <span class="tag-count">2</span></a>
+            <a href="#tag-pagefind" class="tag-pill size-small">Pagefind <span class="tag-count">2</span></a>
+            <a href="#tag-launch" class="tag-pill size-small">launch <span class="tag-count">1</span></a>
+            <a href="#tag-demo" class="tag-pill size-small">demo <span class="tag-count">2</span></a>
+            <a href="#tag-ci" class="tag-pill size-small">CI <span class="tag-count">1</span></a>
+            <a href="#tag-concept-cards" class="tag-pill size-small">concept-cards <span class="tag-count">2</span></a>
+            <a href="#tag-media" class="tag-pill size-small">media <span class="tag-count">1</span></a>
+            <a href="#tag-fetch" class="tag-pill size-small">fetch <span class="tag-count">2</span></a>
+            <a href="#tag-markdown" class="tag-pill size-small">markdown <span class="tag-count">2</span></a>
+            <a href="#tag-validation" class="tag-pill size-small">validation <span class="tag-count">1</span></a>
+            <a href="#tag-licensing" class="tag-pill size-small">licensing <span class="tag-count">1</span></a>
+            <a href="#tag-css" class="tag-pill size-small">CSS <span class="tag-count">2</span></a>
+            <a href="#tag-liquid" class="tag-pill size-small">Liquid <span class="tag-count">2</span></a>
+            <a href="#tag-rss" class="tag-pill size-small">RSS <span class="tag-count">1</span></a>
+            <a href="#tag-accessibility" class="tag-pill size-small">accessibility <span class="tag-count">1</span></a>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+       TAG SECTIONS
+       ═══════════════════════════════════════════════════════════════ -->
+
+        <!-- #design-system -->
+        <div class="tag-section" id="tag-design-system">
+            <div class="tag-section-header">
+                <span class="tag-section-name"><span class="hash">#</span>design-system</span>
+                <span class="tag-section-count">(8 posts)</span>
             </div>
-
-            <p class="hero-stats">90 articles &middot; 10 categories &middot; 3 tiers</p>
-        </section>
-
-        <!-- ── CATEGORY MAP ── -->
-        <section class="category-section">
-            <div class="section-overline">Explore by Category</div>
-            <h2 class="section-heading">Category Map</h2>
-
-            <div class="category-grid">
-
-                <article class="category-card">
-                    <div class="category-card-header">
-                        <a href="#" class="category-card-title">Tibetan Buddhism</a>
-                        <span class="category-card-count">16</span>
-                    </div>
-                    <p class="category-card-desc">Tibetan Buddhist philosophy, practices, teachers, and lineages</p>
-                    <ul class="category-card-articles">
-                        <li><a href="#">Dzogchen</a></li>
-                        <li><a href="#">Padmasambhava</a></li>
-                        <li><a href="#">Nyingma</a></li>
-                    </ul>
-                </article>
-
-                <article class="category-card">
-                    <div class="category-card-header">
-                        <a href="#" class="category-card-title">Music</a>
-                        <span class="category-card-count">17</span>
-                    </div>
-                    <p class="category-card-desc">Music theory, history, composers, and genres</p>
-                    <ul class="category-card-articles">
-                        <li><a href="#">Johann Sebastian Bach</a></li>
-                        <li><a href="#">Jazz</a></li>
-                        <li><a href="#">Music Theory</a></li>
-                    </ul>
-                </article>
-
-                <article class="category-card">
-                    <div class="category-card-header">
-                        <a href="#" class="category-card-title">Linguistics</a>
-                        <span class="category-card-count">10</span>
-                    </div>
-                    <p class="category-card-desc">Languages, writing systems, scripts, and historical linguistics</p>
-                    <ul class="category-card-articles">
-                        <li><a href="#">Sanskrit</a></li>
-                        <li><a href="#">Writing System</a></li>
-                        <li><a href="#">Proto-Indo-European</a></li>
-                    </ul>
-                </article>
-
-                <article class="category-card">
-                    <div class="category-card-header">
-                        <a href="#" class="category-card-title">Theoretical Physics</a>
-                        <span class="category-card-count">9</span>
-                    </div>
-                    <p class="category-card-desc">Fundamental physics, quantum mechanics, and unification theories</p>
-                    <ul class="category-card-articles">
-                        <li><a href="#">Quantum Mechanics</a></li>
-                        <li><a href="#">General Relativity</a></li>
-                        <li><a href="#">String Theory</a></li>
-                    </ul>
-                </article>
-
-                <article class="category-card">
-                    <div class="category-card-header">
-                        <a href="#" class="category-card-title">Mathematics</a>
-                        <span class="category-card-count">9</span>
-                    </div>
-                    <p class="category-card-desc">Pure mathematics: algebra, topology, and foundations</p>
-                    <ul class="category-card-articles">
-                        <li><a href="#">Category Theory</a></li>
-                        <li><a href="#">Homotopy Type Theory</a></li>
-                        <li><a href="#">Group Theory</a></li>
-                    </ul>
-                </article>
-
-                <article class="category-card">
-                    <div class="category-card-header">
-                        <a href="#" class="category-card-title">Geology</a>
-                        <span class="category-card-count">8</span>
-                    </div>
-                    <p class="category-card-desc">Earth's structure, tectonics, and geophysics</p>
-                    <ul class="category-card-articles">
-                        <li><a href="#">Earth</a></li>
-                        <li><a href="#">Tectonics</a></li>
-                        <li><a href="#">Internal Structure of Earth</a></li>
-                    </ul>
-                </article>
-
-                <article class="category-card">
-                    <div class="category-card-header">
-                        <a href="#" class="category-card-title">Botany</a>
-                        <span class="category-card-count">7</span>
-                    </div>
-                    <p class="category-card-desc">Plants, fungi, lichens, and symbiotic relationships</p>
-                    <ul class="category-card-articles">
-                        <li><a href="#">Mycorrhiza</a></li>
-                        <li><a href="#">Fungus</a></li>
-                        <li><a href="#">Lichen</a></li>
-                    </ul>
-                </article>
-
-                <article class="category-card">
-                    <div class="category-card-header">
-                        <a href="#" class="category-card-title">Programming Languages</a>
-                        <span class="category-card-count">5</span>
-                    </div>
-                    <p class="category-card-desc">Language design, history, and notable figures</p>
-                    <ul class="category-card-articles">
-                        <li><a href="#">Rust</a></li>
-                        <li><a href="#">Lisp</a></li>
-                        <li><a href="#">Erlang</a></li>
-                    </ul>
-                </article>
-
-                <article class="category-card">
-                    <div class="category-card-header">
-                        <a href="#" class="category-card-title">Philosophy of Mind</a>
-                        <span class="category-card-count">5</span>
-                    </div>
-                    <p class="category-card-desc">Consciousness, cognition, and the mind-body problem</p>
-                    <ul class="category-card-articles">
-                        <li><a href="#">Philosophy of Mind</a></li>
-                        <li><a href="#">Artificial Consciousness</a></li>
-                        <li><a href="#">Perception</a></li>
-                    </ul>
-                </article>
-
-                <article class="category-card">
-                    <div class="category-card-header">
-                        <a href="#" class="category-card-title">Artificial Intelligence</a>
-                        <span class="category-card-count">4</span>
-                    </div>
-                    <p class="category-card-desc">AI history, theory, systems, and key figures</p>
-                    <ul class="category-card-articles">
-                        <li><a href="#">Artificial Intelligence</a></li>
-                        <li><a href="#">Claude</a></li>
-                        <li><a href="#">Dartmouth Workshop</a></li>
-                    </ul>
-                </article>
-
+            <div class="post-row">
+                <span class="post-date">Mar 19</span>
+                <span class="post-title"><a href="#">Welcome to Haleiki</a></span>
+                <span class="post-category">Announcement</span>
             </div>
-        </section>
-
-        <!-- ── FEATURED ARTICLES — "Start Here" ── -->
-        <section class="featured-section">
-            <div class="section-overline">Start Here</div>
-            <h2 class="section-heading">Featured Articles</h2>
-
-            <div class="featured-grid">
-
-                <article class="featured-card">
-                    <h3 class="featured-card-title">Dzogchen</h3>
-                    <div class="featured-card-meta">
-                        <span class="featured-tag">Tibetan Buddhism</span>
-                        <span class="featured-tier">Foundational</span>
-                    </div>
-                    <p class="featured-card-teaser">The Great Perfection tradition within Tibetan Buddhism, representing the pinnacle of the nine yanas in the Nyingma school.</p>
-                    <a href="#" class="featured-card-link">Read more &#8594;</a>
-                </article>
-
-                <article class="featured-card">
-                    <h3 class="featured-card-title">Quantum Mechanics</h3>
-                    <div class="featured-card-meta">
-                        <span class="featured-tag">Theoretical Physics</span>
-                        <span class="featured-tier">Foundational</span>
-                    </div>
-                    <p class="featured-card-teaser">The fundamental theory describing nature at the smallest scales of energy levels of atoms and subatomic particles.</p>
-                    <a href="#" class="featured-card-link">Read more &#8594;</a>
-                </article>
-
-                <article class="featured-card">
-                    <h3 class="featured-card-title">Johann Sebastian Bach</h3>
-                    <div class="featured-card-meta">
-                        <span class="featured-tag">Music</span>
-                        <span class="featured-tier">Foundational</span>
-                    </div>
-                    <p class="featured-card-teaser">German composer and musician of the late Baroque period, widely considered one of the greatest composers in the history of Western music.</p>
-                    <a href="#" class="featured-card-link">Read more &#8594;</a>
-                </article>
-
+            <div class="post-row">
+                <span class="post-date">Mar 15</span>
+                <span class="post-title"><a href="#">Design System: Day &amp; Night Themes</a></span>
+                <span class="post-category">Design</span>
             </div>
-        </section>
-
-        <!-- ── KNOWLEDGE TIERS ── -->
-        <section class="tiers-section">
-            <div class="section-overline">Knowledge Tiers</div>
-            <h2 class="section-heading">Browse by Tier</h2>
-
-            <div class="tiers-row">
-
-                <div class="tier-card">
-                    <h3 class="tier-card-title">Foundational</h3>
-                    <p class="tier-card-desc">Core concepts -- prerequisites for most other topics</p>
-                    <div class="tier-card-footer">
-                        <span class="tier-card-count">42 articles</span>
-                        <a href="#" class="tier-card-link">Start here &#8594;</a>
-                    </div>
-                </div>
-
-                <div class="tier-card">
-                    <h3 class="tier-card-title">Intermediate</h3>
-                    <p class="tier-card-desc">Builds on foundational knowledge</p>
-                    <div class="tier-card-footer">
-                        <span class="tier-card-count">31 articles</span>
-                        <a href="#" class="tier-card-link">Explore &#8594;</a>
-                    </div>
-                </div>
-
-                <div class="tier-card">
-                    <h3 class="tier-card-title">Advanced</h3>
-                    <p class="tier-card-desc">Specialized or research-level topics</p>
-                    <div class="tier-card-footer">
-                        <span class="tier-card-count">17 articles</span>
-                        <a href="#" class="tier-card-link">Deep dive &#8594;</a>
-                    </div>
-                </div>
-
+            <div class="post-row">
+                <span class="post-date">Feb 20</span>
+                <span class="post-title"><a href="#">Typography Exploration</a></span>
+                <span class="post-category">Design</span>
             </div>
-        </section>
-
-        <!-- ── QUICK LINKS ── -->
-        <nav class="quick-links" aria-label="Quick links">
-            <div class="quick-links-row">
-                <a href="#">Random Article</a>
-                <span class="quick-links-sep">&middot;</span>
-                <a href="#">Browse All</a>
-                <span class="quick-links-sep">&middot;</span>
-                <a href="#">About This Wiki</a>
-                <span class="quick-links-sep">&middot;</span>
-                <a href="#">Attribution</a>
-                <span class="quick-links-sep">&middot;</span>
-                <a href="https://github.com/oxur/haleiki">GitHub &#8599;</a>
+            <div class="post-row">
+                <span class="post-date">Feb 15</span>
+                <span class="post-title"><a href="#">OKLCH Colour System</a></span>
+                <span class="post-category">Design</span>
             </div>
-        </nav>
+            <div class="post-row">
+                <span class="post-date">Feb 1</span>
+                <span class="post-title"><a href="#">Token Architecture Decisions</a></span>
+                <span class="post-category">Design</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Jan 25</span>
+                <span class="post-title"><a href="#">Spacing Scale: Perfect Fourth</a></span>
+                <span class="post-category">Design</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Jan 18</span>
+                <span class="post-title"><a href="#">Layout Primitives from Every Layout</a></span>
+                <span class="post-category">Design</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Jan 10</span>
+                <span class="post-title"><a href="#">Why No Media Queries for Layout</a></span>
+                <span class="post-category">Architecture</span>
+            </div>
+        </div>
 
-    </main>
+        <!-- #architecture -->
+        <div class="tag-section" id="tag-architecture">
+            <div class="tag-section-header">
+                <span class="tag-section-name"><span class="hash">#</span>architecture</span>
+                <span class="tag-section-count">(7 posts)</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Mar 10</span>
+                <span class="post-title"><a href="#">Introducing Concept Cards</a></span>
+                <span class="post-category">Architecture</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Feb 28</span>
+                <span class="post-title"><a href="#">Project Architecture v0.3</a></span>
+                <span class="post-category">Architecture</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Feb 25</span>
+                <span class="post-title"><a href="#">Choosing Cobalt</a></span>
+                <span class="post-category">Architecture</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Feb 5</span>
+                <span class="post-title"><a href="#">Graph-Based Knowledge Model</a></span>
+                <span class="post-category">Architecture</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Jan 22</span>
+                <span class="post-title"><a href="#">CLI Tool Design: Haleiki Binary</a></span>
+                <span class="post-category">Feature</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Jan 15</span>
+                <span class="post-title"><a href="#">Haleiki Concept Document Published</a></span>
+                <span class="post-category">Announcement</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Jan 10</span>
+                <span class="post-title"><a href="#">Why No Media Queries for Layout</a></span>
+                <span class="post-category">Architecture</span>
+            </div>
+        </div>
+
+        <!-- #content -->
+        <div class="tag-section" id="tag-content">
+            <div class="tag-section-header">
+                <span class="tag-section-name"><span class="hash">#</span>content</span>
+                <span class="tag-section-count">(6 posts)</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Mar 17</span>
+                <span class="post-title"><a href="#">Demo Content: 90 Articles</a></span>
+                <span class="post-category">Content</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Mar 12</span>
+                <span class="post-title"><a href="#">The Fetch Pipeline</a></span>
+                <span class="post-category">Content</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Feb 18</span>
+                <span class="post-title"><a href="#">Source Material Selection</a></span>
+                <span class="post-category">Content</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Feb 8</span>
+                <span class="post-title"><a href="#">Markdown Frontmatter Schema</a></span>
+                <span class="post-category">Content</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Jan 28</span>
+                <span class="post-title"><a href="#">Content Validation Pipeline</a></span>
+                <span class="post-category">Feature</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Jan 12</span>
+                <span class="post-title"><a href="#">Article Template Structure</a></span>
+                <span class="post-category">Content</span>
+            </div>
+        </div>
+
+        <!-- #OKLCH -->
+        <div class="tag-section" id="tag-oklch">
+            <div class="tag-section-header">
+                <span class="tag-section-name"><span class="hash">#</span>OKLCH</span>
+                <span class="tag-section-count">(4 posts)</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Mar 15</span>
+                <span class="post-title"><a href="#">Design System: Day &amp; Night Themes</a></span>
+                <span class="post-category">Design</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Feb 15</span>
+                <span class="post-title"><a href="#">OKLCH Colour System</a></span>
+                <span class="post-category">Design</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Feb 1</span>
+                <span class="post-title"><a href="#">Token Architecture Decisions</a></span>
+                <span class="post-category">Design</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Jan 20</span>
+                <span class="post-title"><a href="#">Perceptual Uniformity in Practice</a></span>
+                <span class="post-category">Design</span>
+            </div>
+        </div>
+
+        <!-- #Cobalt -->
+        <div class="tag-section" id="tag-cobalt">
+            <div class="tag-section-header">
+                <span class="tag-section-name"><span class="hash">#</span>Cobalt</span>
+                <span class="tag-section-count">(4 posts)</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Feb 25</span>
+                <span class="post-title"><a href="#">Choosing Cobalt</a></span>
+                <span class="post-category">Architecture</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Feb 12</span>
+                <span class="post-title"><a href="#">Liquid Templates: Pros and Cons</a></span>
+                <span class="post-category">Architecture</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Jan 30</span>
+                <span class="post-title"><a href="#">Build Pipeline Integration</a></span>
+                <span class="post-category">Feature</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Jan 8</span>
+                <span class="post-title"><a href="#">Static Site Generator Survey</a></span>
+                <span class="post-category">Architecture</span>
+            </div>
+        </div>
+
+        <!-- #typography -->
+        <div class="tag-section" id="tag-typography">
+            <div class="tag-section-header">
+                <span class="tag-section-name"><span class="hash">#</span>typography</span>
+                <span class="tag-section-count">(3 posts)</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Feb 20</span>
+                <span class="post-title"><a href="#">Typography Exploration</a></span>
+                <span class="post-category">Design</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Jan 25</span>
+                <span class="post-title"><a href="#">Spacing Scale: Perfect Fourth</a></span>
+                <span class="post-category">Design</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Jan 6</span>
+                <span class="post-title"><a href="#">Red Hat Display + Newsreader: The Decision</a></span>
+                <span class="post-category">Design</span>
+            </div>
+        </div>
+
+        <!-- #templates -->
+        <div class="tag-section" id="tag-templates">
+            <div class="tag-section-header">
+                <span class="tag-section-name"><span class="hash">#</span>templates</span>
+                <span class="tag-section-count">(3 posts)</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Feb 12</span>
+                <span class="post-title"><a href="#">Liquid Templates: Pros and Cons</a></span>
+                <span class="post-category">Architecture</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Jan 12</span>
+                <span class="post-title"><a href="#">Article Template Structure</a></span>
+                <span class="post-category">Content</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Jan 3</span>
+                <span class="post-title"><a href="#">Category Page Templates</a></span>
+                <span class="post-category">Feature</span>
+            </div>
+        </div>
+
+        <!-- #graph -->
+        <div class="tag-section" id="tag-graph">
+            <div class="tag-section-header">
+                <span class="tag-section-name"><span class="hash">#</span>graph</span>
+                <span class="tag-section-count">(3 posts)</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Mar 10</span>
+                <span class="post-title"><a href="#">Introducing Concept Cards</a></span>
+                <span class="post-category">Architecture</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Feb 5</span>
+                <span class="post-title"><a href="#">Graph-Based Knowledge Model</a></span>
+                <span class="post-category">Architecture</span>
+            </div>
+            <div class="post-row">
+                <span class="post-date">Jan 15</span>
+                <span class="post-title"><a href="#">Haleiki Concept Document Published</a></span>
+                <span class="post-category">Announcement</span>
+            </div>
+        </div>
+
+    </div>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <!-- SITE FOOTER                                                     -->
@@ -1315,7 +1112,6 @@
     <footer class="site-footer">
         <div class="footer-inner">
 
-            <!-- ── TOP: Brand + Link Columns ── -->
             <div class="footer-top">
 
                 <!-- Brand column -->
@@ -1327,9 +1123,7 @@
                     <p class="footer-tagline">House of Knowledge ❖ A read-only wiki for structured knowledge</p>
                 </div>
 
-                <!-- Link columns -->
                 <div class="footer-columns">
-
                     <div class="footer-col">
                         <div class="footer-col-title">Knowledge Base</div>
                         <ul class="footer-col-list">
@@ -1339,7 +1133,6 @@
                             <li><a href="/random">Random</a></li>
                         </ul>
                     </div>
-
                     <div class="footer-col">
                         <div class="footer-col-title">About</div>
                         <ul class="footer-col-list">
@@ -1350,7 +1143,6 @@
                             <li><a href="/privacy">Privacy Policy</a></li>
                         </ul>
                     </div>
-
                     <div class="footer-col">
                         <div class="footer-col-title">Development</div>
                         <ul class="footer-col-list">
@@ -1360,16 +1152,13 @@
                             <li><a href="https://github.com/oxur/haleiki/blob/main/CHANGELOG.md">Changelog <span class="ext">&#8599;</span></a></li>
                         </ul>
                     </div>
+                </div>
+            </div>
 
-                </div><!-- end .footer-columns -->
-            </div><!-- end .footer-top -->
-
-            <!-- ── CONTENT NOTICE ── -->
             <div class="footer-content-notice">
                 Wiki content CC0, unless otherwise stated.
             </div>
 
-            <!-- ── BOTTOM: Copyright + meta ── -->
             <div class="footer-bottom">
                 <div class="footer-copyright">&copy; 2026 Oxur Contributors &middot; Apache-2.0 / MIT</div>
                 <ul class="footer-meta-links">
@@ -1379,7 +1168,7 @@
                 </ul>
             </div>
 
-        </div><!-- end .footer-inner -->
+        </div>
     </footer>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->

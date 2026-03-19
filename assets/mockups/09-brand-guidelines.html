@@ -1,1787 +1,1815 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="day">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Brand Guidelines — Haleiki</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Guidelines — Haleiki</title>
 
-<!-- TYPE STACK: Sans display + Serif body + Mono code -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <!-- TYPE STACK: Sans display + Serif body + Mono code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
 
-<style>
-@layer tokens, reset, base, layout, components, utilities;
+    <style>
+        @layer tokens, reset, base, layout, components, utilities;
 
-@layer tokens {
-/* ═══════════════════════════════════════════════════════════════
+        @layer tokens {
+            /* ═══════════════════════════════════════════════════════════════
    HALEIKI DESIGN SYSTEM — TOKEN LAYER
    Principles: Geometric scale (4:3), OKLCH color, semantic naming
    ═══════════════════════════════════════════════════════════════ */
 
-/* ── SCALE: Perfect Fourth (1.333) ── */
-:root {
-  --ratio: 1.333;
-  --step--2: clamp(0.563rem, 0.52rem + 0.18vi, 0.633rem);
-  --step--1: clamp(0.75rem, 0.7rem + 0.22vi, 0.844rem);
-  --step-0:  clamp(1rem, 0.93rem + 0.29vi, 1.125rem);
-  --step-1:  clamp(1.333rem, 1.24rem + 0.39vi, 1.5rem);
-  --step-2:  clamp(1.777rem, 1.65rem + 0.52vi, 2rem);
-  --step-3:  clamp(2.369rem, 2.2rem + 0.69vi, 2.665rem);
-  --step-4:  clamp(3.157rem, 2.93rem + 0.92vi, 3.553rem);
+            /* ── SCALE: Perfect Fourth (1.333) ── */
+            :root {
+                --ratio: 1.333;
+                --step--2: clamp(0.563rem, 0.52rem + 0.18vi, 0.633rem);
+                --step--1: clamp(0.75rem, 0.7rem + 0.22vi, 0.844rem);
+                --step-0: clamp(1rem, 0.93rem + 0.29vi, 1.125rem);
+                --step-1: clamp(1.333rem, 1.24rem + 0.39vi, 1.5rem);
+                --step-2: clamp(1.777rem, 1.65rem + 0.52vi, 2rem);
+                --step-3: clamp(2.369rem, 2.2rem + 0.69vi, 2.665rem);
+                --step-4: clamp(3.157rem, 2.93rem + 0.92vi, 3.553rem);
 
-  /* ── SPACING: Same ratio, named ── */
-  --space-3xs: clamp(0.25rem, 0.23rem + 0.1vi, 0.313rem);
-  --space-2xs: clamp(0.5rem, 0.47rem + 0.15vi, 0.563rem);
-  --space-xs:  clamp(0.75rem, 0.7rem + 0.22vi, 0.844rem);
-  --space-s:   clamp(1rem, 0.93rem + 0.29vi, 1.125rem);
-  --space-m:   clamp(1.5rem, 1.4rem + 0.44vi, 1.688rem);
-  --space-l:   clamp(2rem, 1.86rem + 0.58vi, 2.25rem);
-  --space-xl:  clamp(3rem, 2.79rem + 0.88vi, 3.375rem);
-  --space-2xl: clamp(4rem, 3.72rem + 1.17vi, 4.5rem);
-  --space-3xl: clamp(6rem, 5.58rem + 1.76vi, 6.75rem);
+                /* ── SPACING: Same ratio, named ── */
+                --space-3xs: clamp(0.25rem, 0.23rem + 0.1vi, 0.313rem);
+                --space-2xs: clamp(0.5rem, 0.47rem + 0.15vi, 0.563rem);
+                --space-xs: clamp(0.75rem, 0.7rem + 0.22vi, 0.844rem);
+                --space-s: clamp(1rem, 0.93rem + 0.29vi, 1.125rem);
+                --space-m: clamp(1.5rem, 1.4rem + 0.44vi, 1.688rem);
+                --space-l: clamp(2rem, 1.86rem + 0.58vi, 2.25rem);
+                --space-xl: clamp(3rem, 2.79rem + 0.88vi, 3.375rem);
+                --space-2xl: clamp(4rem, 3.72rem + 1.17vi, 4.5rem);
+                --space-3xl: clamp(6rem, 5.58rem + 1.76vi, 6.75rem);
 
-  /* ── SPACE PAIRS: Steeper interpolation between two tokens ── */
-  --space-s-m:  clamp(1rem, 0.75rem + 1.24vi, 1.688rem);
-  --space-s-l:  clamp(1rem, 0.5rem + 2.48vi, 2.25rem);
-  --space-m-l:  clamp(1.5rem, 1.26rem + 1.18vi, 2.25rem);
-  --space-m-xl: clamp(1.5rem, 0.93rem + 2.82vi, 3.375rem);
-  --space-l-xl: clamp(2rem, 1.49rem + 2.53vi, 3.375rem);
+                /* ── SPACE PAIRS: Steeper interpolation between two tokens ── */
+                --space-s-m: clamp(1rem, 0.75rem + 1.24vi, 1.688rem);
+                --space-s-l: clamp(1rem, 0.5rem + 2.48vi, 2.25rem);
+                --space-m-l: clamp(1.5rem, 1.26rem + 1.18vi, 2.25rem);
+                --space-m-xl: clamp(1.5rem, 0.93rem + 2.82vi, 3.375rem);
+                --space-l-xl: clamp(2rem, 1.49rem + 2.53vi, 3.375rem);
 
-  /* ── TYPE FAMILIES ── */
-  --font-display: 'Red Hat Display', system-ui, sans-serif;
-  --font-body:    'Newsreader', Georgia, serif;
-  --font-mono:    'IBM Plex Mono', 'Menlo', monospace;
+                /* ── TYPE FAMILIES ── */
+                --font-display: 'Red Hat Display', system-ui, sans-serif;
+                --font-body: 'Newsreader', Georgia, serif;
+                --font-mono: 'IBM Plex Mono', 'Menlo', monospace;
 
-  /* ── LAYOUT ── */
-  --content-max: 58ch;
-  --sidebar-width: 280px;
-  --nav-width: 220px;
-  --page-max: 1320px;
-  --radius-s: 4px;
-  --radius-m: 6px;
-  --radius-l: 8px;
-  --radius-pill: 100vmax;
-}
+                /* ── LAYOUT ── */
+                --content-max: 58ch;
+                --sidebar-width: 280px;
+                --nav-width: 220px;
+                --page-max: 1320px;
+                --radius-s: 4px;
+                --radius-m: 6px;
+                --radius-l: 8px;
+                --radius-pill: 100vmax;
+            }
 
-/* ═══════════════════════════════════════════════════════════════
+            /* ═══════════════════════════════════════════════════════════════
    DAY THEME — Warm ochre, sandstone, terracotta
    OKLCH-derived, perceptually uniform progressions
    ═══════════════════════════════════════════════════════════════ */
-[data-theme="day"] {
-  --surface-ground:    oklch(0.97 0.01 80);
-  --surface-primary:   oklch(0.99 0.005 80);
-  --surface-secondary: oklch(0.95 0.015 75);
-  --surface-tertiary:  oklch(0.92 0.02 72);
-  --surface-invert:    oklch(0.25 0.03 55);
+            [data-theme="day"] {
+                --surface-ground: oklch(0.97 0.01 80);
+                --surface-primary: oklch(0.99 0.005 80);
+                --surface-secondary: oklch(0.95 0.015 75);
+                --surface-tertiary: oklch(0.92 0.02 72);
+                --surface-invert: oklch(0.25 0.03 55);
 
-  --border-subtle:     oklch(0.88 0.025 75);
-  --border-default:    oklch(0.82 0.03 72);
-  --border-strong:     oklch(0.70 0.04 65);
+                --border-subtle: oklch(0.88 0.025 75);
+                --border-default: oklch(0.82 0.03 72);
+                --border-strong: oklch(0.70 0.04 65);
 
-  --text-primary:      oklch(0.22 0.02 55);
-  --text-secondary:    oklch(0.40 0.03 60);
-  --text-tertiary:     oklch(0.55 0.025 65);
-  --text-on-invert:    oklch(0.97 0.01 80);
+                --text-primary: oklch(0.22 0.02 55);
+                --text-secondary: oklch(0.40 0.03 60);
+                --text-tertiary: oklch(0.55 0.025 65);
+                --text-on-invert: oklch(0.97 0.01 80);
 
-  --accent-primary:    oklch(0.55 0.14 45);   /* terracotta */
-  --accent-hover:      oklch(0.48 0.15 42);
-  --accent-subtle:     oklch(0.92 0.04 50);
-  --accent-text:       oklch(0.45 0.12 40);
+                --accent-primary: oklch(0.55 0.14 45);
+                /* terracotta */
+                --accent-hover: oklch(0.48 0.15 42);
+                --accent-subtle: oklch(0.92 0.04 50);
+                --accent-text: oklch(0.45 0.12 40);
 
-  --info-surface:      oklch(0.94 0.03 80);
-  --info-border:       oklch(0.82 0.05 75);
-  --info-text:         oklch(0.40 0.06 65);
+                --info-surface: oklch(0.94 0.03 80);
+                --info-border: oklch(0.82 0.05 75);
+                --info-text: oklch(0.40 0.06 65);
 
-  --code-surface:      oklch(0.95 0.01 80);
-  --code-border:       oklch(0.88 0.02 75);
-  --code-text:         oklch(0.38 0.08 40);
+                --code-surface: oklch(0.95 0.01 80);
+                --code-border: oklch(0.88 0.02 75);
+                --code-text: oklch(0.38 0.08 40);
 
-  --footer-surface:    oklch(0.22 0.025 55);
-  --footer-text:       oklch(0.75 0.015 70);
-  --footer-text-dim:   oklch(0.55 0.015 65);
-  --footer-heading:    oklch(0.90 0.01 75);
-  --footer-link:       oklch(0.75 0.015 70);
-  --footer-link-hover: oklch(0.92 0.01 75);
-  --footer-border:     oklch(0.32 0.025 55);
-  --footer-accent:     oklch(0.65 0.12 50);
+                --footer-surface: oklch(0.22 0.025 55);
+                --footer-text: oklch(0.75 0.015 70);
+                --footer-text-dim: oklch(0.55 0.015 65);
+                --footer-heading: oklch(0.90 0.01 75);
+                --footer-link: oklch(0.75 0.015 70);
+                --footer-link-hover: oklch(0.92 0.01 75);
+                --footer-border: oklch(0.32 0.025 55);
+                --footer-accent: oklch(0.65 0.12 50);
 
-  --shadow-soft: 0 1px 3px oklch(0.5 0.02 60 / 0.08);
-  --shadow-medium: 0 2px 8px oklch(0.4 0.03 55 / 0.1);
-}
+                --shadow-soft: 0 1px 3px oklch(0.5 0.02 60 / 0.08);
+                --shadow-medium: 0 2px 8px oklch(0.4 0.03 55 / 0.1);
+            }
 
-/* ═══════════════════════════════════════════════════════════════
+            /* ═══════════════════════════════════════════════════════════════
    NIGHT THEME — Deep oxide, amber accents
    ═══════════════════════════════════════════════════════════════ */
-[data-theme="night"] {
-  --surface-ground:    oklch(0.16 0.02 55);
-  --surface-primary:   oklch(0.20 0.02 55);
-  --surface-secondary: oklch(0.24 0.025 52);
-  --surface-tertiary:  oklch(0.28 0.03 50);
-  --surface-invert:    oklch(0.92 0.02 75);
+            [data-theme="night"] {
+                --surface-ground: oklch(0.16 0.02 55);
+                --surface-primary: oklch(0.20 0.02 55);
+                --surface-secondary: oklch(0.24 0.025 52);
+                --surface-tertiary: oklch(0.28 0.03 50);
+                --surface-invert: oklch(0.92 0.02 75);
 
-  --border-subtle:     oklch(0.30 0.03 50);
-  --border-default:    oklch(0.36 0.035 48);
-  --border-strong:     oklch(0.48 0.04 50);
+                --border-subtle: oklch(0.30 0.03 50);
+                --border-default: oklch(0.36 0.035 48);
+                --border-strong: oklch(0.48 0.04 50);
 
-  --text-primary:      oklch(0.90 0.015 75);
-  --text-secondary:    oklch(0.72 0.02 65);
-  --text-tertiary:     oklch(0.55 0.025 58);
-  --text-on-invert:    oklch(0.20 0.02 55);
+                --text-primary: oklch(0.90 0.015 75);
+                --text-secondary: oklch(0.72 0.02 65);
+                --text-tertiary: oklch(0.55 0.025 58);
+                --text-on-invert: oklch(0.20 0.02 55);
 
-  --accent-primary:    oklch(0.72 0.14 70);   /* amber */
-  --accent-hover:      oklch(0.78 0.15 72);
-  --accent-subtle:     oklch(0.28 0.06 60);
-  --accent-text:       oklch(0.78 0.12 72);
+                --accent-primary: oklch(0.72 0.14 70);
+                /* amber */
+                --accent-hover: oklch(0.78 0.15 72);
+                --accent-subtle: oklch(0.28 0.06 60);
+                --accent-text: oklch(0.78 0.12 72);
 
-  --info-surface:      oklch(0.24 0.03 55);
-  --info-border:       oklch(0.36 0.04 52);
-  --info-text:         oklch(0.72 0.04 68);
+                --info-surface: oklch(0.24 0.03 55);
+                --info-border: oklch(0.36 0.04 52);
+                --info-text: oklch(0.72 0.04 68);
 
-  --code-surface:      oklch(0.22 0.02 55);
-  --code-border:       oklch(0.32 0.03 52);
-  --code-text:         oklch(0.78 0.1 72);
+                --code-surface: oklch(0.22 0.02 55);
+                --code-border: oklch(0.32 0.03 52);
+                --code-text: oklch(0.78 0.1 72);
 
-  --footer-surface:    oklch(0.22 0.02 55);
-  --footer-text:       oklch(0.65 0.015 65);
-  --footer-text-dim:   oklch(0.45 0.015 60);
-  --footer-heading:    oklch(0.82 0.01 70);
-  --footer-link:       oklch(0.65 0.015 65);
-  --footer-link-hover: oklch(0.85 0.01 72);
-  --footer-border:     oklch(0.30 0.025 55);
-  --footer-accent:     oklch(0.72 0.12 70);
+                --footer-surface: oklch(0.22 0.02 55);
+                --footer-text: oklch(0.65 0.015 65);
+                --footer-text-dim: oklch(0.45 0.015 60);
+                --footer-heading: oklch(0.82 0.01 70);
+                --footer-link: oklch(0.65 0.015 65);
+                --footer-link-hover: oklch(0.85 0.01 72);
+                --footer-border: oklch(0.30 0.025 55);
+                --footer-accent: oklch(0.72 0.12 70);
 
-  --shadow-soft: 0 1px 3px oklch(0.1 0.02 55 / 0.3);
-  --shadow-medium: 0 2px 8px oklch(0.08 0.02 55 / 0.4);
-}
-} /* end @layer tokens */
+                --shadow-soft: 0 1px 3px oklch(0.1 0.02 55 / 0.3);
+                --shadow-medium: 0 2px 8px oklch(0.08 0.02 55 / 0.4);
+            }
+        }
 
-@layer reset {
-/* ═══════════════════════════════════════════════════════════════
+        /* end @layer tokens */
+
+        @layer reset {
+
+            /* ═══════════════════════════════════════════════════════════════
    RESET & BASE
    ═══════════════════════════════════════════════════════════════ */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+            *,
+            *::before,
+            *::after {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
 
-html {
-  font-size: 100%;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  scroll-behavior: smooth;
-}
+            html {
+                font-size: 100%;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                scroll-behavior: smooth;
+            }
 
-body {
-  font-family: var(--font-body);
-  font-size: var(--step-0);
-  font-variation-settings: 'opsz' 14;
-  line-height: 1.65;
-  color: var(--text-primary);
-  background: var(--surface-ground);
-  transition: background 0.3s ease, color 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-} /* end @layer reset */
+            body {
+                font-family: var(--font-body);
+                font-size: var(--step-0);
+                font-variation-settings: 'opsz' 14;
+                line-height: 1.65;
+                color: var(--text-primary);
+                background: var(--surface-ground);
+                transition: background 0.3s ease, color 0.3s ease;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+        }
 
-@layer layout {
-/* ═══════════════════════════════════════════════════════════════
+        /* end @layer reset */
+
+        @layer layout {
+
+            /* ═══════════════════════════════════════════════════════════════
    TOP NAVIGATION BAR
    ═══════════════════════════════════════════════════════════════ */
-.topnav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--surface-primary);
-  border-bottom: 1px solid var(--border-subtle);
-  padding: var(--space-2xs) var(--space-s-l);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2xs) var(--space-m);
-  backdrop-filter: blur(12px);
-  transition: background 0.3s ease, border-color 0.3s ease;
-}
+            .topnav {
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                background: var(--surface-primary);
+                border-bottom: 1px solid var(--border-subtle);
+                padding: var(--space-2xs) var(--space-s-l);
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: var(--space-2xs) var(--space-m);
+                backdrop-filter: blur(12px);
+                transition: background 0.3s ease, border-color 0.3s ease;
+            }
 
-.topnav-brand {
-  font-family: var(--font-display);
-  font-size: var(--step-1);
-  font-weight: 600;
-  color: var(--text-primary);
-  text-decoration: none;
-  letter-spacing: -0.01em;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  gap: var(--space-2xs);
-}
+            .topnav-brand {
+                font-family: var(--font-display);
+                font-size: var(--step-1);
+                font-weight: 600;
+                color: var(--text-primary);
+                text-decoration: none;
+                letter-spacing: -0.01em;
+                flex-shrink: 0;
+                display: flex;
+                align-items: center;
+                gap: var(--space-2xs);
+            }
 
-.topnav-brand .brand-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.75em;
-  height: 1.75em;
-  background: var(--accent-primary);
-  color: var(--text-on-invert);
-  border-radius: var(--radius-s);
-  font-size: var(--step--1);
-  font-weight: 700;
-  line-height: 1;
-}
+            .topnav-brand .brand-mark {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 1.75em;
+                height: 1.75em;
+                background: var(--accent-primary);
+                color: var(--text-on-invert);
+                border-radius: var(--radius-s);
+                font-size: var(--step--1);
+                font-weight: 700;
+                line-height: 1;
+            }
 
-[data-theme="night"] .topnav-brand .brand-mark {
-  color: var(--surface-ground);
-}
+            [data-theme="night"] .topnav-brand .brand-mark {
+                color: var(--surface-ground);
+            }
 
-/* ── SEARCH ── */
-.search-container {
-  flex: 1;
-  max-width: 36ch;
-  position: relative;
-}
+            /* ── SEARCH ── */
+            .search-container {
+                flex: 1;
+                max-width: 36ch;
+                position: relative;
+            }
 
-.search-input {
-  width: 100%;
-  padding: var(--space-2xs) var(--space-s);
-  padding-left: var(--space-l);
-  font-family: var(--font-body);
-  font-size: var(--step--1);
-  background: var(--surface-secondary);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-l);
-  color: var(--text-primary);
-  outline: none;
-  transition: all 0.2s ease;
-}
+            .search-input {
+                width: 100%;
+                padding: var(--space-2xs) var(--space-s);
+                padding-left: var(--space-l);
+                font-family: var(--font-body);
+                font-size: var(--step--1);
+                background: var(--surface-secondary);
+                border: 1px solid var(--border-subtle);
+                border-radius: var(--radius-l);
+                color: var(--text-primary);
+                outline: none;
+                transition: all 0.2s ease;
+            }
 
-.search-input::placeholder {
-  color: var(--text-tertiary);
-}
+            .search-input::placeholder {
+                color: var(--text-tertiary);
+            }
 
-.search-input:focus {
-  border-color: var(--accent-primary);
-  background: var(--surface-primary);
-  box-shadow: 0 0 0 3px var(--accent-subtle);
-}
+            .search-input:focus {
+                border-color: var(--accent-primary);
+                background: var(--surface-primary);
+                box-shadow: 0 0 0 3px var(--accent-subtle);
+            }
 
-.search-icon {
-  position: absolute;
-  left: var(--space-xs);
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-tertiary);
-  pointer-events: none;
-}
+            .search-icon {
+                position: absolute;
+                left: var(--space-xs);
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--text-tertiary);
+                pointer-events: none;
+            }
 
-.search-shortcut {
-  position: absolute;
-  right: var(--space-xs);
-  top: 50%;
-  transform: translateY(-50%);
-  font-family: var(--font-mono);
-  font-size: var(--step--2);
-  padding: 0.125em var(--space-3xs);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-s);
-  color: var(--text-tertiary);
-  background: var(--surface-primary);
-  line-height: 1;
-}
+            .search-shortcut {
+                position: absolute;
+                right: var(--space-xs);
+                top: 50%;
+                transform: translateY(-50%);
+                font-family: var(--font-mono);
+                font-size: var(--step--2);
+                padding: 0.125em var(--space-3xs);
+                border: 1px solid var(--border-subtle);
+                border-radius: var(--radius-s);
+                color: var(--text-tertiary);
+                background: var(--surface-primary);
+                line-height: 1;
+            }
 
-/* ── NAV LINKS ── */
-.topnav-links {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-  margin-left: auto;
-  flex-shrink: 0;
-}
+            /* ── NAV LINKS ── */
+            .topnav-links {
+                display: flex;
+                align-items: center;
+                gap: var(--space-xs);
+                margin-left: auto;
+                flex-shrink: 0;
+            }
 
-.topnav-links a {
-  font-family: var(--font-display);
-  font-size: var(--step--1);
-  font-weight: 500;
-  color: var(--text-secondary);
-  text-decoration: none;
-  padding: var(--space-3xs) var(--space-2xs);
-  border-radius: var(--radius-s);
-  transition: color 0.15s ease, background 0.15s ease;
-}
+            .topnav-links a {
+                font-family: var(--font-display);
+                font-size: var(--step--1);
+                font-weight: 500;
+                color: var(--text-secondary);
+                text-decoration: none;
+                padding: var(--space-3xs) var(--space-2xs);
+                border-radius: var(--radius-s);
+                transition: color 0.15s ease, background 0.15s ease;
+            }
 
-.topnav-links a:hover {
-  color: var(--text-primary);
-  background: var(--surface-secondary);
-}
+            .topnav-links a:hover {
+                color: var(--text-primary);
+                background: var(--surface-secondary);
+            }
 
-/* ── THEME TOGGLE ── */
-.theme-toggle {
-  background: var(--surface-secondary);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-pill);
-  padding: var(--space-3xs);
-  display: flex;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-}
+            /* ── THEME TOGGLE ── */
+            .theme-toggle {
+                background: var(--surface-secondary);
+                border: 1px solid var(--border-subtle);
+                border-radius: var(--radius-pill);
+                padding: var(--space-3xs);
+                display: flex;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                flex-shrink: 0;
+            }
 
-.theme-toggle-option {
-  padding: var(--space-3xs) var(--space-xs);
-  border-radius: var(--radius-pill);
-  font-size: 0.8rem;
-  line-height: 1;
-  border: none;
-  background: none;
-  color: var(--text-tertiary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: var(--font-display);
-  font-weight: 500;
-}
+            .theme-toggle-option {
+                padding: var(--space-3xs) var(--space-xs);
+                border-radius: var(--radius-pill);
+                font-size: 0.8rem;
+                line-height: 1;
+                border: none;
+                background: none;
+                color: var(--text-tertiary);
+                cursor: pointer;
+                transition: all 0.2s ease;
+                font-family: var(--font-display);
+                font-weight: 500;
+            }
 
-.theme-toggle-option.active {
-  background: var(--accent-primary);
-  color: var(--text-on-invert);
-}
+            .theme-toggle-option.active {
+                background: var(--accent-primary);
+                color: var(--text-on-invert);
+            }
 
-[data-theme="night"] .theme-toggle-option.active {
-  color: var(--surface-ground);
-}
+            [data-theme="night"] .theme-toggle-option.active {
+                color: var(--surface-ground);
+            }
 
-/* ═══════════════════════════════════════════════════════════════
+            /* ═══════════════════════════════════════════════════════════════
    BRAND GUIDELINES — Single-Column Layout
    ═══════════════════════════════════════════════════════════════ */
-.guidelines {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: var(--space-s-l);
-  flex: 1;
-}
+            .guidelines {
+                max-width: 860px;
+                margin: 0 auto;
+                padding: var(--space-s-l);
+                flex: 1;
+            }
 
-/* ── HERO ── */
-.hero {
-  padding: var(--space-2xl) 0 var(--space-xl);
-  text-align: center;
-  border-bottom: 1px solid var(--border-subtle);
-  margin-bottom: var(--space-xl);
-}
+            /* ── HERO ── */
+            .hero {
+                padding: var(--space-2xl) 0 var(--space-xl);
+                text-align: center;
+                border-bottom: 1px solid var(--border-subtle);
+                margin-bottom: var(--space-xl);
+            }
 
-.hero-overline {
-  font-family: var(--font-mono);
-  font-size: var(--step--2);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--accent-text);
-  margin-bottom: var(--space-2xs);
-}
+            .hero-overline {
+                font-family: var(--font-mono);
+                font-size: var(--step--2);
+                font-weight: 500;
+                text-transform: uppercase;
+                letter-spacing: 0.12em;
+                color: var(--accent-text);
+                margin-bottom: var(--space-2xs);
+            }
 
-.hero-title {
-  font-family: var(--font-display);
-  font-size: var(--step-4);
-  font-weight: 700;
-  color: var(--text-primary);
-  line-height: 1.1;
-  letter-spacing: -0.025em;
-  margin-bottom: var(--space-s);
-}
+            .hero-title {
+                font-family: var(--font-display);
+                font-size: var(--step-4);
+                font-weight: 700;
+                color: var(--text-primary);
+                line-height: 1.1;
+                letter-spacing: -0.025em;
+                margin-bottom: var(--space-s);
+            }
 
-.hero-subtitle {
-  font-family: var(--font-body);
-  font-size: var(--step-0);
-  font-variation-settings: 'opsz' 14;
-  color: var(--text-secondary);
-  max-width: 60ch;
-  margin: 0 auto var(--space-m);
-  line-height: 1.65;
-}
+            .hero-subtitle {
+                font-family: var(--font-body);
+                font-size: var(--step-0);
+                font-variation-settings: 'opsz' 14;
+                color: var(--text-secondary);
+                max-width: 60ch;
+                margin: 0 auto var(--space-m);
+                line-height: 1.65;
+            }
 
-.hero-tags {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--space-2xs);
-}
+            .hero-tags {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: var(--space-2xs);
+            }
 
-.tag {
-  font-family: var(--font-display);
-  font-size: var(--step--2);
-  font-weight: 500;
-  padding: var(--space-3xs) var(--space-xs);
-  border-radius: var(--radius-pill);
-  background: var(--surface-secondary);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-subtle);
-}
+            .tag {
+                font-family: var(--font-display);
+                font-size: var(--step--2);
+                font-weight: 500;
+                padding: var(--space-3xs) var(--space-xs);
+                border-radius: var(--radius-pill);
+                background: var(--surface-secondary);
+                color: var(--text-secondary);
+                border: 1px solid var(--border-subtle);
+            }
 
-/* ── SECTION STRUCTURE ── */
-.section {
-  margin-bottom: var(--space-2xl);
-}
+            /* ── SECTION STRUCTURE ── */
+            .section {
+                margin-bottom: var(--space-2xl);
+            }
 
-.section-label {
-  font-family: var(--font-mono);
-  font-size: var(--step--2);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--text-tertiary);
-  margin-bottom: var(--space-3xs);
-}
+            .section-label {
+                font-family: var(--font-mono);
+                font-size: var(--step--2);
+                font-weight: 500;
+                text-transform: uppercase;
+                letter-spacing: 0.12em;
+                color: var(--text-tertiary);
+                margin-bottom: var(--space-3xs);
+            }
 
-.section h2 {
-  font-family: var(--font-display);
-  font-size: var(--step-2);
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: -0.015em;
-  line-height: 1.2;
-  margin-bottom: var(--space-3xs);
-}
+            .section h2 {
+                font-family: var(--font-display);
+                font-size: var(--step-2);
+                font-weight: 700;
+                color: var(--text-primary);
+                letter-spacing: -0.015em;
+                line-height: 1.2;
+                margin-bottom: var(--space-3xs);
+            }
 
-.section h3 {
-  font-family: var(--font-mono);
-  font-size: var(--step--2);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--text-tertiary);
-  margin-top: var(--space-l);
-  margin-bottom: var(--space-2xs);
-}
+            .section h3 {
+                font-family: var(--font-mono);
+                font-size: var(--step--2);
+                font-weight: 500;
+                text-transform: uppercase;
+                letter-spacing: 0.12em;
+                color: var(--text-tertiary);
+                margin-top: var(--space-l);
+                margin-bottom: var(--space-2xs);
+            }
 
-.desc {
-  font-size: var(--step-0);
-  font-variation-settings: 'opsz' 14;
-  color: var(--text-secondary);
-  max-width: 60ch;
-  line-height: 1.65;
-  margin-bottom: var(--space-m);
-}
+            .desc {
+                font-size: var(--step-0);
+                font-variation-settings: 'opsz' 14;
+                color: var(--text-secondary);
+                max-width: 60ch;
+                line-height: 1.65;
+                margin-bottom: var(--space-m);
+            }
 
-.section p {
-  max-width: 60ch;
-  line-height: 1.65;
-  margin-bottom: var(--space-xs);
-  color: var(--text-primary);
-}
+            .section p {
+                max-width: 60ch;
+                line-height: 1.65;
+                margin-bottom: var(--space-xs);
+                color: var(--text-primary);
+            }
 
-.section p:last-child {
-  margin-bottom: 0;
-}
+            .section p:last-child {
+                margin-bottom: 0;
+            }
 
-.section strong {
-  font-weight: 650;
-  color: var(--text-primary);
-}
+            .section strong {
+                font-weight: 650;
+                color: var(--text-primary);
+            }
 
-.section code {
-  font-family: var(--font-mono);
-  font-size: 0.85em;
-  background: var(--code-surface);
-  border: 1px solid var(--code-border);
-  padding: 1px 5px;
-  border-radius: var(--radius-s);
-  color: var(--code-text);
-}
+            .section code {
+                font-family: var(--font-mono);
+                font-size: 0.85em;
+                background: var(--code-surface);
+                border: 1px solid var(--code-border);
+                padding: 1px 5px;
+                border-radius: var(--radius-s);
+                color: var(--code-text);
+            }
 
-.divider {
-  border: none;
-  border-top: 1px solid var(--border-subtle);
-  margin: var(--space-xl) 0;
-}
-} /* end @layer layout */
+            .divider {
+                border: none;
+                border-top: 1px solid var(--border-subtle);
+                margin: var(--space-xl) 0;
+            }
+        }
 
-@layer components {
-/* ═══════════════════════════════════════════════════════════════
+        /* end @layer layout */
+
+        @layer components {
+
+            /* ═══════════════════════════════════════════════════════════════
    BRAND MARK SHOWCASE
    ═══════════════════════════════════════════════════════════════ */
-.brand-showcase {
-  display: flex;
-  gap: var(--space-m);
-  margin: var(--space-m) 0;
-  flex-wrap: wrap;
-}
+            .brand-showcase {
+                display: flex;
+                gap: var(--space-m);
+                margin: var(--space-m) 0;
+                flex-wrap: wrap;
+            }
 
-.brand-showcase-card {
-  flex: 1;
-  min-width: 200px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-xl) var(--space-l);
-  border-radius: var(--radius-l);
-  gap: var(--space-s);
-}
+            .brand-showcase-card {
+                flex: 1;
+                min-width: 200px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: var(--space-xl) var(--space-l);
+                border-radius: var(--radius-l);
+                gap: var(--space-s);
+            }
 
-.brand-showcase-card.on-light {
-  background: var(--surface-secondary);
-  border: 1px solid var(--border-default);
-}
+            .brand-showcase-card.on-light {
+                background: var(--surface-secondary);
+                border: 1px solid var(--border-default);
+            }
 
-.brand-showcase-card.on-dark {
-  background: var(--surface-invert);
-}
+            .brand-showcase-card.on-dark {
+                background: var(--surface-invert);
+            }
 
-.brand-showcase-card .showcase-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 120px;
-  height: 120px;
-  background: var(--accent-primary);
-  border-radius: var(--radius-l);
-  font-family: var(--font-display);
-  font-size: 3.5rem;
-  font-weight: 800;
-  line-height: 1;
-}
+            .brand-showcase-card .showcase-mark {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 120px;
+                height: 120px;
+                background: var(--accent-primary);
+                border-radius: var(--radius-l);
+                font-family: var(--font-display);
+                font-size: 3.5rem;
+                font-weight: 800;
+                line-height: 1;
+            }
 
-.brand-showcase-card.on-light .showcase-mark {
-  color: var(--text-on-invert);
-}
+            .brand-showcase-card.on-light .showcase-mark {
+                color: var(--text-on-invert);
+            }
 
-.brand-showcase-card.on-dark .showcase-mark {
-  color: var(--surface-invert);
-}
+            .brand-showcase-card.on-dark .showcase-mark {
+                color: var(--surface-invert);
+            }
 
-[data-theme="night"] .brand-showcase-card.on-light .showcase-mark {
-  color: var(--surface-ground);
-}
+            [data-theme="night"] .brand-showcase-card.on-light .showcase-mark {
+                color: var(--surface-ground);
+            }
 
-[data-theme="night"] .brand-showcase-card.on-dark .showcase-mark {
-  color: var(--surface-invert);
-}
+            [data-theme="night"] .brand-showcase-card.on-dark .showcase-mark {
+                color: var(--surface-invert);
+            }
 
-.brand-showcase-card .showcase-label {
-  font-family: var(--font-mono);
-  font-size: var(--step--2);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
+            .brand-showcase-card .showcase-label {
+                font-family: var(--font-mono);
+                font-size: var(--step--2);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+            }
 
-.brand-showcase-card.on-light .showcase-label {
-  color: var(--text-tertiary);
-}
+            .brand-showcase-card.on-light .showcase-label {
+                color: var(--text-tertiary);
+            }
 
-.brand-showcase-card.on-dark .showcase-label {
-  color: var(--text-on-invert);
-  opacity: 0.7;
-}
+            .brand-showcase-card.on-dark .showcase-label {
+                color: var(--text-on-invert);
+                opacity: 0.7;
+            }
 
-.brand-name-display {
-  font-family: var(--font-display);
-  font-size: var(--step-3);
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: -0.02em;
-  margin: var(--space-s) 0 var(--space-3xs);
-}
+            .brand-name-display {
+                font-family: var(--font-display);
+                font-size: var(--step-3);
+                font-weight: 700;
+                color: var(--text-primary);
+                letter-spacing: -0.02em;
+                margin: var(--space-s) 0 var(--space-3xs);
+            }
 
-.brand-tagline {
-  font-family: var(--font-body);
-  font-size: var(--step-1);
-  font-variation-settings: 'opsz' 24;
-  color: var(--text-secondary);
-  font-style: italic;
-  margin-bottom: var(--space-m);
-}
+            .brand-tagline {
+                font-family: var(--font-body);
+                font-size: var(--step-1);
+                font-variation-settings: 'opsz' 24;
+                color: var(--text-secondary);
+                font-style: italic;
+                margin-bottom: var(--space-m);
+            }
 
-/* ═══════════════════════════════════════════════════════════════
+            /* ═══════════════════════════════════════════════════════════════
    COLOUR SWATCHES
    ═══════════════════════════════════════════════════════════════ */
-.swatch-row {
-  display: flex;
-  gap: 0;
-  border-radius: var(--radius-m);
-  overflow: hidden;
-  box-shadow: var(--shadow-soft);
-  margin-bottom: var(--space-2xs);
-}
+            .swatch-row {
+                display: flex;
+                gap: 0;
+                border-radius: var(--radius-m);
+                overflow: hidden;
+                box-shadow: var(--shadow-soft);
+                margin-bottom: var(--space-2xs);
+            }
 
-.swatch {
-  flex: 1;
-  min-height: 64px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 6px;
-}
+            .swatch {
+                flex: 1;
+                min-height: 64px;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+                padding: 6px;
+            }
 
-.swatch span {
-  font-family: var(--font-mono);
-  font-size: 0.5rem;
-  line-height: 1.3;
-  opacity: 0.85;
-}
+            .swatch span {
+                font-family: var(--font-mono);
+                font-size: 0.5rem;
+                line-height: 1.3;
+                opacity: 0.85;
+            }
 
-.swatch.lt span { color: oklch(0.95 0.01 80); }
-.swatch.dk span { color: oklch(0.22 0.02 55); }
+            .swatch.lt span {
+                color: oklch(0.95 0.01 80);
+            }
 
-.swatch-group-label {
-  font-family: var(--font-mono);
-  font-size: var(--step--2);
-  font-weight: 500;
-  color: var(--text-tertiary);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-top: var(--space-s);
-  margin-bottom: var(--space-3xs);
-}
+            .swatch.dk span {
+                color: oklch(0.22 0.02 55);
+            }
 
-/* ═══════════════════════════════════════════════════════════════
+            .swatch-group-label {
+                font-family: var(--font-mono);
+                font-size: var(--step--2);
+                font-weight: 500;
+                color: var(--text-tertiary);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                margin-top: var(--space-s);
+                margin-bottom: var(--space-3xs);
+            }
+
+            /* ═══════════════════════════════════════════════════════════════
    TOKEN TABLE
    ═══════════════════════════════════════════════════════════════ */
-.token-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: var(--space-s) 0;
-  font-size: var(--step--1);
-}
+            .token-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: var(--space-s) 0;
+                font-size: var(--step--1);
+            }
 
-.token-table th {
-  font-family: var(--font-mono);
-  font-size: var(--step--2);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-tertiary);
-  text-align: left;
-  padding: var(--space-2xs) var(--space-xs);
-  border-bottom: 2px solid var(--border-default);
-  font-weight: 500;
-}
+            .token-table th {
+                font-family: var(--font-mono);
+                font-size: var(--step--2);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                color: var(--text-tertiary);
+                text-align: left;
+                padding: var(--space-2xs) var(--space-xs);
+                border-bottom: 2px solid var(--border-default);
+                font-weight: 500;
+            }
 
-.token-table td {
-  padding: var(--space-2xs) var(--space-xs);
-  border-bottom: 1px solid var(--border-subtle);
-  color: var(--text-primary);
-  vertical-align: top;
-}
+            .token-table td {
+                padding: var(--space-2xs) var(--space-xs);
+                border-bottom: 1px solid var(--border-subtle);
+                color: var(--text-primary);
+                vertical-align: top;
+            }
 
-.token-table td:first-child {
-  font-family: var(--font-mono);
-  font-size: var(--step--2);
-  color: var(--text-secondary);
-  white-space: nowrap;
-}
+            .token-table td:first-child {
+                font-family: var(--font-mono);
+                font-size: var(--step--2);
+                color: var(--text-secondary);
+                white-space: nowrap;
+            }
 
-.token-table td:nth-child(2),
-.token-table td:nth-child(3) {
-  font-family: var(--font-mono);
-  font-size: var(--step--2);
-  color: var(--accent-text);
-}
+            .token-table td:nth-child(2),
+            .token-table td:nth-child(3) {
+                font-family: var(--font-mono);
+                font-size: var(--step--2);
+                color: var(--accent-text);
+            }
 
-.token-table td:last-child {
-  font-family: var(--font-body);
-  font-size: var(--step--1);
-  color: var(--text-secondary);
-}
+            .token-table td:last-child {
+                font-family: var(--font-body);
+                font-size: var(--step--1);
+                color: var(--text-secondary);
+            }
 
-.token-table .swatch-chip {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
-  vertical-align: middle;
-  margin-right: 6px;
-  border: 1px solid var(--border-subtle);
-}
+            .token-table .swatch-chip {
+                display: inline-block;
+                width: 14px;
+                height: 14px;
+                border-radius: 3px;
+                vertical-align: middle;
+                margin-right: 6px;
+                border: 1px solid var(--border-subtle);
+            }
 
-/* ═══════════════════════════════════════════════════════════════
+            /* ═══════════════════════════════════════════════════════════════
    SCALE TABLE
    ═══════════════════════════════════════════════════════════════ */
-.scale-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: var(--space-s) 0;
-  font-size: var(--step--1);
-}
+            .scale-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: var(--space-s) 0;
+                font-size: var(--step--1);
+            }
 
-.scale-table th {
-  font-family: var(--font-mono);
-  font-size: var(--step--2);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-tertiary);
-  text-align: left;
-  padding: var(--space-2xs) var(--space-xs);
-  border-bottom: 2px solid var(--border-default);
-  font-weight: 500;
-}
+            .scale-table th {
+                font-family: var(--font-mono);
+                font-size: var(--step--2);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                color: var(--text-tertiary);
+                text-align: left;
+                padding: var(--space-2xs) var(--space-xs);
+                border-bottom: 2px solid var(--border-default);
+                font-weight: 500;
+            }
 
-.scale-table td {
-  padding: var(--space-2xs) var(--space-xs);
-  border-bottom: 1px solid var(--border-subtle);
-  color: var(--text-primary);
-}
+            .scale-table td {
+                padding: var(--space-2xs) var(--space-xs);
+                border-bottom: 1px solid var(--border-subtle);
+                color: var(--text-primary);
+            }
 
-.scale-table td:first-child {
-  font-family: var(--font-mono);
-  font-size: var(--step--2);
-  color: var(--text-secondary);
-}
+            .scale-table td:first-child {
+                font-family: var(--font-mono);
+                font-size: var(--step--2);
+                color: var(--text-secondary);
+            }
 
-/* ═══════════════════════════════════════════════════════════════
+            /* ═══════════════════════════════════════════════════════════════
    TYPE SPECIMEN CARDS
    ═══════════════════════════════════════════════════════════════ */
-.type-card {
-  border-radius: var(--radius-l);
-  overflow: hidden;
-  box-shadow: var(--shadow-soft);
-  margin: var(--space-s) 0 var(--space-m);
-}
+            .type-card {
+                border-radius: var(--radius-l);
+                overflow: hidden;
+                box-shadow: var(--shadow-soft);
+                margin: var(--space-s) 0 var(--space-m);
+            }
 
-.type-card-head {
-  padding: var(--space-s) var(--space-m);
-  background: var(--surface-invert);
-  color: var(--text-on-invert);
-}
+            .type-card-head {
+                padding: var(--space-s) var(--space-m);
+                background: var(--surface-invert);
+                color: var(--text-on-invert);
+            }
 
-.type-card-head h4 {
-  font-family: var(--font-display);
-  font-size: var(--step-1);
-  font-weight: 700;
-  line-height: 1.2;
-  margin-bottom: var(--space-3xs);
-}
+            .type-card-head h4 {
+                font-family: var(--font-display);
+                font-size: var(--step-1);
+                font-weight: 700;
+                line-height: 1.2;
+                margin-bottom: var(--space-3xs);
+            }
 
-.type-card-head .type-meta {
-  font-family: var(--font-mono);
-  font-size: var(--step--2);
-  opacity: 0.65;
-}
+            .type-card-head .type-meta {
+                font-family: var(--font-mono);
+                font-size: var(--step--2);
+                opacity: 0.65;
+            }
 
-.type-card-body {
-  padding: var(--space-s) var(--space-m);
-  background: var(--surface-secondary);
-  font-size: var(--step--1);
-  line-height: 1.65;
-  color: var(--text-primary);
-}
+            .type-card-body {
+                padding: var(--space-s) var(--space-m);
+                background: var(--surface-secondary);
+                font-size: var(--step--1);
+                line-height: 1.65;
+                color: var(--text-primary);
+            }
 
-/* ── TYPE SPECIMENS (live scale) ── */
-.specimen {
-  margin: var(--space-s) 0;
-  padding: var(--space-xs) 0;
-  border-bottom: 1px solid var(--border-subtle);
-}
+            /* ── TYPE SPECIMENS (live scale) ── */
+            .specimen {
+                margin: var(--space-s) 0;
+                padding: var(--space-xs) 0;
+                border-bottom: 1px solid var(--border-subtle);
+            }
 
-.specimen:last-child {
-  border-bottom: none;
-}
+            .specimen:last-child {
+                border-bottom: none;
+            }
 
-.specimen-label {
-  font-family: var(--font-mono);
-  font-size: var(--step--2);
-  color: var(--text-tertiary);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: var(--space-3xs);
-}
+            .specimen-label {
+                font-family: var(--font-mono);
+                font-size: var(--step--2);
+                color: var(--text-tertiary);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                margin-bottom: var(--space-3xs);
+            }
 
-.specimen-text {
-  color: var(--text-primary);
-  line-height: 1.2;
-}
+            .specimen-text {
+                color: var(--text-primary);
+                line-height: 1.2;
+            }
 
-/* ═══════════════════════════════════════════════════════════════
+            /* ═══════════════════════════════════════════════════════════════
    NOTES BLOCK
    ═══════════════════════════════════════════════════════════════ */
-.notes {
-  background: var(--info-surface);
-  border: 1px solid var(--info-border);
-  border-left: 3px solid var(--accent-primary);
-  border-radius: var(--radius-m);
-  padding: var(--space-s) var(--space-m);
-  margin: var(--space-m) 0;
-}
+            .notes {
+                background: var(--info-surface);
+                border: 1px solid var(--info-border);
+                border-left: 3px solid var(--accent-primary);
+                border-radius: var(--radius-m);
+                padding: var(--space-s) var(--space-m);
+                margin: var(--space-m) 0;
+            }
 
-.notes h4 {
-  font-family: var(--font-display);
-  font-size: var(--step--1);
-  font-weight: 600;
-  color: var(--accent-text);
-  margin-bottom: var(--space-3xs);
-}
+            .notes h4 {
+                font-family: var(--font-display);
+                font-size: var(--step--1);
+                font-weight: 600;
+                color: var(--accent-text);
+                margin-bottom: var(--space-3xs);
+            }
 
-.notes p {
-  font-size: var(--step--1);
-  font-variation-settings: 'opsz' 10;
-  color: var(--info-text);
-  max-width: 60ch;
-  line-height: 1.6;
-}
+            .notes p {
+                font-size: var(--step--1);
+                font-variation-settings: 'opsz' 10;
+                color: var(--info-text);
+                max-width: 60ch;
+                line-height: 1.6;
+            }
 
-/* ═══════════════════════════════════════════════════════════════
+            /* ═══════════════════════════════════════════════════════════════
    SITE FOOTER — Columnar, dark-surface, warm
    ═══════════════════════════════════════════════════════════════ */
-.site-footer {
-  background: var(--footer-surface);
-  color: var(--footer-text);
-  transition: background 0.3s ease, color 0.3s ease;
-}
+            .site-footer {
+                background: var(--footer-surface);
+                color: var(--footer-text);
+                transition: background 0.3s ease, color 0.3s ease;
+            }
 
-.footer-inner {
-  max-width: var(--page-max);
-  margin: 0 auto;
-  padding: var(--space-xl) var(--space-s-l) var(--space-l);
-}
+            .footer-inner {
+                max-width: var(--page-max);
+                margin: 0 auto;
+                padding: var(--space-xl) var(--space-s-l) var(--space-l);
+            }
 
-.footer-top {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-l) var(--space-xl);
-  padding-bottom: var(--space-l);
-}
+            .footer-top {
+                display: flex;
+                flex-wrap: wrap;
+                gap: var(--space-l) var(--space-xl);
+                padding-bottom: var(--space-l);
+            }
 
-.footer-brand-col {
-  flex-basis: 260px;
-  flex-grow: 1;
-  max-width: 320px;
-}
+            .footer-brand-col {
+                flex-basis: 260px;
+                flex-grow: 1;
+                max-width: 320px;
+            }
 
-.footer-brand-link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2xs);
-  text-decoration: none;
-  color: var(--footer-heading);
-  margin-bottom: var(--space-xs);
-  transition: color 0.15s ease;
-}
+            .footer-brand-link {
+                display: inline-flex;
+                align-items: center;
+                gap: var(--space-2xs);
+                text-decoration: none;
+                color: var(--footer-heading);
+                margin-bottom: var(--space-xs);
+                transition: color 0.15s ease;
+            }
 
-.footer-brand-link:hover {
-  color: var(--footer-accent);
-}
+            .footer-brand-link:hover {
+                color: var(--footer-accent);
+            }
 
-.footer-brand-link .brand-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.25em;
-  height: 2.25em;
-  background: var(--footer-accent);
-  color: var(--footer-surface);
-  border-radius: var(--radius-m);
-  font-family: var(--font-display);
-  font-size: var(--step-0);
-  font-weight: 800;
-  line-height: 1;
-  transition: background 0.15s ease;
-}
+            .footer-brand-link .brand-mark {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 2.25em;
+                height: 2.25em;
+                background: var(--footer-accent);
+                color: var(--footer-surface);
+                border-radius: var(--radius-m);
+                font-family: var(--font-display);
+                font-size: var(--step-0);
+                font-weight: 800;
+                line-height: 1;
+                transition: background 0.15s ease;
+            }
 
-.footer-brand-link:hover .brand-mark {
-  background: var(--footer-link-hover);
-}
+            .footer-brand-link:hover .brand-mark {
+                background: var(--footer-link-hover);
+            }
 
-.footer-brand-link .brand-name {
-  font-family: var(--font-display);
-  font-size: var(--step-1);
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
+            .footer-brand-link .brand-name {
+                font-family: var(--font-display);
+                font-size: var(--step-1);
+                font-weight: 700;
+                letter-spacing: -0.01em;
+            }
 
-.footer-tagline {
-  font-family: var(--font-body);
-  font-size: var(--step--1);
-  font-variation-settings: 'opsz' 10;
-  color: var(--footer-text-dim);
-  line-height: 1.5;
-  max-width: 30ch;
-}
+            .footer-tagline {
+                font-family: var(--font-body);
+                font-size: var(--step--1);
+                font-variation-settings: 'opsz' 10;
+                color: var(--footer-text-dim);
+                line-height: 1.5;
+                max-width: 30ch;
+            }
 
-.footer-columns {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-l) var(--space-xl);
-  flex: 1;
-  min-width: 0;
-}
+            .footer-columns {
+                display: flex;
+                flex-wrap: wrap;
+                gap: var(--space-l) var(--space-xl);
+                flex: 1;
+                min-width: 0;
+            }
 
-.footer-col {
-  min-width: 140px;
-  flex: 1;
-}
+            .footer-col {
+                min-width: 140px;
+                flex: 1;
+            }
 
-.footer-col-title {
-  font-family: var(--font-display);
-  font-size: var(--step--2);
-  font-weight: 600;
-  color: var(--footer-heading);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: var(--space-xs);
-}
+            .footer-col-title {
+                font-family: var(--font-display);
+                font-size: var(--step--2);
+                font-weight: 600;
+                color: var(--footer-heading);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                margin-bottom: var(--space-xs);
+            }
 
-.footer-col-list {
-  list-style: none;
-}
+            .footer-col-list {
+                list-style: none;
+            }
 
-.footer-col-list li {
-  margin-bottom: var(--space-3xs);
-}
+            .footer-col-list li {
+                margin-bottom: var(--space-3xs);
+            }
 
-.footer-col-list a {
-  font-family: var(--font-display);
-  font-size: var(--step--1);
-  font-weight: 400;
-  color: var(--footer-link);
-  text-decoration: none;
-  transition: color 0.15s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35em;
-}
+            .footer-col-list a {
+                font-family: var(--font-display);
+                font-size: var(--step--1);
+                font-weight: 400;
+                color: var(--footer-link);
+                text-decoration: none;
+                transition: color 0.15s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.35em;
+            }
 
-.footer-col-list a:hover {
-  color: var(--footer-link-hover);
-}
+            .footer-col-list a:hover {
+                color: var(--footer-link-hover);
+            }
 
-.footer-col-list a .ext {
-  font-size: 0.75em;
-  opacity: 0.5;
-  transition: opacity 0.15s ease;
-}
+            .footer-col-list a .ext {
+                font-size: 0.75em;
+                opacity: 0.5;
+                transition: opacity 0.15s ease;
+            }
 
-.footer-col-list a:hover .ext {
-  opacity: 0.8;
-}
+            .footer-col-list a:hover .ext {
+                opacity: 0.8;
+            }
 
-.footer-content-notice {
-  font-family: var(--font-mono);
-  font-size: calc((var(--step--1) + var(--step--2)) / 2);
-  color: var(--footer-text-dim);
-  text-align: center;
-  padding-top: var(--space-m);
-  padding-bottom: var(--space-m);
-  border-bottom: 1px solid var(--footer-border);
-}
+            .footer-content-notice {
+                font-family: var(--font-mono);
+                font-size: calc((var(--step--1) + var(--step--2)) / 2);
+                color: var(--footer-text-dim);
+                text-align: center;
+                padding-top: var(--space-m);
+                padding-bottom: var(--space-m);
+                border-bottom: 1px solid var(--footer-border);
+            }
 
-.footer-bottom {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--space-2xs) var(--space-l);
-  padding-top: var(--space-m);
-}
+            .footer-bottom {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: center;
+                gap: var(--space-2xs) var(--space-l);
+                padding-top: var(--space-m);
+            }
 
-.footer-copyright {
-  font-family: var(--font-mono);
-  font-size: var(--step--2);
-  color: var(--footer-text-dim);
-}
+            .footer-copyright {
+                font-family: var(--font-mono);
+                font-size: var(--step--2);
+                color: var(--footer-text-dim);
+            }
 
-.footer-meta-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2xs) var(--space-m);
-  list-style: none;
-}
+            .footer-meta-links {
+                display: flex;
+                flex-wrap: wrap;
+                gap: var(--space-2xs) var(--space-m);
+                list-style: none;
+            }
 
-.footer-meta-links a {
-  font-family: var(--font-mono);
-  font-size: var(--step--2);
-  color: var(--footer-text-dim);
-  text-decoration: none;
-  transition: color 0.15s ease;
-}
+            .footer-meta-links a {
+                font-family: var(--font-mono);
+                font-size: var(--step--2);
+                color: var(--footer-text-dim);
+                text-decoration: none;
+                transition: color 0.15s ease;
+            }
 
-.footer-meta-links a:hover {
-  color: var(--footer-link-hover);
-}
+            .footer-meta-links a:hover {
+                color: var(--footer-link-hover);
+            }
 
-.footer-meta-links .sep {
-  color: var(--footer-border);
-}
-} /* end @layer components */
+            .footer-meta-links .sep {
+                color: var(--footer-border);
+            }
+        }
 
-@layer utilities {
-@media (max-width: 40rem) {
-  .footer-brand-col {
-    max-width: none;
-    flex-basis: 100%;
-    margin-bottom: var(--space-xs);
-  }
+        /* end @layer components */
 
-  .footer-bottom {
-    justify-content: center;
-    text-align: center;
-  }
+        @layer utilities {
+            @media (max-width: 40rem) {
+                .footer-brand-col {
+                    max-width: none;
+                    flex-basis: 100%;
+                    margin-bottom: var(--space-xs);
+                }
 
-  .brand-showcase {
-    flex-direction: column;
-  }
+                .footer-bottom {
+                    justify-content: center;
+                    text-align: center;
+                }
 
-  .swatch {
-    min-height: 48px;
-  }
-}
-} /* end @layer utilities */
-</style>
+                .brand-showcase {
+                    flex-direction: column;
+                }
+
+                .swatch {
+                    min-height: 48px;
+                }
+            }
+        }
+
+        /* end @layer utilities */
+    </style>
 </head>
 
 <body>
 
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<!-- TOP NAVIGATION                                                 -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<nav class="topnav">
-  <a href="#" class="topnav-brand">
-    <span class="brand-mark">H</span>
-    Haleiki
-  </a>
-
-  <div class="search-container">
-    <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.5"/>
-      <line x1="10.5" y1="10.5" x2="15" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-    </svg>
-    <input type="text" class="search-input" placeholder="Search Haleiki...">
-    <span class="search-shortcut">&#8984;K</span>
-  </div>
-
-  <div class="topnav-links">
-    <a href="#">Browse</a>
-    <a href="#">Categories</a>
-    <a href="#">Random</a>
-  </div>
-
-  <div class="theme-toggle" role="radiogroup" aria-label="Theme">
-    <button class="theme-toggle-option active" data-theme-choice="day" aria-label="Day theme">&#9788;</button>
-    <button class="theme-toggle-option" data-theme-choice="night" aria-label="Night theme">&#9790;</button>
-  </div>
-</nav>
-
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<!-- BRAND GUIDELINES CONTENT                                       -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="guidelines">
-
-  <!-- ── HERO ── -->
-  <div class="hero">
-    <div class="hero-overline">Design System</div>
-    <h1 class="hero-title">Brand Guidelines</h1>
-    <p class="hero-subtitle">Visual identity system for Haleiki -- covering the brand mark, colour architecture, typography, spacing, and implementation. Built in OKLCH, scaled with a perfect fourth, fluid from phone to ultrawide.</p>
-    <div class="hero-tags">
-      <span class="tag">OKLCH</span>
-      <span class="tag">Perfect Fourth Scale</span>
-      <span class="tag">Day &amp; Night Themes</span>
-      <span class="tag">Version 1.0</span>
-      <span class="tag">March 2026</span>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════════ -->
-  <!-- 1. BRAND IDENTITY                                          -->
-  <!-- ═══════════════════════════════════════════════════════════ -->
-  <div class="section">
-    <div class="section-label">Section 1</div>
-    <h2>Brand Identity</h2>
-    <p class="desc">The Haleiki brand mark is a single geometric letterform -- the "H" -- rendered in the accent colour against a rounded rectangle. It functions at every scale: favicon, topnav, footer, and documentation.</p>
-
-    <h3>Brand Mark</h3>
-    <p>Shown at 120px on both surface treatments. The mark uses <code>--accent-primary</code> as its background, which shifts from terracotta (day) to amber (night) with theme switching.</p>
-
-    <div class="brand-showcase">
-      <div class="brand-showcase-card on-light">
-        <div class="showcase-mark">H</div>
-        <div class="showcase-label">Day Surface</div>
-      </div>
-      <div class="brand-showcase-card on-dark">
-        <div class="showcase-mark">H</div>
-        <div class="showcase-label">Inverted Surface</div>
-      </div>
-    </div>
-
-    <div class="brand-name-display">Haleiki</div>
-    <div class="brand-tagline">House of Knowledge -- a read-only wiki for structured knowledge</div>
-
-    <h3>Personality</h3>
-    <p>Haleiki communicates scholarly warmth, navigational clarity, and the quiet confidence of a well-organized library. The design language draws from Wikipedia's information architecture, modernized with perceptually uniform colour, geometric type scale, and intrinsic layout composition.</p>
-  </div>
-
-  <hr class="divider">
-
-  <!-- ═══════════════════════════════════════════════════════════ -->
-  <!-- 2. COLOUR SYSTEM — DAY THEME                               -->
-  <!-- ═══════════════════════════════════════════════════════════ -->
-  <div class="section">
-    <div class="section-label">Section 2</div>
-    <h2>Warm Ochre, Sandstone, Terracotta</h2>
-    <p class="desc">Day theme colour tokens. All values defined in OKLCH for perceptual uniformity -- equal lightness steps produce equal perceived brightness.</p>
-
-    <div class="swatch-group-label">Surfaces</div>
-    <div class="swatch-row">
-      <div class="swatch dk" style="background: oklch(0.97 0.01 80)"><span>ground<br>0.97 0.01 80</span></div>
-      <div class="swatch dk" style="background: oklch(0.99 0.005 80)"><span>primary<br>0.99 0.005 80</span></div>
-      <div class="swatch dk" style="background: oklch(0.95 0.015 75)"><span>secondary<br>0.95 0.015 75</span></div>
-      <div class="swatch dk" style="background: oklch(0.92 0.02 72)"><span>tertiary<br>0.92 0.02 72</span></div>
-      <div class="swatch lt" style="background: oklch(0.25 0.03 55)"><span>invert<br>0.25 0.03 55</span></div>
-    </div>
-
-    <div class="swatch-group-label">Borders</div>
-    <div class="swatch-row">
-      <div class="swatch dk" style="background: oklch(0.88 0.025 75)"><span>subtle<br>0.88 0.025 75</span></div>
-      <div class="swatch dk" style="background: oklch(0.82 0.03 72)"><span>default<br>0.82 0.03 72</span></div>
-      <div class="swatch dk" style="background: oklch(0.70 0.04 65)"><span>strong<br>0.70 0.04 65</span></div>
-    </div>
-
-    <div class="swatch-group-label">Text</div>
-    <div class="swatch-row">
-      <div class="swatch lt" style="background: oklch(0.22 0.02 55)"><span>primary<br>0.22 0.02 55</span></div>
-      <div class="swatch lt" style="background: oklch(0.40 0.03 60)"><span>secondary<br>0.40 0.03 60</span></div>
-      <div class="swatch lt" style="background: oklch(0.55 0.025 65)"><span>tertiary<br>0.55 0.025 65</span></div>
-      <div class="swatch dk" style="background: oklch(0.97 0.01 80)"><span>on-invert<br>0.97 0.01 80</span></div>
-    </div>
-
-    <div class="swatch-group-label">Accent</div>
-    <div class="swatch-row">
-      <div class="swatch lt" style="background: oklch(0.55 0.14 45)"><span>primary<br>0.55 0.14 45</span></div>
-      <div class="swatch lt" style="background: oklch(0.48 0.15 42)"><span>hover<br>0.48 0.15 42</span></div>
-      <div class="swatch dk" style="background: oklch(0.92 0.04 50)"><span>subtle<br>0.92 0.04 50</span></div>
-      <div class="swatch lt" style="background: oklch(0.45 0.12 40)"><span>text<br>0.45 0.12 40</span></div>
-    </div>
-
-    <div class="swatch-group-label">Info &amp; Code</div>
-    <div class="swatch-row">
-      <div class="swatch dk" style="background: oklch(0.94 0.03 80)"><span>info-srf<br>0.94 0.03 80</span></div>
-      <div class="swatch dk" style="background: oklch(0.82 0.05 75)"><span>info-bdr<br>0.82 0.05 75</span></div>
-      <div class="swatch lt" style="background: oklch(0.40 0.06 65)"><span>info-txt<br>0.40 0.06 65</span></div>
-      <div class="swatch dk" style="background: oklch(0.95 0.01 80)"><span>code-srf<br>0.95 0.01 80</span></div>
-      <div class="swatch dk" style="background: oklch(0.88 0.02 75)"><span>code-bdr<br>0.88 0.02 75</span></div>
-      <div class="swatch lt" style="background: oklch(0.38 0.08 40)"><span>code-txt<br>0.38 0.08 40</span></div>
-    </div>
-  </div>
-
-  <hr class="divider">
-
-  <!-- ═══════════════════════════════════════════════════════════ -->
-  <!-- 3. COLOUR SYSTEM — NIGHT THEME                             -->
-  <!-- ═══════════════════════════════════════════════════════════ -->
-  <div class="section">
-    <div class="section-label">Section 3</div>
-    <h2>Deep Oxide, Amber</h2>
-    <p class="desc">Night theme colour tokens. The palette shifts to deep oxide surfaces with amber accents, maintaining the same semantic structure as the day theme.</p>
-
-    <div class="swatch-group-label">Surfaces</div>
-    <div class="swatch-row">
-      <div class="swatch lt" style="background: oklch(0.16 0.02 55)"><span>ground<br>0.16 0.02 55</span></div>
-      <div class="swatch lt" style="background: oklch(0.20 0.02 55)"><span>primary<br>0.20 0.02 55</span></div>
-      <div class="swatch lt" style="background: oklch(0.24 0.025 52)"><span>secondary<br>0.24 0.025 52</span></div>
-      <div class="swatch lt" style="background: oklch(0.28 0.03 50)"><span>tertiary<br>0.28 0.03 50</span></div>
-      <div class="swatch dk" style="background: oklch(0.92 0.02 75)"><span>invert<br>0.92 0.02 75</span></div>
-    </div>
-
-    <div class="swatch-group-label">Borders</div>
-    <div class="swatch-row">
-      <div class="swatch lt" style="background: oklch(0.30 0.03 50)"><span>subtle<br>0.30 0.03 50</span></div>
-      <div class="swatch lt" style="background: oklch(0.36 0.035 48)"><span>default<br>0.36 0.035 48</span></div>
-      <div class="swatch lt" style="background: oklch(0.48 0.04 50)"><span>strong<br>0.48 0.04 50</span></div>
-    </div>
-
-    <div class="swatch-group-label">Text</div>
-    <div class="swatch-row">
-      <div class="swatch dk" style="background: oklch(0.90 0.015 75)"><span>primary<br>0.90 0.015 75</span></div>
-      <div class="swatch dk" style="background: oklch(0.72 0.02 65)"><span>secondary<br>0.72 0.02 65</span></div>
-      <div class="swatch lt" style="background: oklch(0.55 0.025 58)"><span>tertiary<br>0.55 0.025 58</span></div>
-      <div class="swatch lt" style="background: oklch(0.20 0.02 55)"><span>on-invert<br>0.20 0.02 55</span></div>
-    </div>
-
-    <div class="swatch-group-label">Accent</div>
-    <div class="swatch-row">
-      <div class="swatch dk" style="background: oklch(0.72 0.14 70)"><span>primary<br>0.72 0.14 70</span></div>
-      <div class="swatch dk" style="background: oklch(0.78 0.15 72)"><span>hover<br>0.78 0.15 72</span></div>
-      <div class="swatch lt" style="background: oklch(0.28 0.06 60)"><span>subtle<br>0.28 0.06 60</span></div>
-      <div class="swatch dk" style="background: oklch(0.78 0.12 72)"><span>text<br>0.78 0.12 72</span></div>
-    </div>
-
-    <div class="swatch-group-label">Info &amp; Code</div>
-    <div class="swatch-row">
-      <div class="swatch lt" style="background: oklch(0.24 0.03 55)"><span>info-srf<br>0.24 0.03 55</span></div>
-      <div class="swatch lt" style="background: oklch(0.36 0.04 52)"><span>info-bdr<br>0.36 0.04 52</span></div>
-      <div class="swatch dk" style="background: oklch(0.72 0.04 68)"><span>info-txt<br>0.72 0.04 68</span></div>
-      <div class="swatch lt" style="background: oklch(0.22 0.02 55)"><span>code-srf<br>0.22 0.02 55</span></div>
-      <div class="swatch lt" style="background: oklch(0.32 0.03 52)"><span>code-bdr<br>0.32 0.03 52</span></div>
-      <div class="swatch dk" style="background: oklch(0.78 0.1 72)"><span>code-txt<br>0.78 0.1 72</span></div>
-    </div>
-  </div>
-
-  <hr class="divider">
-
-  <!-- ═══════════════════════════════════════════════════════════ -->
-  <!-- 4. SEMANTIC TOKEN MAPPING                                   -->
-  <!-- ═══════════════════════════════════════════════════════════ -->
-  <div class="section">
-    <div class="section-label">Section 4</div>
-    <h2>Semantic Token Mapping</h2>
-    <p class="desc">How each semantic token resolves across themes. The token name stays constant; the OKLCH value shifts to maintain contrast and legibility in each context.</p>
-
-    <table class="token-table">
-      <thead>
-        <tr>
-          <th>Token</th>
-          <th>Day (OKLCH)</th>
-          <th>Night (OKLCH)</th>
-          <th>Purpose</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><span class="swatch-chip" style="background: var(--surface-ground)"></span>surface-ground</td>
-          <td>0.97 0.01 80</td>
-          <td>0.16 0.02 55</td>
-          <td>Page background</td>
-        </tr>
-        <tr>
-          <td><span class="swatch-chip" style="background: var(--surface-primary)"></span>surface-primary</td>
-          <td>0.99 0.005 80</td>
-          <td>0.20 0.02 55</td>
-          <td>Card / panel background</td>
-        </tr>
-        <tr>
-          <td><span class="swatch-chip" style="background: var(--surface-secondary)"></span>surface-secondary</td>
-          <td>0.95 0.015 75</td>
-          <td>0.24 0.025 52</td>
-          <td>Sidebar, input fields</td>
-        </tr>
-        <tr>
-          <td><span class="swatch-chip" style="background: var(--surface-tertiary)"></span>surface-tertiary</td>
-          <td>0.92 0.02 72</td>
-          <td>0.28 0.03 50</td>
-          <td>Hover states, zebra rows</td>
-        </tr>
-        <tr>
-          <td><span class="swatch-chip" style="background: var(--surface-invert)"></span>surface-invert</td>
-          <td>0.25 0.03 55</td>
-          <td>0.92 0.02 75</td>
-          <td>Inverted sections, card headers</td>
-        </tr>
-        <tr>
-          <td><span class="swatch-chip" style="background: var(--border-subtle)"></span>border-subtle</td>
-          <td>0.88 0.025 75</td>
-          <td>0.30 0.03 50</td>
-          <td>Soft dividers</td>
-        </tr>
-        <tr>
-          <td><span class="swatch-chip" style="background: var(--border-default)"></span>border-default</td>
-          <td>0.82 0.03 72</td>
-          <td>0.36 0.035 48</td>
-          <td>Standard borders</td>
-        </tr>
-        <tr>
-          <td><span class="swatch-chip" style="background: var(--border-strong)"></span>border-strong</td>
-          <td>0.70 0.04 65</td>
-          <td>0.48 0.04 50</td>
-          <td>Prominent borders</td>
-        </tr>
-        <tr>
-          <td><span class="swatch-chip" style="background: var(--text-primary)"></span>text-primary</td>
-          <td>0.22 0.02 55</td>
-          <td>0.90 0.015 75</td>
-          <td>Body text, headings</td>
-        </tr>
-        <tr>
-          <td><span class="swatch-chip" style="background: var(--text-secondary)"></span>text-secondary</td>
-          <td>0.40 0.03 60</td>
-          <td>0.72 0.02 65</td>
-          <td>Subtitles, descriptions</td>
-        </tr>
-        <tr>
-          <td><span class="swatch-chip" style="background: var(--text-tertiary)"></span>text-tertiary</td>
-          <td>0.55 0.025 65</td>
-          <td>0.55 0.025 58</td>
-          <td>Captions, metadata</td>
-        </tr>
-        <tr>
-          <td><span class="swatch-chip" style="background: var(--accent-primary)"></span>accent-primary</td>
-          <td>0.55 0.14 45</td>
-          <td>0.72 0.14 70</td>
-          <td>Brand mark, buttons, links</td>
-        </tr>
-        <tr>
-          <td><span class="swatch-chip" style="background: var(--accent-hover)"></span>accent-hover</td>
-          <td>0.48 0.15 42</td>
-          <td>0.78 0.15 72</td>
-          <td>Interactive hover state</td>
-        </tr>
-        <tr>
-          <td><span class="swatch-chip" style="background: var(--accent-subtle)"></span>accent-subtle</td>
-          <td>0.92 0.04 50</td>
-          <td>0.28 0.06 60</td>
-          <td>Active TOC item background</td>
-        </tr>
-        <tr>
-          <td><span class="swatch-chip" style="background: var(--accent-text)"></span>accent-text</td>
-          <td>0.45 0.12 40</td>
-          <td>0.78 0.12 72</td>
-          <td>Accent-coloured text</td>
-        </tr>
-        <tr>
-          <td><span class="swatch-chip" style="background: var(--info-surface)"></span>info-surface</td>
-          <td>0.94 0.03 80</td>
-          <td>0.24 0.03 55</td>
-          <td>Callout background</td>
-        </tr>
-        <tr>
-          <td><span class="swatch-chip" style="background: var(--code-surface)"></span>code-surface</td>
-          <td>0.95 0.01 80</td>
-          <td>0.22 0.02 55</td>
-          <td>Code block background</td>
-        </tr>
-        <tr>
-          <td><span class="swatch-chip" style="background: var(--code-text)"></span>code-text</td>
-          <td>0.38 0.08 40</td>
-          <td>0.78 0.1 72</td>
-          <td>Code text</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <hr class="divider">
-
-  <!-- ═══════════════════════════════════════════════════════════ -->
-  <!-- 5. TYPOGRAPHY                                               -->
-  <!-- ═══════════════════════════════════════════════════════════ -->
-  <div class="section">
-    <div class="section-label">Section 5</div>
-    <h2>Three Voices, One Ensemble</h2>
-    <p class="desc">Each typeface serves a distinct role. Together they create a reading experience that is structured yet warm -- navigational without being mechanical, scholarly without being cold.</p>
-
-    <h3>Display &amp; Headlines</h3>
-    <div class="type-card">
-      <div class="type-card-head">
-        <h4>Red Hat Display</h4>
-        <div class="type-meta">Variable weight 300--900 | Geometric sans with humanist touches</div>
-      </div>
-      <div class="type-card-body">
-        <p>Clean geometric sans-serif designed by Jeremy Mickel for Red Hat. Open counters, slightly rounded stroke endings, and generous x-height make it legible at every scale -- from navigation labels to hero headings. The variable weight axis provides fine control over visual hierarchy.</p>
-        <p style="margin-top: var(--space-xs);">The geometric clarity of Red Hat Display communicates the structured, navigational quality of a knowledge base. Its humanist touches -- the slightly rounded stroke endings, the open counters -- keep it warm rather than clinical.</p>
-      </div>
-    </div>
-
-    <h3>Body &amp; Long-form</h3>
-    <div class="type-card">
-      <div class="type-card-head">
-        <h4 style="font-family: var(--font-body); font-variation-settings: 'opsz' 72; font-weight: 500;">Newsreader</h4>
-        <div class="type-meta">Variable weight 200--800 | Optical size 6--72 | Transitional serif</div>
-      </div>
-      <div class="type-card-body">
-        <p>Production Type's Newsreader is a variable serif with optical sizing. Transitional old-style roots designed for sustained reading. The editorial energy fits a knowledge base -- it says "here is something worth reading carefully."</p>
-        <p style="margin-top: var(--space-xs);">The <code>opsz</code> axis is key: at 72, Newsreader is elegant and refined for headlines; at 14, the letterforms are sturdier, with more open spacing and thicker thin strokes for comfortable body reading.</p>
-      </div>
-    </div>
-
-    <h3>Code &amp; System</h3>
-    <div class="type-card">
-      <div class="type-card-head">
-        <h4 style="font-family: var(--font-mono); font-weight: 500;">IBM Plex Mono</h4>
-        <div class="type-meta">Weights 300, 400, 500 | Monospace with human warmth</div>
-      </div>
-      <div class="type-card-body">
-        <p>Monospace with human warmth. Used for code blocks, inline code, metadata, tags, section labels, and system-level information. IBM Plex Mono avoids the cold, mechanical quality of many monospace faces -- its curves and proportions echo the warmth of the rest of the type stack.</p>
-      </div>
-    </div>
-
-    <h3>The Modular Scale -- Perfect Fourth (4:3 = 1.333)</h3>
-
-    <div class="specimen">
-      <div class="specimen-label">Step 4 -- Red Hat Display 700</div>
-      <div class="specimen-text" style="font-family: var(--font-display); font-size: var(--step-4); font-weight: 700; letter-spacing: -0.025em;">Haleiki</div>
-    </div>
-
-    <div class="specimen">
-      <div class="specimen-label">Step 3 -- Red Hat Display 700</div>
-      <div class="specimen-text" style="font-family: var(--font-display); font-size: var(--step-3); font-weight: 700; letter-spacing: -0.02em;">House of Knowledge</div>
-    </div>
-
-    <div class="specimen">
-      <div class="specimen-label">Step 2 -- Red Hat Display 700</div>
-      <div class="specimen-text" style="font-family: var(--font-display); font-size: var(--step-2); font-weight: 700; letter-spacing: -0.015em;">Ownership in Rust</div>
-    </div>
-
-    <div class="specimen">
-      <div class="specimen-label">Step 1 -- Newsreader opsz 24</div>
-      <div class="specimen-text" style="font-family: var(--font-body); font-size: var(--step-1); font-variation-settings: 'opsz' 24; line-height: 1.45;">Ownership is the foundational concept in Rust's approach to memory safety. Where languages like Java and Go rely on a runtime garbage collector, Rust takes a third path.</div>
-    </div>
-
-    <div class="specimen">
-      <div class="specimen-label">Step 0 -- Newsreader opsz 14 (body)</div>
-      <div class="specimen-text" style="font-family: var(--font-body); font-size: var(--step-0); font-variation-settings: 'opsz' 14; line-height: 1.65;">In Dzogchen, the natural state of mind is described as the union of awareness and emptiness. Rigpa -- intrinsic awareness -- is not something to be created or achieved, but rather recognized as already present. The practice involves relaxing into this recognition without grasping, allowing thoughts and perceptions to arise and dissolve without interference. This non-dual awareness is considered the basis of all experience, prior to the conceptual divisions of subject and object.</div>
-    </div>
-
-    <div class="specimen">
-      <div class="specimen-label">Step -1 -- Newsreader opsz 10 (caption)</div>
-      <div class="specimen-text" style="font-family: var(--font-body); font-size: var(--step--1); font-variation-settings: 'opsz' 10; line-height: 1.5; color: var(--text-secondary);">Caption text for images, figures, and supplementary information. Slightly reduced size for secondary content.</div>
-    </div>
-
-    <div class="specimen">
-      <div class="specimen-label">Step -2 -- IBM Plex Mono 400 (metadata)</div>
-      <div class="specimen-text" style="font-family: var(--font-mono); font-size: var(--step--2); text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary);">Last updated: 2026-03-18 &middot; Category: Language Concepts &middot; Status: Stable</div>
-    </div>
-
-    <table class="scale-table">
-      <thead>
-        <tr>
-          <th>Step</th>
-          <th>Min</th>
-          <th>Max</th>
-          <th>Usage</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>step 4</td>
-          <td>50.5px</td>
-          <td>56.8px</td>
-          <td>Hero / page title (Red Hat Display)</td>
-        </tr>
-        <tr>
-          <td>step 3</td>
-          <td>37.9px</td>
-          <td>42.6px</td>
-          <td>Article title, section heading (Red Hat Display)</td>
-        </tr>
-        <tr>
-          <td>step 2</td>
-          <td>28.4px</td>
-          <td>32px</td>
-          <td>Subsection heading (Red Hat Display)</td>
-        </tr>
-        <tr>
-          <td>step 1</td>
-          <td>21.3px</td>
-          <td>24px</td>
-          <td>Lead paragraph, subtitle (Newsreader)</td>
-        </tr>
-        <tr>
-          <td>step 0</td>
-          <td>16px</td>
-          <td>18px</td>
-          <td>Body text (Newsreader)</td>
-        </tr>
-        <tr>
-          <td>step -1</td>
-          <td>12px</td>
-          <td>13.5px</td>
-          <td>Caption, TOC links (Newsreader)</td>
-        </tr>
-        <tr>
-          <td>step -2</td>
-          <td>9px</td>
-          <td>10.1px</td>
-          <td>Metadata, labels (IBM Plex Mono)</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <hr class="divider">
-
-  <!-- ═══════════════════════════════════════════════════════════ -->
-  <!-- 6. SPACING SYSTEM                                           -->
-  <!-- ═══════════════════════════════════════════════════════════ -->
-  <div class="section">
-    <div class="section-label">Section 6</div>
-    <h2>Spacing System</h2>
-    <p class="desc">Fluid spacing tokens generated from the same perfect fourth ratio. All values interpolate between min and max using CSS <code>clamp()</code> with the <code>vi</code> unit.</p>
-
-    <h3>Base Tokens</h3>
-    <table class="scale-table">
-      <thead>
-        <tr>
-          <th>Token</th>
-          <th>Min</th>
-          <th>Max</th>
-          <th>Typical Use</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>space-3xs</td>
-          <td>4px</td>
-          <td>5px</td>
-          <td>Tight inline gaps, tag internal padding</td>
-        </tr>
-        <tr>
-          <td>space-2xs</td>
-          <td>8px</td>
-          <td>9px</td>
-          <td>Icon-to-label, compact gaps</td>
-        </tr>
-        <tr>
-          <td>space-xs</td>
-          <td>12px</td>
-          <td>13.5px</td>
-          <td>Label-to-input, list item spacing</td>
-        </tr>
-        <tr>
-          <td>space-s</td>
-          <td>16px</td>
-          <td>18px</td>
-          <td>Default component padding</td>
-        </tr>
-        <tr>
-          <td>space-m</td>
-          <td>24px</td>
-          <td>27px</td>
-          <td>Card padding, paragraph spacing</td>
-        </tr>
-        <tr>
-          <td>space-l</td>
-          <td>32px</td>
-          <td>36px</td>
-          <td>Section padding</td>
-        </tr>
-        <tr>
-          <td>space-xl</td>
-          <td>48px</td>
-          <td>54px</td>
-          <td>Major section gaps</td>
-        </tr>
-        <tr>
-          <td>space-2xl</td>
-          <td>64px</td>
-          <td>72px</td>
-          <td>Hero padding, page-level rhythm</td>
-        </tr>
-        <tr>
-          <td>space-3xl</td>
-          <td>96px</td>
-          <td>108px</td>
-          <td>Full-page vertical breathing room</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h3>Space Pairs</h3>
-    <p>Steeper interpolation between two named sizes. Used where spacing should grow more aggressively on wider viewports.</p>
-    <table class="scale-table">
-      <thead>
-        <tr>
-          <th>Token</th>
-          <th>Min</th>
-          <th>Max</th>
-          <th>Typical Use</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>space-s-m</td>
-          <td>16px</td>
-          <td>27px</td>
-          <td>Component-to-component within a region</td>
-        </tr>
-        <tr>
-          <td>space-s-l</td>
-          <td>16px</td>
-          <td>36px</td>
-          <td>Responsive page padding</td>
-        </tr>
-        <tr>
-          <td>space-m-l</td>
-          <td>24px</td>
-          <td>36px</td>
-          <td>Column gap in layout primitives</td>
-        </tr>
-        <tr>
-          <td>space-m-xl</td>
-          <td>24px</td>
-          <td>54px</td>
-          <td>Section top margin (prose h2)</td>
-        </tr>
-        <tr>
-          <td>space-l-xl</td>
-          <td>32px</td>
-          <td>54px</td>
-          <td>Footer top margin, major breaks</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="notes">
-      <h4>The Proximity Principle</h4>
-      <p><strong>Intra-group spacing must always be tighter than inter-group spacing.</strong> This activates gestalt proximity grouping -- the perceptual mechanism that makes related elements feel connected. A card with uniform 16px everywhere destroys all spatial information. Title-to-subtitle at 4px, subtitle-to-meta at 8px, card padding at 16px, between cards at 24px -- four scales communicating four relationships.</p>
-    </div>
-  </div>
-
-  <hr class="divider">
-
-  <!-- ═══════════════════════════════════════════════════════════ -->
-  <!-- 7. LAYOUT                                                   -->
-  <!-- ═══════════════════════════════════════════════════════════ -->
-  <div class="section">
-    <div class="section-label">Section 7</div>
-    <h2>Layout System</h2>
-    <p class="desc">Intrinsic layout using Every Layout primitives and Utopia fluid spacing. Zero media queries for column arrangement -- the layout adapts by measuring its own available space.</p>
-
-    <h3>Three-Column Structure</h3>
-    <p>The article page uses a nested Sidebar pattern: a left navigation column (table of contents), a main article column, and a right sidebar (taxonomy card). The columns wrap intrinsically when there is not enough space -- the left nav disappears first, then the right sidebar stacks above the article.</p>
-
-    <h3>Layout Tokens</h3>
-    <table class="scale-table">
-      <thead>
-        <tr>
-          <th>Token</th>
-          <th>Value</th>
-          <th>Purpose</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>--content-max</td>
-          <td>58ch</td>
-          <td>Prose line length (optimal readability)</td>
-        </tr>
-        <tr>
-          <td>--sidebar-width</td>
-          <td>280px</td>
-          <td>Right sidebar (taxonomy card)</td>
-        </tr>
-        <tr>
-          <td>--nav-width</td>
-          <td>220px</td>
-          <td>Left navigation (TOC)</td>
-        </tr>
-        <tr>
-          <td>--page-max</td>
-          <td>1320px</td>
-          <td>Outer page container</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h3>Design Principles</h3>
-    <p><strong>No media queries for layout.</strong> The flexbox-based Sidebar primitives use <code>min-inline-size</code> and <code>flex-grow</code> to decide when columns should wrap. This means the layout works at every viewport width, including sizes that media queries would miss (split-screen, embedded views, print).</p>
-    <p><strong>Content decisions use media queries.</strong> Hiding the left nav on narrow viewports is a content decision (removing a component), not a layout decision. This is the one place a breakpoint is used: <code>@media (max-width: 60rem)</code>.</p>
-  </div>
-
-  <hr class="divider">
-
-  <!-- ═══════════════════════════════════════════════════════════ -->
-  <!-- 8. IMPLEMENTATION                                           -->
-  <!-- ═══════════════════════════════════════════════════════════ -->
-  <div class="section">
-    <div class="section-label">Section 8</div>
-    <h2>Implementation</h2>
-
-    <h3>Token Architecture</h3>
-    <p><strong>Three tiers:</strong> Primitive tokens (OKLCH values) map to semantic tokens (<code>--surface-primary</code>, <code>--accent-text</code>) which feed component tokens (<code>.topnav</code> background, <code>.info-card-header</code> colour). This indirection enables theme switching: swap the primitive-to-semantic mapping, and every component updates automatically.</p>
-
-    <h3>CSS Cascade Layers</h3>
-    <p>The stylesheet is organized into cascade layers to eliminate specificity conflicts:</p>
-    <p><code>@layer tokens, reset, base, layout, components, utilities</code></p>
-    <p>Tokens define custom properties. Reset normalizes elements. Layout handles structural positioning. Components style individual UI pieces. Utilities provide overrides. Each layer has strictly higher priority than the one before it.</p>
-
-    <h3>Fluid Type &amp; Space</h3>
-    <p>All type and spacing values use CSS <code>clamp()</code> for fluid interpolation. The <code>vi</code> unit (viewport inline) is used instead of <code>vw</code> to respect writing direction. No breakpoints are needed for sizing -- values scale continuously between their min and max bounds.</p>
-
-    <h3>Build Pipeline</h3>
-    <p><strong>Cobalt</strong> static site generator with Liquid templates. <strong>Pagefind</strong> for client-side search indexing. Content authored in Markdown, compiled to static HTML. No JavaScript frameworks, no build-time CSS processing -- just clean CSS custom properties and cascade layers.</p>
-
-    <div class="notes">
-      <h4>Seven Design Principles</h4>
-      <p><strong>Geometric scale.</strong> Every size derives from one ratio (4:3). No magic numbers.</p>
-      <p><strong>Perceptual uniformity.</strong> OKLCH ensures equal lightness steps look equal to human eyes.</p>
-      <p><strong>Semantic naming.</strong> Tokens describe purpose, not appearance. <code>--accent-primary</code>, not <code>--terracotta</code>.</p>
-      <p><strong>Constraint.</strong> Fewer choices, made well. Three typefaces. One ratio. Two themes.</p>
-      <p><strong>Unity not uniformity.</strong> Day and night themes share structure but differ in expression.</p>
-      <p><strong>Proximity as syntax.</strong> Spacing communicates relationships. Tighter = more related.</p>
-      <p><strong>Design the invariants.</strong> Build the system that survives content changes, not a page that looks good with today's content.</p>
-    </div>
-  </div>
-
-</div><!-- end .guidelines -->
-
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<!-- SITE FOOTER                                                     -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<footer class="site-footer">
-  <div class="footer-inner">
-
-    <!-- ── TOP: Brand + Link Columns ── -->
-    <div class="footer-top">
-
-      <!-- Brand column -->
-      <div class="footer-brand-col">
-        <a href="/" class="footer-brand-link">
-          <span class="brand-mark">H</span>
-          <span class="brand-name">Haleiki</span>
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- TOP NAVIGATION                                                 -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <nav class="topnav">
+        <a href="#" class="topnav-brand">
+            <span class="brand-mark">H</span>
+            Haleiki
         </a>
-        <p class="footer-tagline">House of Knowledge -- a read-only wiki for structured knowledge.</p>
-      </div>
 
-      <!-- Link columns -->
-      <div class="footer-columns">
-
-        <div class="footer-col">
-          <div class="footer-col-title">Knowledge Base</div>
-          <ul class="footer-col-list">
-            <li><a href="/">Front Page</a></li>
-            <li><a href="/browse">Browse</a></li>
-            <li><a href="/categories">Categories</a></li>
-            <li><a href="/random">Random</a></li>
-          </ul>
+        <div class="search-container">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.5" />
+                <line x1="10.5" y1="10.5" x2="15" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+            <input type="text" class="search-input" placeholder="Search Haleiki...">
+            <span class="search-shortcut">&#8984;K</span>
         </div>
 
-        <div class="footer-col">
-          <div class="footer-col-title">About</div>
-          <ul class="footer-col-list">
-            <li><a href="/about">About This Wiki</a></li>
-            <li><a href="/about/haleiki">About Haleiki</a></li>
-            <li><a href="/design">Design</a></li>
-            <li><a href="/license">License</a></li>
-            <li><a href="/privacy">Privacy Policy</a></li>
-          </ul>
+        <div class="topnav-links">
+            <a href="#">Browse</a>
+            <a href="#">Categories</a>
+            <a href="#">Random</a>
         </div>
 
-        <div class="footer-col">
-          <div class="footer-col-title">Development</div>
-          <ul class="footer-col-list">
-            <li><a href="https://github.com/oxur/haleiki">GitHub <span class="ext">&#8599;</span></a></li>
-            <li><a href="https://github.com/oxur/haleiki/issues/new">Submit Issue <span class="ext">&#8599;</span></a></li>
-            <li><a href="https://github.com/oxur/haleiki/discussions">Discussions <span class="ext">&#8599;</span></a></li>
-            <li><a href="https://github.com/oxur/haleiki/blob/main/CHANGELOG.md">Changelog <span class="ext">&#8599;</span></a></li>
-          </ul>
+        <div class="theme-toggle" role="radiogroup" aria-label="Theme">
+            <button class="theme-toggle-option active" data-theme-choice="day" aria-label="Day theme">&#9788;</button>
+            <button class="theme-toggle-option" data-theme-choice="night" aria-label="Night theme">&#9790;</button>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- BRAND GUIDELINES CONTENT                                       -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="guidelines">
+
+        <!-- ── HERO ── -->
+        <div class="hero">
+            <div class="hero-overline">Design System</div>
+            <h1 class="hero-title">Brand Guidelines</h1>
+            <p class="hero-subtitle">Visual identity system for Haleiki -- covering the brand mark, colour architecture, typography, spacing, and implementation. Built in OKLCH, scaled with a perfect fourth, fluid from phone to ultrawide.</p>
+            <div class="hero-tags">
+                <span class="tag">OKLCH</span>
+                <span class="tag">Perfect Fourth Scale</span>
+                <span class="tag">Day &amp; Night Themes</span>
+                <span class="tag">Version 1.0</span>
+                <span class="tag">March 2026</span>
+            </div>
         </div>
 
-      </div><!-- end .footer-columns -->
-    </div><!-- end .footer-top -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- 1. BRAND IDENTITY                                          -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div class="section">
+            <div class="section-label">Section 1</div>
+            <h2>Brand Identity</h2>
+            <p class="desc">The Haleiki brand mark is a single geometric letterform -- the "H" -- rendered in the accent colour against a rounded rectangle. It functions at every scale: favicon, topnav, footer, and documentation.</p>
 
-    <!-- ── CONTENT NOTICE ── -->
-    <div class="footer-content-notice">
-      Wiki content CC0, unless otherwise stated.
-    </div>
+            <h3>Brand Mark</h3>
+            <p>Shown at 120px on both surface treatments. The mark uses <code>--accent-primary</code> as its background, which shifts from terracotta (day) to amber (night) with theme switching.</p>
 
-    <!-- ── BOTTOM: Copyright + meta ── -->
-    <div class="footer-bottom">
-      <div class="footer-copyright">&copy; 2026 Oxur Contributors &middot; Apache-2.0 / MIT</div>
-      <ul class="footer-meta-links">
-        <li><a href="/about/haleiki">Built with Haleiki</a></li>
-        <li><a href="https://cobalt-org.github.io/">Powered by Cobalt</a></li>
-        <li><a href="/privacy">Privacy</a></li>
-      </ul>
-    </div>
+            <div class="brand-showcase">
+                <div class="brand-showcase-card on-light">
+                    <div class="showcase-mark">H</div>
+                    <div class="showcase-label">Day Surface</div>
+                </div>
+                <div class="brand-showcase-card on-dark">
+                    <div class="showcase-mark">H</div>
+                    <div class="showcase-label">Inverted Surface</div>
+                </div>
+            </div>
 
-  </div><!-- end .footer-inner -->
-</footer>
+            <div class="brand-name-display">Haleiki</div>
+            <div class="brand-tagline">House of Knowledge -- a read-only wiki for structured knowledge</div>
 
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<!-- THEME TOGGLE SCRIPT                                            -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<script>
-document.querySelectorAll('.theme-toggle-option').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const theme = btn.dataset.themeChoice;
-    document.documentElement.setAttribute('data-theme', theme);
-    document.querySelectorAll('.theme-toggle-option').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-  });
-});
-</script>
+            <h3>Personality</h3>
+            <p>Haleiki communicates scholarly warmth, navigational clarity, and the quiet confidence of a well-organized library. The design language draws from Wikipedia's information architecture, modernized with perceptually uniform colour, geometric type scale, and intrinsic layout composition.</p>
+        </div>
+
+        <hr class="divider">
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- 2. COLOUR SYSTEM — DAY THEME                               -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div class="section">
+            <div class="section-label">Section 2</div>
+            <h2>Warm Ochre, Sandstone, Terracotta</h2>
+            <p class="desc">Day theme colour tokens. All values defined in OKLCH for perceptual uniformity -- equal lightness steps produce equal perceived brightness.</p>
+
+            <div class="swatch-group-label">Surfaces</div>
+            <div class="swatch-row">
+                <div class="swatch dk" style="background: oklch(0.97 0.01 80)"><span>ground<br>0.97 0.01 80</span></div>
+                <div class="swatch dk" style="background: oklch(0.99 0.005 80)"><span>primary<br>0.99 0.005 80</span></div>
+                <div class="swatch dk" style="background: oklch(0.95 0.015 75)"><span>secondary<br>0.95 0.015 75</span></div>
+                <div class="swatch dk" style="background: oklch(0.92 0.02 72)"><span>tertiary<br>0.92 0.02 72</span></div>
+                <div class="swatch lt" style="background: oklch(0.25 0.03 55)"><span>invert<br>0.25 0.03 55</span></div>
+            </div>
+
+            <div class="swatch-group-label">Borders</div>
+            <div class="swatch-row">
+                <div class="swatch dk" style="background: oklch(0.88 0.025 75)"><span>subtle<br>0.88 0.025 75</span></div>
+                <div class="swatch dk" style="background: oklch(0.82 0.03 72)"><span>default<br>0.82 0.03 72</span></div>
+                <div class="swatch dk" style="background: oklch(0.70 0.04 65)"><span>strong<br>0.70 0.04 65</span></div>
+            </div>
+
+            <div class="swatch-group-label">Text</div>
+            <div class="swatch-row">
+                <div class="swatch lt" style="background: oklch(0.22 0.02 55)"><span>primary<br>0.22 0.02 55</span></div>
+                <div class="swatch lt" style="background: oklch(0.40 0.03 60)"><span>secondary<br>0.40 0.03 60</span></div>
+                <div class="swatch lt" style="background: oklch(0.55 0.025 65)"><span>tertiary<br>0.55 0.025 65</span></div>
+                <div class="swatch dk" style="background: oklch(0.97 0.01 80)"><span>on-invert<br>0.97 0.01 80</span></div>
+            </div>
+
+            <div class="swatch-group-label">Accent</div>
+            <div class="swatch-row">
+                <div class="swatch lt" style="background: oklch(0.55 0.14 45)"><span>primary<br>0.55 0.14 45</span></div>
+                <div class="swatch lt" style="background: oklch(0.48 0.15 42)"><span>hover<br>0.48 0.15 42</span></div>
+                <div class="swatch dk" style="background: oklch(0.92 0.04 50)"><span>subtle<br>0.92 0.04 50</span></div>
+                <div class="swatch lt" style="background: oklch(0.45 0.12 40)"><span>text<br>0.45 0.12 40</span></div>
+            </div>
+
+            <div class="swatch-group-label">Info &amp; Code</div>
+            <div class="swatch-row">
+                <div class="swatch dk" style="background: oklch(0.94 0.03 80)"><span>info-srf<br>0.94 0.03 80</span></div>
+                <div class="swatch dk" style="background: oklch(0.82 0.05 75)"><span>info-bdr<br>0.82 0.05 75</span></div>
+                <div class="swatch lt" style="background: oklch(0.40 0.06 65)"><span>info-txt<br>0.40 0.06 65</span></div>
+                <div class="swatch dk" style="background: oklch(0.95 0.01 80)"><span>code-srf<br>0.95 0.01 80</span></div>
+                <div class="swatch dk" style="background: oklch(0.88 0.02 75)"><span>code-bdr<br>0.88 0.02 75</span></div>
+                <div class="swatch lt" style="background: oklch(0.38 0.08 40)"><span>code-txt<br>0.38 0.08 40</span></div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- 3. COLOUR SYSTEM — NIGHT THEME                             -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div class="section">
+            <div class="section-label">Section 3</div>
+            <h2>Deep Oxide, Amber</h2>
+            <p class="desc">Night theme colour tokens. The palette shifts to deep oxide surfaces with amber accents, maintaining the same semantic structure as the day theme.</p>
+
+            <div class="swatch-group-label">Surfaces</div>
+            <div class="swatch-row">
+                <div class="swatch lt" style="background: oklch(0.16 0.02 55)"><span>ground<br>0.16 0.02 55</span></div>
+                <div class="swatch lt" style="background: oklch(0.20 0.02 55)"><span>primary<br>0.20 0.02 55</span></div>
+                <div class="swatch lt" style="background: oklch(0.24 0.025 52)"><span>secondary<br>0.24 0.025 52</span></div>
+                <div class="swatch lt" style="background: oklch(0.28 0.03 50)"><span>tertiary<br>0.28 0.03 50</span></div>
+                <div class="swatch dk" style="background: oklch(0.92 0.02 75)"><span>invert<br>0.92 0.02 75</span></div>
+            </div>
+
+            <div class="swatch-group-label">Borders</div>
+            <div class="swatch-row">
+                <div class="swatch lt" style="background: oklch(0.30 0.03 50)"><span>subtle<br>0.30 0.03 50</span></div>
+                <div class="swatch lt" style="background: oklch(0.36 0.035 48)"><span>default<br>0.36 0.035 48</span></div>
+                <div class="swatch lt" style="background: oklch(0.48 0.04 50)"><span>strong<br>0.48 0.04 50</span></div>
+            </div>
+
+            <div class="swatch-group-label">Text</div>
+            <div class="swatch-row">
+                <div class="swatch dk" style="background: oklch(0.90 0.015 75)"><span>primary<br>0.90 0.015 75</span></div>
+                <div class="swatch dk" style="background: oklch(0.72 0.02 65)"><span>secondary<br>0.72 0.02 65</span></div>
+                <div class="swatch lt" style="background: oklch(0.55 0.025 58)"><span>tertiary<br>0.55 0.025 58</span></div>
+                <div class="swatch lt" style="background: oklch(0.20 0.02 55)"><span>on-invert<br>0.20 0.02 55</span></div>
+            </div>
+
+            <div class="swatch-group-label">Accent</div>
+            <div class="swatch-row">
+                <div class="swatch dk" style="background: oklch(0.72 0.14 70)"><span>primary<br>0.72 0.14 70</span></div>
+                <div class="swatch dk" style="background: oklch(0.78 0.15 72)"><span>hover<br>0.78 0.15 72</span></div>
+                <div class="swatch lt" style="background: oklch(0.28 0.06 60)"><span>subtle<br>0.28 0.06 60</span></div>
+                <div class="swatch dk" style="background: oklch(0.78 0.12 72)"><span>text<br>0.78 0.12 72</span></div>
+            </div>
+
+            <div class="swatch-group-label">Info &amp; Code</div>
+            <div class="swatch-row">
+                <div class="swatch lt" style="background: oklch(0.24 0.03 55)"><span>info-srf<br>0.24 0.03 55</span></div>
+                <div class="swatch lt" style="background: oklch(0.36 0.04 52)"><span>info-bdr<br>0.36 0.04 52</span></div>
+                <div class="swatch dk" style="background: oklch(0.72 0.04 68)"><span>info-txt<br>0.72 0.04 68</span></div>
+                <div class="swatch lt" style="background: oklch(0.22 0.02 55)"><span>code-srf<br>0.22 0.02 55</span></div>
+                <div class="swatch lt" style="background: oklch(0.32 0.03 52)"><span>code-bdr<br>0.32 0.03 52</span></div>
+                <div class="swatch dk" style="background: oklch(0.78 0.1 72)"><span>code-txt<br>0.78 0.1 72</span></div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- 4. SEMANTIC TOKEN MAPPING                                   -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div class="section">
+            <div class="section-label">Section 4</div>
+            <h2>Semantic Token Mapping</h2>
+            <p class="desc">How each semantic token resolves across themes. The token name stays constant; the OKLCH value shifts to maintain contrast and legibility in each context.</p>
+
+            <table class="token-table">
+                <thead>
+                    <tr>
+                        <th>Token</th>
+                        <th>Day (OKLCH)</th>
+                        <th>Night (OKLCH)</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="swatch-chip" style="background: var(--surface-ground)"></span>surface-ground</td>
+                        <td>0.97 0.01 80</td>
+                        <td>0.16 0.02 55</td>
+                        <td>Page background</td>
+                    </tr>
+                    <tr>
+                        <td><span class="swatch-chip" style="background: var(--surface-primary)"></span>surface-primary</td>
+                        <td>0.99 0.005 80</td>
+                        <td>0.20 0.02 55</td>
+                        <td>Card / panel background</td>
+                    </tr>
+                    <tr>
+                        <td><span class="swatch-chip" style="background: var(--surface-secondary)"></span>surface-secondary</td>
+                        <td>0.95 0.015 75</td>
+                        <td>0.24 0.025 52</td>
+                        <td>Sidebar, input fields</td>
+                    </tr>
+                    <tr>
+                        <td><span class="swatch-chip" style="background: var(--surface-tertiary)"></span>surface-tertiary</td>
+                        <td>0.92 0.02 72</td>
+                        <td>0.28 0.03 50</td>
+                        <td>Hover states, zebra rows</td>
+                    </tr>
+                    <tr>
+                        <td><span class="swatch-chip" style="background: var(--surface-invert)"></span>surface-invert</td>
+                        <td>0.25 0.03 55</td>
+                        <td>0.92 0.02 75</td>
+                        <td>Inverted sections, card headers</td>
+                    </tr>
+                    <tr>
+                        <td><span class="swatch-chip" style="background: var(--border-subtle)"></span>border-subtle</td>
+                        <td>0.88 0.025 75</td>
+                        <td>0.30 0.03 50</td>
+                        <td>Soft dividers</td>
+                    </tr>
+                    <tr>
+                        <td><span class="swatch-chip" style="background: var(--border-default)"></span>border-default</td>
+                        <td>0.82 0.03 72</td>
+                        <td>0.36 0.035 48</td>
+                        <td>Standard borders</td>
+                    </tr>
+                    <tr>
+                        <td><span class="swatch-chip" style="background: var(--border-strong)"></span>border-strong</td>
+                        <td>0.70 0.04 65</td>
+                        <td>0.48 0.04 50</td>
+                        <td>Prominent borders</td>
+                    </tr>
+                    <tr>
+                        <td><span class="swatch-chip" style="background: var(--text-primary)"></span>text-primary</td>
+                        <td>0.22 0.02 55</td>
+                        <td>0.90 0.015 75</td>
+                        <td>Body text, headings</td>
+                    </tr>
+                    <tr>
+                        <td><span class="swatch-chip" style="background: var(--text-secondary)"></span>text-secondary</td>
+                        <td>0.40 0.03 60</td>
+                        <td>0.72 0.02 65</td>
+                        <td>Subtitles, descriptions</td>
+                    </tr>
+                    <tr>
+                        <td><span class="swatch-chip" style="background: var(--text-tertiary)"></span>text-tertiary</td>
+                        <td>0.55 0.025 65</td>
+                        <td>0.55 0.025 58</td>
+                        <td>Captions, metadata</td>
+                    </tr>
+                    <tr>
+                        <td><span class="swatch-chip" style="background: var(--accent-primary)"></span>accent-primary</td>
+                        <td>0.55 0.14 45</td>
+                        <td>0.72 0.14 70</td>
+                        <td>Brand mark, buttons, links</td>
+                    </tr>
+                    <tr>
+                        <td><span class="swatch-chip" style="background: var(--accent-hover)"></span>accent-hover</td>
+                        <td>0.48 0.15 42</td>
+                        <td>0.78 0.15 72</td>
+                        <td>Interactive hover state</td>
+                    </tr>
+                    <tr>
+                        <td><span class="swatch-chip" style="background: var(--accent-subtle)"></span>accent-subtle</td>
+                        <td>0.92 0.04 50</td>
+                        <td>0.28 0.06 60</td>
+                        <td>Active TOC item background</td>
+                    </tr>
+                    <tr>
+                        <td><span class="swatch-chip" style="background: var(--accent-text)"></span>accent-text</td>
+                        <td>0.45 0.12 40</td>
+                        <td>0.78 0.12 72</td>
+                        <td>Accent-coloured text</td>
+                    </tr>
+                    <tr>
+                        <td><span class="swatch-chip" style="background: var(--info-surface)"></span>info-surface</td>
+                        <td>0.94 0.03 80</td>
+                        <td>0.24 0.03 55</td>
+                        <td>Callout background</td>
+                    </tr>
+                    <tr>
+                        <td><span class="swatch-chip" style="background: var(--code-surface)"></span>code-surface</td>
+                        <td>0.95 0.01 80</td>
+                        <td>0.22 0.02 55</td>
+                        <td>Code block background</td>
+                    </tr>
+                    <tr>
+                        <td><span class="swatch-chip" style="background: var(--code-text)"></span>code-text</td>
+                        <td>0.38 0.08 40</td>
+                        <td>0.78 0.1 72</td>
+                        <td>Code text</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr class="divider">
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- 5. TYPOGRAPHY                                               -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div class="section">
+            <div class="section-label">Section 5</div>
+            <h2>Three Voices, One Ensemble</h2>
+            <p class="desc">Each typeface serves a distinct role. Together they create a reading experience that is structured yet warm -- navigational without being mechanical, scholarly without being cold.</p>
+
+            <h3>Display &amp; Headlines</h3>
+            <div class="type-card">
+                <div class="type-card-head">
+                    <h4>Red Hat Display</h4>
+                    <div class="type-meta">Variable weight 300--900 | Geometric sans with humanist touches</div>
+                </div>
+                <div class="type-card-body">
+                    <p>Clean geometric sans-serif designed by Jeremy Mickel for Red Hat. Open counters, slightly rounded stroke endings, and generous x-height make it legible at every scale -- from navigation labels to hero headings. The variable weight axis provides fine control over visual hierarchy.</p>
+                    <p style="margin-top: var(--space-xs);">The geometric clarity of Red Hat Display communicates the structured, navigational quality of a knowledge base. Its humanist touches -- the slightly rounded stroke endings, the open counters -- keep it warm rather than clinical.</p>
+                </div>
+            </div>
+
+            <h3>Body &amp; Long-form</h3>
+            <div class="type-card">
+                <div class="type-card-head">
+                    <h4 style="font-family: var(--font-body); font-variation-settings: 'opsz' 72; font-weight: 500;">Newsreader</h4>
+                    <div class="type-meta">Variable weight 200--800 | Optical size 6--72 | Transitional serif</div>
+                </div>
+                <div class="type-card-body">
+                    <p>Production Type's Newsreader is a variable serif with optical sizing. Transitional old-style roots designed for sustained reading. The editorial energy fits a knowledge base -- it says "here is something worth reading carefully."</p>
+                    <p style="margin-top: var(--space-xs);">The <code>opsz</code> axis is key: at 72, Newsreader is elegant and refined for headlines; at 14, the letterforms are sturdier, with more open spacing and thicker thin strokes for comfortable body reading.</p>
+                </div>
+            </div>
+
+            <h3>Code &amp; System</h3>
+            <div class="type-card">
+                <div class="type-card-head">
+                    <h4 style="font-family: var(--font-mono); font-weight: 500;">IBM Plex Mono</h4>
+                    <div class="type-meta">Weights 300, 400, 500 | Monospace with human warmth</div>
+                </div>
+                <div class="type-card-body">
+                    <p>Monospace with human warmth. Used for code blocks, inline code, metadata, tags, section labels, and system-level information. IBM Plex Mono avoids the cold, mechanical quality of many monospace faces -- its curves and proportions echo the warmth of the rest of the type stack.</p>
+                </div>
+            </div>
+
+            <h3>The Modular Scale -- Perfect Fourth (4:3 = 1.333)</h3>
+
+            <div class="specimen">
+                <div class="specimen-label">Step 4 -- Red Hat Display 700</div>
+                <div class="specimen-text" style="font-family: var(--font-display); font-size: var(--step-4); font-weight: 700; letter-spacing: -0.025em;">Haleiki</div>
+            </div>
+
+            <div class="specimen">
+                <div class="specimen-label">Step 3 -- Red Hat Display 700</div>
+                <div class="specimen-text" style="font-family: var(--font-display); font-size: var(--step-3); font-weight: 700; letter-spacing: -0.02em;">House of Knowledge</div>
+            </div>
+
+            <div class="specimen">
+                <div class="specimen-label">Step 2 -- Red Hat Display 700</div>
+                <div class="specimen-text" style="font-family: var(--font-display); font-size: var(--step-2); font-weight: 700; letter-spacing: -0.015em;">Ownership in Rust</div>
+            </div>
+
+            <div class="specimen">
+                <div class="specimen-label">Step 1 -- Newsreader opsz 24</div>
+                <div class="specimen-text" style="font-family: var(--font-body); font-size: var(--step-1); font-variation-settings: 'opsz' 24; line-height: 1.45;">Ownership is the foundational concept in Rust's approach to memory safety. Where languages like Java and Go rely on a runtime garbage collector, Rust takes a third path.</div>
+            </div>
+
+            <div class="specimen">
+                <div class="specimen-label">Step 0 -- Newsreader opsz 14 (body)</div>
+                <div class="specimen-text" style="font-family: var(--font-body); font-size: var(--step-0); font-variation-settings: 'opsz' 14; line-height: 1.65;">In Dzogchen, the natural state of mind is described as the union of awareness and emptiness. Rigpa -- intrinsic awareness -- is not something to be created or achieved, but rather recognized as already present. The practice involves relaxing into this recognition without grasping, allowing thoughts and perceptions to arise and dissolve without interference. This non-dual awareness is considered the basis of all experience, prior to the conceptual divisions of subject and object.</div>
+            </div>
+
+            <div class="specimen">
+                <div class="specimen-label">Step -1 -- Newsreader opsz 10 (caption)</div>
+                <div class="specimen-text" style="font-family: var(--font-body); font-size: var(--step--1); font-variation-settings: 'opsz' 10; line-height: 1.5; color: var(--text-secondary);">Caption text for images, figures, and supplementary information. Slightly reduced size for secondary content.</div>
+            </div>
+
+            <div class="specimen">
+                <div class="specimen-label">Step -2 -- IBM Plex Mono 400 (metadata)</div>
+                <div class="specimen-text" style="font-family: var(--font-mono); font-size: var(--step--2); text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary);">Last updated: 2026-03-18 &middot; Category: Language Concepts &middot; Status: Stable</div>
+            </div>
+
+            <table class="scale-table">
+                <thead>
+                    <tr>
+                        <th>Step</th>
+                        <th>Min</th>
+                        <th>Max</th>
+                        <th>Usage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>step 4</td>
+                        <td>50.5px</td>
+                        <td>56.8px</td>
+                        <td>Hero / page title (Red Hat Display)</td>
+                    </tr>
+                    <tr>
+                        <td>step 3</td>
+                        <td>37.9px</td>
+                        <td>42.6px</td>
+                        <td>Article title, section heading (Red Hat Display)</td>
+                    </tr>
+                    <tr>
+                        <td>step 2</td>
+                        <td>28.4px</td>
+                        <td>32px</td>
+                        <td>Subsection heading (Red Hat Display)</td>
+                    </tr>
+                    <tr>
+                        <td>step 1</td>
+                        <td>21.3px</td>
+                        <td>24px</td>
+                        <td>Lead paragraph, subtitle (Newsreader)</td>
+                    </tr>
+                    <tr>
+                        <td>step 0</td>
+                        <td>16px</td>
+                        <td>18px</td>
+                        <td>Body text (Newsreader)</td>
+                    </tr>
+                    <tr>
+                        <td>step -1</td>
+                        <td>12px</td>
+                        <td>13.5px</td>
+                        <td>Caption, TOC links (Newsreader)</td>
+                    </tr>
+                    <tr>
+                        <td>step -2</td>
+                        <td>9px</td>
+                        <td>10.1px</td>
+                        <td>Metadata, labels (IBM Plex Mono)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr class="divider">
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- 6. SPACING SYSTEM                                           -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div class="section">
+            <div class="section-label">Section 6</div>
+            <h2>Spacing System</h2>
+            <p class="desc">Fluid spacing tokens generated from the same perfect fourth ratio. All values interpolate between min and max using CSS <code>clamp()</code> with the <code>vi</code> unit.</p>
+
+            <h3>Base Tokens</h3>
+            <table class="scale-table">
+                <thead>
+                    <tr>
+                        <th>Token</th>
+                        <th>Min</th>
+                        <th>Max</th>
+                        <th>Typical Use</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>space-3xs</td>
+                        <td>4px</td>
+                        <td>5px</td>
+                        <td>Tight inline gaps, tag internal padding</td>
+                    </tr>
+                    <tr>
+                        <td>space-2xs</td>
+                        <td>8px</td>
+                        <td>9px</td>
+                        <td>Icon-to-label, compact gaps</td>
+                    </tr>
+                    <tr>
+                        <td>space-xs</td>
+                        <td>12px</td>
+                        <td>13.5px</td>
+                        <td>Label-to-input, list item spacing</td>
+                    </tr>
+                    <tr>
+                        <td>space-s</td>
+                        <td>16px</td>
+                        <td>18px</td>
+                        <td>Default component padding</td>
+                    </tr>
+                    <tr>
+                        <td>space-m</td>
+                        <td>24px</td>
+                        <td>27px</td>
+                        <td>Card padding, paragraph spacing</td>
+                    </tr>
+                    <tr>
+                        <td>space-l</td>
+                        <td>32px</td>
+                        <td>36px</td>
+                        <td>Section padding</td>
+                    </tr>
+                    <tr>
+                        <td>space-xl</td>
+                        <td>48px</td>
+                        <td>54px</td>
+                        <td>Major section gaps</td>
+                    </tr>
+                    <tr>
+                        <td>space-2xl</td>
+                        <td>64px</td>
+                        <td>72px</td>
+                        <td>Hero padding, page-level rhythm</td>
+                    </tr>
+                    <tr>
+                        <td>space-3xl</td>
+                        <td>96px</td>
+                        <td>108px</td>
+                        <td>Full-page vertical breathing room</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Space Pairs</h3>
+            <p>Steeper interpolation between two named sizes. Used where spacing should grow more aggressively on wider viewports.</p>
+            <table class="scale-table">
+                <thead>
+                    <tr>
+                        <th>Token</th>
+                        <th>Min</th>
+                        <th>Max</th>
+                        <th>Typical Use</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>space-s-m</td>
+                        <td>16px</td>
+                        <td>27px</td>
+                        <td>Component-to-component within a region</td>
+                    </tr>
+                    <tr>
+                        <td>space-s-l</td>
+                        <td>16px</td>
+                        <td>36px</td>
+                        <td>Responsive page padding</td>
+                    </tr>
+                    <tr>
+                        <td>space-m-l</td>
+                        <td>24px</td>
+                        <td>36px</td>
+                        <td>Column gap in layout primitives</td>
+                    </tr>
+                    <tr>
+                        <td>space-m-xl</td>
+                        <td>24px</td>
+                        <td>54px</td>
+                        <td>Section top margin (prose h2)</td>
+                    </tr>
+                    <tr>
+                        <td>space-l-xl</td>
+                        <td>32px</td>
+                        <td>54px</td>
+                        <td>Footer top margin, major breaks</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="notes">
+                <h4>The Proximity Principle</h4>
+                <p><strong>Intra-group spacing must always be tighter than inter-group spacing.</strong> This activates gestalt proximity grouping -- the perceptual mechanism that makes related elements feel connected. A card with uniform 16px everywhere destroys all spatial information. Title-to-subtitle at 4px, subtitle-to-meta at 8px, card padding at 16px, between cards at 24px -- four scales communicating four relationships.</p>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- 7. LAYOUT                                                   -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div class="section">
+            <div class="section-label">Section 7</div>
+            <h2>Layout System</h2>
+            <p class="desc">Intrinsic layout using Every Layout primitives and Utopia fluid spacing. Zero media queries for column arrangement -- the layout adapts by measuring its own available space.</p>
+
+            <h3>Three-Column Structure</h3>
+            <p>The article page uses a nested Sidebar pattern: a left navigation column (table of contents), a main article column, and a right sidebar (taxonomy card). The columns wrap intrinsically when there is not enough space -- the left nav disappears first, then the right sidebar stacks above the article.</p>
+
+            <h3>Layout Tokens</h3>
+            <table class="scale-table">
+                <thead>
+                    <tr>
+                        <th>Token</th>
+                        <th>Value</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>--content-max</td>
+                        <td>58ch</td>
+                        <td>Prose line length (optimal readability)</td>
+                    </tr>
+                    <tr>
+                        <td>--sidebar-width</td>
+                        <td>280px</td>
+                        <td>Right sidebar (taxonomy card)</td>
+                    </tr>
+                    <tr>
+                        <td>--nav-width</td>
+                        <td>220px</td>
+                        <td>Left navigation (TOC)</td>
+                    </tr>
+                    <tr>
+                        <td>--page-max</td>
+                        <td>1320px</td>
+                        <td>Outer page container</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Design Principles</h3>
+            <p><strong>No media queries for layout.</strong> The flexbox-based Sidebar primitives use <code>min-inline-size</code> and <code>flex-grow</code> to decide when columns should wrap. This means the layout works at every viewport width, including sizes that media queries would miss (split-screen, embedded views, print).</p>
+            <p><strong>Content decisions use media queries.</strong> Hiding the left nav on narrow viewports is a content decision (removing a component), not a layout decision. This is the one place a breakpoint is used: <code>@media (max-width: 60rem)</code>.</p>
+        </div>
+
+        <hr class="divider">
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- 8. IMPLEMENTATION                                           -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div class="section">
+            <div class="section-label">Section 8</div>
+            <h2>Implementation</h2>
+
+            <h3>Token Architecture</h3>
+            <p><strong>Three tiers:</strong> Primitive tokens (OKLCH values) map to semantic tokens (<code>--surface-primary</code>, <code>--accent-text</code>) which feed component tokens (<code>.topnav</code> background, <code>.info-card-header</code> colour). This indirection enables theme switching: swap the primitive-to-semantic mapping, and every component updates automatically.</p>
+
+            <h3>CSS Cascade Layers</h3>
+            <p>The stylesheet is organized into cascade layers to eliminate specificity conflicts:</p>
+            <p><code>@layer tokens, reset, base, layout, components, utilities</code></p>
+            <p>Tokens define custom properties. Reset normalizes elements. Layout handles structural positioning. Components style individual UI pieces. Utilities provide overrides. Each layer has strictly higher priority than the one before it.</p>
+
+            <h3>Fluid Type &amp; Space</h3>
+            <p>All type and spacing values use CSS <code>clamp()</code> for fluid interpolation. The <code>vi</code> unit (viewport inline) is used instead of <code>vw</code> to respect writing direction. No breakpoints are needed for sizing -- values scale continuously between their min and max bounds.</p>
+
+            <h3>Build Pipeline</h3>
+            <p><strong>Cobalt</strong> static site generator with Liquid templates. <strong>Pagefind</strong> for client-side search indexing. Content authored in Markdown, compiled to static HTML. No JavaScript frameworks, no build-time CSS processing -- just clean CSS custom properties and cascade layers.</p>
+
+            <div class="notes">
+                <h4>Seven Design Principles</h4>
+                <p><strong>Geometric scale.</strong> Every size derives from one ratio (4:3). No magic numbers.</p>
+                <p><strong>Perceptual uniformity.</strong> OKLCH ensures equal lightness steps look equal to human eyes.</p>
+                <p><strong>Semantic naming.</strong> Tokens describe purpose, not appearance. <code>--accent-primary</code>, not <code>--terracotta</code>.</p>
+                <p><strong>Constraint.</strong> Fewer choices, made well. Three typefaces. One ratio. Two themes.</p>
+                <p><strong>Unity not uniformity.</strong> Day and night themes share structure but differ in expression.</p>
+                <p><strong>Proximity as syntax.</strong> Spacing communicates relationships. Tighter = more related.</p>
+                <p><strong>Design the invariants.</strong> Build the system that survives content changes, not a page that looks good with today's content.</p>
+            </div>
+        </div>
+
+    </div><!-- end .guidelines -->
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SITE FOOTER                                                     -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+
+            <!-- ── TOP: Brand + Link Columns ── -->
+            <div class="footer-top">
+
+                <!-- Brand column -->
+                <div class="footer-brand-col">
+                    <a href="/" class="footer-brand-link">
+                        <span class="brand-mark">H</span>
+                        <span class="brand-name">Haleiki</span>
+                    </a>
+                    <p class="footer-tagline">House of Knowledge ❖ A read-only wiki for structured knowledge</p>
+                </div>
+
+                <!-- Link columns -->
+                <div class="footer-columns">
+
+                    <div class="footer-col">
+                        <div class="footer-col-title">Knowledge Base</div>
+                        <ul class="footer-col-list">
+                            <li><a href="/">Front Page</a></li>
+                            <li><a href="/browse">Browse</a></li>
+                            <li><a href="/categories">Categories</a></li>
+                            <li><a href="/random">Random</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <div class="footer-col-title">About</div>
+                        <ul class="footer-col-list">
+                            <li><a href="/about">About This Wiki</a></li>
+                            <li><a href="/about/haleiki">About Haleiki</a></li>
+                            <li><a href="/design">Design</a></li>
+                            <li><a href="/license">License</a></li>
+                            <li><a href="/privacy">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <div class="footer-col-title">Development</div>
+                        <ul class="footer-col-list">
+                            <li><a href="https://github.com/oxur/haleiki">GitHub <span class="ext">&#8599;</span></a></li>
+                            <li><a href="https://github.com/oxur/haleiki/issues/new">Submit Issue <span class="ext">&#8599;</span></a></li>
+                            <li><a href="https://github.com/oxur/haleiki/discussions">Discussions <span class="ext">&#8599;</span></a></li>
+                            <li><a href="https://github.com/oxur/haleiki/blob/main/CHANGELOG.md">Changelog <span class="ext">&#8599;</span></a></li>
+                        </ul>
+                    </div>
+
+                </div><!-- end .footer-columns -->
+            </div><!-- end .footer-top -->
+
+            <!-- ── CONTENT NOTICE ── -->
+            <div class="footer-content-notice">
+                Wiki content CC0, unless otherwise stated.
+            </div>
+
+            <!-- ── BOTTOM: Copyright + meta ── -->
+            <div class="footer-bottom">
+                <div class="footer-copyright">&copy; 2026 Oxur Contributors &middot; Apache-2.0 / MIT</div>
+                <ul class="footer-meta-links">
+                    <li><a href="/about/haleiki">Built with Haleiki</a></li>
+                    <li><a href="https://cobalt-org.github.io/">Powered by Cobalt</a></li>
+                    <li><a href="/privacy">Privacy</a></li>
+                </ul>
+            </div>
+
+        </div><!-- end .footer-inner -->
+    </footer>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- THEME TOGGLE SCRIPT                                            -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <script>
+        document.querySelectorAll('.theme-toggle-option').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const theme = btn.dataset.themeChoice;
+                document.documentElement.setAttribute('data-theme', theme);
+                document.querySelectorAll('.theme-toggle-option').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+    </script>
 
 </body>
+
 </html>
