@@ -5,6 +5,7 @@
 //! base built from publicly licensed content.
 
 pub mod manifest;
+pub mod status;
 
 use clap::Subcommand;
 
@@ -71,7 +72,9 @@ pub fn run(cmd: &DemoCommand) -> anyhow::Result<()> {
         }
         DemoCommand::Build => println!("demo build: not yet implemented"),
         DemoCommand::Serve => println!("demo serve: not yet implemented"),
-        DemoCommand::Status => println!("demo status: not yet implemented"),
+        DemoCommand::Status => {
+            status::run()?;
+        }
         DemoCommand::Validate => println!("demo validate: not yet implemented"),
         DemoCommand::Attribution => println!("demo attribution: not yet implemented"),
         DemoCommand::Clean => println!("demo clean: not yet implemented"),

@@ -6,9 +6,9 @@
 //! reserve this typed enum for errors that callers need to match on.
 
 /// Errors that can occur during Haleiki operations.
-#[allow(dead_code)]
 #[derive(Debug, thiserror::Error)]
 #[non_exhaustive]
+#[allow(dead_code)]
 pub enum Error {
     /// An I/O operation failed.
     #[error("I/O error: {0}")]
@@ -38,5 +38,4 @@ pub enum Error {
 }
 
 /// Convenience alias used throughout the crate.
-#[allow(dead_code)]
 pub type Result<T> = std::result::Result<T, Error>;
