@@ -5,6 +5,8 @@
 //! base built from publicly licensed content.
 
 pub mod clean;
+#[allow(dead_code)] // Not yet wired to a command; used by tests and future pipeline
+pub mod convert;
 pub mod fetch;
 pub mod manifest;
 #[allow(dead_code)] // Not yet wired to a command; used by tests and future pipeline
@@ -64,6 +66,17 @@ pub enum DemoCommand {
         /// Article slug.
         slug: String,
     },
+
+    /// [Dev] Convert a single article's HTML to Markdown.
+    #[command(hide = true)]
+    Convert {
+        /// Article slug.
+        slug: String,
+
+        /// Use pandoc instead of the built-in converter.
+        #[arg(long)]
+        pandoc: bool,
+    },
 }
 
 /// Execute a demo subcommand.
@@ -95,6 +108,18 @@ pub fn run(cmd: &DemoCommand) -> anyhow::Result<()> {
         DemoCommand::CleanHtml { slug } => {
             let path = clean::clean_article(slug)?;
             println!("Cleaned HTML written to {}", path.display());
+        }
+        DemoCommand::Convert { slug, pandoc } => {
+            if *pandoc {
+                let html = std::fs::read_to_string(media::staging_final_path(slug))?;
+                let md = convert::html_to_markdown_pandoc(&html)?;
+                let out = convert::staging_markdown_path(slug);
+                std::fs::write(&out, &md)?;
+                println!("Pandoc Markdown written to {}", out.display());
+            } else {
+                let path = convert::convert_article(slug)?;
+                println!("Markdown written to {}", path.display());
+            }
         }
     }
     Ok(())
