@@ -28,11 +28,8 @@ pub enum Command {
     /// Show statistics about the knowledge base.
     Stats,
 
-    /// Search the knowledge base.
-    Search {
-        /// The query string to search for.
-        query: String,
-    },
+    /// Generate the search index (wraps Pagefind).
+    Search,
 
     /// Developer utilities (debug, inspect internals).
     Dev,

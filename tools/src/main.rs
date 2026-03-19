@@ -36,8 +36,7 @@ fn run(cmd: &Command) -> anyhow::Result<()> {
         Command::Stats => {
             println!("stats: not yet implemented");
         }
-        Command::Search { query } => {
-            let _ = query;
+        Command::Search => {
             println!("search: not yet implemented");
         }
         Command::Dev => {
