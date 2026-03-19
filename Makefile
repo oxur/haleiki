@@ -131,9 +131,9 @@ build: clean $(BIN_DIR)
 	@echo "$(BLUE)Building $(PROJECT_NAME) in $(MODE) mode...$(RESET)"
 	@echo "$(CYAN)• Compiling workspace...$(RESET)"
 	@if [ "$(MODE)" = "release" ]; then \
-		cargo build --release; \
+		cargo build --release --features demo; \
 	else \
-		cargo build; \
+		cargo build --features demo; \
 	fi
 	@echo "$(CYAN)• Copying binaries to $(BIN_DIR)/$(RESET)"
 	@for bin in $(BINARIES); do \
@@ -153,7 +153,7 @@ build-release: TARGET = ./target/$(MODE)
 build-release: clean $(BIN_DIR)
 	@echo "$(BLUE)Building $(PROJECT_NAME) in release mode...$(RESET)"
 	@echo "$(CYAN)• Compiling optimized workspace...$(RESET)"
-	@cargo build --release
+	@cargo build --release --features demo
 	@echo "$(CYAN)• Copying binaries to $(BIN_DIR)/$(RESET)"
 	@for bin in $(BINARIES); do \
 		if [ -f $(TARGET)/$$bin ]; then \
