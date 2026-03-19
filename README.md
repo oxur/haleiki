@@ -9,11 +9,11 @@
 
 *A beautiful house of knowledge*
 
----
+## About
 
 Haleiki (*hale* "house" + *ʻike* "knowledge," Hawaiian) is a static-site wiki-like knowledge-sharing tool — beautifully designed, searchable, and interlinked. There are no logins, no in-page edits, no comments. Content goes in as source pages and concept cards; a navigable knowledge base comes out.
 
-Closer to an encyclopedia than a wiki in philosophy. Closer to a wiki than an encyclopedia in navigation.
+Closer to an encyclopedia than a wiki in philosophy. Closer to a wiki than an encyclopedia in navigation. You can view a [demo here]().
 
 ## How It Works
 
@@ -52,6 +52,10 @@ Warm/cool dual-theme aesthetic built on a semantic design token architecture. DM
 ## Project Status
 
 Early development. See the [architecture document](./haleiki-architecture.md) for the full design and phase plan.
+
+## Example Instances / Deployments
+
+- TBD
 
 ## License
 
