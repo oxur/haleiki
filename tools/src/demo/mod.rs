@@ -8,12 +8,16 @@ pub mod clean;
 #[allow(dead_code)] // Not yet wired to a command; used by tests and future pipeline
 pub mod convert;
 pub mod fetch;
+#[allow(dead_code)] // Not yet wired to a command; used by tests and future pipeline
+pub mod frontmatter;
 pub mod manifest;
 #[allow(dead_code)] // Not yet wired to a command; used by tests and future pipeline
 pub mod media;
 #[allow(dead_code)] // Not yet wired to a command; used by tests and future pipeline
 pub mod rewrite;
 pub mod status;
+
+use std::path::Path;
 
 use clap::Subcommand;
 
@@ -77,6 +81,13 @@ pub enum DemoCommand {
         #[arg(long)]
         pandoc: bool,
     },
+
+    /// [Dev] Inject frontmatter into staged Markdown.
+    #[command(hide = true)]
+    Frontmatter {
+        /// Article slug (omit to process all).
+        slug: Option<String>,
+    },
 }
 
 /// Execute a demo subcommand.
@@ -116,6 +127,15 @@ pub fn run(cmd: &DemoCommand) -> anyhow::Result<()> {
             } else {
                 let count = convert::convert_all_articles(*pandoc)?;
                 println!("Converted {count} article(s).");
+            }
+        }
+        DemoCommand::Frontmatter { slug } => {
+            let manifest_path = Path::new("demo/manifest.yaml");
+            let manifest = manifest::Manifest::from_file(manifest_path)?;
+            if let Some(slug) = slug {
+                frontmatter::inject_frontmatter(slug, &manifest)?;
+            } else {
+                frontmatter::inject_all(&manifest)?;
             }
         }
     }
