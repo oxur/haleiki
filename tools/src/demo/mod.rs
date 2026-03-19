@@ -67,11 +67,11 @@ pub enum DemoCommand {
         slug: String,
     },
 
-    /// [Dev] Convert a single article's HTML to Markdown.
+    /// [Dev] Convert final HTML to Markdown.
     #[command(hide = true)]
     Convert {
-        /// Article slug.
-        slug: String,
+        /// Article slug (omit to convert all).
+        slug: Option<String>,
 
         /// Use pandoc instead of the built-in converter.
         #[arg(long)]
@@ -110,15 +110,12 @@ pub fn run(cmd: &DemoCommand) -> anyhow::Result<()> {
             println!("Cleaned HTML written to {}", path.display());
         }
         DemoCommand::Convert { slug, pandoc } => {
-            if *pandoc {
-                let html = std::fs::read_to_string(media::staging_final_path(slug))?;
-                let md = convert::html_to_markdown_pandoc(&html)?;
-                let out = convert::staging_markdown_path(slug);
-                std::fs::write(&out, &md)?;
-                println!("Pandoc Markdown written to {}", out.display());
-            } else {
-                let path = convert::convert_article(slug)?;
+            if let Some(slug) = slug {
+                let path = convert::reconvert_article(slug, *pandoc)?;
                 println!("Markdown written to {}", path.display());
+            } else {
+                let count = convert::convert_all_articles(*pandoc)?;
+                println!("Converted {count} article(s).");
             }
         }
     }
