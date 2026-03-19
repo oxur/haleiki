@@ -113,6 +113,14 @@ pub struct ArticleMedia {
     pub exclude: Vec<String>,
 }
 
+/// Normalize a Wikipedia article title for comparison.
+///
+/// Lowercases, trims, replaces underscores with spaces.
+#[allow(dead_code)] // used by rewrite module and tests
+pub fn normalize_wiki_title(title: &str) -> String {
+    title.trim().replace('_', " ").to_lowercase()
+}
+
 /// A validation problem found in the manifest.
 #[derive(Debug, Clone, PartialEq)]
 pub struct ValidationIssue {
@@ -132,6 +140,27 @@ impl std::fmt::Display for ValidationIssue {
 }
 
 impl Manifest {
+    /// Build a lookup index from Wikimedia article titles to Haleiki slugs.
+    ///
+    /// Titles are normalized (lowercased, underscores->spaces) for fuzzy matching.
+    /// Multiple keys may map to the same slug (title + variants).
+    #[allow(dead_code)] // used by rewrite module and tests
+    pub fn title_to_slug_index(&self) -> HashMap<String, String> {
+        let mut index = HashMap::new();
+
+        for article in &self.articles {
+            // Exact title
+            let normalized = normalize_wiki_title(&article.title);
+            index.insert(normalized, article.slug.clone());
+
+            // Also index with underscores (as they appear in URLs)
+            let underscore_form = article.title.replace(' ', "_").to_lowercase();
+            index.insert(underscore_form, article.slug.clone());
+        }
+
+        index
+    }
+
     /// Load and parse a manifest from a YAML file.
     ///
     /// # Errors
@@ -815,5 +844,46 @@ articles:
         let yaml = serde_yaml::to_string(&m).unwrap();
         let m2: Manifest = serde_yaml::from_str(&yaml).unwrap();
         assert_eq!(m, m2);
+    }
+
+    // --- title_to_slug_index tests ---
+
+    #[test]
+    fn test_title_to_slug_index_contains_all_articles() {
+        let m = sample_manifest();
+        let index = m.title_to_slug_index();
+        // Each article adds 2 entries (normalized + underscore form)
+        assert!(index.len() >= m.articles.len());
+    }
+
+    #[test]
+    fn test_title_to_slug_index_lookup_with_underscores() {
+        let m = sample_manifest();
+        let index = m.title_to_slug_index();
+        assert_eq!(
+            index.get("memory_management"),
+            Some(&"memory-management".to_string()),
+        );
+    }
+
+    #[test]
+    fn test_title_to_slug_index_lookup_case_insensitive() {
+        let m = sample_manifest();
+        let index = m.title_to_slug_index();
+        // normalize_wiki_title lowercases
+        assert_eq!(
+            index.get("memory management"),
+            Some(&"memory-management".to_string()),
+        );
+    }
+
+    #[test]
+    fn test_title_to_slug_index_parenthetical_title() {
+        let m = sample_manifest();
+        let index = m.title_to_slug_index();
+        assert_eq!(
+            index.get("garbage collection (computer science)"),
+            Some(&"garbage-collection".to_string()),
+        );
     }
 }
