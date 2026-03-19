@@ -8,6 +8,8 @@ pub mod clean;
 pub mod fetch;
 pub mod manifest;
 #[allow(dead_code)] // Not yet wired to a command; used by tests and future pipeline
+pub mod media;
+#[allow(dead_code)] // Not yet wired to a command; used by tests and future pipeline
 pub mod rewrite;
 pub mod status;
 
