@@ -7,29 +7,35 @@ use super::manifest::Manifest;
 /// The fetch state of an article on disk.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum FetchState {
-    /// No source file exists in `demo/sources/`.
+    /// No staging HTML or source Markdown exists.
     Missing,
-    /// Source file exists in `demo/sources/`.
-    Fetched,
+    /// Staging HTML exists but not yet converted to Markdown.
+    Staged,
+    /// Converted source Markdown exists.
+    Converted,
 }
 
 impl std::fmt::Display for FetchState {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::Missing => write!(f, "missing"),
-            Self::Fetched => write!(f, "fetched"),
+            Self::Staged => write!(f, "staged"),
+            Self::Converted => write!(f, "converted"),
         }
     }
 }
 
-/// Determine the fetch state of an article by checking if its source file exists.
+/// Determine the fetch state of an article by checking disk artifacts.
 fn fetch_state(slug: &str) -> FetchState {
     let source_path = Path::new("demo/sources").join(format!("{slug}.md"));
     if source_path.exists() {
-        FetchState::Fetched
-    } else {
-        FetchState::Missing
+        return FetchState::Converted;
     }
+    let staging_path = Path::new("demo/.staging").join(format!("{slug}.html"));
+    if staging_path.exists() {
+        return FetchState::Staged;
+    }
+    FetchState::Missing
 }
 
 /// Run the `haleiki demo status` subcommand.
@@ -68,7 +74,8 @@ pub fn run() -> anyhow::Result<()> {
     );
     println!("  {}", "-".repeat(85));
 
-    let mut fetched_count = 0;
+    let mut converted_count = 0;
+    let mut staged_count = 0;
     let mut missing_count = 0;
 
     for article in &manifest.articles {
@@ -76,7 +83,8 @@ pub fn run() -> anyhow::Result<()> {
         let project = manifest.effective_project(article);
 
         match state {
-            FetchState::Fetched => fetched_count += 1,
+            FetchState::Converted => converted_count += 1,
+            FetchState::Staged => staged_count += 1,
             FetchState::Missing => missing_count += 1,
         }
 
@@ -95,9 +103,10 @@ pub fn run() -> anyhow::Result<()> {
 
     println!("  {}", "-".repeat(85));
     println!(
-        "  Total: {} articles ({} fetched, {} missing)",
+        "  Total: {} articles ({} converted, {} staged, {} missing)",
         manifest.articles.len(),
-        fetched_count,
+        converted_count,
+        staged_count,
         missing_count,
     );
     println!();

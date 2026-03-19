@@ -27,7 +27,7 @@ name = "haleiki"
 path = "src/main.rs"
 
 [features]
-demo = ["dep:reqwest", "dep:tokio", "dep:scraper", "dep:htmd", "dep:globset", "dep:indicatif"]
+demo = ["dep:reqwest", "dep:reqwest-middleware", "dep:reqwest-retry", "dep:tokio", "dep:scraper", "dep:htmd", "dep:globset", "dep:indicatif"]
 
 [dependencies]
 anyhow = "1"
@@ -42,7 +42,9 @@ thiserror = "2"
 globset = { version = "0.4", optional = true }
 htmd = { version = "0.1", optional = true }
 indicatif = { version = "0.17", optional = true }
-reqwest = { version = "0.12", features = ["rustls-tls", "json"], optional = true }
+reqwest = { version = "0.13", features = ["rustls", "json"], optional = true }
+reqwest-middleware = { version = "0.5", optional = true }
+reqwest-retry = { version = "0.9", optional = true }
 scraper = { version = "0.22", optional = true }
 tokio = { version = "1", features = ["full"], optional = true }
 

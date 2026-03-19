@@ -1,5 +1,5 @@
 # Haleiki Demo Site — Content Manifest
-# All content sourced under CC BY-SA 4.0 (or compatible) from Wikimedia projects.
+# Content sourced under CC BY-SA (3.0/4.0) from Wikimedia projects and Rigpa Wiki.
 
 # Default settings (can be overridden per-article)
 defaults:
@@ -20,103 +20,683 @@ defaults:
 # Classification defaults for the demo taxonomy
 taxonomy:
   categories:
-    - "memory-management"
-    - "type-systems"
-    - "programming-concepts"
-    - "data-structures"
+    - "tibetan-buddhism"
+    - "theoretical-physics"
+    - "mathematics"
+    - "music"
+    - "programming-languages"
+    - "artificial-intelligence"
+    - "philosophy-of-mind"
+    - "linguistics"
+    - "botany"
+    - "geology"
   tiers:
     - "foundational"
     - "intermediate"
     - "advanced"
 
-# ─── Articles ───────────────────────────────────────────
+# ═══ Articles ════════════════════════════════════════════
 
 articles:
 
-  - title: "Memory management"
-    slug: "memory-management"
-    category: "memory-management"
-    tier: "foundational"
-    tags: ["overview", "foundational"]
-    keywords: ["allocation", "deallocation", "memory model"]
+  # ─── Tibetan Buddhism ─────────────────────────────────
 
-  - title: "Garbage collection (computer science)"
-    slug: "garbage-collection"
-    category: "memory-management"
+  - title: "Dzogchen"
+    slug: "dzogchen"
+    category: "tibetan-buddhism"
+    tier: "foundational"
+    tags: ["practice", "philosophy", "nyingma"]
+    keywords: ["great perfection", "rigpa", "awareness", "atiyoga"]
+
+  - title: "Chagdud Tulku Rinpoche"
+    slug: "chagdud-tulku-rinpoche"
+    category: "tibetan-buddhism"
     tier: "intermediate"
-    tags: ["runtime", "automatic-memory"]
-    keywords: ["GC", "mark-and-sweep", "tracing"]
+    tags: ["teacher", "nyingma", "contemporary"]
+    keywords: ["Chagdud Gonpa", "tulku", "terton"]
 
-  - title: "Reference counting"
-    slug: "reference-counting"
-    category: "memory-management"
+  - title: "Dilgo Khyentse"
+    slug: "dilgo-khyentse"
+    category: "tibetan-buddhism"
     tier: "intermediate"
-    tags: ["runtime", "automatic-memory"]
-    keywords: ["ref count", "weak reference", "cycle detection"]
+    tags: ["teacher", "nyingma", "rime"]
+    keywords: ["Khyentse lineage", "Shechen", "dzogchen master"]
 
-  - title: "Stack-based memory allocation"
-    slug: "stack-memory"
-    category: "memory-management"
-    tier: "foundational"
-    tags: ["allocation"]
-    keywords: ["stack frame", "LIFO", "automatic storage"]
-
-  - title: "Region-based memory management"
-    slug: "region-based-memory"
-    category: "memory-management"
-    tier: "advanced"
-    tags: ["allocation", "research"]
-    keywords: ["arena", "region inference", "Cyclone"]
-
-  - title: "Resource acquisition is initialization"
-    slug: "raii"
-    category: "memory-management"
+  - title: "Dudjom Jigdral Yeshe Dorje"
+    slug: "dudjom-rinpoche"
+    category: "tibetan-buddhism"
     tier: "intermediate"
-    tags: ["pattern", "C++", "Rust"]
-    keywords: ["RAII", "destructor", "scope-based cleanup"]
+    tags: ["teacher", "nyingma", "head-of-lineage"]
+    keywords: ["Dudjom Rinpoche", "Dudjom Tersar", "nyingma head"]
 
-  - title: "Smart pointer"
-    slug: "smart-pointer"
-    category: "data-structures"
+  - title: "Yangthang Rinpoche"
+    project: "www.rigpawiki.org"
+    slug: "yangthang-rinpoche"
+    category: "tibetan-buddhism"
     tier: "intermediate"
-    tags: ["pointer", "automatic-memory"]
-    keywords: ["unique_ptr", "shared_ptr", "Box", "Rc"]
-
-  - title: "Pointer (computer programming)"
-    slug: "pointer"
-    category: "programming-concepts"
-    tier: "foundational"
-    tags: ["fundamentals"]
-    keywords: ["address", "dereference", "null pointer"]
-
-  - title: "Dangling pointer"
-    slug: "dangling-pointer"
-    category: "memory-management"
-    tier: "intermediate"
-    tags: ["bug", "safety"]
-    keywords: ["use-after-free", "wild pointer", "stale reference"]
-
-  - title: "Memory safety"
-    slug: "memory-safety"
-    category: "type-systems"
-    tier: "foundational"
-    tags: ["safety", "verification"]
-    keywords: ["buffer overflow", "bounds checking", "spatial safety"]
-
-  - title: "Type safety"
-    slug: "type-safety"
-    category: "type-systems"
-    tier: "foundational"
-    tags: ["safety", "type-theory"]
-    keywords: ["type checking", "strong typing", "soundness"]
-
-  # ─── Cross-project sources ───────────────────────────
-
-  - title: "Introduction to Computer Science/Memory Management"
-    project: "en.wikibooks.org"
-    slug: "wikibooks-memory-management"
-    category: "memory-management"
-    tier: "foundational"
-    tags: ["tutorial", "beginner-friendly"]
-    keywords: ["introduction", "textbook"]
+    tags: ["teacher", "nyingma", "contemporary"]
+    keywords: ["Yangthang", "dzogchen master"]
     license: "CC BY-SA 3.0"
+
+  - title: "Gyatrul Rinpoche"
+    project: "www.rigpawiki.org"
+    slug: "gyatrul-rinpoche"
+    category: "tibetan-buddhism"
+    tier: "intermediate"
+    tags: ["teacher", "nyingma", "contemporary"]
+    keywords: ["Gyatrul", "Tashi Choling", "Oregon"]
+    license: "CC BY-SA 3.0"
+
+  - title: "Chögyam Trungpa"
+    project: "www.rigpawiki.org"
+    slug: "chogyam-trungpa"
+    category: "tibetan-buddhism"
+    tier: "intermediate"
+    tags: ["teacher", "kagyu", "nyingma", "shambhala"]
+    keywords: ["Trungpa", "Shambhala", "crazy wisdom", "Naropa"]
+    license: "CC BY-SA 3.0"
+
+  - title: "Jamgon Kongtrul"
+    slug: "jamgon-kongtrul"
+    category: "tibetan-buddhism"
+    tier: "advanced"
+    tags: ["teacher", "scholar", "rime"]
+    keywords: ["Kongtrul", "Five Treasuries", "rime movement", "Lodro Thaye"]
+
+  - title: "Vajrayana"
+    slug: "vajrayana"
+    category: "tibetan-buddhism"
+    tier: "foundational"
+    tags: ["tradition", "tantra"]
+    keywords: ["diamond vehicle", "tantric Buddhism", "mantrayana"]
+
+  - title: "Vimalamitra"
+    slug: "vimalamitra"
+    category: "tibetan-buddhism"
+    tier: "advanced"
+    tags: ["teacher", "historical", "dzogchen"]
+    keywords: ["Vima Nyingtik", "Indian master", "heart essence"]
+
+  - title: "Padmasambhava"
+    slug: "padmasambhava"
+    category: "tibetan-buddhism"
+    tier: "foundational"
+    tags: ["teacher", "historical", "nyingma"]
+    keywords: ["Guru Rinpoche", "lotus-born", "Tibet"]
+
+  - title: "Nyingma"
+    slug: "nyingma"
+    category: "tibetan-buddhism"
+    tier: "foundational"
+    tags: ["school", "lineage"]
+    keywords: ["ancient ones", "old translation", "nine yanas"]
+
+  - title: "Kagyu"
+    slug: "kagyu"
+    category: "tibetan-buddhism"
+    tier: "foundational"
+    tags: ["school", "lineage"]
+    keywords: ["oral lineage", "Marpa", "Milarepa", "mahamudra"]
+
+  - title: "Longchen Nyingtik"
+    project: "www.rigpawiki.org"
+    slug: "longchen-nyingtik"
+    category: "tibetan-buddhism"
+    tier: "advanced"
+    tags: ["terma", "dzogchen", "practice-cycle"]
+    keywords: ["heart essence of the vast expanse", "Jikme Lingpa"]
+    license: "CC BY-SA 3.0"
+
+  - title: "Jikme Lingpa"
+    project: "www.rigpawiki.org"
+    slug: "jikme-lingpa"
+    category: "tibetan-buddhism"
+    tier: "advanced"
+    tags: ["teacher", "terton", "dzogchen"]
+    keywords: ["Longchen Nyingtik", "Khyentse Ozer", "visionary"]
+    license: "CC BY-SA 3.0"
+
+  - title: "Longchenpa"
+    project: "www.rigpawiki.org"
+    slug: "longchenpa"
+    category: "tibetan-buddhism"
+    tier: "advanced"
+    tags: ["teacher", "scholar", "dzogchen"]
+    keywords: ["Longchen Rabjam", "Seven Treasuries", "omniscient"]
+    license: "CC BY-SA 3.0"
+
+  # ─── Theoretical Physics ──────────────────────────────
+
+  - title: "M-theory"
+    slug: "m-theory"
+    category: "theoretical-physics"
+    tier: "advanced"
+    tags: ["unification", "string-theory"]
+    keywords: ["eleven dimensions", "membrane", "duality"]
+
+  - title: "Edward Witten"
+    slug: "edward-witten"
+    category: "theoretical-physics"
+    tier: "intermediate"
+    tags: ["physicist", "biography"]
+    keywords: ["Fields Medal", "string theory", "M-theory"]
+
+  - title: "String theory"
+    slug: "string-theory"
+    category: "theoretical-physics"
+    tier: "intermediate"
+    tags: ["theory", "unification"]
+    keywords: ["strings", "extra dimensions", "quantum gravity"]
+
+  - title: "Topological quantum field theory"
+    slug: "topological-qft"
+    category: "theoretical-physics"
+    tier: "advanced"
+    tags: ["theory", "topology", "quantum"]
+    keywords: ["TQFT", "Witten", "Chern-Simons", "invariants"]
+
+  - title: "Supersymmetry"
+    slug: "supersymmetry"
+    category: "theoretical-physics"
+    tier: "advanced"
+    tags: ["theory", "particle-physics"]
+    keywords: ["SUSY", "superpartners", "boson", "fermion"]
+
+  - title: "AdS/CFT correspondence"
+    slug: "ads-cft-correspondence"
+    category: "theoretical-physics"
+    tier: "advanced"
+    tags: ["theory", "holography"]
+    keywords: ["anti-de Sitter", "conformal field theory", "Maldacena", "holographic"]
+
+  - title: "Quantum mechanics"
+    slug: "quantum-mechanics"
+    category: "theoretical-physics"
+    tier: "foundational"
+    tags: ["theory", "physics"]
+    keywords: ["wave function", "superposition", "measurement", "Planck"]
+
+  - title: "General relativity"
+    slug: "general-relativity"
+    category: "theoretical-physics"
+    tier: "foundational"
+    tags: ["theory", "gravity"]
+    keywords: ["Einstein", "spacetime", "curvature", "gravitation"]
+
+  - title: "Physics"
+    slug: "physics"
+    category: "theoretical-physics"
+    tier: "foundational"
+    tags: ["overview", "science"]
+    keywords: ["natural science", "matter", "energy", "fundamental forces"]
+
+  # ─── Mathematics ──────────────────────────────────────
+
+  - title: "Group theory"
+    slug: "group-theory"
+    category: "mathematics"
+    tier: "foundational"
+    tags: ["algebra", "overview"]
+    keywords: ["symmetry", "groups", "operations"]
+
+  - title: "Abstract algebra"
+    slug: "abstract-algebra"
+    category: "mathematics"
+    tier: "foundational"
+    tags: ["algebra", "overview"]
+    keywords: ["algebraic structures", "rings", "fields", "groups"]
+
+  - title: "Algebraic structure"
+    slug: "algebraic-structure"
+    category: "mathematics"
+    tier: "foundational"
+    tags: ["algebra", "structure"]
+    keywords: ["operations", "axioms", "set with operations"]
+
+  - title: "Group (mathematics)"
+    slug: "group-mathematics"
+    category: "mathematics"
+    tier: "intermediate"
+    tags: ["algebra", "definition"]
+    keywords: ["group axioms", "identity", "inverse", "associativity"]
+
+  - title: "History of group theory"
+    slug: "history-of-group-theory"
+    category: "mathematics"
+    tier: "intermediate"
+    tags: ["history", "algebra"]
+    keywords: ["Galois", "Abel", "Cayley", "permutations"]
+
+  - title: "Category theory"
+    slug: "category-theory"
+    category: "mathematics"
+    tier: "advanced"
+    tags: ["foundations", "abstraction"]
+    keywords: ["morphisms", "functors", "natural transformations"]
+
+  - title: "Homotopy"
+    slug: "homotopy"
+    category: "mathematics"
+    tier: "intermediate"
+    tags: ["topology", "algebraic-topology"]
+    keywords: ["continuous deformation", "path", "homotopy equivalence"]
+
+  - title: "Homotopy type theory"
+    slug: "homotopy-type-theory"
+    category: "mathematics"
+    tier: "advanced"
+    tags: ["foundations", "type-theory", "topology"]
+    keywords: ["HoTT", "univalence", "higher inductive types"]
+
+  - title: "Type theory"
+    slug: "type-theory"
+    category: "mathematics"
+    tier: "intermediate"
+    tags: ["foundations", "logic"]
+    keywords: ["types", "lambda calculus", "Martin-Lof", "propositions as types"]
+
+  # ─── Music ────────────────────────────────────────────
+
+  - title: "Music theory"
+    slug: "music-theory"
+    category: "music"
+    tier: "foundational"
+    tags: ["overview", "theory"]
+    keywords: ["harmony", "melody", "rhythm", "notation"]
+
+  - title: "History of music"
+    slug: "history-of-music"
+    category: "music"
+    tier: "foundational"
+    tags: ["history", "overview"]
+    keywords: ["musical periods", "evolution", "traditions"]
+
+  - title: "Olivier Messiaen"
+    slug: "olivier-messiaen"
+    category: "music"
+    tier: "intermediate"
+    tags: ["composer", "20th-century"]
+    keywords: ["modes of limited transposition", "birdsong", "rhythmic innovation"]
+
+  - title: "Claude Debussy"
+    slug: "claude-debussy"
+    category: "music"
+    tier: "intermediate"
+    tags: ["composer", "impressionism"]
+    keywords: ["impressionism", "whole-tone scale", "orchestral color"]
+
+  - title: "Arvo Pärt"
+    slug: "arvo-part"
+    category: "music"
+    tier: "intermediate"
+    tags: ["composer", "contemporary", "minimalism"]
+    keywords: ["tintinnabuli", "sacred minimalism", "Estonian"]
+
+  - title: "Philip Glass"
+    slug: "philip-glass"
+    category: "music"
+    tier: "intermediate"
+    tags: ["composer", "minimalism"]
+    keywords: ["minimalism", "repetitive structures", "opera"]
+
+  - title: "Max Richter"
+    slug: "max-richter"
+    category: "music"
+    tier: "intermediate"
+    tags: ["composer", "contemporary", "neo-classical"]
+    keywords: ["post-minimalism", "Sleep", "Recomposed"]
+
+  - title: "Ólafur Arnalds"
+    slug: "olafur-arnalds"
+    category: "music"
+    tier: "intermediate"
+    tags: ["composer", "contemporary", "electronic"]
+    keywords: ["neo-classical", "Icelandic", "ambient", "Stratus"]
+
+  - title: "David Lewin"
+    slug: "david-lewin"
+    category: "music"
+    tier: "advanced"
+    tags: ["theorist", "mathematics"]
+    keywords: ["transformational theory", "GIS", "musical intervals"]
+
+  - title: "Johann Sebastian Bach"
+    slug: "johann-sebastian-bach"
+    category: "music"
+    tier: "foundational"
+    tags: ["composer", "baroque"]
+    keywords: ["counterpoint", "fugue", "Well-Tempered Clavier"]
+
+  - title: "Giovanni Pierluigi da Palestrina"
+    slug: "palestrina"
+    category: "music"
+    tier: "intermediate"
+    tags: ["composer", "renaissance"]
+    keywords: ["polyphony", "sacred music", "counterpoint"]
+
+  - title: "Renaissance music"
+    slug: "renaissance-music"
+    category: "music"
+    tier: "foundational"
+    tags: ["period", "history"]
+    keywords: ["polyphony", "humanism", "madrigal"]
+
+  - title: "Medieval music"
+    slug: "medieval-music"
+    category: "music"
+    tier: "foundational"
+    tags: ["period", "history"]
+    keywords: ["plainchant", "organum", "troubadour"]
+
+  - title: "Jazz"
+    slug: "jazz"
+    category: "music"
+    tier: "foundational"
+    tags: ["genre", "american"]
+    keywords: ["improvisation", "swing", "blues"]
+
+  - title: "Miles Davis"
+    slug: "miles-davis"
+    category: "music"
+    tier: "intermediate"
+    tags: ["musician", "jazz", "trumpet"]
+    keywords: ["Kind of Blue", "modal jazz", "fusion"]
+
+  - title: "John Coltrane"
+    slug: "john-coltrane"
+    category: "music"
+    tier: "intermediate"
+    tags: ["musician", "jazz", "saxophone"]
+    keywords: ["A Love Supreme", "sheets of sound", "free jazz"]
+
+  - title: "Cool jazz"
+    slug: "cool-jazz"
+    category: "music"
+    tier: "intermediate"
+    tags: ["genre", "jazz"]
+    keywords: ["West Coast", "Birth of the Cool", "relaxed tempo"]
+
+  # ─── Programming Languages ────────────────────────────
+
+  - title: "Rust (programming language)"
+    slug: "rust-language"
+    category: "programming-languages"
+    tier: "intermediate"
+    tags: ["systems", "memory-safety"]
+    keywords: ["ownership", "borrow checker", "zero-cost abstractions"]
+
+  - title: "Erlang (programming language)"
+    slug: "erlang-language"
+    category: "programming-languages"
+    tier: "intermediate"
+    tags: ["concurrent", "functional"]
+    keywords: ["BEAM", "OTP", "fault-tolerance", "Ericsson"]
+
+  - title: "LFE (programming language)"
+    slug: "lfe-language"
+    category: "programming-languages"
+    tier: "advanced"
+    tags: ["lisp", "beam"]
+    keywords: ["Lisp Flavoured Erlang", "BEAM", "Virding"]
+
+  - title: "Lisp (programming language)"
+    slug: "lisp-language"
+    category: "programming-languages"
+    tier: "foundational"
+    tags: ["functional", "historical"]
+    keywords: ["S-expressions", "lambda calculus", "homoiconicity"]
+
+  - title: "John McCarthy (computer scientist)"
+    slug: "john-mccarthy"
+    category: "programming-languages"
+    tier: "intermediate"
+    tags: ["biography", "pioneer"]
+    keywords: ["Lisp", "artificial intelligence", "time-sharing"]
+
+  # ─── Artificial Intelligence ──────────────────────────
+
+  - title: "Dartmouth workshop"
+    slug: "dartmouth-workshop"
+    category: "artificial-intelligence"
+    tier: "foundational"
+    tags: ["history", "founding"]
+    keywords: ["1956", "birth of AI", "McCarthy", "Minsky"]
+
+  - title: "Artificial intelligence"
+    slug: "artificial-intelligence"
+    category: "artificial-intelligence"
+    tier: "foundational"
+    tags: ["overview"]
+    keywords: ["machine learning", "neural networks", "reasoning"]
+
+  - title: "Amanda Askell"
+    slug: "amanda-askell"
+    category: "artificial-intelligence"
+    tier: "intermediate"
+    tags: ["biography", "alignment"]
+    keywords: ["Anthropic", "AI ethics", "philosophy"]
+
+  - title: "Claude (language model)"
+    slug: "claude-language-model"
+    category: "artificial-intelligence"
+    tier: "intermediate"
+    tags: ["language-model", "anthropic"]
+    keywords: ["Anthropic", "constitutional AI", "large language model"]
+
+  # ─── Philosophy of Mind ───────────────────────────────
+
+  - title: "Artificial consciousness"
+    slug: "artificial-consciousness"
+    category: "philosophy-of-mind"
+    tier: "advanced"
+    tags: ["consciousness", "ai"]
+    keywords: ["machine consciousness", "sentience", "qualia"]
+
+  - title: "Philosophy of mind"
+    slug: "philosophy-of-mind"
+    category: "philosophy-of-mind"
+    tier: "foundational"
+    tags: ["philosophy", "overview"]
+    keywords: ["mind-body problem", "dualism", "consciousness"]
+
+  - title: "Cognitive science"
+    slug: "cognitive-science"
+    category: "philosophy-of-mind"
+    tier: "foundational"
+    tags: ["interdisciplinary", "overview"]
+    keywords: ["cognition", "neuroscience", "psychology", "linguistics"]
+
+  - title: "Perception"
+    slug: "perception"
+    category: "philosophy-of-mind"
+    tier: "intermediate"
+    tags: ["cognition", "senses"]
+    keywords: ["sensory processing", "awareness", "phenomenology"]
+
+  - title: "Eye"
+    slug: "eye"
+    category: "philosophy-of-mind"
+    tier: "intermediate"
+    tags: ["biology", "senses"]
+    keywords: ["vision", "retina", "optics", "visual system"]
+
+  # ─── Linguistics ──────────────────────────────────────
+
+  - title: "Writing system"
+    slug: "writing-system"
+    category: "linguistics"
+    tier: "foundational"
+    tags: ["overview", "script"]
+    keywords: ["alphabet", "syllabary", "logography", "orthography"]
+
+  - title: "Language"
+    slug: "language"
+    category: "linguistics"
+    tier: "foundational"
+    tags: ["overview"]
+    keywords: ["communication", "grammar", "syntax", "semantics"]
+
+  - title: "Classical Tibetan"
+    slug: "classical-tibetan"
+    category: "linguistics"
+    tier: "intermediate"
+    tags: ["language", "tibetan"]
+    keywords: ["literary Tibetan", "Tibetan script", "Buddhist texts"]
+
+  - title: "Proto-Indo-European language"
+    slug: "proto-indo-european"
+    category: "linguistics"
+    tier: "intermediate"
+    tags: ["historical", "reconstruction"]
+    keywords: ["PIE", "language family", "comparative linguistics"]
+
+  - title: "Sanskrit"
+    slug: "sanskrit"
+    category: "linguistics"
+    tier: "intermediate"
+    tags: ["language", "classical"]
+    keywords: ["Indo-Aryan", "Vedic", "Panini", "Devanagari"]
+
+  - title: "Avestan"
+    slug: "avestan"
+    category: "linguistics"
+    tier: "advanced"
+    tags: ["language", "historical"]
+    keywords: ["Zoroastrian", "Old Avestan", "Gathas", "Iranian"]
+
+  - title: "Proto-Sinaitic script"
+    slug: "proto-sinaitic-script"
+    category: "linguistics"
+    tier: "advanced"
+    tags: ["script", "historical"]
+    keywords: ["earliest alphabet", "Sinai", "Egyptian influence"]
+
+  - title: "Edicts of Ashoka"
+    slug: "edicts-of-ashoka"
+    category: "linguistics"
+    tier: "intermediate"
+    tags: ["epigraphy", "history"]
+    keywords: ["Ashoka", "Brahmi", "Kharosthi", "Maurya"]
+
+  - title: "Kharosthi"
+    slug: "kharosthi"
+    category: "linguistics"
+    tier: "advanced"
+    tags: ["script", "historical"]
+    keywords: ["Gandhara", "Aramaic-derived", "right-to-left"]
+
+  - title: "Gandhara"
+    slug: "gandhara"
+    category: "linguistics"
+    tier: "intermediate"
+    tags: ["region", "history"]
+    keywords: ["Greco-Buddhist", "Peshawar", "Taxila", "Kushan"]
+
+  # ─── Botany ───────────────────────────────────────────
+
+  - title: "Fungus"
+    slug: "fungus"
+    category: "botany"
+    tier: "foundational"
+    tags: ["kingdom", "overview"]
+    keywords: ["mycelium", "spores", "decomposer", "eukaryote"]
+
+  - title: "Moss"
+    slug: "moss"
+    category: "botany"
+    tier: "intermediate"
+    tags: ["bryophyte", "non-vascular"]
+    keywords: ["bryophyta", "spore", "gametophyte"]
+
+  - title: "Lichen"
+    slug: "lichen"
+    category: "botany"
+    tier: "intermediate"
+    tags: ["symbiosis", "composite"]
+    keywords: ["fungal-algal", "symbiosis", "pioneer species"]
+
+  - title: "Flowering plant"
+    slug: "flowering-plant"
+    category: "botany"
+    tier: "foundational"
+    tags: ["angiosperm", "overview"]
+    keywords: ["angiosperm", "flower", "seed", "pollination"]
+
+  - title: "Sequoioideae"
+    slug: "sequoioideae"
+    category: "botany"
+    tier: "intermediate"
+    tags: ["conifer", "tree"]
+    keywords: ["redwood", "sequoia", "giant sequoia", "metasequoia"]
+
+  - title: "Eucalyptus"
+    slug: "eucalyptus"
+    category: "botany"
+    tier: "intermediate"
+    tags: ["tree", "myrtaceae"]
+    keywords: ["gum tree", "Australia", "essential oil"]
+
+  - title: "Mycorrhiza"
+    slug: "mycorrhiza"
+    category: "botany"
+    tier: "intermediate"
+    tags: ["symbiosis", "fungal"]
+    keywords: ["fungal-root", "symbiosis", "nutrient exchange", "wood wide web"]
+
+  # ─── Geology ──────────────────────────────────────────
+
+  - title: "Tectonics"
+    slug: "tectonics"
+    category: "geology"
+    tier: "foundational"
+    tags: ["overview", "plate-tectonics"]
+    keywords: ["plates", "subduction", "continental drift"]
+
+  - title: "Mantle (geology)"
+    slug: "mantle"
+    category: "geology"
+    tier: "intermediate"
+    tags: ["structure", "interior"]
+    keywords: ["silicate rock", "convection", "asthenosphere"]
+
+  - title: "Earth's internal heat budget"
+    slug: "earths-internal-heat-budget"
+    category: "geology"
+    tier: "advanced"
+    tags: ["geophysics", "thermodynamics"]
+    keywords: ["radiogenic heat", "primordial heat", "heat flow"]
+
+  - title: "Earth"
+    slug: "earth"
+    category: "geology"
+    tier: "foundational"
+    tags: ["planet", "overview"]
+    keywords: ["formation", "atmosphere", "biosphere", "solar system"]
+
+  - title: "Earth's crust"
+    slug: "earths-crust"
+    category: "geology"
+    tier: "intermediate"
+    tags: ["structure", "interior"]
+    keywords: ["continental crust", "oceanic crust", "Moho"]
+
+  - title: "Internal structure of Earth"
+    slug: "internal-structure-of-earth"
+    category: "geology"
+    tier: "foundational"
+    tags: ["structure", "overview"]
+    keywords: ["layers", "core", "mantle", "crust"]
+
+  - title: "Earth's outer core"
+    slug: "earths-outer-core"
+    category: "geology"
+    tier: "intermediate"
+    tags: ["structure", "interior"]
+    keywords: ["liquid iron", "magnetic field", "geodynamo"]
+
+  - title: "Earth's inner core"
+    slug: "earths-inner-core"
+    category: "geology"
+    tier: "intermediate"
+    tags: ["structure", "interior"]
+    keywords: ["solid iron", "inner core boundary", "seismology"]

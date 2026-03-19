@@ -4,6 +4,7 @@
 //! for fetching, building, serving, and validating a demonstration knowledge
 //! base built from publicly licensed content.
 
+pub mod fetch;
 pub mod manifest;
 pub mod status;
 
@@ -67,8 +68,8 @@ pub fn run(cmd: &DemoCommand) -> anyhow::Result<()> {
             force,
             pandoc,
         } => {
-            let _ = (article, dry_run, force, pandoc);
-            println!("demo fetch: not yet implemented");
+            let rt = tokio::runtime::Runtime::new()?;
+            rt.block_on(fetch::run(article.as_deref(), *dry_run, *force, *pandoc))?;
         }
         DemoCommand::Build => println!("demo build: not yet implemented"),
         DemoCommand::Serve => println!("demo serve: not yet implemented"),
