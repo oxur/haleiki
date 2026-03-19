@@ -9,8 +9,10 @@ use super::manifest::Manifest;
 pub enum FetchState {
     /// No staging HTML or source Markdown exists.
     Missing,
-    /// Staging HTML exists but not yet converted to Markdown.
+    /// Staging HTML exists but not yet cleaned.
     Staged,
+    /// Cleaned HTML exists but not yet converted to Markdown.
+    Cleaned,
     /// Converted source Markdown exists.
     Converted,
 }
@@ -20,6 +22,7 @@ impl std::fmt::Display for FetchState {
         match self {
             Self::Missing => write!(f, "missing"),
             Self::Staged => write!(f, "staged"),
+            Self::Cleaned => write!(f, "cleaned"),
             Self::Converted => write!(f, "converted"),
         }
     }
@@ -30,6 +33,10 @@ fn fetch_state(slug: &str) -> FetchState {
     let source_path = Path::new("demo/sources").join(format!("{slug}.md"));
     if source_path.exists() {
         return FetchState::Converted;
+    }
+    let clean_path = Path::new("demo/.staging").join(format!("{slug}.clean.html"));
+    if clean_path.exists() {
+        return FetchState::Cleaned;
     }
     let staging_path = Path::new("demo/.staging").join(format!("{slug}.html"));
     if staging_path.exists() {
@@ -75,6 +82,7 @@ pub fn run() -> anyhow::Result<()> {
     println!("  {}", "-".repeat(95));
 
     let mut converted_count = 0;
+    let mut cleaned_count = 0;
     let mut staged_count = 0;
     let mut missing_count = 0;
 
@@ -84,6 +92,7 @@ pub fn run() -> anyhow::Result<()> {
 
         match state {
             FetchState::Converted => converted_count += 1,
+            FetchState::Cleaned => cleaned_count += 1,
             FetchState::Staged => staged_count += 1,
             FetchState::Missing => missing_count += 1,
         }
@@ -108,9 +117,10 @@ pub fn run() -> anyhow::Result<()> {
 
     println!("  {}", "-".repeat(95));
     println!(
-        "  Total: {} articles ({} converted, {} staged, {} missing)",
+        "  Total: {} articles ({} converted, {} cleaned, {} staged, {} missing)",
         manifest.articles.len(),
         converted_count,
+        cleaned_count,
         staged_count,
         missing_count,
     );

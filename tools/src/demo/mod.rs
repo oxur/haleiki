@@ -4,6 +4,7 @@
 //! for fetching, building, serving, and validating a demonstration knowledge
 //! base built from publicly licensed content.
 
+pub mod clean;
 pub mod fetch;
 pub mod manifest;
 pub mod status;
@@ -52,6 +53,13 @@ pub enum DemoCommand {
 
     /// Re-fetch and rebuild all demo content.
     Refresh,
+
+    /// [Dev] Clean raw HTML for a single article (development tool).
+    #[command(hide = true)]
+    CleanHtml {
+        /// Article slug.
+        slug: String,
+    },
 }
 
 /// Execute a demo subcommand.
@@ -80,6 +88,10 @@ pub fn run(cmd: &DemoCommand) -> anyhow::Result<()> {
         DemoCommand::Attribution => println!("demo attribution: not yet implemented"),
         DemoCommand::Clean => println!("demo clean: not yet implemented"),
         DemoCommand::Refresh => println!("demo refresh: not yet implemented"),
+        DemoCommand::CleanHtml { slug } => {
+            let path = clean::clean_article(slug)?;
+            println!("Cleaned HTML written to {}", path.display());
+        }
     }
     Ok(())
 }
