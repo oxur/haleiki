@@ -1,0 +1,1849 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="day" data-trust="established">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epistemic Trust Bar — Haleiki Prototype</title>
+
+    <!-- TYPE STACK: Sans display + Serif body + Mono code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        @layer tokens, reset, base, layout, components, utilities;
+
+        @layer tokens {
+            /* ═══════════════════════════════════════════════════════════════
+   HALEIKI DESIGN SYSTEM — TOKEN LAYER
+   ═══════════════════════════════════════════════════════════════ */
+
+            :root {
+                --ratio: 1.333;
+                --step--2: clamp(0.563rem, 0.52rem + 0.18vi, 0.633rem);
+                --step--1: clamp(0.75rem, 0.7rem + 0.22vi, 0.844rem);
+                --step-0: clamp(1rem, 0.93rem + 0.29vi, 1.125rem);
+                --step-1: clamp(1.333rem, 1.24rem + 0.39vi, 1.5rem);
+                --step-2: clamp(1.777rem, 1.65rem + 0.52vi, 2rem);
+                --step-3: clamp(2.369rem, 2.2rem + 0.69vi, 2.665rem);
+                --step-4: clamp(3.157rem, 2.93rem + 0.92vi, 3.553rem);
+
+                --space-3xs: clamp(0.25rem, 0.23rem + 0.1vi, 0.313rem);
+                --space-2xs: clamp(0.5rem, 0.47rem + 0.15vi, 0.563rem);
+                --space-xs: clamp(0.75rem, 0.7rem + 0.22vi, 0.844rem);
+                --space-s: clamp(1rem, 0.93rem + 0.29vi, 1.125rem);
+                --space-m: clamp(1.5rem, 1.4rem + 0.44vi, 1.688rem);
+                --space-l: clamp(2rem, 1.86rem + 0.58vi, 2.25rem);
+                --space-xl: clamp(3rem, 2.79rem + 0.88vi, 3.375rem);
+                --space-2xl: clamp(4rem, 3.72rem + 1.17vi, 4.5rem);
+                --space-3xl: clamp(6rem, 5.58rem + 1.76vi, 6.75rem);
+
+                --space-s-m: clamp(1rem, 0.75rem + 1.24vi, 1.688rem);
+                --space-s-l: clamp(1rem, 0.5rem + 2.48vi, 2.25rem);
+                --space-m-l: clamp(1.5rem, 1.26rem + 1.18vi, 2.25rem);
+                --space-m-xl: clamp(1.5rem, 0.93rem + 2.82vi, 3.375rem);
+                --space-l-xl: clamp(2rem, 1.49rem + 2.53vi, 3.375rem);
+
+                --font-display: 'Red Hat Display', system-ui, sans-serif;
+                --font-body: 'Newsreader', Georgia, serif;
+                --font-mono: 'IBM Plex Mono', 'Menlo', monospace;
+
+                --content-max: 58ch;
+                --sidebar-width: 280px;
+                --nav-width: 220px;
+                --page-max: 1320px;
+                --radius-s: 4px;
+                --radius-m: 6px;
+                --radius-l: 8px;
+                --radius-pill: 100vmax;
+            }
+
+            /* ═══════════════════════════════════════════════════════════════
+   DAY THEME
+   ═══════════════════════════════════════════════════════════════ */
+            [data-theme="day"] {
+                --surface-ground: oklch(0.97 0.01 80);
+                --surface-primary: oklch(0.99 0.005 80);
+                --surface-secondary: oklch(0.95 0.015 75);
+                --surface-tertiary: oklch(0.92 0.02 72);
+                --surface-invert: oklch(0.25 0.03 55);
+
+                --border-subtle: oklch(0.88 0.025 75);
+                --border-default: oklch(0.82 0.03 72);
+                --border-strong: oklch(0.70 0.04 65);
+
+                --text-primary: oklch(0.22 0.02 55);
+                --text-secondary: oklch(0.40 0.03 60);
+                --text-tertiary: oklch(0.55 0.025 65);
+                --text-on-invert: oklch(0.97 0.01 80);
+
+                --accent-primary: oklch(0.55 0.14 45);
+                --accent-hover: oklch(0.48 0.15 42);
+                --accent-subtle: oklch(0.92 0.04 50);
+                --accent-text: oklch(0.45 0.12 40);
+
+                --info-surface: oklch(0.94 0.03 80);
+                --info-border: oklch(0.82 0.05 75);
+                --info-text: oklch(0.40 0.06 65);
+
+                --code-surface: oklch(0.95 0.01 80);
+                --code-border: oklch(0.88 0.02 75);
+                --code-text: oklch(0.38 0.08 40);
+
+                --shadow-soft: 0 1px 3px oklch(0.5 0.02 60 / 0.08);
+                --shadow-medium: 0 2px 8px oklch(0.4 0.03 55 / 0.1);
+            }
+
+            /* ═══════════════════════════════════════════════════════════════
+   NIGHT THEME
+   ═══════════════════════════════════════════════════════════════ */
+            [data-theme="night"] {
+                --surface-ground: oklch(0.16 0.02 55);
+                --surface-primary: oklch(0.20 0.02 55);
+                --surface-secondary: oklch(0.24 0.025 52);
+                --surface-tertiary: oklch(0.28 0.03 50);
+                --surface-invert: oklch(0.92 0.02 75);
+
+                --border-subtle: oklch(0.30 0.03 50);
+                --border-default: oklch(0.36 0.035 48);
+                --border-strong: oklch(0.48 0.04 50);
+
+                --text-primary: oklch(0.90 0.015 75);
+                --text-secondary: oklch(0.72 0.02 65);
+                --text-tertiary: oklch(0.55 0.025 58);
+                --text-on-invert: oklch(0.20 0.02 55);
+
+                --accent-primary: oklch(0.72 0.14 70);
+                --accent-hover: oklch(0.78 0.15 72);
+                --accent-subtle: oklch(0.28 0.06 60);
+                --accent-text: oklch(0.78 0.12 72);
+
+                --info-surface: oklch(0.24 0.03 55);
+                --info-border: oklch(0.36 0.04 52);
+                --info-text: oklch(0.72 0.04 68);
+
+                --code-surface: oklch(0.22 0.02 55);
+                --code-border: oklch(0.32 0.03 52);
+                --code-text: oklch(0.78 0.1 72);
+
+                --shadow-soft: 0 1px 3px oklch(0.1 0.02 55 / 0.3);
+                --shadow-medium: 0 2px 8px oklch(0.08 0.02 55 / 0.4);
+            }
+
+            /* ═══════════════════════════════════════════════════════════════
+   EPISTEMIC TRUST TOKENS
+
+   Four levels, furthest-from-bedrock = loudest signal:
+
+   ESTABLISHED  — Terracotta/warm (inherits wiki accent) — bedrock
+   INFORMED     — Sage/teal — trustworthy but angled
+   SPECULATIVE  — Dusty violet — hold loosely
+   EXPLORATORY  — Warm ochre/yellow — provisional, sticky-note
+   ═══════════════════════════════════════════════════════════════ */
+
+            /* ── ESTABLISHED: Day ── */
+            [data-theme="day"][data-trust="established"] {
+                --trust-hue: 45;
+                --trust-surface: oklch(0.97 0.015 45);
+                --trust-border: oklch(0.85 0.05 45);
+                --trust-accent: oklch(0.55 0.14 45);
+                --trust-text: oklch(0.45 0.12 40);
+                --trust-subtle: oklch(0.93 0.03 45);
+                --trust-bar-bg: oklch(0.96 0.01 45);
+                --trust-on-accent: oklch(0.97 0.01 80);
+            }
+
+            /* ── ESTABLISHED: Night ── */
+            [data-theme="night"][data-trust="established"] {
+                --trust-hue: 70;
+                --trust-surface: oklch(0.20 0.025 70);
+                --trust-border: oklch(0.35 0.05 70);
+                --trust-accent: oklch(0.72 0.14 70);
+                --trust-text: oklch(0.78 0.12 72);
+                --trust-subtle: oklch(0.24 0.04 65);
+                --trust-bar-bg: oklch(0.18 0.02 65);
+                --trust-on-accent: oklch(0.16 0.02 55);
+            }
+
+            /* ── INFORMED: Day — Sage/teal ── */
+            [data-theme="day"][data-trust="informed"] {
+                --trust-hue: 165;
+                --trust-surface: oklch(0.96 0.02 165);
+                --trust-border: oklch(0.82 0.06 165);
+                --trust-accent: oklch(0.50 0.10 165);
+                --trust-text: oklch(0.40 0.09 160);
+                --trust-subtle: oklch(0.93 0.035 165);
+                --trust-bar-bg: oklch(0.95 0.015 165);
+                --trust-on-accent: oklch(0.97 0.01 165);
+            }
+
+            /* ── INFORMED: Night ── */
+            [data-theme="night"][data-trust="informed"] {
+                --trust-hue: 165;
+                --trust-surface: oklch(0.20 0.03 165);
+                --trust-border: oklch(0.35 0.05 160);
+                --trust-accent: oklch(0.68 0.10 165);
+                --trust-text: oklch(0.75 0.09 168);
+                --trust-subtle: oklch(0.24 0.04 162);
+                --trust-bar-bg: oklch(0.18 0.025 162);
+                --trust-on-accent: oklch(0.16 0.02 160);
+            }
+
+            /* ── SPECULATIVE: Day — Dusty violet ── */
+            [data-theme="day"][data-trust="speculative"] {
+                --trust-hue: 295;
+                --trust-surface: oklch(0.96 0.02 295);
+                --trust-border: oklch(0.82 0.06 290);
+                --trust-accent: oklch(0.52 0.12 295);
+                --trust-text: oklch(0.42 0.10 290);
+                --trust-subtle: oklch(0.93 0.035 295);
+                --trust-bar-bg: oklch(0.95 0.018 295);
+                --trust-on-accent: oklch(0.97 0.01 295);
+            }
+
+            /* ── SPECULATIVE: Night ── */
+            [data-theme="night"][data-trust="speculative"] {
+                --trust-hue: 295;
+                --trust-surface: oklch(0.20 0.03 290);
+                --trust-border: oklch(0.36 0.06 290);
+                --trust-accent: oklch(0.70 0.12 295);
+                --trust-text: oklch(0.76 0.10 298);
+                --trust-subtle: oklch(0.25 0.05 292);
+                --trust-bar-bg: oklch(0.18 0.025 290);
+                --trust-on-accent: oklch(0.16 0.02 288);
+            }
+
+            /* ── EXPLORATORY: Day — Warm yellow/ochre ── */
+            [data-theme="day"][data-trust="exploratory"] {
+                --trust-hue: 85;
+                --trust-surface: oklch(0.96 0.03 85);
+                --trust-border: oklch(0.82 0.07 80);
+                --trust-accent: oklch(0.58 0.13 85);
+                --trust-text: oklch(0.45 0.10 78);
+                --trust-subtle: oklch(0.94 0.04 85);
+                --trust-bar-bg: oklch(0.95 0.025 85);
+                --trust-on-accent: oklch(0.97 0.01 85);
+            }
+
+            /* ── EXPLORATORY: Night ── */
+            [data-theme="night"][data-trust="exploratory"] {
+                --trust-hue: 85;
+                --trust-surface: oklch(0.21 0.03 82);
+                --trust-border: oklch(0.36 0.06 80);
+                --trust-accent: oklch(0.72 0.12 85);
+                --trust-text: oklch(0.78 0.10 88);
+                --trust-subtle: oklch(0.25 0.05 82);
+                --trust-bar-bg: oklch(0.18 0.025 80);
+                --trust-on-accent: oklch(0.16 0.02 78);
+            }
+
+            /* ═══════════════════════════════════════════════════════════════
+   CANON STATUS TOKENS
+
+   Separate axis from trust. Uses LIGHTNESS/CHROMA variation
+   within a single warm-neutral hue family (~30° copper/bronze).
+   Intentionally NOT using hue rotation — that's the trust bar's
+   visual language. Canon status speaks through weight/density.
+
+   CANON       — Darkest, most saturated — this is settled
+   PROPOSED    — Mid-dark, moderate sat — on its way
+   DEVELOPING  — Mid-light, low sat — actively shaping
+   SEED        — Lightest, most washed — could go anywhere
+   ═══════════════════════════════════════════════════════════════ */
+
+            /* ── Day theme canon tokens ── */
+            [data-theme="day"] {
+                /* Canon: solid, authoritative bronze */
+                --canon-canon-bg: oklch(0.45 0.08 30);
+                --canon-canon-text: oklch(0.98 0.005 30);
+                --canon-canon-border: oklch(0.40 0.09 28);
+
+                /* Proposed: warm mid-tone */
+                --canon-proposed-bg: oklch(0.62 0.06 35);
+                --canon-proposed-text: oklch(0.98 0.005 35);
+                --canon-proposed-border: oklch(0.58 0.07 32);
+
+                /* Developing: lighter, cooler bronze */
+                --canon-developing-bg: oklch(0.78 0.04 40);
+                --canon-developing-text: oklch(0.30 0.04 35);
+                --canon-developing-border: oklch(0.72 0.05 38);
+
+                /* Seed: nearly washed out, a whisper */
+                --canon-seed-bg: oklch(0.90 0.02 45);
+                --canon-seed-text: oklch(0.45 0.03 40);
+                --canon-seed-border: oklch(0.85 0.025 42);
+            }
+
+            /* ── Night theme canon tokens ── */
+            [data-theme="night"] {
+                /* Canon: bright, confident bronze on dark */
+                --canon-canon-bg: oklch(0.65 0.09 40);
+                --canon-canon-text: oklch(0.15 0.02 35);
+                --canon-canon-border: oklch(0.60 0.10 38);
+
+                /* Proposed: moderate warm */
+                --canon-proposed-bg: oklch(0.52 0.07 42);
+                --canon-proposed-text: oklch(0.92 0.01 40);
+                --canon-proposed-border: oklch(0.48 0.08 40);
+
+                /* Developing: muted, mid-range */
+                --canon-developing-bg: oklch(0.38 0.04 45);
+                --canon-developing-text: oklch(0.82 0.02 42);
+                --canon-developing-border: oklch(0.34 0.05 43);
+
+                /* Seed: barely there, ghostly */
+                --canon-seed-bg: oklch(0.28 0.02 48);
+                --canon-seed-text: oklch(0.68 0.02 45);
+                --canon-seed-border: oklch(0.32 0.025 46);
+            }
+
+        }
+
+        /* end @layer tokens */
+
+        @layer reset {
+
+            *,
+            *::before,
+            *::after {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            html {
+                font-size: 100%;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                scroll-behavior: smooth;
+            }
+
+            body {
+                font-family: var(--font-body);
+                font-size: var(--step-0);
+                font-variation-settings: 'opsz' 14;
+                line-height: 1.65;
+                color: var(--text-primary);
+                background: var(--surface-ground);
+                transition: background 0.3s ease, color 0.3s ease;
+            }
+        }
+
+        /* end @layer reset */
+
+        @layer layout {
+
+            /* ═══════════════════════════════════════════════════════════════
+   TOP NAVIGATION BAR
+   ═══════════════════════════════════════════════════════════════ */
+            .topnav {
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                background: var(--surface-primary);
+                border-bottom: 1px solid var(--border-subtle);
+                padding: var(--space-2xs) var(--space-s-l);
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: var(--space-2xs) var(--space-m);
+                backdrop-filter: blur(12px);
+                transition: background 0.3s ease, border-color 0.3s ease;
+            }
+
+            .topnav-brand {
+                font-family: var(--font-display);
+                font-size: var(--step-1);
+                font-weight: 600;
+                color: var(--text-primary);
+                text-decoration: none;
+                letter-spacing: -0.01em;
+                flex-shrink: 0;
+                display: flex;
+                align-items: center;
+                gap: var(--space-2xs);
+            }
+
+            .topnav-brand .brand-mark {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 1.75em;
+                height: 1.75em;
+                background: var(--accent-primary);
+                color: var(--text-on-invert);
+                border-radius: var(--radius-s);
+                font-size: var(--step--1);
+                font-weight: 700;
+                line-height: 1;
+            }
+
+            [data-theme="night"] .topnav-brand .brand-mark {
+                color: var(--surface-ground);
+            }
+
+            .search-container {
+                flex: 1;
+                max-width: 36ch;
+                position: relative;
+            }
+
+            .search-input {
+                width: 100%;
+                padding: var(--space-2xs) var(--space-s);
+                padding-left: var(--space-l);
+                font-family: var(--font-body);
+                font-size: var(--step--1);
+                background: var(--surface-secondary);
+                border: 1px solid var(--border-subtle);
+                border-radius: var(--radius-l);
+                color: var(--text-primary);
+                outline: none;
+                transition: all 0.2s ease;
+            }
+
+            .search-input::placeholder {
+                color: var(--text-tertiary);
+            }
+
+            .search-input:focus {
+                border-color: var(--accent-primary);
+                background: var(--surface-primary);
+                box-shadow: 0 0 0 3px var(--accent-subtle);
+            }
+
+            .search-icon {
+                position: absolute;
+                left: var(--space-xs);
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--text-tertiary);
+                pointer-events: none;
+            }
+
+            .search-shortcut {
+                position: absolute;
+                right: var(--space-xs);
+                top: 50%;
+                transform: translateY(-50%);
+                font-family: var(--font-mono);
+                font-size: var(--step--2);
+                padding: 0.125em var(--space-3xs);
+                border: 1px solid var(--border-subtle);
+                border-radius: var(--radius-s);
+                color: var(--text-tertiary);
+                background: var(--surface-primary);
+                line-height: 1;
+            }
+
+            .topnav-links {
+                display: flex;
+                align-items: center;
+                gap: var(--space-xs);
+                margin-left: auto;
+                flex-shrink: 0;
+            }
+
+            .topnav-links a {
+                font-family: var(--font-display);
+                font-size: var(--step--1);
+                font-weight: 500;
+                color: var(--text-secondary);
+                text-decoration: none;
+                padding: var(--space-3xs) var(--space-2xs);
+                border-radius: var(--radius-s);
+                transition: color 0.15s ease, background 0.15s ease;
+            }
+
+            .topnav-links a:hover {
+                color: var(--text-primary);
+                background: var(--surface-secondary);
+            }
+
+            .theme-toggle {
+                background: var(--surface-secondary);
+                border: 1px solid var(--border-subtle);
+                border-radius: var(--radius-pill);
+                padding: var(--space-3xs);
+                display: flex;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                flex-shrink: 0;
+            }
+
+            .theme-toggle-option {
+                padding: var(--space-3xs) var(--space-xs);
+                border-radius: var(--radius-pill);
+                font-size: 0.8rem;
+                line-height: 1;
+                border: none;
+                background: none;
+                color: var(--text-tertiary);
+                cursor: pointer;
+                transition: all 0.2s ease;
+                font-family: var(--font-display);
+                font-weight: 500;
+            }
+
+            .theme-toggle-option.active {
+                background: var(--accent-primary);
+                color: var(--text-on-invert);
+            }
+
+            [data-theme="night"] .theme-toggle-option.active {
+                color: var(--surface-ground);
+            }
+
+            /* ═══════════════════════════════════════════════════════════════
+   EPISTEMIC TRUST BAR — Horizontal sub-nav
+   Sits directly below the topnav. Colored by trust level.
+   The further from bedrock, the louder the signal.
+   ═══════════════════════════════════════════════════════════════ */
+            .trust-bar {
+                background: var(--trust-bar-bg);
+                border-bottom: 2px solid var(--trust-border);
+                padding: var(--space-3xs) var(--space-s-l);
+                display: flex;
+                align-items: center;
+                gap: var(--space-s);
+                transition: all 0.35s ease;
+                position: sticky;
+                top: 3rem;
+                /* sits below topnav */
+                z-index: 99;
+            }
+
+            .trust-bar-label {
+                display: flex;
+                align-items: center;
+                gap: var(--space-2xs);
+                font-family: var(--font-display);
+                font-size: var(--step--1);
+                font-weight: 600;
+                color: var(--trust-text);
+                white-space: nowrap;
+            }
+
+            /* ── TRUST GLYPHS: Geometric, almost punctuation ── */
+            .trust-glyph {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 1.1em;
+                height: 1.1em;
+                flex-shrink: 0;
+            }
+
+            .trust-glyph svg {
+                width: 100%;
+                height: 100%;
+            }
+
+            .trust-bar-desc {
+                font-family: var(--font-body);
+                font-size: var(--step--2);
+                font-variation-settings: 'opsz' 8;
+                color: var(--trust-text);
+                opacity: 0.8;
+            }
+
+            .trust-bar-nav {
+                margin-left: auto;
+                display: flex;
+                align-items: center;
+                gap: var(--space-3xs);
+            }
+
+            .trust-bar-nav a {
+                font-family: var(--font-display);
+                font-size: var(--step--2);
+                font-weight: 500;
+                color: var(--trust-text);
+                text-decoration: none;
+                padding: var(--space-3xs) var(--space-xs);
+                border-radius: var(--radius-pill);
+                border: 1px solid var(--trust-border);
+                background: transparent;
+                transition: all 0.15s ease;
+                opacity: 0.7;
+                white-space: nowrap;
+            }
+
+            .trust-bar-nav a:hover {
+                opacity: 1;
+                background: var(--trust-subtle);
+            }
+
+            .trust-bar-nav a.current {
+                opacity: 1;
+                background: var(--trust-accent);
+                color: var(--trust-on-accent);
+                border-color: var(--trust-accent);
+            }
+
+            /* ── Intensity scaling: established is quietest, exploratory is loudest ── */
+            [data-trust="established"] .trust-bar {
+                border-bottom-width: 1px;
+            }
+
+            [data-trust="informed"] .trust-bar {
+                border-bottom-width: 2px;
+            }
+
+            [data-trust="speculative"] .trust-bar {
+                border-bottom-width: 2px;
+            }
+
+            [data-trust="exploratory"] .trust-bar {
+                border-bottom-width: 3px;
+                /* dashed border for the most provisional level */
+                border-bottom-style: dashed;
+            }
+
+
+            /* ═══════════════════════════════════════════════════════════════
+   PAGE LAYOUT
+   ═══════════════════════════════════════════════════════════════ */
+            .page-layout {
+                max-width: var(--page-max);
+                margin: 0 auto;
+                display: flex;
+                flex-wrap: wrap;
+                gap: var(--space-m-l);
+                padding: var(--space-s-l);
+                align-items: start;
+            }
+
+            .left-nav {
+                flex-basis: var(--nav-width);
+                flex-grow: 0;
+                flex-shrink: 1;
+            }
+
+            .content-area {
+                flex-basis: 0;
+                flex-grow: 999;
+                min-inline-size: 65%;
+                display: flex;
+                flex-wrap: wrap;
+                gap: var(--space-m-l);
+                align-items: start;
+            }
+
+            .article {
+                flex-basis: 0;
+                flex-grow: 999;
+                min-inline-size: 60%;
+            }
+
+            .sidebar {
+                flex-basis: var(--sidebar-width);
+                flex-grow: 0;
+                flex-shrink: 1;
+            }
+
+            .left-nav {
+                position: sticky;
+                top: calc(5.5rem + var(--space-l));
+                font-family: var(--font-display);
+            }
+
+            .left-nav-title {
+                font-size: var(--step--2);
+                font-weight: 600;
+                color: var(--text-tertiary);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                margin-bottom: var(--space-xs);
+            }
+
+            .toc-list {
+                list-style: none;
+            }
+
+            .toc-list li {
+                margin-bottom: 0.125em;
+            }
+
+            .toc-list a {
+                display: block;
+                font-size: var(--step--1);
+                font-weight: 400;
+                color: var(--text-secondary);
+                text-decoration: none;
+                padding: var(--space-3xs) var(--space-2xs);
+                border-left: 2px solid transparent;
+                border-radius: 0 var(--radius-s) var(--radius-s) 0;
+                transition: all 0.15s ease;
+                line-height: 1.4;
+            }
+
+            .toc-list a:hover {
+                color: var(--text-primary);
+                background: var(--surface-secondary);
+            }
+
+            .toc-list a.active {
+                color: var(--accent-text);
+                border-left-color: var(--accent-primary);
+                background: var(--accent-subtle);
+                font-weight: 500;
+            }
+
+            .toc-list .toc-sub {
+                padding-left: var(--space-s);
+            }
+
+            .toc-list .toc-sub a {
+                font-size: var(--step--2);
+                color: var(--text-tertiary);
+            }
+        }
+
+        /* end @layer layout */
+
+        @layer components {
+
+            /* ── ARTICLE HEADER ── */
+            .article-header {
+                margin-bottom: var(--space-m-l);
+                padding-bottom: var(--space-s-m);
+                border-bottom: 1px solid var(--border-subtle);
+            }
+
+            /* ── OVERLINE: Picks up trust color ── */
+            .article-overline {
+                font-family: var(--font-display);
+                font-size: var(--step--2);
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: var(--trust-text);
+                margin-bottom: var(--space-3xs);
+                display: flex;
+                align-items: center;
+                gap: var(--space-2xs);
+                transition: color 0.35s ease;
+            }
+
+            .article-overline .trust-glyph {
+                width: 0.9em;
+                height: 0.9em;
+            }
+
+            .article-title {
+                font-family: var(--font-display);
+                font-size: var(--step-3);
+                font-weight: 700;
+                color: var(--text-primary);
+                line-height: 1.15;
+                letter-spacing: -0.02em;
+                margin-bottom: var(--space-2xs);
+            }
+
+            .article-subtitle {
+                font-family: var(--font-body);
+                font-size: var(--step-1);
+                font-variation-settings: 'opsz' 24;
+                color: var(--text-secondary);
+                max-width: var(--content-max);
+                line-height: 1.5;
+                font-weight: 350;
+                margin-bottom: var(--space-xs);
+            }
+
+            .article-meta {
+                display: flex;
+                flex-wrap: wrap;
+                gap: var(--space-2xs);
+                align-items: center;
+            }
+
+            .tag {
+                font-family: var(--font-display);
+                font-size: var(--step--2);
+                font-weight: 500;
+                padding: var(--space-3xs) var(--space-xs);
+                border-radius: var(--radius-pill);
+                background: var(--surface-secondary);
+                color: var(--text-secondary);
+                border: 1px solid var(--border-subtle);
+                text-decoration: none;
+                transition: all 0.15s ease;
+            }
+
+            .tag:hover {
+                background: var(--accent-subtle);
+                color: var(--accent-text);
+                border-color: var(--accent-primary);
+            }
+
+            /* ── PROSE ── */
+            .prose {
+                max-width: var(--content-max);
+            }
+
+            .prose p {
+                margin-bottom: var(--space-s);
+            }
+
+            .prose h2 {
+                font-family: var(--font-display);
+                font-size: var(--step-2);
+                font-weight: 700;
+                color: var(--text-primary);
+                letter-spacing: -0.015em;
+                margin-top: var(--space-m-xl);
+                margin-bottom: var(--space-xs);
+                line-height: 1.2;
+            }
+
+            .prose h3 {
+                font-family: var(--font-display);
+                font-size: var(--step-1);
+                font-weight: 600;
+                color: var(--text-primary);
+                margin-top: var(--space-m-l);
+                margin-bottom: var(--space-2xs);
+                line-height: 1.25;
+            }
+
+            .prose a {
+                color: var(--accent-text);
+                text-decoration: underline;
+                text-decoration-color: var(--accent-subtle);
+                text-underline-offset: 2px;
+                transition: text-decoration-color 0.15s ease;
+            }
+
+            .prose a:hover {
+                text-decoration-color: var(--accent-primary);
+            }
+
+            .prose strong {
+                font-weight: 650;
+                color: var(--text-primary);
+            }
+
+            .prose code {
+                font-family: var(--font-mono);
+                font-size: 0.88em;
+                background: var(--code-surface);
+                border: 1px solid var(--code-border);
+                padding: 0.1em 0.35em;
+                border-radius: var(--radius-s);
+                color: var(--code-text);
+            }
+
+            .prose ul,
+            .prose ol {
+                margin-bottom: var(--space-s);
+                padding-left: var(--space-m);
+            }
+
+            .prose li {
+                margin-bottom: var(--space-3xs);
+            }
+
+            /* ── CODE BLOCK ── */
+            .code-block {
+                background: var(--code-surface);
+                border: 1px solid var(--code-border);
+                border-radius: var(--radius-m);
+                padding: var(--space-s) var(--space-m);
+                margin-bottom: var(--space-m);
+                overflow-x: auto;
+            }
+
+            .code-block-header {
+                font-family: var(--font-display);
+                font-size: var(--step--2);
+                font-weight: 500;
+                color: var(--text-tertiary);
+                margin-bottom: var(--space-2xs);
+            }
+
+            .code-block pre {
+                font-family: var(--font-mono);
+                font-size: var(--step--1);
+                line-height: 1.55;
+                color: var(--code-text);
+                white-space: pre;
+            }
+
+            .code-block .kw {
+                color: var(--accent-text);
+                font-weight: 500;
+            }
+
+            .code-block .fn {
+                color: var(--text-primary);
+            }
+
+            .code-block .cm {
+                color: var(--text-tertiary);
+                font-style: italic;
+            }
+
+            .code-block .st {
+                color: oklch(0.6 0.12 150);
+            }
+
+            [data-theme="night"] .code-block .st {
+                color: oklch(0.75 0.12 150);
+            }
+
+            .code-block .ty {
+                color: oklch(0.5 0.1 280);
+            }
+
+            [data-theme="night"] .code-block .ty {
+                color: oklch(0.75 0.1 280);
+            }
+
+            /* ── CALLOUT ── */
+            .callout {
+                background: var(--info-surface);
+                border: 1px solid var(--info-border);
+                border-left: 3px solid var(--accent-primary);
+                border-radius: var(--radius-m);
+                padding: var(--space-s) var(--space-m);
+                margin-bottom: var(--space-m);
+            }
+
+            .callout-title {
+                font-family: var(--font-display);
+                font-size: var(--step--1);
+                font-weight: 600;
+                color: var(--accent-text);
+                margin-bottom: var(--space-3xs);
+            }
+
+            .callout p {
+                font-size: var(--step--1);
+                font-variation-settings: 'opsz' 10;
+                color: var(--info-text);
+                max-width: var(--content-max);
+            }
+
+            /* ── SEE ALSO ── */
+            .see-also {
+                margin-top: var(--space-m-xl);
+                padding-top: var(--space-s-m);
+                border-top: 1px solid var(--border-subtle);
+            }
+
+            .see-also-title {
+                font-family: var(--font-display);
+                font-size: var(--step-0);
+                font-weight: 600;
+                color: var(--text-primary);
+                margin-bottom: var(--space-xs);
+            }
+
+            .see-also-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: var(--space-2xs);
+            }
+
+            .see-also-card {
+                background: var(--surface-secondary);
+                border: 1px solid var(--border-subtle);
+                border-radius: var(--radius-m);
+                padding: var(--space-xs) var(--space-s);
+                text-decoration: none;
+                transition: all 0.15s ease;
+            }
+
+            .see-also-card:hover {
+                border-color: var(--accent-primary);
+                background: var(--accent-subtle);
+                box-shadow: var(--shadow-soft);
+            }
+
+            .see-also-card-title {
+                font-family: var(--font-display);
+                font-size: var(--step--1);
+                font-weight: 600;
+                color: var(--text-primary);
+                margin-bottom: 0.125em;
+            }
+
+            .see-also-card-desc {
+                font-size: var(--step--2);
+                color: var(--text-tertiary);
+                line-height: 1.4;
+            }
+
+            /* ═══════════════════════════════════════════════════════════════
+   RIGHT SIDEBAR — Info card header picks up trust color
+   ═══════════════════════════════════════════════════════════════ */
+            .sidebar {
+                position: sticky;
+                top: calc(5.5rem + var(--space-l));
+            }
+
+            .info-card {
+                background: var(--surface-secondary);
+                border: 1px solid var(--border-default);
+                border-radius: var(--radius-l);
+                overflow: hidden;
+            }
+
+            .info-card-header {
+                background: var(--trust-accent);
+                color: var(--trust-on-accent);
+                padding: var(--space-xs) var(--space-s);
+                font-family: var(--font-display);
+                font-size: var(--step--1);
+                font-weight: 600;
+                text-align: center;
+                transition: background 0.35s ease, color 0.35s ease;
+            }
+
+            .info-card-body {
+                padding: var(--space-2xs) 0;
+            }
+
+            .info-row {
+                display: flex;
+                padding: var(--space-3xs) var(--space-s);
+                font-size: var(--step--1);
+                line-height: 1.4;
+            }
+
+            .info-row:hover {
+                background: var(--surface-tertiary);
+            }
+
+            .info-label {
+                flex-shrink: 0;
+                width: 8ch;
+                font-weight: 600;
+                color: var(--text-secondary);
+                font-family: var(--font-display);
+                font-size: var(--step--2);
+            }
+
+            .info-value {
+                color: var(--text-primary);
+                font-size: var(--step--2);
+            }
+
+            .info-value a {
+                color: var(--accent-text);
+                text-decoration: none;
+            }
+
+            .info-value a:hover {
+                text-decoration: underline;
+            }
+
+            .info-card-section {
+                padding: var(--space-3xs) var(--space-s);
+                border-top: 1px solid var(--border-subtle);
+                margin-top: var(--space-3xs);
+            }
+
+            .info-card-section-title {
+                font-family: var(--font-display);
+                font-size: var(--step--2);
+                font-weight: 600;
+                color: var(--text-tertiary);
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                margin-bottom: var(--space-3xs);
+            }
+
+            .info-card-section .tag-list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: var(--space-3xs);
+            }
+
+            .info-card-section .tag {
+                font-size: var(--step--2);
+                padding: 0.125em var(--space-2xs);
+            }
+
+            /* ═══════════════════════════════════════════════════════════════
+   CANON STATUS BADGE — Inline in info card
+   Uses lightness/density, not hue. Visually distinct from trust.
+   ═══════════════════════════════════════════════════════════════ */
+            .canon-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: var(--space-3xs);
+                font-family: var(--font-display);
+                font-size: var(--step--2);
+                font-weight: 600;
+                padding: 0.15em var(--space-xs);
+                border-radius: var(--radius-s);
+                border: 1px solid transparent;
+                letter-spacing: 0.02em;
+                transition: all 0.3s ease;
+                line-height: 1.3;
+            }
+
+            /* ── Per-status styling ── */
+            .canon-badge[data-canon="canon"] {
+                background: var(--canon-canon-bg);
+                color: var(--canon-canon-text);
+                border-color: var(--canon-canon-border);
+            }
+
+            .canon-badge[data-canon="proposed"] {
+                background: var(--canon-proposed-bg);
+                color: var(--canon-proposed-text);
+                border-color: var(--canon-proposed-border);
+            }
+
+            .canon-badge[data-canon="developing"] {
+                background: var(--canon-developing-bg);
+                color: var(--canon-developing-text);
+                border-color: var(--canon-developing-border);
+            }
+
+            .canon-badge[data-canon="seed"] {
+                background: var(--canon-seed-bg);
+                color: var(--canon-seed-text);
+                border-color: var(--canon-seed-border);
+            }
+
+            /* ── Small inline indicator mark within badge ── */
+            .canon-mark {
+                display: inline-block;
+                width: 0.55em;
+                height: 0.55em;
+                border-radius: 1px;
+                flex-shrink: 0;
+            }
+
+            /* Canon: solid filled square — settled, complete */
+            .canon-badge[data-canon="canon"] .canon-mark {
+                background: currentColor;
+            }
+
+            /* Proposed: square with a thick border, partially filled */
+            .canon-badge[data-canon="proposed"] .canon-mark {
+                background: currentColor;
+                opacity: 0.7;
+            }
+
+            /* Developing: outlined square */
+            .canon-badge[data-canon="developing"] .canon-mark {
+                background: transparent;
+                border: 1.5px solid currentColor;
+            }
+
+            /* Seed: dotted outlined square — most provisional */
+            .canon-badge[data-canon="seed"] .canon-mark {
+                background: transparent;
+                border: 1.5px dashed currentColor;
+            }
+
+            /* ── BREADCRUMB ── */
+            .breadcrumb {
+                font-family: var(--font-display);
+                font-size: var(--step--2);
+                color: var(--text-tertiary);
+                margin-bottom: var(--space-xs);
+            }
+
+            .breadcrumb a {
+                color: var(--text-tertiary);
+                text-decoration: none;
+            }
+
+            .breadcrumb a:hover {
+                color: var(--accent-text);
+            }
+
+            .breadcrumb .sep {
+                margin: 0 var(--space-3xs);
+                opacity: 0.5;
+            }
+
+            /* ── FOOTER ── */
+            .site-footer {
+                border-top: 1px solid var(--border-subtle);
+                padding: var(--space-s-m) var(--space-s-l);
+                margin-top: var(--space-l-xl);
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: var(--space-2xs) var(--space-l);
+                align-items: center;
+                max-width: var(--page-max);
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .site-footer .footer-brand {
+                font-family: var(--font-display);
+                font-size: var(--step--1);
+                font-weight: 600;
+                color: var(--text-secondary);
+            }
+
+            .site-footer .footer-meta {
+                font-family: var(--font-display);
+                font-size: var(--step--2);
+                color: var(--text-tertiary);
+            }
+
+            /* ═══════════════════════════════════════════════════════════════
+   PROTOTYPE CONTROLS — Floating panel for switching trust level
+   ═══════════════════════════════════════════════════════════════ */
+            .proto-controls {
+                position: fixed;
+                bottom: var(--space-m);
+                right: var(--space-m);
+                z-index: 200;
+                background: var(--surface-primary);
+                border: 1px solid var(--border-default);
+                border-radius: var(--radius-l);
+                padding: var(--space-s);
+                box-shadow: var(--shadow-medium);
+                font-family: var(--font-display);
+                max-width: 280px;
+                max-height: calc(100vh - 4rem);
+                overflow-y: auto;
+                transition: background 0.3s ease, border-color 0.3s ease;
+            }
+
+            .proto-controls-title {
+                font-size: var(--step--2);
+                font-weight: 600;
+                color: var(--text-tertiary);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                margin-bottom: var(--space-2xs);
+            }
+
+            .proto-trust-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: var(--space-3xs);
+            }
+
+            .proto-trust-btn {
+                display: flex;
+                align-items: center;
+                gap: var(--space-2xs);
+                padding: var(--space-3xs) var(--space-xs);
+                border: 1px solid var(--border-subtle);
+                border-radius: var(--radius-m);
+                background: var(--surface-secondary);
+                color: var(--text-secondary);
+                font-family: var(--font-display);
+                font-size: var(--step--2);
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.15s ease;
+                text-align: left;
+            }
+
+            .proto-trust-btn:hover {
+                background: var(--surface-tertiary);
+                color: var(--text-primary);
+            }
+
+            .proto-trust-btn.active {
+                border-color: var(--trust-accent);
+                background: var(--trust-subtle);
+                color: var(--trust-text);
+                font-weight: 600;
+            }
+
+            .proto-trust-btn .proto-swatch {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                flex-shrink: 0;
+            }
+
+            /* Color swatches — fixed colors so they're always visible regardless of current trust */
+            .proto-swatch-established {
+                background: oklch(0.55 0.14 45);
+            }
+
+            .proto-swatch-informed {
+                background: oklch(0.50 0.10 165);
+            }
+
+            .proto-swatch-speculative {
+                background: oklch(0.52 0.12 295);
+            }
+
+            .proto-swatch-exploratory {
+                background: oklch(0.58 0.13 85);
+            }
+
+            [data-theme="night"] .proto-swatch-established {
+                background: oklch(0.72 0.14 70);
+            }
+
+            [data-theme="night"] .proto-swatch-informed {
+                background: oklch(0.68 0.10 165);
+            }
+
+            [data-theme="night"] .proto-swatch-speculative {
+                background: oklch(0.70 0.12 295);
+            }
+
+            [data-theme="night"] .proto-swatch-exploratory {
+                background: oklch(0.72 0.12 85);
+            }
+
+            .proto-divider {
+                height: 1px;
+                background: var(--border-subtle);
+                margin: var(--space-2xs) 0;
+            }
+
+        }
+
+        /* end @layer components */
+
+        @layer utilities {
+            @media (max-width: 60rem) {
+                .left-nav {
+                    display: none;
+                }
+
+                .trust-bar-nav {
+                    display: none;
+                }
+            }
+        }
+
+        /* end @layer utilities */
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- TOP NAVIGATION                                                 -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <nav class="topnav">
+        <a href="#" class="topnav-brand">
+            <span class="brand-mark">H</span>
+            Haleiki
+        </a>
+        <div class="search-container">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.5" />
+                <line x1="10.5" y1="10.5" x2="15" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+            <input type="text" class="search-input" placeholder="Search Haleiki…">
+            <span class="search-shortcut">⌘K</span>
+        </div>
+        <div class="topnav-links">
+            <a href="#">Browse</a>
+            <a href="#">Categories</a>
+            <a href="#">Random</a>
+        </div>
+        <div class="theme-toggle" role="radiogroup" aria-label="Theme">
+            <button class="theme-toggle-option active" data-theme-choice="day" aria-label="Day theme">☀</button>
+            <button class="theme-toggle-option" data-theme-choice="night" aria-label="Night theme">☾</button>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- EPISTEMIC TRUST BAR                                            -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="trust-bar">
+        <div class="trust-bar-label">
+            <span class="trust-glyph" id="trust-glyph-slot">
+                <!-- Glyph injected by JS based on trust level -->
+            </span>
+            <span id="trust-label-text">Established</span>
+        </div>
+        <div class="trust-bar-desc" id="trust-desc-text">Verified, sourced knowledge</div>
+        <div class="trust-bar-nav">
+            <a href="#" class="current" data-trust-filter="established">Established</a>
+            <a href="#" data-trust-filter="informed">Informed</a>
+            <a href="#" data-trust-filter="speculative">Speculative</a>
+            <a href="#" data-trust-filter="exploratory">Exploratory</a>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- PAGE LAYOUT                                                    -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="page-layout">
+
+        <aside class="left-nav">
+            <div class="left-nav-title">Contents</div>
+            <ul class="toc-list">
+                <li><a href="#overview" class="active">Overview</a></li>
+                <li><a href="#the-three-rules">The Three Rules</a></li>
+                <li class="toc-sub"><a href="#each-value-one-owner">Each value, one owner</a></li>
+                <li class="toc-sub"><a href="#ownership-transfers">Ownership transfers</a></li>
+                <li class="toc-sub"><a href="#scope-based-dropping">Scope-based dropping</a></li>
+                <li><a href="#how-the-compiler">How the Compiler Enforces It</a></li>
+                <li><a href="#ownership-vs-gc">Ownership vs. Garbage Collection</a></li>
+                <li><a href="#common-patterns">Common Patterns</a></li>
+                <li><a href="#related-concepts">Related Concepts</a></li>
+                <li><a href="#see-also">See Also</a></li>
+            </ul>
+        </aside>
+
+        <div class="content-area">
+            <main class="article">
+
+                <div class="breadcrumb">
+                    <a href="#">Haleiki</a><span class="sep">›</span>
+                    <a href="#">Language Concepts</a><span class="sep">›</span>
+                    <a href="#">Memory Model</a><span class="sep">›</span>
+                    <span>Ownership</span>
+                </div>
+
+                <header class="article-header">
+                    <div class="article-overline">
+                        <span class="trust-glyph" id="overline-glyph-slot"></span>
+                        <span id="overline-label">Established · Language Concept</span>
+                    </div>
+                    <h1 class="article-title">Ownership</h1>
+                    <p class="article-subtitle">Rust's central mechanism for memory safety without garbage collection — a compile-time discipline that gives every value exactly one owner, ensuring deterministic resource management.</p>
+                    <div class="article-meta">
+                        <a href="#" class="tag">Memory Model</a>
+                        <a href="#" class="tag">Core Concept</a>
+                        <a href="#" class="tag">Beginner-Friendly</a>
+                        <a href="#" class="tag">Stable since 1.0</a>
+                    </div>
+                </header>
+
+                <div class="prose">
+                    <h2 id="overview">Overview</h2>
+                    <p><strong>Ownership</strong> is the foundational concept in Rust's approach to memory safety. Where languages like Java and Go rely on a runtime garbage collector, and languages like C and C++ rely on the programmer to manually allocate and free memory, Rust takes a third path: a set of compile-time rules that the compiler enforces statically, with zero runtime cost.</p>
+                    <p>The ownership system is not a library feature or an optional mode. It is woven into the language at every level — from how variables are bound, to how functions accept arguments, to how values are cleaned up when they go out of scope. Understanding ownership is not just useful for writing Rust; it <em>is</em> understanding Rust.</p>
+
+                    <div class="callout">
+                        <div class="callout-title">Why this matters</div>
+                        <p>Ownership eliminates <em>at compile time</em> entire categories of bugs that other languages only catch at runtime (or don't catch at all): use-after-free, double-free, dangling pointers, and data races in concurrent code.</p>
+                    </div>
+
+                    <h2 id="the-three-rules">The Three Rules</h2>
+                    <p>The ownership system can be distilled into three rules. Every interaction with memory in Rust is governed by these rules, and the compiler rejects any program that violates them.</p>
+
+                    <h3 id="each-value-one-owner">1. Each value has exactly one owner</h3>
+                    <p>Every value in Rust is "owned" by a variable. There is no shared ownership by default — when you assign a value to a variable, that variable is its sole owner. This might sound restrictive, but it is precisely this restriction that makes the rest of the system possible.</p>
+
+                    <div class="code-block">
+                        <div class="code-block-header"><span>Rust — Value binding</span></div>
+                        <pre><span class="kw">let</span> s1 = <span class="ty">String</span>::from(<span class="st">"hello"</span>);  <span class="cm">// s1 owns this String</span>
+<span class="kw">let</span> s2 = s1;                       <span class="cm">// ownership MOVES to s2</span>
+<span class="cm">// println!("{}", s1);             // ← compile error: s1 is no longer valid</span>
+println!(<span class="st">"{}"</span>, s2);               <span class="cm">// ✓ s2 is the owner</span></pre>
+                    </div>
+
+                    <h3 id="ownership-transfers">2. Ownership can be transferred (moved)</h3>
+                    <p>When you pass a value to a function, assign it to another variable, or return it from a function, ownership <strong>moves</strong>. The previous owner can no longer use the value. This is not a deep copy — the bits stay exactly where they were. Only the compiler's understanding of who is responsible for those bits changes.</p>
+
+                    <div class="code-block">
+                        <div class="code-block-header"><span>Rust — Move semantics in functions</span></div>
+                        <pre><span class="kw">fn</span> <span class="fn">take_ownership</span>(s: <span class="ty">String</span>) {
+    println!(<span class="st">"I own: {s}"</span>);
+}   <span class="cm">// s is dropped here — memory freed</span>
+
+<span class="kw">fn</span> <span class="fn">main</span>() {
+    <span class="kw">let</span> greeting = <span class="ty">String</span>::from(<span class="st">"kia ora"</span>);
+    take_ownership(greeting);         <span class="cm">// greeting moves into the function</span>
+    <span class="cm">// greeting is now invalid here</span>
+}</pre>
+                    </div>
+
+                    <h3 id="scope-based-dropping">3. When the owner goes out of scope, the value is dropped</h3>
+                    <p>Rust automatically calls <code>drop</code> on a value when its owner leaves scope. This is deterministic — you know exactly when memory is freed, files are closed, and locks are released. There is no finalizer queue, no GC pause, no ambiguity.</p>
+
+                    <div class="code-block">
+                        <div class="code-block-header"><span>Rust — Deterministic drop</span></div>
+                        <pre>{
+    <span class="kw">let</span> data = <span class="ty">Vec</span>::&lt;<span class="ty">u8</span>&gt;::with_capacity(<span class="st">1024</span>);
+    <span class="cm">// ... use data ...</span>
+}   <span class="cm">// ← data is dropped here: 1024 bytes freed, instantly, deterministically</span></pre>
+                    </div>
+
+                    <h2 id="how-the-compiler">How the Compiler Enforces It</h2>
+                    <p>The <strong>borrow checker</strong> is the component of the Rust compiler (<code>rustc</code>) that enforces the ownership rules. It performs a static analysis of your code at compile time, tracking the ownership and lifetime of every value through every possible code path.</p>
+                    <p>When the borrow checker rejects your code, it is not being pedantic. It has found a path — possibly one you didn't think of — where a value would be used after it was freed, or where two parts of your program would hold mutable access to the same data simultaneously. The error messages are the compiler <em>showing you the bug</em>.</p>
+
+                    <h2 id="ownership-vs-gc">Ownership vs. Garbage Collection</h2>
+                    <p>The tradeoff is straightforward. Garbage-collected languages give you convenience: you don't think about when memory is freed. Ownership gives you <strong>predictability</strong>: you always know when resources are cleaned up, and you pay zero runtime cost for that knowledge.</p>
+                    <p>In practice, ownership also gives you something subtler: <strong>documentation</strong>. A function signature that takes <code>String</code> (by value) tells you it will consume the string. A signature that takes <code>&str</code> tells you it's just borrowing. The ownership model encodes intent into the type system in a way that garbage-collected languages simply cannot.</p>
+
+                    <h2 id="common-patterns">Common Patterns</h2>
+                    <p>Idiomatic Rust code works <em>with</em> ownership rather than around it. The most common patterns are:</p>
+                    <ul>
+                        <li><strong>Borrowing</strong> — lending access to a value without transferring ownership, via <code>&T</code> (shared) or <code>&mut T</code> (exclusive).</li>
+                        <li><strong>Cloning</strong> — explicitly duplicating a value when you genuinely need two independent copies. The <code>.clone()</code> call makes the cost visible.</li>
+                        <li><strong>Returning ownership</strong> — a function that needs to create a value and give it to the caller simply returns it; ownership moves to the caller automatically.</li>
+                        <li><strong>Using <code>Copy</code> types</strong> — simple stack values (integers, booleans, <code>char</code>) implement <code>Copy</code> and are duplicated implicitly on assignment, because copying them is trivially cheap.</li>
+                    </ul>
+
+                    <h2 id="related-concepts">Related Concepts</h2>
+                    <div class="callout">
+                        <div class="callout-title">The ownership family</div>
+                        <p>Ownership does not exist in isolation. It is one pillar of a triad: <strong>Ownership</strong> governs who is responsible for a value; <a href="#">Borrowing</a> governs how others can access it; and <a href="#">Lifetimes</a> govern how long those access grants are valid. Understanding all three together is essential.</p>
+                    </div>
+
+                    <div class="see-also" id="see-also">
+                        <div class="see-also-title">See Also</div>
+                        <div class="see-also-grid">
+                            <a href="#" class="see-also-card">
+                                <div class="see-also-card-title">Borrowing & References</div>
+                                <div class="see-also-card-desc">Accessing values without taking ownership, via shared and mutable references.</div>
+                            </a>
+                            <a href="#" class="see-also-card">
+                                <div class="see-also-card-title">Lifetimes</div>
+                                <div class="see-also-card-desc">The compiler's system for tracking how long references remain valid.</div>
+                            </a>
+                            <a href="#" class="see-also-card">
+                                <div class="see-also-card-title">The Drop Trait</div>
+                                <div class="see-also-card-desc">Custom cleanup logic that runs when a value goes out of scope.</div>
+                            </a>
+                            <a href="#" class="see-also-card">
+                                <div class="see-also-card-title">Clone & Copy</div>
+                                <div class="see-also-card-desc">Explicit vs. implicit value duplication and when to use each.</div>
+                            </a>
+                            <a href="#" class="see-also-card">
+                                <div class="see-also-card-title">Smart Pointers</div>
+                                <div class="see-also-card-desc">Box, Rc, Arc — extending ownership semantics beyond the stack.</div>
+                            </a>
+                            <a href="#" class="see-also-card">
+                                <div class="see-also-card-title">Move Semantics</div>
+                                <div class="see-also-card-desc">How Rust transfers values efficiently without copying underlying data.</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <aside class="sidebar">
+                <div class="info-card">
+                    <div class="info-card-header">Ownership</div>
+                    <div class="info-card-body">
+                        <div class="info-row">
+                            <span class="info-label">Type</span>
+                            <span class="info-value">Language concept</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Domain</span>
+                            <span class="info-value"><a href="#">Memory model</a></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Since</span>
+                            <span class="info-value">Rust 1.0 (2015)</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Stability</span>
+                            <span class="info-value">Stable (foundational)</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Canon</span>
+                            <span class="info-value">
+                                <span class="canon-badge" data-canon="canon" id="canon-badge">
+                                    <span class="canon-mark"></span>
+                                    <span id="canon-badge-label">Canon</span>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Enforced by</span>
+                            <span class="info-value"><a href="#">Borrow checker</a></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Runtime cost</span>
+                            <span class="info-value">Zero</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Prerequisite</span>
+                            <span class="info-value"><a href="#">Variable binding</a></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Leads to</span>
+                            <span class="info-value"><a href="#">Borrowing</a>, <a href="#">Lifetimes</a></span>
+                        </div>
+
+                        <div class="info-card-section">
+                            <div class="info-card-section-title">Categories</div>
+                            <div class="tag-list">
+                                <a href="#" class="tag">Memory Safety</a>
+                                <a href="#" class="tag">Core Language</a>
+                                <a href="#" class="tag">Compile-Time</a>
+                                <a href="#" class="tag">Zero-Cost</a>
+                            </div>
+                        </div>
+
+                        <div class="info-card-section">
+                            <div class="info-card-section-title">Analogues</div>
+                            <div class="tag-list">
+                                <a href="#" class="tag">C++ RAII</a>
+                                <a href="#" class="tag">Swift ARC</a>
+                                <a href="#" class="tag">Linear Types</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SITE FOOTER                                                     -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+
+            <div class="footer-top">
+
+                <!-- Brand column -->
+                <div class="footer-brand-col">
+                    <a href="/" class="footer-brand-link">
+                        <span class="brand-mark">H</span>
+                        <span class="brand-name">Haleiki</span>
+                    </a>
+                    <p class="footer-tagline">House of Knowledge ❖ A read-only wiki for structured knowledge</p>
+                </div>
+
+                <div class="footer-columns">
+                    <div class="footer-col">
+                        <div class="footer-col-title">Knowledge Base</div>
+                        <ul class="footer-col-list">
+                            <li><a href="/">Front Page</a></li>
+                            <li><a href="/browse">Browse</a></li>
+                            <li><a href="/categories">Categories</a></li>
+                            <li><a href="/random">Random</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <div class="footer-col-title">About</div>
+                        <ul class="footer-col-list">
+                            <li><a href="/about">About This Wiki</a></li>
+                            <li><a href="/about/haleiki">About Haleiki</a></li>
+                            <li><a href="/design">Design</a></li>
+                            <li><a href="/license">License</a></li>
+                            <li><a href="/privacy">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <div class="footer-col-title">Development</div>
+                        <ul class="footer-col-list">
+                            <li><a href="https://github.com/oxur/haleiki">GitHub <span class="ext">&#8599;</span></a></li>
+                            <li><a href="https://github.com/oxur/haleiki/issues/new">Submit Issue <span class="ext">&#8599;</span></a></li>
+                            <li><a href="https://github.com/oxur/haleiki/discussions">Discussions <span class="ext">&#8599;</span></a></li>
+                            <li><a href="https://github.com/oxur/haleiki/blob/main/CHANGELOG.md">Changelog <span class="ext">&#8599;</span></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-content-notice">
+                Wiki content CC0, unless otherwise stated.
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copyright">&copy; 2026 Oxur Contributors &middot; Apache-2.0 / MIT</div>
+                <ul class="footer-meta-links">
+                    <li><a href="/about/haleiki">Built with Haleiki</a></li>
+                    <li><a href="https://cobalt-org.github.io/">Powered by Cobalt</a></li>
+                    <li><a href="/privacy">Privacy</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </footer>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- PROTOTYPE CONTROLS — Floating panel                            -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="proto-controls">
+        <div class="proto-controls-title">Prototype Controls</div>
+        <div class="proto-trust-buttons">
+            <button class="proto-trust-btn active" data-set-trust="established">
+                <span class="proto-swatch proto-swatch-established"></span>
+                Established — bedrock
+            </button>
+            <button class="proto-trust-btn" data-set-trust="informed">
+                <span class="proto-swatch proto-swatch-informed"></span>
+                Informed — angled lens
+            </button>
+            <button class="proto-trust-btn" data-set-trust="speculative">
+                <span class="proto-swatch proto-swatch-speculative"></span>
+                Speculative — hold loosely
+            </button>
+            <button class="proto-trust-btn" data-set-trust="exploratory">
+                <span class="proto-swatch proto-swatch-exploratory"></span>
+                Exploratory — provisional
+            </button>
+        </div>
+        <div class="proto-divider"></div>
+        <div class="proto-controls-title">Canon Status</div>
+        <div class="proto-trust-buttons">
+            <button class="proto-trust-btn active" data-set-canon="canon">
+                <span class="proto-swatch" style="background: oklch(0.45 0.08 30); border-radius: 1px;"></span>
+                Canon — settled
+            </button>
+            <button class="proto-trust-btn" data-set-canon="proposed">
+                <span class="proto-swatch" style="background: oklch(0.62 0.06 35); border-radius: 1px;"></span>
+                Proposed — on its way
+            </button>
+            <button class="proto-trust-btn" data-set-canon="developing">
+                <span class="proto-swatch" style="background: oklch(0.78 0.04 40); border-radius: 1px;"></span>
+                Developing — shaping
+            </button>
+            <button class="proto-trust-btn" data-set-canon="seed">
+                <span class="proto-swatch" style="background: oklch(0.90 0.02 45); border-radius: 1px;"></span>
+                Seed — early idea
+            </button>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SCRIPTS                                                        -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <script>
+        // ── Canon status metadata ──
+        const CANON_LEVELS = {
+            canon: { label: 'Canon' },
+            proposed: { label: 'Proposed' },
+            developing: { label: 'Developing' },
+            seed: { label: 'Seed' }
+        };
+
+        function setCanon(level) {
+            const badge = document.getElementById('canon-badge');
+            const label = document.getElementById('canon-badge-label');
+            badge.setAttribute('data-canon', level);
+            label.textContent = CANON_LEVELS[level].label;
+
+            // Update proto control highlights
+            document.querySelectorAll('[data-set-canon]').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.setCanon === level);
+            });
+        }
+
+        // ── Trust level metadata ──
+        const TRUST_LEVELS = {
+            established: {
+                label: 'Established',
+                overline: 'Established · Language Concept',
+                desc: 'Verified, sourced, load-bearing knowledge',
+                // Solid filled circle — bedrock, complete
+                glyph: `<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="8" cy="8" r="6" fill="currentColor"/>
+    </svg>`
+            },
+            informed: {
+                label: 'Informed',
+                overline: 'Informed Research · Language Concept',
+                desc: 'Real sources, framed for narrative or purpose',
+                // Three-quarter filled circle — mostly solid, slight opening
+                glyph: `<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M8 2.5a5.5 5.5 0 0 1 0 11 5.5 5.5 0 0 1 0-11z" fill="currentColor" clip-path="inset(0 0 0 25%)"/>
+      <circle cx="8" cy="8" r="3" fill="currentColor"/>
+    </svg>`
+            },
+            speculative: {
+                label: 'Speculative',
+                overline: 'Speculative · Language Concept',
+                desc: 'Assembled from mixed sources — hold loosely',
+                // Half-filled circle — partial, uncertain
+                glyph: `<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M8 2.5 A5.5 5.5 0 0 1 8 13.5 Z" fill="currentColor"/>
+    </svg>`
+            },
+            exploratory: {
+                label: 'Exploratory',
+                overline: 'Exploratory Sketch · Language Concept',
+                desc: 'Working notes — provisional, may be revised or abandoned',
+                // Open circle with dashed stroke — empty, provisional
+                glyph: `<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/>
+    </svg>`
+            }
+        };
+
+        function setTrust(level) {
+            const html = document.documentElement;
+            html.setAttribute('data-trust', level);
+
+            const meta = TRUST_LEVELS[level];
+
+            // Update trust bar
+            document.getElementById('trust-glyph-slot').innerHTML = meta.glyph;
+            document.getElementById('trust-label-text').textContent = meta.label;
+            document.getElementById('trust-desc-text').textContent = meta.desc;
+
+            // Update overline
+            document.getElementById('overline-glyph-slot').innerHTML = meta.glyph;
+            document.getElementById('overline-label').textContent = meta.overline;
+
+            // Update trust bar nav highlights
+            document.querySelectorAll('.trust-bar-nav a').forEach(a => {
+                a.classList.toggle('current', a.dataset.trustFilter === level);
+            });
+
+            // Update proto control highlights
+            document.querySelectorAll('[data-set-trust]').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.setTrust === level);
+            });
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+
+            // Sync topnav theme toggle
+            document.querySelectorAll('.theme-toggle-option').forEach(b => {
+                b.classList.toggle('active', b.dataset.themeChoice === theme);
+            });
+
+            // Sync proto theme buttons
+            document.querySelectorAll('[data-set-theme]').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.setTheme === theme);
+            });
+        }
+
+        // ── Event listeners ──
+
+        // Prototype panel: trust buttons
+        document.querySelectorAll('[data-set-trust]').forEach(btn => {
+            btn.addEventListener('click', () => setTrust(btn.dataset.setTrust));
+        });
+
+        // Prototype panel: canon buttons
+        document.querySelectorAll('[data-set-canon]').forEach(btn => {
+            btn.addEventListener('click', () => setCanon(btn.dataset.setCanon));
+        });
+
+
+        // Trust bar nav links
+        document.querySelectorAll('.trust-bar-nav a').forEach(a => {
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                setTrust(a.dataset.trustFilter);
+            });
+        });
+
+        // Topnav theme toggle
+        document.querySelectorAll('.theme-toggle-option').forEach(btn => {
+            btn.addEventListener('click', () => setTheme(btn.dataset.themeChoice));
+        });
+
+        // Initialize
+        setTrust('established');
+        setCanon('canon');
+    </script>
+
+</body>
+
+</html>
