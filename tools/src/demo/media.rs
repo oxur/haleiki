@@ -81,6 +81,7 @@ impl MediaEntry {
     /// Requires the article slug and the effective license for the article.
     /// Returns `None` for skipped or failed images (those without a `local_path`
     /// or `size_bytes`).
+    #[allow(dead_code)] // Used by tests; will be wired to media manifest generation
     pub fn from_extracted(
         image: &ExtractedImage,
         article_slug: &str,
@@ -108,6 +109,7 @@ impl MediaEntry {
 }
 
 /// Detect image format from filename extension.
+#[allow(dead_code)] // Used by `MediaEntry::from_extracted`
 fn detect_format(filename: &str) -> String {
     let ext = Path::new(filename)
         .extension()
@@ -131,6 +133,7 @@ fn detect_format(filename: &str) -> String {
 ///   `https://commons.wikimedia.org/wiki/File:{filename}`
 ///
 /// For non-Wikimedia sources (e.g., Rigpa Wiki), use the original URL.
+#[allow(dead_code)] // Used by tests; will be wired to media manifest generation
 fn build_commons_url(original_src: &str, filename: &str) -> String {
     if original_src.contains("wikimedia.org") || original_src.contains("wikipedia.org") {
         format!(
@@ -154,6 +157,7 @@ fn build_commons_url(original_src: &str, filename: &str) -> String {
 /// # Errors
 ///
 /// Returns an error if the manifest cannot be serialized or written to disk.
+#[allow(dead_code)] // Used by tests; will be wired to batch media processing
 pub fn write_media_manifest(results: &[MediaResult], manifest: &Manifest) -> anyhow::Result<()> {
     let mut entries = Vec::new();
     let mut articles_with_media = 0;
@@ -728,7 +732,13 @@ pub fn rewrite_image_sources(
         result = result.replace(&old_attr_sq, &new_attr_sq);
     }
 
-    // Pass 3: Clean up empty <figure> elements left after image removal
+    // Pass 3: Unwrap <a class="mw-file-description"> wrappers around images.
+    // After image source rewriting, these anchors still point at wiki File:
+    // description pages. The <img> inside has already been rewritten to a
+    // local path, so we just need to remove the <a> wrapper.
+    unwrap_file_description_links(&mut result);
+
+    // Pass 4: Clean up empty <figure> elements left after image removal
     remove_empty_figures(&mut result);
 
     result
@@ -805,6 +815,42 @@ fn remove_empty_figures(html: &mut String) {
         if !found_empty {
             break;
         }
+    }
+}
+
+/// Unwrap `<a class="mw-file-description">` wrappers around images.
+///
+/// After image source rewriting, these anchors still point at wiki `File:`
+/// description pages. The `<img>` inside has already been rewritten to a
+/// local path, so we just need to remove the `<a>` wrapper and keep the
+/// inner content.
+fn unwrap_file_description_links(html: &mut String) {
+    loop {
+        let Some(class_pos) = html.find("mw-file-description") else {
+            break;
+        };
+
+        // Walk backwards to find the opening <a
+        let before = &html[..class_pos];
+        let Some(open_start) = before.rfind("<a") else {
+            break;
+        };
+
+        // Find the end of the opening tag
+        let Some(open_end_offset) = html[class_pos..].find('>') else {
+            break;
+        };
+        let open_end = class_pos + open_end_offset + 1;
+
+        // Find the closing </a>
+        let Some(close_offset) = html[open_end..].find("</a>") else {
+            break;
+        };
+        let close_start = open_end + close_offset;
+        let close_end = close_start + 4;
+
+        let inner = html[open_end..close_start].to_string();
+        *html = format!("{}{}{}", &html[..open_start], inner, &html[close_end..]);
     }
 }
 
@@ -1535,6 +1581,99 @@ mod tests {
         assert!(result.contains("<h2>Section</h2>"));
         assert!(result.contains("<a href=\"/source/raii/\">"));
         assert!(result.contains("<table>"));
+    }
+
+    // ─── Rigpa Wiki URL resolution tests ─────────────────
+
+    #[test]
+    fn test_resolve_download_url_rigpa_wiki_root_relative() {
+        let url = resolve_download_url(
+            "/images/thumb/b/ba/Yangthang_Rinpoche.jpeg/300px-Yangthang_Rinpoche.jpeg",
+            1024,
+            "www.rigpawiki.org",
+        );
+        assert!(
+            url.starts_with("https://www.rigpawiki.org/"),
+            "Should prepend source project: {url}",
+        );
+    }
+
+    #[test]
+    fn test_resolve_download_url_rigpa_wiki_non_thumb() {
+        let url = resolve_download_url(
+            "/images/a/ac/LotsawaHouse-tag.png",
+            1024,
+            "www.rigpawiki.org",
+        );
+        assert_eq!(
+            url,
+            "https://www.rigpawiki.org/images/a/ac/LotsawaHouse-tag.png",
+        );
+    }
+
+    // ─── File description link unwrapping tests ────────
+
+    #[test]
+    fn test_rewrite_image_sources_unwraps_wikipedia_file_description() {
+        let html = r#"<figure><a class="mw-file-description" href="./File:Example.svg"><img src="//upload.wikimedia.org/example.png" /></a><figcaption>Caption</figcaption></figure>"#;
+        let mut downloaded = HashMap::new();
+        downloaded.insert(
+            "//upload.wikimedia.org/example.png".to_string(),
+            "../media/test/Example.png".to_string(),
+        );
+        let result = rewrite_image_sources(html, &downloaded, &HashMap::new());
+        assert!(
+            !result.contains("mw-file-description"),
+            "File description link should be unwrapped",
+        );
+        assert!(
+            !result.contains("./File:"),
+            "File page href should be gone",
+        );
+        assert!(
+            result.contains(r#"src="../media/test/Example.png""#),
+            "Image src should be rewritten",
+        );
+        assert!(result.contains("Caption"), "Caption should be preserved");
+    }
+
+    #[test]
+    fn test_rewrite_image_sources_unwraps_rigpa_wiki_file_description() {
+        let html = r#"<figure><a class="mw-file-description" href="/index.php?title=File:Photo.jpeg"><img src="/images/thumb/b/ba/Photo.jpeg/300px-Photo.jpeg" /></a><figcaption>Photo caption</figcaption></figure>"#;
+        let mut downloaded = HashMap::new();
+        downloaded.insert(
+            "/images/thumb/b/ba/Photo.jpeg/300px-Photo.jpeg".to_string(),
+            "../media/test/Photo.jpeg".to_string(),
+        );
+        let result = rewrite_image_sources(html, &downloaded, &HashMap::new());
+        assert!(
+            !result.contains("mw-file-description"),
+            "File description link should be unwrapped",
+        );
+        assert!(
+            !result.contains("index.php"),
+            "Rigpa Wiki file href should be gone",
+        );
+        assert!(result.contains(r#"src="../media/test/Photo.jpeg""#));
+    }
+
+    #[test]
+    fn test_rewrite_image_sources_skipped_removes_figure() {
+        let html = r#"<figure><a class="mw-file-description" href="./File:Skip.png"><img src="//upload.wikimedia.org/skip.png" /></a><figcaption>Skip this</figcaption></figure><p>Keep this.</p>"#;
+        let mut skipped = HashMap::new();
+        skipped.insert(
+            "//upload.wikimedia.org/skip.png".to_string(),
+            "skipped".to_string(),
+        );
+        let result = rewrite_image_sources(html, &HashMap::new(), &skipped);
+        assert!(
+            !result.contains("Skip this"),
+            "Skipped figure should be removed",
+        );
+        assert!(
+            result.contains("Keep this."),
+            "Other content should be preserved",
+        );
     }
 
     // ─── Staging path tests ─────────────────────────────

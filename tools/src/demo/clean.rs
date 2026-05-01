@@ -38,6 +38,13 @@ const REMOVE_SELECTORS: &[&str] = &[
     ".navbox",
     ".navbox-styles",
     ".vertical-navbox",
+    // Sidebar navboxes ("Part of a series on X" pattern)
+    "table.sidebar",
+    // v/t/e template-edit link containers and items
+    "div.navbar",
+    "span.nv-view",
+    "span.nv-talk",
+    "span.nv-edit",
     // Table of contents
     "#toc",
     ".toc",
@@ -664,6 +671,75 @@ mod tests {
         assert!(cleaned.contains("<strong>bold</strong>"));
         assert!(cleaned.contains("<em>italic</em>"));
         assert!(cleaned.contains("<a href="));
+    }
+
+    // --- Sidebar and navbar removal tests ---
+
+    #[test]
+    fn test_clean_html_removes_sidebar_tables() {
+        let html = r#"<html><body>
+            <p>Content before.</p>
+            <table class="sidebar sidebar-collapse nomobile">
+                <tbody><tr><td>Part of a series on Tibetan Buddhism</td></tr></tbody>
+            </table>
+            <p>Content after.</p>
+        </body></html>"#;
+        let cleaned = clean_html(html);
+        assert!(!cleaned.contains("sidebar"), "Sidebar table not removed");
+        assert!(
+            !cleaned.contains("Tibetan Buddhism"),
+            "Sidebar content not removed",
+        );
+        assert!(cleaned.contains("Content before."));
+        assert!(cleaned.contains("Content after."));
+    }
+
+    #[test]
+    fn test_clean_html_removes_navbar_div() {
+        let html = r#"<html><body>
+            <p>Content.</p>
+            <div class="navbar">
+                <span class="nv-view"><a href="/wiki/Template:X">v</a></span>
+                <span class="nv-talk"><a href="/wiki/Template_talk:X">t</a></span>
+                <span class="nv-edit"><a href="/wiki/Special:EditPage/Template:X">e</a></span>
+            </div>
+        </body></html>"#;
+        let cleaned = clean_html(html);
+        assert!(!cleaned.contains("navbar"), "Navbar not removed");
+        assert!(!cleaned.contains("nv-view"), "nv-view not removed");
+        assert!(cleaned.contains("Content."));
+    }
+
+    #[test]
+    fn test_clean_html_preserves_infobox() {
+        let html = r#"<html><body>
+            <table class="infobox">
+                <tbody><tr><td>Tibetan</td><td>རྫོགས་ཆེན་</td></tr></tbody>
+            </table>
+            <p>Content.</p>
+        </body></html>"#;
+        let cleaned = clean_html(html);
+        assert!(
+            cleaned.contains("infobox"),
+            "Infobox should be preserved",
+        );
+        assert!(
+            cleaned.contains("རྫོགས་ཆེན་"),
+            "Infobox content should be preserved",
+        );
+    }
+
+    #[test]
+    fn test_clean_html_preserves_shortdescription() {
+        let html = r#"<html><body>
+            <div class="shortdescription">Tradition of teachings in Indo-Tibetan Buddhism</div>
+            <p>Content.</p>
+        </body></html>"#;
+        let cleaned = clean_html(html);
+        assert!(
+            cleaned.contains("shortdescription"),
+            "Shortdescription should be preserved",
+        );
     }
 
     // --- Real article test (requires fetched HTML) ---

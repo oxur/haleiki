@@ -131,8 +131,32 @@ fn classify_and_rewrite(
         };
     }
 
-    // 3. External links (absolute http/https) -- keep as-is
+    // 3. External links -- check for self-references first
     if href.starts_with("http://") || href.starts_with("https://") {
+        // Check if this is a self-reference to the source project
+        // e.g., http://www.rigpawiki.org/index.php?title=PageName
+        if let Some(path_part) = strip_source_project_prefix(href, source_project) {
+            if let Some(title_part) = extract_wiki_title(&path_part) {
+                let (title, fragment) = split_fragment(&title_part);
+                let normalized = normalize_wiki_title(&title);
+                if let Some(slug) = title_index.get(&normalized) {
+                    let haleiki_url = if let Some(frag) = fragment {
+                        format!("/source/{slug}/#{frag}")
+                    } else {
+                        format!("/source/{slug}/")
+                    };
+                    return LinkReplacement {
+                        original_href,
+                        action: LinkAction::Rewrite(haleiki_url),
+                    };
+                }
+            }
+            // Self-reference but not in manifest -- keep as-is (already absolute)
+            return LinkReplacement {
+                original_href,
+                action: LinkAction::Keep,
+            };
+        }
         return LinkReplacement {
             original_href,
             action: LinkAction::Keep,
@@ -197,7 +221,9 @@ fn classify_and_rewrite(
 /// Handles:
 /// - `/wiki/Article_Title` -> `Article_Title`
 /// - `./Article_Title` -> `Article_Title`
+/// - `/index.php?title=Article_Title` -> `Article_Title` (Rigpa Wiki)
 /// - `/w/index.php?title=Article_Title&action=...` -> None (edit/action links)
+/// - `/index.php?title=File:...` -> None (media namespace)
 fn extract_wiki_title(href: &str) -> Option<String> {
     // /wiki/Title pattern (most common in REST API HTML)
     if let Some(rest) = href.strip_prefix("/wiki/") {
@@ -214,6 +240,60 @@ fn extract_wiki_title(href: &str) -> Option<String> {
         return None;
     }
 
+    // /index.php?title=PageName pattern (MediaWiki action API, used by Rigpa Wiki)
+    if let Some(title) = extract_title_from_query(href) {
+        // Skip File: namespace -- images are handled by the media pipeline
+        if title.starts_with("File:") {
+            return None;
+        }
+        return Some(url_decode_basic(&title));
+    }
+
+    None
+}
+
+/// Extract the `title` query parameter from a `/index.php?title=...` URL path.
+///
+/// Returns `None` for action links (those containing `action=edit`, etc.)
+/// and for empty title values.
+fn extract_title_from_query(href: &str) -> Option<String> {
+    let query = href
+        .strip_prefix("/index.php?")
+        .or_else(|| {
+            href.find("/index.php?")
+                .map(|pos| &href[pos + "/index.php?".len()..])
+        })?;
+
+    // Skip action links (edit, history, etc.)
+    if query.contains("action=") {
+        return None;
+    }
+
+    for param in query.split('&') {
+        if let Some(value) = param.strip_prefix("title=") {
+            let value = value.split('#').next().unwrap_or(value);
+            if value.is_empty() {
+                return None;
+            }
+            return Some(value.to_string());
+        }
+    }
+    None
+}
+
+/// Strip the source project's host from an absolute URL, returning the path portion.
+///
+/// Matches both `http://` and `https://`, with or without `www.` prefix.
+fn strip_source_project_prefix(url: &str, source_project: &str) -> Option<String> {
+    let stripped = url
+        .strip_prefix("https://")
+        .or_else(|| url.strip_prefix("http://"))?;
+
+    if let Some(path) = stripped.strip_prefix(source_project) {
+        if path.is_empty() || path.starts_with('/') {
+            return Some(path.to_string());
+        }
+    }
     None
 }
 
@@ -228,8 +308,11 @@ fn split_fragment(title: &str) -> (String, Option<String>) {
 }
 
 /// Basic URL decoding -- handles `%XX` sequences common in wiki URLs.
+///
+/// Correctly decodes multi-byte UTF-8 percent-encoded sequences
+/// (e.g., `%C3%BC` -> `ü`).
 fn url_decode_basic(s: &str) -> String {
-    let mut result = String::with_capacity(s.len());
+    let mut bytes = Vec::with_capacity(s.len());
     let mut chars = s.chars();
 
     while let Some(c) = chars.next() {
@@ -237,18 +320,22 @@ fn url_decode_basic(s: &str) -> String {
             let hex: String = chars.by_ref().take(2).collect();
             if hex.len() == 2 {
                 if let Ok(byte) = u8::from_str_radix(&hex, 16) {
-                    result.push(byte as char);
+                    bytes.push(byte);
                     continue;
                 }
             }
-            result.push('%');
-            result.push_str(&hex);
+            bytes.push(b'%');
+            bytes.extend_from_slice(hex.as_bytes());
+        } else if c.is_ascii() {
+            bytes.push(c as u8);
         } else {
-            result.push(c);
+            let mut buf = [0u8; 4];
+            let encoded = c.encode_utf8(&mut buf);
+            bytes.extend_from_slice(encoded.as_bytes());
         }
     }
 
-    result
+    String::from_utf8(bytes).unwrap_or_else(|e| String::from_utf8_lossy(e.as_bytes()).into_owned())
 }
 
 /// Apply link replacements to the HTML string.
@@ -444,6 +531,81 @@ mod tests {
     #[test]
     fn test_normalize_wiki_title_trims() {
         assert_eq!(normalize_wiki_title("  RAII  "), "raii");
+    }
+
+    // --- extract_wiki_title /index.php tests ---
+
+    #[test]
+    fn test_extract_wiki_title_index_php_basic() {
+        assert_eq!(
+            extract_wiki_title("/index.php?title=Nyingma"),
+            Some("Nyingma".to_string()),
+        );
+    }
+
+    #[test]
+    fn test_extract_wiki_title_index_php_percent_encoded() {
+        assert_eq!(
+            extract_wiki_title("/index.php?title=Lhats%C3%BCn_Namkha_Jikm%C3%A9"),
+            Some("Lhatsün_Namkha_Jikmé".to_string()),
+        );
+    }
+
+    #[test]
+    fn test_extract_wiki_title_index_php_file_namespace_returns_none() {
+        assert_eq!(
+            extract_wiki_title("/index.php?title=File:TBRC-tag.png"),
+            None,
+        );
+    }
+
+    #[test]
+    fn test_extract_wiki_title_index_php_action_edit_returns_none() {
+        assert_eq!(
+            extract_wiki_title("/index.php?title=Nyingma&action=edit"),
+            None,
+        );
+    }
+
+    // --- classify_and_rewrite self-reference tests ---
+
+    #[test]
+    fn test_classify_absolute_self_reference_in_manifest() {
+        let index = test_index();
+        let r = classify_and_rewrite(
+            "http://www.rigpawiki.org/index.php?title=Memory_management",
+            &index,
+            "www.rigpawiki.org",
+            false,
+        );
+        assert_eq!(
+            r.action,
+            LinkAction::Rewrite("/source/memory-management/".to_string()),
+        );
+    }
+
+    #[test]
+    fn test_classify_absolute_self_reference_not_in_manifest() {
+        let index = test_index();
+        let r = classify_and_rewrite(
+            "http://www.rigpawiki.org/index.php?title=Nonexistent_Page",
+            &index,
+            "www.rigpawiki.org",
+            false,
+        );
+        assert_eq!(r.action, LinkAction::Keep);
+    }
+
+    #[test]
+    fn test_classify_absolute_non_self_reference() {
+        let index = test_index();
+        let r = classify_and_rewrite(
+            "http://www.lotsawahouse.org/tibetan-masters/yangthang-rinpoche",
+            &index,
+            "www.rigpawiki.org",
+            false,
+        );
+        assert_eq!(r.action, LinkAction::Keep);
     }
 
     // --- classify_and_rewrite tests ---
@@ -664,6 +826,12 @@ mod tests {
     #[test]
     fn test_url_decode_basic_no_encoding() {
         assert_eq!(url_decode_basic("simple"), "simple");
+    }
+
+    #[test]
+    fn test_url_decode_basic_multibyte_utf8() {
+        // ü is U+00FC, encoded in UTF-8 as 0xC3 0xBC
+        assert_eq!(url_decode_basic("Lhats%C3%BCn"), "Lhatsün");
     }
 
     // --- Real article test ---

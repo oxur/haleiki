@@ -497,6 +497,7 @@ pub fn reconvert_article(slug: &str, use_pandoc: bool) -> anyhow::Result<std::pa
 ///
 /// Note: This produces Markdown WITHOUT frontmatter. Frontmatter
 /// injection happens in milestone 5.3.
+#[allow(dead_code)] // Used by tests; will be wired to CLI in a future milestone
 pub fn convert_article(slug: &str) -> anyhow::Result<std::path::PathBuf> {
     let input_path = staging_final_path(slug);
     if !input_path.exists() {
