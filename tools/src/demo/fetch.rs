@@ -155,7 +155,7 @@ pub struct FetchMeta {
 /// transient failures (5xx responses, timeouts, connection errors).
 /// Retry policy: exponential backoff with jitter, up to 3 retries,
 /// starting at 500ms (500ms -> ~1s -> ~2s).
-fn build_client() -> anyhow::Result<ClientWithMiddleware> {
+pub fn build_client() -> anyhow::Result<ClientWithMiddleware> {
     let mut headers = HeaderMap::new();
     headers.insert(
         USER_AGENT,
@@ -610,15 +610,171 @@ pub(crate) fn is_leap_year(y: u64) -> bool {
     (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0)
 }
 
+/// Run downstream pipeline stages (clean, rewrite, media, convert, frontmatter)
+/// for a single article after a successful fetch.
+///
+/// Runs stages up to and including `stop_stage`. Skips the `Fetch` stage itself
+/// (that was already done by the caller).
+async fn run_downstream(
+    slug: &str,
+    manifest: &Manifest,
+    article: &Article,
+    client: &ClientWithMiddleware,
+    stop_stage: super::PipelineStage,
+    pandoc: bool,
+) -> anyhow::Result<()> {
+    use super::PipelineStage;
+
+    if stop_stage == PipelineStage::Fetch {
+        return Ok(());
+    }
+
+    // Clean
+    eprintln!("  Pipeline: cleaning {slug}...");
+    super::clean::clean_article(slug)?;
+    if stop_stage == PipelineStage::Clean {
+        return Ok(());
+    }
+
+    // Rewrite links
+    eprintln!("  Pipeline: rewriting links for {slug}...");
+    super::rewrite::rewrite_article(slug, manifest)?;
+    if stop_stage == PipelineStage::Rewrite {
+        return Ok(());
+    }
+
+    // Media (download + rewrite)
+    eprintln!("  Pipeline: processing media for {slug}...");
+    let media_result =
+        super::media::process_article_media(client, slug, manifest, article).await?;
+    super::media::rewrite_article_images(slug, &media_result)?;
+    if stop_stage == PipelineStage::Media {
+        return Ok(());
+    }
+
+    // Convert
+    eprintln!("  Pipeline: converting {slug} to Markdown...");
+    super::convert::reconvert_article(slug, pandoc)?;
+    if stop_stage == PipelineStage::Convert {
+        return Ok(());
+    }
+
+    // Frontmatter
+    eprintln!("  Pipeline: injecting frontmatter for {slug}...");
+    super::frontmatter::inject_frontmatter(slug, manifest)?;
+
+    Ok(())
+}
+
+/// Fetch a single article and optionally run downstream pipeline stages.
+async fn run_single(
+    slug: &str,
+    manifest: &Manifest,
+    dry_run: bool,
+    force: bool,
+    pandoc: bool,
+    stage: Option<super::PipelineStage>,
+) -> anyhow::Result<()> {
+    let article = manifest
+        .articles
+        .iter()
+        .find(|a| a.slug == slug)
+        .ok_or_else(|| {
+            anyhow::anyhow!(
+                "article with slug \"{slug}\" not found in manifest\n\
+                 Available slugs: {}",
+                manifest
+                    .articles
+                    .iter()
+                    .map(|a| a.slug.as_str())
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            )
+        })?;
+
+    let html_path = staging_html_path(&article.slug);
+    if html_path.exists() && !force {
+        eprintln!(
+            "Already fetched: {} (use --force to re-fetch)",
+            html_path.display()
+        );
+        return Ok(());
+    }
+
+    if dry_run {
+        let url = manifest.api_url(article);
+        println!("Would fetch: {}", article.title);
+        println!("  URL: {url}");
+        println!("  Project: {}", manifest.effective_project(article));
+        println!("  Destination: {}", html_path.display());
+        return Ok(());
+    }
+
+    let client = build_client()?;
+    fetch_article(&client, manifest, article).await?;
+
+    if let Some(stop_stage) = stage {
+        run_downstream(slug, manifest, article, &client, stop_stage, pandoc).await?;
+    }
+
+    eprintln!("Done.");
+    Ok(())
+}
+
+/// Run downstream pipeline stages for all fetched articles in the manifest.
+async fn run_batch_pipeline(
+    manifest: &Manifest,
+    stage: super::PipelineStage,
+    pandoc: bool,
+) -> anyhow::Result<()> {
+    let client = build_client()?;
+    let mut succeeded = 0;
+    let mut failed: Vec<(String, String)> = Vec::new();
+
+    for article in &manifest.articles {
+        let html_path = staging_html_path(&article.slug);
+        if !html_path.exists() {
+            continue;
+        }
+        match run_downstream(&article.slug, manifest, article, &client, stage, pandoc).await {
+            Ok(()) => succeeded += 1,
+            Err(e) => failed.push((article.slug.clone(), e.to_string())),
+        }
+    }
+
+    eprintln!();
+    eprintln!(
+        "Pipeline summary: {succeeded} succeeded, {} failed",
+        failed.len(),
+    );
+    for (slug, msg) in &failed {
+        eprintln!("  {slug}: {msg}");
+    }
+
+    if !failed.is_empty() {
+        anyhow::bail!(
+            "{} article(s) failed during pipeline processing",
+            failed.len(),
+        );
+    }
+
+    Ok(())
+}
+
 /// Entry point for `haleiki demo fetch`.
 ///
 /// When `article_slug` is `Some`, fetches a single article. When `None`,
 /// fetches all manifest articles with bounded concurrency and progress bars.
+///
+/// If `stage` is provided, runs the downstream pipeline up to and including
+/// that stage after each successful fetch. When `None`, runs only the fetch
+/// stage (preserving backward compatibility).
 pub async fn run(
     article_slug: Option<&str>,
     dry_run: bool,
     force: bool,
-    _pandoc: bool,
+    pandoc: bool,
+    stage: Option<super::PipelineStage>,
 ) -> anyhow::Result<()> {
     let manifest_path = Path::new("demo/manifest.yaml");
     if !manifest_path.exists() {
@@ -641,53 +797,14 @@ pub async fn run(
         eprintln!();
     }
 
-    match article_slug {
-        Some(slug) => {
-            // Single article fetch
-            let article = manifest
-                .articles
-                .iter()
-                .find(|a| a.slug == slug)
-                .ok_or_else(|| {
-                    anyhow::anyhow!(
-                        "article with slug \"{slug}\" not found in manifest\n\
-                         Available slugs: {}",
-                        manifest
-                            .articles
-                            .iter()
-                            .map(|a| a.slug.as_str())
-                            .collect::<Vec<_>>()
-                            .join(", ")
-                    )
-                })?;
-
-            // Check if already fetched (skip unless --force)
-            let html_path = staging_html_path(&article.slug);
-            if html_path.exists() && !force {
-                eprintln!(
-                    "Already fetched: {} (use --force to re-fetch)",
-                    html_path.display()
-                );
-                return Ok(());
+    if let Some(slug) = article_slug {
+        run_single(slug, &manifest, dry_run, force, pandoc, stage).await?;
+    } else {
+        batch_fetch(&manifest, dry_run, force).await?;
+        if let Some(stop_stage) = stage {
+            if !dry_run {
+                run_batch_pipeline(&manifest, stop_stage, pandoc).await?;
             }
-
-            if dry_run {
-                let url = manifest.api_url(article);
-                println!("Would fetch: {}", article.title);
-                println!("  URL: {url}");
-                println!("  Project: {}", manifest.effective_project(article));
-                println!("  Destination: {}", html_path.display());
-                return Ok(());
-            }
-
-            let client = build_client()?;
-            fetch_article(&client, &manifest, article).await?;
-
-            eprintln!("Done.");
-        }
-        None => {
-            // Batch fetch all articles
-            batch_fetch(&manifest, dry_run, force).await?;
         }
     }
 
