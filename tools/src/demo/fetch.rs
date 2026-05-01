@@ -766,9 +766,9 @@ async fn run_batch_pipeline(
 /// When `article_slug` is `Some`, fetches a single article. When `None`,
 /// fetches all manifest articles with bounded concurrency and progress bars.
 ///
-/// If `stage` is provided, runs the downstream pipeline up to and including
-/// that stage after each successful fetch. When `None`, runs only the fetch
-/// stage (preserving backward compatibility).
+/// Runs the downstream pipeline (clean, rewrite, media, convert, frontmatter)
+/// after each successful fetch. The `stage` parameter controls how far the
+/// pipeline runs: default (`None`) runs the full pipeline through frontmatter.
 pub async fn run(
     article_slug: Option<&str>,
     dry_run: bool,
@@ -797,11 +797,13 @@ pub async fn run(
         eprintln!();
     }
 
+    let effective_stage = Some(stage.unwrap_or(super::PipelineStage::Frontmatter));
+
     if let Some(slug) = article_slug {
-        run_single(slug, &manifest, dry_run, force, pandoc, stage).await?;
+        run_single(slug, &manifest, dry_run, force, pandoc, effective_stage).await?;
     } else {
         batch_fetch(&manifest, dry_run, force).await?;
-        if let Some(stop_stage) = stage {
+        if let Some(stop_stage) = effective_stage {
             if !dry_run {
                 run_batch_pipeline(&manifest, stop_stage, pandoc).await?;
             }
