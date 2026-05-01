@@ -598,9 +598,27 @@ pub async fn download_article_images(
     })
 }
 
+/// Strip thumbnail path components to get the original image URL.
+///
+/// Handles both Wikimedia and generic `MediaWiki` thumbnail patterns:
+/// - `.../thumb/x/xx/File.ext/NNNpx-File.ext` -> `.../x/xx/File.ext`
+/// - `/images/thumb/x/xx/File.ext/NNNpx-File.ext` -> `/images/x/xx/File.ext`
+fn strip_thumbnail_path(url: &str) -> Option<String> {
+    if !url.contains("/thumb/") {
+        return None;
+    }
+    // Remove "/thumb" segment and the trailing "/{size}px-{filename}" segment
+    let without_thumb = url.replacen("/thumb/", "/", 1);
+    // The last segment is the sized thumbnail filename — remove it
+    let pos = without_thumb.rfind('/')?;
+    Some(without_thumb[..pos].to_string())
+}
+
 /// Download a single image to disk.
 ///
-/// Returns the file size in bytes on success.
+/// Returns the file size in bytes on success. If the initial request fails
+/// and the URL looks like a thumbnail, retries with the original
+/// (non-thumbnail) URL as a fallback.
 async fn download_single_image(
     client: &ClientWithMiddleware,
     url: &str,
@@ -608,16 +626,28 @@ async fn download_single_image(
 ) -> anyhow::Result<u64> {
     let response = client.get(url).send().await?;
 
-    if !response.status().is_success() {
-        anyhow::bail!("HTTP {} downloading {url}", response.status());
+    if response.status().is_success() {
+        let bytes = response.bytes().await?;
+        let size = bytes.len() as u64;
+        std::fs::write(dest, &bytes)?;
+        return Ok(size);
     }
 
-    let bytes = response.bytes().await?;
-    let size = bytes.len() as u64;
+    let status = response.status();
 
-    std::fs::write(dest, &bytes)?;
+    // Thumbnail request failed — try the original (non-thumbnail) URL
+    if let Some(fallback) = strip_thumbnail_path(url) {
+        eprintln!("  Thumbnail {status}, retrying with original: {fallback}");
+        let fallback_resp = client.get(&fallback).send().await?;
+        if fallback_resp.status().is_success() {
+            let bytes = fallback_resp.bytes().await?;
+            let size = bytes.len() as u64;
+            std::fs::write(dest, &bytes)?;
+            return Ok(size);
+        }
+    }
 
-    Ok(size)
+    anyhow::bail!("HTTP {status} downloading {url}")
 }
 
 /// Convenience: extract and download images for a single article.
@@ -1626,10 +1656,7 @@ mod tests {
             !result.contains("mw-file-description"),
             "File description link should be unwrapped",
         );
-        assert!(
-            !result.contains("./File:"),
-            "File page href should be gone",
-        );
+        assert!(!result.contains("./File:"), "File page href should be gone",);
         assert!(
             result.contains(r#"src="../media/test/Example.png""#),
             "Image src should be rewritten",
@@ -1718,6 +1745,34 @@ mod tests {
                 );
             }
         }
+    }
+
+    // ─── Thumbnail path stripping tests ──────────────────
+
+    #[test]
+    fn test_strip_thumbnail_path_rigpa_wiki_returns_original() {
+        let url = "https://www.rigpawiki.org/images/thumb/b/ba/Yangthang_Rinpoche_RD_LL.jpeg/1024px-Yangthang_Rinpoche_RD_LL.jpeg";
+        let original = strip_thumbnail_path(url);
+        assert_eq!(
+            original,
+            Some("https://www.rigpawiki.org/images/b/ba/Yangthang_Rinpoche_RD_LL.jpeg".to_string()),
+        );
+    }
+
+    #[test]
+    fn test_strip_thumbnail_path_wikimedia_returns_original() {
+        let url = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Mark.svg/1024px-Mark.svg.png";
+        let original = strip_thumbnail_path(url);
+        assert_eq!(
+            original,
+            Some("https://upload.wikimedia.org/wikipedia/commons/4/4c/Mark.svg".to_string()),
+        );
+    }
+
+    #[test]
+    fn test_strip_thumbnail_path_non_thumb_returns_none() {
+        let url = "https://upload.wikimedia.org/wikipedia/commons/a/ab/Example.png";
+        assert_eq!(strip_thumbnail_path(url), None);
     }
 
     /// Minimal manifest for testing.

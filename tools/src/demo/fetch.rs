@@ -645,8 +645,7 @@ async fn run_downstream(
 
     // Media (download + rewrite)
     eprintln!("  Pipeline: processing media for {slug}...");
-    let media_result =
-        super::media::process_article_media(client, slug, manifest, article).await?;
+    let media_result = super::media::process_article_media(client, slug, manifest, article).await?;
     super::media::rewrite_article_images(slug, &media_result)?;
     if stop_stage == PipelineStage::Media {
         return Ok(());

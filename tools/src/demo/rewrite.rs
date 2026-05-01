@@ -10,6 +10,7 @@ use std::path::Path;
 use scraper::{Html, Selector};
 
 use super::clean::staging_clean_path;
+use super::fetch::is_wikimedia_project;
 use super::manifest::{Manifest, normalize_wiki_title};
 
 /// Path where rewritten HTML is written.
@@ -189,11 +190,22 @@ fn classify_and_rewrite(
             };
         }
 
-        // External wiki link -- rewrite to absolute Wikimedia URL
-        let absolute_url = if let Some(frag) = fragment {
-            format!("https://{source_project}/wiki/{title}#{frag}")
+        // External wiki link -- rewrite to absolute URL using source
+        // project's URL pattern. Wikimedia projects use `/wiki/{title}`;
+        // non-Wikimedia MediaWiki instances use `/index.php?title=`.
+        let absolute_url = if is_wikimedia_project(source_project) {
+            if let Some(frag) = fragment {
+                format!("https://{source_project}/wiki/{title}#{frag}")
+            } else {
+                format!("https://{source_project}/wiki/{title}")
+            }
         } else {
-            format!("https://{source_project}/wiki/{title}")
+            let encoded_title = title.replace(' ', "_");
+            if let Some(frag) = fragment {
+                format!("https://{source_project}/index.php?title={encoded_title}#{frag}")
+            } else {
+                format!("https://{source_project}/index.php?title={encoded_title}")
+            }
         };
         return LinkReplacement {
             original_href,
@@ -257,12 +269,10 @@ fn extract_wiki_title(href: &str) -> Option<String> {
 /// Returns `None` for action links (those containing `action=edit`, etc.)
 /// and for empty title values.
 fn extract_title_from_query(href: &str) -> Option<String> {
-    let query = href
-        .strip_prefix("/index.php?")
-        .or_else(|| {
-            href.find("/index.php?")
-                .map(|pos| &href[pos + "/index.php?".len()..])
-        })?;
+    let query = href.strip_prefix("/index.php?").or_else(|| {
+        href.find("/index.php?")
+            .map(|pos| &href[pos + "/index.php?".len()..])
+    })?;
 
     // Skip action links (edit, history, etc.)
     if query.contains("action=") {
@@ -874,6 +884,47 @@ mod tests {
         assert_eq!(
             bare_wiki_count, 0,
             "Found {bare_wiki_count} bare /wiki/ links that should have been rewritten"
+        );
+    }
+
+    // --- Source-aware external wiki link URL pattern tests ---
+
+    #[test]
+    fn test_classify_external_wiki_link_wikipedia_uses_wiki_path() {
+        let index = test_index();
+        let r = classify_and_rewrite("./Some_Article", &index, "en.wikipedia.org", false);
+        assert_eq!(
+            r.action,
+            LinkAction::Rewrite("https://en.wikipedia.org/wiki/Some_Article".to_string()),
+        );
+    }
+
+    #[test]
+    fn test_classify_external_wiki_link_rigpawiki_uses_index_php() {
+        let index = test_index();
+        let r = classify_and_rewrite("./Domang_Monastery", &index, "www.rigpawiki.org", false);
+        assert_eq!(
+            r.action,
+            LinkAction::Rewrite(
+                "https://www.rigpawiki.org/index.php?title=Domang_Monastery".to_string()
+            ),
+        );
+    }
+
+    #[test]
+    fn test_classify_external_rigpawiki_preserves_fragment() {
+        let index = test_index();
+        let r = classify_and_rewrite(
+            "./Domang_Monastery#History",
+            &index,
+            "www.rigpawiki.org",
+            false,
+        );
+        assert_eq!(
+            r.action,
+            LinkAction::Rewrite(
+                "https://www.rigpawiki.org/index.php?title=Domang_Monastery#History".to_string()
+            ),
         );
     }
 }
