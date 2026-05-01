@@ -719,10 +719,7 @@ mod tests {
             <p>Content.</p>
         </body></html>"#;
         let cleaned = clean_html(html);
-        assert!(
-            cleaned.contains("infobox"),
-            "Infobox should be preserved",
-        );
+        assert!(cleaned.contains("infobox"), "Infobox should be preserved",);
         assert!(
             cleaned.contains("རྫོགས་ཆེན་"),
             "Infobox content should be preserved",

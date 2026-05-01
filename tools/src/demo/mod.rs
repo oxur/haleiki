@@ -167,7 +167,13 @@ pub fn run(cmd: &DemoCommand) -> anyhow::Result<()> {
         DemoCommand::Clean => println!("demo clean: not yet implemented"),
         DemoCommand::Refresh => {
             let rt = tokio::runtime::Runtime::new()?;
-            rt.block_on(fetch::run(None, false, true, false, Some(PipelineStage::Frontmatter)))?;
+            rt.block_on(fetch::run(
+                None,
+                false,
+                true,
+                false,
+                Some(PipelineStage::Frontmatter),
+            ))?;
         }
         DemoCommand::CleanHtml { slug } => {
             let path = clean::clean_article(slug)?;

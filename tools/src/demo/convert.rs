@@ -40,6 +40,7 @@ pub fn staging_markdown_path(slug: &str) -> std::path::PathBuf {
 pub fn html_to_markdown(html: &str) -> anyhow::Result<String> {
     // Pre-process: handle elements the converter struggles with
     let preprocessed = preprocess_definition_lists(html);
+    let preprocessed = ensure_img_alt_attributes(&preprocessed);
 
     let converter = htmd::HtmlToMarkdown::builder().build();
 
@@ -342,6 +343,151 @@ fn fix_table_block(lines: &[&str]) -> Vec<String> {
 /// Removes empty title attributes: `[text](url "")` becomes `[text](url)`.
 fn normalize_links(md: &str) -> String {
     md.replace(" \"\")", ")")
+}
+
+/// Ensure every `<img>` element has an `alt` attribute.
+///
+/// Sources alt text from (in order of preference):
+/// 1. Existing `alt` attribute (no change needed)
+/// 2. Text content of the parent `<figure>`'s `<figcaption>`
+/// 3. The `title` attribute on the `<img>`
+/// 4. The filename from `src`, with extension stripped and underscores replaced by spaces
+fn ensure_img_alt_attributes(html: &str) -> String {
+    let document = scraper::Html::parse_fragment(html);
+    let img_selector = scraper::Selector::parse("img").expect("valid CSS selector");
+
+    let mut result = html.to_string();
+
+    for img in document.select(&img_selector) {
+        // Skip if already has a non-empty alt
+        if let Some(alt) = img.value().attr("alt") {
+            if !alt.trim().is_empty() {
+                continue;
+            }
+        }
+
+        // We need the src attribute to locate this <img> in the raw HTML string,
+        // because scraper normalizes self-closing tags (e.g. `<img ... />` -> `<img ...>`).
+        let Some(src) = img.value().attr("src") else {
+            continue;
+        };
+
+        // Try figcaption from ancestor figure
+        let mut alt_text = None;
+
+        if let Some(figure_ref) = find_ancestor_figure(&document, img.id()) {
+            let figcaption_sel = scraper::Selector::parse("figcaption").expect("valid selector");
+            if let Some(caption) = figure_ref.select(&figcaption_sel).next() {
+                let text: String = caption.text().collect();
+                let trimmed = text.trim();
+                if !trimmed.is_empty() {
+                    alt_text = Some(trimmed.to_string());
+                }
+            }
+        }
+
+        // Try title attribute
+        if alt_text.is_none() {
+            if let Some(title) = img.value().attr("title") {
+                if !title.trim().is_empty() {
+                    alt_text = Some(title.trim().to_string());
+                }
+            }
+        }
+
+        // Fallback: filename from src
+        if alt_text.is_none() {
+            alt_text = Some(alt_from_filename(src));
+        }
+
+        let Some(alt) = alt_text else { continue };
+
+        // Locate the <img> tag in the raw HTML by finding its src attribute.
+        // We search for `src="..."` and walk backwards to find `<img`, then
+        // insert or replace the alt attribute directly in the raw string.
+        let src_pattern = format!("src=\"{src}\"");
+        if let Some(src_pos) = result.find(&src_pattern) {
+            // Walk backwards to find the <img opening
+            let before = &result[..src_pos];
+            if let Some(img_start) = before.rfind("<img") {
+                if img.value().attr("alt").is_some() {
+                    // Has empty alt="" -- replace it
+                    let img_tag_end = result[img_start..]
+                        .find('>')
+                        .map_or(result.len(), |p| img_start + p + 1);
+                    let img_tag = &result[img_start..img_tag_end];
+                    let new_tag = replace_empty_alt(img_tag, &alt);
+                    result = format!(
+                        "{}{}{}",
+                        &result[..img_start],
+                        new_tag,
+                        &result[img_tag_end..],
+                    );
+                } else {
+                    // No alt attribute -- insert one after <img
+                    let insert_pos = img_start + "<img".len();
+                    let alt_attr = format!(" alt=\"{}\"", escape_attr(&alt));
+                    result.insert_str(insert_pos, &alt_attr);
+                }
+            }
+        }
+    }
+
+    result
+}
+
+/// Walk up the DOM tree to find an ancestor `<figure>` element.
+fn find_ancestor_figure(
+    document: &scraper::Html,
+    start: ego_tree::NodeId,
+) -> Option<scraper::ElementRef<'_>> {
+    let mut current = start;
+    for _ in 0..5 {
+        let node = document.tree.get(current)?;
+        if let Some(el) = node.value().as_element() {
+            if el.name() == "figure" {
+                return scraper::ElementRef::wrap(node);
+            }
+        }
+        current = node.parent()?.id();
+    }
+    None
+}
+
+/// Derive alt text from a filename in a `src` URL.
+///
+/// Strips the query string, extension, and any `NNNpx-` size prefix,
+/// then replaces underscores with spaces.
+fn alt_from_filename(src: &str) -> String {
+    let path = src.split('?').next().unwrap_or(src);
+    let filename = path.rsplit('/').next().unwrap_or("image");
+    // Strip extension
+    let name = filename.rsplit_once('.').map_or(filename, |(n, _)| n);
+    // Strip size prefix like "300px-"
+    let name = if let Some(pos) = name.find("px-") {
+        &name[pos + 3..]
+    } else {
+        name
+    };
+    name.replace('_', " ")
+}
+
+/// Escape characters that are special inside HTML attribute values.
+fn escape_attr(s: &str) -> String {
+    s.replace('"', "&quot;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;")
+}
+
+/// Replace an empty `alt=""` or `alt=''` with a populated value.
+fn replace_empty_alt(img_html: &str, new_alt: &str) -> String {
+    let replacement = format!("alt=\"{}\"", escape_attr(new_alt));
+    for pattern in [r#"alt="""#, "alt=''"] {
+        if img_html.contains(pattern) {
+            return img_html.replacen(pattern, &replacement, 1);
+        }
+    }
+    img_html.to_string()
 }
 
 /// Convert HTML definition lists to a Markdown-compatible format.
@@ -1008,6 +1154,59 @@ mod tests {
         let md = html_to_markdown_pandoc(html).unwrap();
         assert!(md.contains("Title"), "Heading missing: {md}");
         assert!(md.contains("**bold**"), "Bold missing: {md}");
+    }
+
+    // --- Image alt attribute preprocessing tests ---------
+
+    #[test]
+    fn test_ensure_img_alt_from_figcaption_sets_alt() {
+        let html = r#"<figure><img src="../media/test/Photo.png" /><figcaption>A beautiful photo</figcaption></figure>"#;
+        let result = ensure_img_alt_attributes(html);
+        assert!(
+            result.contains(r#"alt="A beautiful photo""#),
+            "Alt should come from figcaption: {result}",
+        );
+    }
+
+    #[test]
+    fn test_ensure_img_alt_preserves_existing_nonempty() {
+        let html = r#"<img alt="Existing alt" src="test.png" />"#;
+        let result = ensure_img_alt_attributes(html);
+        assert!(
+            result.contains(r#"alt="Existing alt""#),
+            "Should preserve existing alt: {result}",
+        );
+    }
+
+    #[test]
+    fn test_ensure_img_alt_from_title_attribute() {
+        let html = r#"<img src="test.png" title="My title" />"#;
+        let result = ensure_img_alt_attributes(html);
+        assert!(
+            result.contains(r#"alt="My title""#),
+            "Alt should come from title: {result}",
+        );
+    }
+
+    #[test]
+    fn test_ensure_img_alt_from_filename_fallback() {
+        let html = r#"<img src="../media/dzogchen/White-A_(Dzogchen).svg" />"#;
+        let result = ensure_img_alt_attributes(html);
+        assert!(
+            result.contains("White-A (Dzogchen)"),
+            "Alt should come from filename: {result}",
+        );
+    }
+
+    #[test]
+    fn test_ensure_img_alt_produces_valid_markdown_image() {
+        let html = r#"<figure><img src="../media/test/Photo.png" /><figcaption>A photo</figcaption></figure>"#;
+        let md = html_to_markdown(html).unwrap();
+        assert!(md.contains("!["), "Should produce valid image syntax: {md}",);
+        assert!(
+            !md.starts_with('!') || md.starts_with("!["),
+            "Should not have bare !: {md}",
+        );
     }
 
     // --- Real article test ------------------------------
