@@ -610,10 +610,21 @@ fn preprocess_syntaxhighlight(html: &str) -> String {
 
     for (data_mw, tag_name, replacement) in &replacements {
         // Find the element in the raw HTML by locating the data-mw attribute value.
-        // The attribute may be quoted with either ' or " in the source HTML.
-        let Some(attr_pos) = result.find(data_mw.as_str()) else {
-            continue;
-        };
+        // The cleaner's serializer encodes special chars as HTML entities inside
+        // double-quoted attributes, so try both the raw JSON and the entity-encoded form.
+        let encoded_mw = data_mw
+            .replace('&', "&amp;")
+            .replace('"', "&quot;")
+            .replace('<', "&lt;")
+            .replace('>', "&gt;");
+        let (attr_pos, search_len) =
+            if let Some(pos) = result.find(data_mw.as_str()) {
+                (pos, data_mw.len())
+            } else if let Some(pos) = result.find(&encoded_mw) {
+                (pos, encoded_mw.len())
+            } else {
+                continue;
+            };
 
         // Walk backwards from the data-mw value to find the opening `<tag`
         let before = &result[..attr_pos];
@@ -624,7 +635,7 @@ fn preprocess_syntaxhighlight(html: &str) -> String {
 
         // Find the closing tag after the data-mw value
         let close_pattern = format!("</{tag_name}>");
-        let after_attr = attr_pos + data_mw.len();
+        let after_attr = attr_pos + search_len;
         let Some(close_offset) = result[after_attr..].find(&close_pattern) else {
             continue;
         };
@@ -1436,6 +1447,20 @@ mod tests {
         assert!(
             md.contains("(* (+ 1 2) 3)"),
             "Should contain original source: {md}",
+        );
+    }
+
+    #[test]
+    fn test_preprocess_syntaxhighlight_entity_encoded_data_mw() {
+        let html = r#"<div class="mw-highlight" typeof="mw:Extension/syntaxhighlight" data-mw="{&quot;name&quot;:&quot;syntaxhighlight&quot;,&quot;attrs&quot;:{&quot;lang&quot;:&quot;Lisp&quot;},&quot;body&quot;:{&quot;extsrc&quot;:&quot;\n(+ 1 2)\n&quot;}}"><span class="p">(</span><span class="nb">+</span></div>"#;
+        let result = preprocess_syntaxhighlight(html);
+        assert!(
+            result.contains("<pre><code"),
+            "Should handle entity-encoded data-mw: {result}",
+        );
+        assert!(
+            result.contains("(+ 1 2)"),
+            "Should extract source code: {result}",
         );
     }
 
