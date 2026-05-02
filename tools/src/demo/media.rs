@@ -614,40 +614,70 @@ fn strip_thumbnail_path(url: &str) -> Option<String> {
     Some(without_thumb[..pos].to_string())
 }
 
+/// Parse a `Retry-After` header value as seconds.
+///
+/// Handles the integer-seconds format (e.g. `"5"`). Returns `None` for
+/// HTTP-date format or unparseable values, letting the caller fall back
+/// to exponential backoff.
+fn parse_retry_after_value(value: &str) -> Option<u64> {
+    value.trim().parse::<u64>().ok()
+}
+
 /// Download a single image to disk.
 ///
-/// Returns the file size in bytes on success. If the initial request fails
-/// and the URL looks like a thumbnail, retries with the original
-/// (non-thumbnail) URL as a fallback.
+/// Returns the file size in bytes on success. Handles HTTP 429 responses
+/// by reading the `Retry-After` header and sleeping before retrying.
+/// If the request fails for non-429 reasons and the URL looks like a
+/// thumbnail, retries with the original (non-thumbnail) URL as a fallback.
 async fn download_single_image(
     client: &ClientWithMiddleware,
     url: &str,
     dest: &Path,
 ) -> anyhow::Result<u64> {
-    let response = client.get(url).send().await?;
+    let max_retries: u32 = 5;
+    let mut attempt_url = url.to_string();
+    let mut used_fallback = false;
 
-    if response.status().is_success() {
-        let bytes = response.bytes().await?;
-        let size = bytes.len() as u64;
-        std::fs::write(dest, &bytes)?;
-        return Ok(size);
-    }
+    for attempt in 0..=max_retries {
+        let response = client.get(&attempt_url).send().await?;
 
-    let status = response.status();
-
-    // Thumbnail request failed — try the original (non-thumbnail) URL
-    if let Some(fallback) = strip_thumbnail_path(url) {
-        eprintln!("  Thumbnail {status}, retrying with original: {fallback}");
-        let fallback_resp = client.get(&fallback).send().await?;
-        if fallback_resp.status().is_success() {
-            let bytes = fallback_resp.bytes().await?;
+        if response.status().is_success() {
+            let bytes = response.bytes().await?;
             let size = bytes.len() as u64;
             std::fs::write(dest, &bytes)?;
             return Ok(size);
         }
+
+        let status = response.status();
+
+        // Handle 429 with Retry-After
+        if status == reqwest::StatusCode::TOO_MANY_REQUESTS && attempt < max_retries {
+            let wait_secs = response
+                .headers()
+                .get("retry-after")
+                .and_then(|h| h.to_str().ok())
+                .and_then(parse_retry_after_value)
+                .unwrap_or_else(|| u64::from(1_u32 << attempt).min(30));
+            let wait_secs = wait_secs.min(60);
+            eprintln!("  Rate limited (429), waiting {wait_secs}s before retry...");
+            tokio::time::sleep(std::time::Duration::from_secs(wait_secs)).await;
+            continue;
+        }
+
+        // Non-429 failure: try thumbnail fallback (once)
+        if !used_fallback {
+            if let Some(fallback) = strip_thumbnail_path(&attempt_url) {
+                eprintln!("  Thumbnail {status}, retrying with original: {fallback}");
+                attempt_url = fallback;
+                used_fallback = true;
+                continue;
+            }
+        }
+
+        anyhow::bail!("HTTP {status} downloading {url}");
     }
 
-    anyhow::bail!("HTTP {status} downloading {url}")
+    anyhow::bail!("Exceeded {max_retries} retries downloading {url}")
 }
 
 /// Convenience: extract and download images for a single article.
@@ -1773,6 +1803,31 @@ mod tests {
     fn test_strip_thumbnail_path_non_thumb_returns_none() {
         let url = "https://upload.wikimedia.org/wikipedia/commons/a/ab/Example.png";
         assert_eq!(strip_thumbnail_path(url), None);
+    }
+
+    // ─── Retry-After parsing tests ────────────────────────
+
+    #[test]
+    fn test_parse_retry_after_value_seconds() {
+        assert_eq!(parse_retry_after_value("2"), Some(2));
+    }
+
+    #[test]
+    fn test_parse_retry_after_value_large() {
+        assert_eq!(parse_retry_after_value("120"), Some(120));
+    }
+
+    #[test]
+    fn test_parse_retry_after_value_date_returns_none() {
+        assert_eq!(
+            parse_retry_after_value("Thu, 01 May 2025 00:00:00 GMT"),
+            None,
+        );
+    }
+
+    #[test]
+    fn test_parse_retry_after_value_empty_returns_none() {
+        assert_eq!(parse_retry_after_value(""), None);
     }
 
     /// Minimal manifest for testing.
