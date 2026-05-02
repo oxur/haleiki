@@ -70,6 +70,14 @@ pub enum DemoCommand {
         /// Stages: fetch, clean, rewrite, media, convert, frontmatter.
         #[arg(long, value_parser = parse_stage)]
         stage: Option<PipelineStage>,
+
+        /// Restrict to articles with this tier (e.g., foundational, intermediate, advanced).
+        #[arg(long, conflicts_with = "article")]
+        tier: Option<String>,
+
+        /// Restrict to articles with this category (e.g., music, tibetan-buddhism).
+        #[arg(long, conflicts_with = "article")]
+        category: Option<String>,
     },
 
     /// Build the demo site from fetched sources.
@@ -147,6 +155,8 @@ pub fn run(cmd: &DemoCommand) -> anyhow::Result<()> {
             force,
             pandoc,
             stage,
+            tier,
+            category,
         } => {
             let rt = tokio::runtime::Runtime::new()?;
             rt.block_on(fetch::run(
@@ -155,6 +165,8 @@ pub fn run(cmd: &DemoCommand) -> anyhow::Result<()> {
                 *force,
                 *pandoc,
                 *stage,
+                tier.as_deref(),
+                category.as_deref(),
             ))?;
         }
         DemoCommand::Build => println!("demo build: not yet implemented"),
@@ -173,6 +185,8 @@ pub fn run(cmd: &DemoCommand) -> anyhow::Result<()> {
                 true,
                 false,
                 Some(PipelineStage::Frontmatter),
+                None,
+                None,
             ))?;
         }
         DemoCommand::CleanHtml { slug } => {

@@ -381,13 +381,23 @@ struct BatchResult {
 
 /// Fetch all articles in the manifest with bounded parallelism and progress.
 #[allow(clippy::too_many_lines)] // orchestrator function; splitting would obscure the flow
-async fn batch_fetch(manifest: &Manifest, dry_run: bool, force: bool) -> anyhow::Result<()> {
-    let articles = &manifest.articles;
+async fn batch_fetch(
+    manifest: &Manifest,
+    dry_run: bool,
+    force: bool,
+    tier: Option<&str>,
+    category: Option<&str>,
+) -> anyhow::Result<()> {
+    let articles: Vec<&Article> = manifest
+        .articles
+        .iter()
+        .filter(|a| tier.is_none_or(|t| a.tier == t) && category.is_none_or(|c| a.category == c))
+        .collect();
     let total = articles.len();
 
     if dry_run {
         println!("Dry run — would fetch {total} articles:\n");
-        for article in articles {
+        for article in &articles {
             let url = manifest.api_url(article);
             let cached = staging_html_path(&article.slug).exists();
             let cache_note = if cached && !force {
@@ -439,7 +449,7 @@ async fn batch_fetch(manifest: &Manifest, dry_run: bool, force: bool) -> anyhow:
 
     // Partition into skip/fetch lists first
     let mut to_fetch = Vec::new();
-    for article in articles {
+    for article in &articles {
         let html_path = staging_html_path(&article.slug);
         if html_path.exists() && !force {
             result.skipped.push(article.slug.clone());
@@ -449,7 +459,7 @@ async fn batch_fetch(manifest: &Manifest, dry_run: bool, force: bool) -> anyhow:
             bar.finish();
             overall_bar.inc(1);
         } else {
-            to_fetch.push(article);
+            to_fetch.push(*article);
         }
     }
 
@@ -725,12 +735,22 @@ async fn run_batch_pipeline(
     manifest: &Manifest,
     stage: super::PipelineStage,
     pandoc: bool,
+    tier: Option<&str>,
+    category: Option<&str>,
 ) -> anyhow::Result<()> {
     let client = build_client()?;
     let mut succeeded = 0;
     let mut failed: Vec<(String, String)> = Vec::new();
 
-    for article in &manifest.articles {
+    let articles: Vec<&Article> = manifest
+        .articles
+        .iter()
+        .filter(|a| {
+            tier.is_none_or(|t| a.tier == t) && category.is_none_or(|c| a.category == c)
+        })
+        .collect();
+
+    for article in articles {
         let html_path = staging_html_path(&article.slug);
         if !html_path.exists() {
             continue;
@@ -774,6 +794,8 @@ pub async fn run(
     force: bool,
     pandoc: bool,
     stage: Option<super::PipelineStage>,
+    tier: Option<&str>,
+    category: Option<&str>,
 ) -> anyhow::Result<()> {
     let manifest_path = Path::new("demo/manifest.yaml");
     if !manifest_path.exists() {
@@ -796,15 +818,33 @@ pub async fn run(
         eprintln!();
     }
 
+    // Validate tier/category filters against manifest taxonomy
+    if let Some(tier) = tier {
+        if !manifest.taxonomy.tiers.contains(&tier.to_string()) {
+            anyhow::bail!(
+                "unknown tier '{tier}'. Valid tiers: {}",
+                manifest.taxonomy.tiers.join(", "),
+            );
+        }
+    }
+    if let Some(category) = category {
+        if !manifest.taxonomy.categories.contains(&category.to_string()) {
+            anyhow::bail!(
+                "unknown category '{category}'. Valid categories: {}",
+                manifest.taxonomy.categories.join(", "),
+            );
+        }
+    }
+
     let effective_stage = Some(stage.unwrap_or(super::PipelineStage::Frontmatter));
 
     if let Some(slug) = article_slug {
         run_single(slug, &manifest, dry_run, force, pandoc, effective_stage).await?;
     } else {
-        batch_fetch(&manifest, dry_run, force).await?;
+        batch_fetch(&manifest, dry_run, force, tier, category).await?;
         if let Some(stop_stage) = effective_stage {
             if !dry_run {
-                run_batch_pipeline(&manifest, stop_stage, pandoc).await?;
+                run_batch_pipeline(&manifest, stop_stage, pandoc, tier, category).await?;
             }
         }
     }

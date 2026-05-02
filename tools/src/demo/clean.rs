@@ -292,6 +292,15 @@ fn serialize_node(
             use std::fmt::Write;
             let tag = el.name();
 
+            // Unwrap mw:Entity spans -- preserve content, discard wrapper
+            if tag == "span" {
+                if let Some(typeof_attr) = el.attr("typeof") {
+                    if typeof_attr.contains("mw:Entity") {
+                        return serialize_children(node_id, document, remove_ids);
+                    }
+                }
+            }
+
             // Self-closing void elements
             if matches!(tag, "br" | "hr" | "img" | "input" | "meta" | "link") {
                 let mut s = format!("<{tag}");
@@ -736,6 +745,49 @@ mod tests {
         assert!(
             cleaned.contains("shortdescription"),
             "Shortdescription should be preserved",
+        );
+    }
+
+    // --- mw:Entity unwrapping tests ---
+
+    #[test]
+    fn test_clean_html_unwraps_mw_entity_nbsp() {
+        let html = r#"<html><body>
+            <th>Known<span typeof="mw:Entity"> </span>for</th>
+        </body></html>"#;
+        let cleaned = clean_html(html);
+        assert!(
+            cleaned.contains("Known for"),
+            "nbsp should be preserved between words: {cleaned}",
+        );
+        assert!(
+            !cleaned.contains("mw:Entity"),
+            "mw:Entity span should be unwrapped",
+        );
+    }
+
+    #[test]
+    fn test_clean_html_unwraps_mw_entity_copyright() {
+        let html = r#"<html><body>
+            <p>Copyright<span typeof="mw:Entity">©</span> 2024</p>
+        </body></html>"#;
+        let cleaned = clean_html(html);
+        assert!(
+            cleaned.contains("Copyright© 2024") || cleaned.contains("Copyright©"),
+            "Entity character should be preserved: {cleaned}",
+        );
+        assert!(!cleaned.contains("mw:Entity"));
+    }
+
+    #[test]
+    fn test_clean_html_unwraps_mw_entity_arrow() {
+        let html = r#"<html><body>
+            <p>A<span typeof="mw:Entity">→</span>B</p>
+        </body></html>"#;
+        let cleaned = clean_html(html);
+        assert!(
+            cleaned.contains("A→B"),
+            "Arrow entity should be preserved: {cleaned}",
         );
     }
 
