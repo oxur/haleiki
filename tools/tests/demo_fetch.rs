@@ -169,6 +169,101 @@ fn test_demo_fetch_batch_live() {
     }
 }
 
+// --- Tier and category filter tests ---
+
+#[test]
+#[cfg(feature = "demo")]
+fn test_demo_fetch_tier_filter_dry_run() {
+    Command::cargo_bin("haleiki")
+        .unwrap()
+        .args(["demo", "fetch", "--tier", "foundational", "--dry-run"])
+        .current_dir(env!("CARGO_MANIFEST_DIR").to_string() + "/..")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Would fetch"));
+}
+
+#[test]
+#[cfg(feature = "demo")]
+fn test_demo_fetch_category_filter_dry_run() {
+    Command::cargo_bin("haleiki")
+        .unwrap()
+        .args(["demo", "fetch", "--category", "music", "--dry-run"])
+        .current_dir(env!("CARGO_MANIFEST_DIR").to_string() + "/..")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Would fetch"));
+}
+
+#[test]
+#[cfg(feature = "demo")]
+fn test_demo_fetch_tier_and_category_combined_dry_run() {
+    Command::cargo_bin("haleiki")
+        .unwrap()
+        .args([
+            "demo",
+            "fetch",
+            "--tier",
+            "foundational",
+            "--category",
+            "music",
+            "--dry-run",
+        ])
+        .current_dir(env!("CARGO_MANIFEST_DIR").to_string() + "/..")
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Would fetch"));
+}
+
+#[test]
+#[cfg(feature = "demo")]
+fn test_demo_fetch_unknown_tier_fails() {
+    Command::cargo_bin("haleiki")
+        .unwrap()
+        .args(["demo", "fetch", "--tier", "nonexistent-tier", "--dry-run"])
+        .current_dir(env!("CARGO_MANIFEST_DIR").to_string() + "/..")
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("unknown tier"));
+}
+
+#[test]
+#[cfg(feature = "demo")]
+fn test_demo_fetch_unknown_category_fails() {
+    Command::cargo_bin("haleiki")
+        .unwrap()
+        .args([
+            "demo",
+            "fetch",
+            "--category",
+            "nonexistent-cat",
+            "--dry-run",
+        ])
+        .current_dir(env!("CARGO_MANIFEST_DIR").to_string() + "/..")
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("unknown category"));
+}
+
+#[test]
+#[cfg(feature = "demo")]
+fn test_demo_fetch_article_and_tier_conflict() {
+    Command::cargo_bin("haleiki")
+        .unwrap()
+        .args([
+            "demo",
+            "fetch",
+            "--article",
+            "dzogchen",
+            "--tier",
+            "advanced",
+            "--dry-run",
+        ])
+        .current_dir(env!("CARGO_MANIFEST_DIR").to_string() + "/..")
+        .assert()
+        .failure();
+}
+
 // --- Rigpa Wiki dry-run tests ---
 
 #[test]

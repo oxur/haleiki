@@ -39,7 +39,8 @@ pub fn staging_markdown_path(slug: &str) -> std::path::PathBuf {
 /// and post-processing fixups are applied after the initial conversion.
 pub fn html_to_markdown(html: &str) -> anyhow::Result<String> {
     // Pre-process: handle elements the converter struggles with
-    let preprocessed = preprocess_definition_lists(html);
+    let preprocessed = preprocess_syntaxhighlight(html);
+    let preprocessed = preprocess_definition_lists(&preprocessed);
     let preprocessed = ensure_img_alt_attributes(&preprocessed);
 
     let converter = htmd::HtmlToMarkdown::builder().build();
@@ -456,13 +457,15 @@ fn find_ancestor_figure(
 
 /// Derive alt text from a filename in a `src` URL.
 ///
-/// Strips the query string, extension, and any `NNNpx-` size prefix,
-/// then replaces underscores with spaces.
+/// Percent-decodes the filename, strips the query string, extension,
+/// and any `NNNpx-` size prefix, then replaces underscores with spaces.
 fn alt_from_filename(src: &str) -> String {
     let path = src.split('?').next().unwrap_or(src);
     let filename = path.rsplit('/').next().unwrap_or("image");
+    // Percent-decode the filename first
+    let decoded = percent_decode(filename);
     // Strip extension
-    let name = filename.rsplit_once('.').map_or(filename, |(n, _)| n);
+    let name = decoded.rsplit_once('.').map_or(decoded.as_str(), |(n, _)| n);
     // Strip size prefix like "300px-"
     let name = if let Some(pos) = name.find("px-") {
         &name[pos + 3..]
@@ -470,6 +473,41 @@ fn alt_from_filename(src: &str) -> String {
         name
     };
     name.replace('_', " ")
+}
+
+/// Percent-decode a URL-encoded string.
+fn percent_decode(s: &str) -> String {
+    let mut bytes = Vec::with_capacity(s.len());
+    let mut chars = s.as_bytes().iter();
+    while let Some(&b) = chars.next() {
+        if b == b'%' {
+            let hi = chars.next().copied();
+            let lo = chars.next().copied();
+            if let (Some(h), Some(l)) = (hi, lo) {
+                let hex = [h, l];
+                if let Ok(decoded) = u8::from_str_radix(
+                    std::str::from_utf8(&hex).unwrap_or(""),
+                    16,
+                ) {
+                    bytes.push(decoded);
+                    continue;
+                }
+                // Invalid hex -- emit literally
+                bytes.push(b'%');
+                bytes.push(h);
+                bytes.push(l);
+                continue;
+            }
+            // Incomplete sequence -- emit literally
+            bytes.push(b'%');
+            if let Some(h) = hi {
+                bytes.push(h);
+            }
+        } else {
+            bytes.push(b);
+        }
+    }
+    String::from_utf8_lossy(&bytes).into_owned()
 }
 
 /// Escape characters that are special inside HTML attribute values.
@@ -488,6 +526,114 @@ fn replace_empty_alt(img_html: &str, new_alt: &str) -> String {
         }
     }
     img_html.to_string()
+}
+
+/// Pre-process `<syntaxhighlight>` elements using `data-mw` source text.
+///
+/// Parsoid wraps syntax-highlighted code in per-token `<span>` elements
+/// which htmd concatenates without whitespace. The original source is
+/// available in the `data-mw` attribute's `body.extsrc` field.
+///
+/// Uses a two-pass approach: first parse with scraper to extract data-mw
+/// attribute values, then use string searching to locate and replace the
+/// original elements in the raw HTML (since scraper re-serialization
+/// changes attribute quoting and can break round-trip matching).
+fn preprocess_syntaxhighlight(html: &str) -> String {
+    let document = scraper::Html::parse_fragment(html);
+    let selector = scraper::Selector::parse("[typeof]").expect("valid CSS selector");
+
+    // Collect replacements: (data_mw_value, replacement_html)
+    // We key on the data-mw value to find the element in the raw string.
+    let mut replacements: Vec<(String, String, String)> = Vec::new();
+
+    for element in document.select(&selector) {
+        let Some(typeof_attr) = element.value().attr("typeof") else {
+            continue;
+        };
+        if !typeof_attr.contains("mw:Extension/syntaxhighlight") {
+            continue;
+        }
+
+        let Some(data_mw) = element.value().attr("data-mw") else {
+            continue;
+        };
+
+        let Ok(parsed) = serde_json::from_str::<serde_json::Value>(data_mw) else {
+            continue;
+        };
+
+        let Some(extsrc) = parsed.pointer("/body/extsrc").and_then(|v| v.as_str()) else {
+            continue;
+        };
+
+        // Strip a single leading and trailing newline
+        let code = extsrc.strip_prefix('\n').unwrap_or(extsrc);
+        let code = code.strip_suffix('\n').unwrap_or(code);
+
+        let lang = parsed
+            .pointer("/attrs/lang")
+            .and_then(|v| v.as_str())
+            .map(str::to_lowercase);
+
+        let is_inline = parsed
+            .pointer("/attrs/inline")
+            .and_then(|v| v.as_str())
+            .is_some();
+
+        let tag_name = element.value().name();
+        let is_block =
+            tag_name == "div" || (!is_inline && tag_name != "code" && tag_name != "span");
+
+        let escaped_code = code
+            .replace('&', "&amp;")
+            .replace('<', "&lt;")
+            .replace('>', "&gt;");
+
+        let replacement = if is_block {
+            if let Some(ref lang) = lang {
+                format!("<pre><code class=\"language-{lang}\">{escaped_code}</code></pre>")
+            } else {
+                format!("<pre><code>{escaped_code}</code></pre>")
+            }
+        } else {
+            format!("<code>{escaped_code}</code>")
+        };
+
+        replacements.push((data_mw.to_string(), tag_name.to_string(), replacement));
+    }
+
+    if replacements.is_empty() {
+        return html.to_string();
+    }
+
+    let mut result = html.to_string();
+
+    for (data_mw, tag_name, replacement) in &replacements {
+        // Find the element in the raw HTML by locating the data-mw attribute value.
+        // The attribute may be quoted with either ' or " in the source HTML.
+        let Some(attr_pos) = result.find(data_mw.as_str()) else {
+            continue;
+        };
+
+        // Walk backwards from the data-mw value to find the opening `<tag`
+        let before = &result[..attr_pos];
+        let open_pattern = format!("<{tag_name}");
+        let Some(tag_start) = before.rfind(&open_pattern) else {
+            continue;
+        };
+
+        // Find the closing tag after the data-mw value
+        let close_pattern = format!("</{tag_name}>");
+        let after_attr = attr_pos + data_mw.len();
+        let Some(close_offset) = result[after_attr..].find(&close_pattern) else {
+            continue;
+        };
+        let tag_end = after_attr + close_offset + close_pattern.len();
+
+        result = format!("{}{}{}", &result[..tag_start], replacement, &result[tag_end..]);
+    }
+
+    result
 }
 
 /// Convert HTML definition lists to a Markdown-compatible format.
@@ -1207,6 +1353,117 @@ mod tests {
             !md.starts_with('!') || md.starts_with("!["),
             "Should not have bare !: {md}",
         );
+    }
+
+    // --- Syntaxhighlight preprocessing tests ---
+
+    #[test]
+    fn test_preprocess_syntaxhighlight_block_with_lang() {
+        let html = r#"<div typeof="mw:Extension/syntaxhighlight" data-mw='{"name":"syntaxhighlight","attrs":{"lang":"Lisp"},"body":{"extsrc":"\n(* (+ 1 2 3 4 5 6) 2)\n"}}'><span class="p">(</span><span class="nb">*</span></div>"#;
+        let result = preprocess_syntaxhighlight(html);
+        assert!(
+            result.contains("<pre><code class=\"language-lisp\">"),
+            "Should produce pre/code with lang: {result}",
+        );
+        assert!(
+            result.contains("(* (+ 1 2 3 4 5 6) 2)"),
+            "Should contain exact source: {result}",
+        );
+        assert!(
+            !result.contains("span class=\"p\""),
+            "Should replace span tokens: {result}",
+        );
+    }
+
+    #[test]
+    fn test_preprocess_syntaxhighlight_block_without_lang() {
+        let html = r#"<div typeof="mw:Extension/syntaxhighlight" data-mw='{"name":"syntaxhighlight","body":{"extsrc":"\nsome code\n"}}'><span>some</span> <span>code</span></div>"#;
+        let result = preprocess_syntaxhighlight(html);
+        assert!(
+            result.contains("<pre><code>some code</code></pre>"),
+            "Should produce pre/code without lang: {result}",
+        );
+    }
+
+    #[test]
+    fn test_preprocess_syntaxhighlight_inline() {
+        let html = r#"<code typeof="mw:Extension/syntaxhighlight" data-mw='{"name":"syntaxhighlight","attrs":{"lang":"Lisp","inline":"1"},"body":{"extsrc":"(list 1 2)"}}'><span>(</span><span>list</span></code>"#;
+        let result = preprocess_syntaxhighlight(html);
+        assert!(
+            result.contains("<code>(list 1 2)</code>"),
+            "Inline should produce simple code: {result}",
+        );
+        assert!(
+            !result.contains("<pre>"),
+            "Inline should not have pre: {result}",
+        );
+    }
+
+    #[test]
+    fn test_preprocess_syntaxhighlight_multiline_preserves_whitespace() {
+        let html = r#"<div typeof="mw:Extension/syntaxhighlight" data-mw='{"name":"syntaxhighlight","attrs":{"lang":"erlang"},"body":{"extsrc":"\n      1> X = 42.\n      42\n"}}'><span>1</span></div>"#;
+        let result = preprocess_syntaxhighlight(html);
+        // The > is HTML-escaped in the pre/code output
+        assert!(
+            result.contains("      1&gt; X = 42."),
+            "Should preserve leading whitespace: {result}",
+        );
+        assert!(
+            result.contains("      42"),
+            "Should preserve indentation: {result}",
+        );
+    }
+
+    #[test]
+    fn test_preprocess_syntaxhighlight_with_transclusion_typeof() {
+        // typeof may contain multiple values
+        let html = r#"<code typeof="mw:Extension/syntaxhighlight mw:Transclusion" data-mw='{"name":"syntaxhighlight","attrs":{"lang":"Lisp","inline":"1"},"body":{"extsrc":"(list 1 2)"}}'><span>(list 1 2)</span></code>"#;
+        let result = preprocess_syntaxhighlight(html);
+        assert!(
+            result.contains("<code>(list 1 2)</code>"),
+            "Should handle multi-value typeof: {result}",
+        );
+    }
+
+    #[test]
+    fn test_syntaxhighlight_produces_fenced_code_after_markdown_conversion() {
+        let html = r#"<div typeof="mw:Extension/syntaxhighlight" data-mw='{"name":"syntaxhighlight","attrs":{"lang":"lisp"},"body":{"extsrc":"\n(* (+ 1 2) 3)\n"}}'><span>(</span></div>"#;
+        let md = html_to_markdown(html).unwrap();
+        assert!(
+            md.contains("```"),
+            "Should produce fenced code block: {md}",
+        );
+        assert!(
+            md.contains("(* (+ 1 2) 3)"),
+            "Should contain original source: {md}",
+        );
+    }
+
+    // --- Percent-decoded alt text tests ---
+
+    #[test]
+    fn test_alt_from_filename_percent_encoded_parens() {
+        let result = alt_from_filename("../media/lfe-language/LFE_%28Lisp_Flavored_Erlang%29_Logo.png");
+        assert_eq!(result, "LFE (Lisp Flavored Erlang) Logo");
+    }
+
+    #[test]
+    fn test_alt_from_filename_percent_encoded_spaces() {
+        let result = alt_from_filename("../media/test/My%20Photo%20Album.jpg");
+        assert_eq!(result, "My Photo Album");
+    }
+
+    #[test]
+    fn test_alt_from_filename_percent_encoded_utf8() {
+        // O-umlaut = C3 96 in UTF-8
+        let result = alt_from_filename("../media/test/%C3%96lafur_Arnalds.jpg");
+        assert_eq!(result, "\u{00D6}lafur Arnalds");
+    }
+
+    #[test]
+    fn test_alt_from_filename_no_encoding_unchanged() {
+        let result = alt_from_filename("../media/test/Simple_Name.png");
+        assert_eq!(result, "Simple Name");
     }
 
     // --- Real article test ------------------------------
