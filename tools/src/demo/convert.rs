@@ -39,7 +39,8 @@ pub fn staging_markdown_path(slug: &str) -> std::path::PathBuf {
 /// and post-processing fixups are applied after the initial conversion.
 pub fn html_to_markdown(html: &str) -> anyhow::Result<String> {
     // Pre-process: handle elements the converter struggles with
-    let preprocessed = preprocess_syntaxhighlight(html);
+    let (preprocessed, math_placeholders) = preprocess_math(html);
+    let preprocessed = preprocess_syntaxhighlight(&preprocessed);
     let preprocessed = preprocess_definition_lists(&preprocessed);
     let preprocessed = ensure_img_alt_attributes(&preprocessed);
 
@@ -49,7 +50,17 @@ pub fn html_to_markdown(html: &str) -> anyhow::Result<String> {
         .convert(&preprocessed)
         .map_err(|e| anyhow::anyhow!("htmd conversion failed: {e}"))?;
 
-    let cleaned = post_process(&raw_md);
+    let mut cleaned = post_process(&raw_md);
+
+    // Substitute math placeholders after all post-processing
+    for placeholder in &math_placeholders {
+        let replacement = if placeholder.is_block {
+            format!("$$\n{}\n$$", placeholder.latex)
+        } else {
+            format!("${}$", placeholder.latex)
+        };
+        cleaned = cleaned.replace(&placeholder.sentinel, &replacement);
+    }
 
     Ok(cleaned)
 }
@@ -465,7 +476,9 @@ fn alt_from_filename(src: &str) -> String {
     // Percent-decode the filename first
     let decoded = percent_decode(filename);
     // Strip extension
-    let name = decoded.rsplit_once('.').map_or(decoded.as_str(), |(n, _)| n);
+    let name = decoded
+        .rsplit_once('.')
+        .map_or(decoded.as_str(), |(n, _)| n);
     // Strip size prefix like "300px-"
     let name = if let Some(pos) = name.find("px-") {
         &name[pos + 3..]
@@ -485,10 +498,8 @@ fn percent_decode(s: &str) -> String {
             let lo = chars.next().copied();
             if let (Some(h), Some(l)) = (hi, lo) {
                 let hex = [h, l];
-                if let Ok(decoded) = u8::from_str_radix(
-                    std::str::from_utf8(&hex).unwrap_or(""),
-                    16,
-                ) {
+                if let Ok(decoded) = u8::from_str_radix(std::str::from_utf8(&hex).unwrap_or(""), 16)
+                {
                     bytes.push(decoded);
                     continue;
                 }
@@ -526,6 +537,166 @@ fn replace_empty_alt(img_html: &str, new_alt: &str) -> String {
         }
     }
     img_html.to_string()
+}
+
+/// A placeholder for a math expression that survives htmd conversion.
+struct MathPlaceholder {
+    /// Unique sentinel string that replaces the math HTML in the preprocessed output.
+    sentinel: String,
+    /// The original LaTeX source extracted from `data-mw` or the `<img>` alt text.
+    latex: String,
+    /// Whether this is a display/block math expression (vs. inline).
+    is_block: bool,
+}
+
+/// Pre-process `<math>` elements using `data-mw` source text.
+///
+/// Uses sentinel placeholders that survive htmd without backslash escaping.
+/// Sentinels are replaced with `$LaTeX$` or `$$\nLaTeX\n$$` in post-processing.
+fn preprocess_math(html: &str) -> (String, Vec<MathPlaceholder>) {
+    let document = scraper::Html::parse_fragment(html);
+    let selector = scraper::Selector::parse("[typeof]").expect("valid CSS selector");
+
+    let mut placeholders: Vec<MathPlaceholder> = Vec::new();
+    let mut replacements: Vec<(String, String, String)> = Vec::new();
+
+    for element in document.select(&selector) {
+        let Some(typeof_attr) = element.value().attr("typeof") else {
+            continue;
+        };
+        if !typeof_attr.contains("mw:Extension/math") {
+            continue;
+        }
+
+        let Some(data_mw) = element.value().attr("data-mw") else {
+            continue;
+        };
+        let Ok(parsed) = serde_json::from_str::<serde_json::Value>(data_mw) else {
+            continue;
+        };
+
+        // Extract LaTeX from body.extsrc, falling back to img alt
+        let latex = if let Some(extsrc) = parsed.pointer("/body/extsrc").and_then(|v| v.as_str()) {
+            extsrc.trim().to_string()
+        } else {
+            // Fallback: extract from img alt attribute
+            extract_math_alt_fallback(&element).unwrap_or_default()
+        };
+
+        if latex.is_empty() {
+            continue;
+        }
+
+        // Determine inline vs block from attrs.display
+        let is_block = parsed
+            .pointer("/attrs/display")
+            .and_then(|v| v.as_str())
+            .is_some_and(|d| d == "block");
+
+        let idx = placeholders.len();
+        let sentinel = format!("HALEIKIMATH{idx}HALEIKIMATH");
+
+        placeholders.push(MathPlaceholder {
+            sentinel: sentinel.clone(),
+            latex,
+            is_block,
+        });
+
+        let tag_name = element.value().name();
+        replacements.push((data_mw.to_string(), tag_name.to_string(), sentinel));
+    }
+
+    if replacements.is_empty() {
+        return (html.to_string(), placeholders);
+    }
+
+    let mut result = html.to_string();
+
+    for (data_mw, tag_name, replacement) in &replacements {
+        // Same entity-encoding search logic as preprocess_syntaxhighlight
+        let encoded_mw = data_mw
+            .replace('&', "&amp;")
+            .replace('"', "&quot;")
+            .replace('<', "&lt;")
+            .replace('>', "&gt;");
+        let (attr_pos, search_len) = if let Some(pos) = result.find(data_mw.as_str()) {
+            (pos, data_mw.len())
+        } else if let Some(pos) = result.find(&encoded_mw) {
+            (pos, encoded_mw.len())
+        } else {
+            continue;
+        };
+
+        let before = &result[..attr_pos];
+        let open_pattern = format!("<{tag_name}");
+        let Some(tag_start) = before.rfind(&open_pattern) else {
+            continue;
+        };
+
+        // For math, the closing tag may be nested (outer span contains inner spans).
+        // Count nesting depth to find the MATCHING close tag.
+        let close_pattern = format!("</{tag_name}>");
+        let after_open = attr_pos + search_len;
+
+        let mut depth = 1;
+        let mut search_pos = after_open;
+        let mut close_end = None;
+        while depth > 0 {
+            let next_open = result[search_pos..].find(&open_pattern);
+            let next_close = result[search_pos..].find(&close_pattern);
+            match (next_open, next_close) {
+                (Some(o), Some(c)) if o < c => {
+                    depth += 1;
+                    search_pos += o + open_pattern.len();
+                }
+                (_, Some(c)) => {
+                    depth -= 1;
+                    if depth == 0 {
+                        close_end = Some(search_pos + c + close_pattern.len());
+                    }
+                    search_pos += c + close_pattern.len();
+                }
+                _ => break,
+            }
+        }
+
+        let Some(tag_end) = close_end else { continue };
+
+        result = format!(
+            "{}{}{}",
+            &result[..tag_start],
+            replacement,
+            &result[tag_end..]
+        );
+    }
+
+    (result, placeholders)
+}
+
+/// Extract LaTeX from the fallback `<img>` alt attribute inside a math element.
+///
+/// Strips the `{\displaystyle ...}` wrapper if present.
+fn extract_math_alt_fallback(element: &scraper::ElementRef<'_>) -> Option<String> {
+    let img_sel = scraper::Selector::parse(
+        "img.mwe-math-fallback-image-inline, img.mwe-math-fallback-image-display",
+    )
+    .ok()?;
+    let img = element.select(&img_sel).next()?;
+    let alt = img.value().attr("alt")?;
+    let trimmed = alt.trim();
+    // Strip {\displaystyle ...} wrapper
+    let latex = if let Some(rest) = trimmed.strip_prefix("{\\displaystyle ") {
+        rest.strip_suffix('}').unwrap_or(rest)
+    } else if let Some(rest) = trimmed.strip_prefix("{\\displaystyle") {
+        rest.strip_suffix('}').unwrap_or(rest)
+    } else {
+        trimmed
+    };
+    let latex = latex.trim();
+    if latex.is_empty() {
+        return None;
+    }
+    Some(latex.to_string())
 }
 
 /// Pre-process `<syntaxhighlight>` elements using `data-mw` source text.
@@ -617,14 +788,13 @@ fn preprocess_syntaxhighlight(html: &str) -> String {
             .replace('"', "&quot;")
             .replace('<', "&lt;")
             .replace('>', "&gt;");
-        let (attr_pos, search_len) =
-            if let Some(pos) = result.find(data_mw.as_str()) {
-                (pos, data_mw.len())
-            } else if let Some(pos) = result.find(&encoded_mw) {
-                (pos, encoded_mw.len())
-            } else {
-                continue;
-            };
+        let (attr_pos, search_len) = if let Some(pos) = result.find(data_mw.as_str()) {
+            (pos, data_mw.len())
+        } else if let Some(pos) = result.find(&encoded_mw) {
+            (pos, encoded_mw.len())
+        } else {
+            continue;
+        };
 
         // Walk backwards from the data-mw value to find the opening `<tag`
         let before = &result[..attr_pos];
@@ -641,7 +811,12 @@ fn preprocess_syntaxhighlight(html: &str) -> String {
         };
         let tag_end = after_attr + close_offset + close_pattern.len();
 
-        result = format!("{}{}{}", &result[..tag_start], replacement, &result[tag_end..]);
+        result = format!(
+            "{}{}{}",
+            &result[..tag_start],
+            replacement,
+            &result[tag_end..]
+        );
     }
 
     result
@@ -1440,10 +1615,7 @@ mod tests {
     fn test_syntaxhighlight_produces_fenced_code_after_markdown_conversion() {
         let html = r#"<div typeof="mw:Extension/syntaxhighlight" data-mw='{"name":"syntaxhighlight","attrs":{"lang":"lisp"},"body":{"extsrc":"\n(* (+ 1 2) 3)\n"}}'><span>(</span></div>"#;
         let md = html_to_markdown(html).unwrap();
-        assert!(
-            md.contains("```"),
-            "Should produce fenced code block: {md}",
-        );
+        assert!(md.contains("```"), "Should produce fenced code block: {md}",);
         assert!(
             md.contains("(* (+ 1 2) 3)"),
             "Should contain original source: {md}",
@@ -1468,7 +1640,8 @@ mod tests {
 
     #[test]
     fn test_alt_from_filename_percent_encoded_parens() {
-        let result = alt_from_filename("../media/lfe-language/LFE_%28Lisp_Flavored_Erlang%29_Logo.png");
+        let result =
+            alt_from_filename("../media/lfe-language/LFE_%28Lisp_Flavored_Erlang%29_Logo.png");
         assert_eq!(result, "LFE (Lisp Flavored Erlang) Logo");
     }
 
@@ -1489,6 +1662,73 @@ mod tests {
     fn test_alt_from_filename_no_encoding_unchanged() {
         let result = alt_from_filename("../media/test/Simple_Name.png");
         assert_eq!(result, "Simple Name");
+    }
+
+    // --- Math preprocessor tests ---
+
+    #[test]
+    fn test_preprocess_math_inline_produces_dollar_latex() {
+        let html = r#"<span typeof="mw:Extension/math" data-mw='{"name":"math","attrs":{},"body":{"extsrc":"E=mc^2"}}'><span style="display:none"><math></math></span><img class="mwe-math-fallback-image-inline" alt="{\displaystyle E=mc^2}" /></span>"#;
+        let md = html_to_markdown(html).unwrap();
+        assert!(md.contains("$E=mc^2$"), "Should produce inline math: {md}");
+        assert!(
+            !md.contains("\\displaystyle"),
+            "Should not contain displaystyle wrapper: {md}",
+        );
+        assert!(
+            !md.contains("\\\\"),
+            "Backslashes should not be escaped: {md}",
+        );
+    }
+
+    #[test]
+    fn test_preprocess_math_block_produces_double_dollar() {
+        let html = r#"<span typeof="mw:Extension/math" data-mw='{"name":"math","attrs":{"display":"block"},"body":{"extsrc":"\\frac{d}{dt}|\\Psi\\rangle = H|\\Psi\\rangle"}}'><span style="display:none"><math></math></span><img class="mwe-math-fallback-image-display" /></span>"#;
+        let md = html_to_markdown(html).unwrap();
+        assert!(md.contains("$$"), "Should produce display math: {md}");
+        assert!(
+            md.contains("\\frac{d}{dt}"),
+            "Should contain unescaped LaTeX: {md}",
+        );
+    }
+
+    #[test]
+    fn test_preprocess_math_alt_fallback() {
+        let html = r#"<span typeof="mw:Extension/math" data-mw='{"name":"math","attrs":{}}'><span style="display:none"><math></math></span><img class="mwe-math-fallback-image-inline" alt="{\displaystyle \psi}" /></span>"#;
+        let md = html_to_markdown(html).unwrap();
+        assert!(
+            md.contains("$\\psi$"),
+            "Should extract LaTeX from alt: {md}",
+        );
+    }
+
+    #[test]
+    fn test_preprocess_math_entity_encoded_data_mw() {
+        let html = r#"<span typeof="mw:Extension/math" data-mw="{&quot;name&quot;:&quot;math&quot;,&quot;attrs&quot;:{},&quot;body&quot;:{&quot;extsrc&quot;:&quot;x^2&quot;}}"><span style="display:none"><math></math></span><img class="mwe-math-fallback-image-inline" /></span>"#;
+        let md = html_to_markdown(html).unwrap();
+        assert!(
+            md.contains("$x^2$"),
+            "Should handle entity-encoded data-mw: {md}",
+        );
+    }
+
+    #[test]
+    fn test_preprocess_math_multiple_on_same_page() {
+        let html = r#"<p>Inline <span typeof="mw:Extension/math" data-mw='{"name":"math","attrs":{},"body":{"extsrc":"a"}}'><img class="mwe-math-fallback-image-inline" /></span> and <span typeof="mw:Extension/math" data-mw='{"name":"math","attrs":{},"body":{"extsrc":"b"}}'><img class="mwe-math-fallback-image-inline" /></span>.</p>"#;
+        let md = html_to_markdown(html).unwrap();
+        assert!(md.contains("$a$"), "Should contain first math: {md}");
+        assert!(md.contains("$b$"), "Should contain second math: {md}");
+    }
+
+    #[test]
+    fn test_preprocess_math_no_backslash_escaping() {
+        let html = r#"<span typeof="mw:Extension/math" data-mw='{"name":"math","attrs":{},"body":{"extsrc":"\\hat{H}|\\Psi\\rangle"}}'><img class="mwe-math-fallback-image-inline" /></span>"#;
+        let md = html_to_markdown(html).unwrap();
+        assert!(
+            md.contains("\\hat{H}"),
+            "Should have single backslash: {md}",
+        );
+        assert!(!md.contains("\\\\hat"), "Should not double-escape: {md}",);
     }
 
     // --- Real article test ------------------------------

@@ -745,9 +745,7 @@ async fn run_batch_pipeline(
     let articles: Vec<&Article> = manifest
         .articles
         .iter()
-        .filter(|a| {
-            tier.is_none_or(|t| a.tier == t) && category.is_none_or(|c| a.category == c)
-        })
+        .filter(|a| tier.is_none_or(|t| a.tier == t) && category.is_none_or(|c| a.category == c))
         .collect();
 
     for article in articles {
