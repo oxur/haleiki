@@ -31,6 +31,7 @@ Run a single test: `cargo test <test_name>`
 ## Architecture
 
 Two first-class content types:
+
 - **Source Pages** — authored Markdown (guides, tutorials, essays). Published as-is and also serve as input for concept extraction.
 - **Concept Cards** — atomic knowledge units with structured frontmatter: typed relationships, provenance, competency questions, aliases, classification. Generated via AI-driven extraction from source pages.
 
@@ -41,6 +42,7 @@ The Rust CLI (pre-build layer) parses all content, builds a relationship graph (
 Design docs are managed with ODM (`odm.toml` config) in `docs/design/`, organized by state folders (01-draft, 02-under-review, ..., 06-final). View them with `./bin/odm show <number>`.
 
 Key docs:
+
 - **0001** — Architecture document (draft)
 - **0002** — Demo site design document (under review)
 
@@ -50,11 +52,12 @@ Working documents (not committed): `workbench/`
 
 For Rust code quality, load the skill and guides:
 
-1. **`assets/ai/ai-rust/skills/claude/SKILL.md`** — Advanced Rust programming skill
-2. **`assets/ai/ai-rust/guides/*.md`** — Comprehensive Rust guidelines (especially `11-anti-patterns.md`)
+1. **`assets/ai/rust/SKILL.md`** — Advanced Rust programming skill
+2. **`assets/ai/rust/guides/*`** — Comprehensive Rust guidelines (especially `11-anti-patterns.md`)
 3. **`assets/ai/CLAUDE-CODE-COVERAGE.md`** — Test coverage guide (95%+ target)
 
 **Note:** `assets/ai/ai-rust` may be a symlink. If it doesn't exist, check `~/lab/oxur/ai-rust` or `~/lab/oxur/ai-rust-skill`, or ask permission to clone:
+
 ```bash
 git clone https://github.com/oxur/ai-rust assets/ai/ai-rust
 ```

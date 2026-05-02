@@ -45,7 +45,15 @@ articles:
     slug: "dzogchen"
     category: "tibetan-buddhism"
     subcategory: "practice"
-    tier: "foundational"
+    tier: "advanced"
+    tags: ["practice", "philosophy", "nyingma"]
+    keywords: ["great perfection", "rigpa", "awareness", "atiyoga"]
+
+  - title: "Madhyamaka"
+    slug: "madhyamaka"
+    category: "tibetan-buddhism"
+    subcategory: "philosophy"
+    tier: "advanced"
     tags: ["practice", "philosophy", "nyingma"]
     keywords: ["great perfection", "rigpa", "awareness", "atiyoga"]
 
