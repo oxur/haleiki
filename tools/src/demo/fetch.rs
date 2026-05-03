@@ -537,8 +537,12 @@ async fn batch_fetch(
 
     print_batch_summary(&result);
 
+    // Report failures but don't abort — let the pipeline process whatever succeeded
     if !result.failed.is_empty() {
-        anyhow::bail!("{} article(s) failed to fetch", result.failed.len());
+        eprintln!(
+            "Warning: {} article(s) failed to fetch (see above). Continuing with pipeline for fetched articles.",
+            result.failed.len(),
+        );
     }
 
     Ok(())
@@ -766,13 +770,6 @@ async fn run_batch_pipeline(
     );
     for (slug, msg) in &failed {
         eprintln!("  {slug}: {msg}");
-    }
-
-    if !failed.is_empty() {
-        anyhow::bail!(
-            "{} article(s) failed during pipeline processing",
-            failed.len(),
-        );
     }
 
     Ok(())
