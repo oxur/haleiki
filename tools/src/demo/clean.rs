@@ -64,6 +64,7 @@ const REMOVE_SELECTORS: &[&str] = &[
     // Miscellaneous chrome
     ".authority-control",
     ".spoken-wikipedia",
+    ".noprint", // Wikipedia maintenance UI: [citation needed], [when?], etc.
     "#siteSub",
     "#contentSub",
     ".mw-indicators",
@@ -788,6 +789,56 @@ mod tests {
         assert!(
             cleaned.contains("A→B"),
             "Arrow entity should be preserved: {cleaned}",
+        );
+    }
+
+    // --- noprint removal tests ---
+
+    #[test]
+    fn test_clean_html_removes_noprint_citation_needed() {
+        let html = r#"<html><body>
+            <p>Some claim<sup class="noprint Inline-Template">[<i><a href="/wiki/Wikipedia:Citation_needed">citation needed</a></i>]</sup> is made.</p>
+        </body></html>"#;
+        let cleaned = clean_html(html);
+        assert!(
+            !cleaned.contains("citation needed"),
+            "citation needed should be stripped: {cleaned}",
+        );
+        assert!(
+            cleaned.contains("Some claim"),
+            "Content before should be preserved",
+        );
+        assert!(
+            cleaned.contains("is made."),
+            "Content after should be preserved",
+        );
+    }
+
+    #[test]
+    fn test_clean_html_removes_noprint_when_tag() {
+        let html = r#"<html><body>
+            <p>At one time,<sup class="noprint Inline-Template"><span>[<i><a href="/wiki/Wikipedia:When">when?</a></i>]</span></sup> something happened.</p>
+        </body></html>"#;
+        let cleaned = clean_html(html);
+        assert!(
+            !cleaned.contains("when?"),
+            "when? should be stripped: {cleaned}",
+        );
+        assert!(
+            cleaned.contains("something happened"),
+            "Content should be preserved",
+        );
+    }
+
+    #[test]
+    fn test_clean_html_preserves_export_noprint_styles() {
+        let html = r#"<html><body>
+            <div class="export-noprint-styles">Important content</div>
+        </body></html>"#;
+        let cleaned = clean_html(html);
+        assert!(
+            cleaned.contains("Important content"),
+            "export-noprint-styles should NOT be stripped: {cleaned}",
         );
     }
 

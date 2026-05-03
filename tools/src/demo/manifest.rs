@@ -121,6 +121,31 @@ pub fn normalize_wiki_title(title: &str) -> String {
     title.trim().replace('_', " ").to_lowercase()
 }
 
+/// Encode an article title for use in a URL path segment.
+///
+/// Spaces become underscores (Wikimedia convention), and characters that
+/// are reserved in URL path segments are percent-encoded.
+fn encode_title_for_path(title: &str) -> String {
+    use std::fmt::Write;
+    let with_underscores = title.replace(' ', "_");
+    let mut result = String::with_capacity(with_underscores.len() * 2);
+    for byte in with_underscores.bytes() {
+        match byte {
+            // Unreserved characters pass through
+            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'.' | b'_' | b'~'
+            // Allow these in path segments (parentheses are common in Wikipedia titles)
+            | b'(' | b')' | b',' | b':' | b'@' | b'!' | b'\'' => {
+                result.push(byte as char);
+            }
+            // Everything else gets percent-encoded (including /, ?, #, &, %, etc.)
+            _ => {
+                let _ = write!(result, "%{byte:02X}");
+            }
+        }
+    }
+    result
+}
+
 /// A validation problem found in the manifest.
 #[derive(Debug, Clone, PartialEq)]
 pub struct ValidationIssue {
@@ -192,7 +217,7 @@ impl Manifest {
         let project = self.effective_project(article);
 
         if super::fetch::is_wikimedia_project(project) {
-            let encoded_title = article.title.replace(' ', "_");
+            let encoded_title = encode_title_for_path(&article.title);
             format!("https://{project}/api/rest_v1/page/html/{encoded_title}")
         } else {
             let url_title = super::fetch::url_encode_title(&article.title);
@@ -538,9 +563,10 @@ mod tests {
         article.project = Some("en.wikibooks.org".to_string());
         article.title = "Intro/Memory".to_string();
         let url = m.api_url(&article);
+        // Slash is percent-encoded for path-segment safety
         assert_eq!(
             url,
-            "https://en.wikibooks.org/api/rest_v1/page/html/Intro/Memory"
+            "https://en.wikibooks.org/api/rest_v1/page/html/Intro%2FMemory"
         );
     }
 
@@ -884,6 +910,49 @@ articles:
         assert_eq!(
             index.get("garbage collection (computer science)"),
             Some(&"garbage-collection".to_string()),
+        );
+    }
+
+    // --- encode_title_for_path tests ---
+
+    #[test]
+    fn test_encode_title_for_path_simple() {
+        assert_eq!(
+            encode_title_for_path("Memory management"),
+            "Memory_management",
+        );
+    }
+
+    #[test]
+    fn test_encode_title_for_path_slash() {
+        let encoded = encode_title_for_path("AdS/CFT correspondence");
+        assert_eq!(encoded, "AdS%2FCFT_correspondence");
+    }
+
+    #[test]
+    fn test_encode_title_for_path_parentheses_preserved() {
+        assert_eq!(
+            encode_title_for_path("Rust (programming language)"),
+            "Rust_(programming_language)",
+        );
+    }
+
+    #[test]
+    fn test_encode_title_for_path_diacritics_encoded() {
+        let encoded = encode_title_for_path("Arvo Pärt");
+        // ä = C3 A4 in UTF-8
+        assert!(
+            encoded.contains("P%C3%A4rt"),
+            "Diacritics should be percent-encoded: {encoded}",
+        );
+    }
+
+    #[test]
+    fn test_encode_title_for_path_hash_encoded() {
+        let encoded = encode_title_for_path("C# (language)");
+        assert!(
+            encoded.contains("%23"),
+            "Hash should be percent-encoded: {encoded}",
         );
     }
 }

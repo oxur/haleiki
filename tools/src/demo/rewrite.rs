@@ -173,6 +173,13 @@ fn classify_and_rewrite(
     }
 
     // 5. Wiki links -- /wiki/Title or ./Title formats
+    // But first: check if this is a Parsoid red link (./Page?action=edit&redlink=1)
+    if is_mediawiki_red_link(href) {
+        return LinkReplacement {
+            original_href,
+            action: LinkAction::Unwrap,
+        };
+    }
     if let Some(title_part) = extract_wiki_title(href) {
         let (title, fragment) = split_fragment(&title_part);
         let normalized = normalize_wiki_title(&title);
@@ -213,8 +220,15 @@ fn classify_and_rewrite(
         };
     }
 
-    // 6. Other relative links -- make absolute against source project
+    // 6. Other relative links -- check for red links first, then make absolute
     if !href.contains("://") {
+        // Detect MediaWiki red links: /index.php?title=X&action=edit&redlink=1
+        if is_mediawiki_red_link(href) {
+            return LinkReplacement {
+                original_href,
+                action: LinkAction::Unwrap,
+            };
+        }
         return LinkReplacement {
             original_href,
             action: LinkAction::Rewrite(format!("https://{source_project}{href}")),
@@ -307,6 +321,16 @@ fn strip_source_project_prefix(url: &str, source_project: &str) -> Option<String
     None
 }
 
+/// Check if a URL is a `MediaWiki` red link (non-existent page).
+///
+/// Red links have `action=edit` and `redlink=1` query parameters.
+fn is_mediawiki_red_link(href: &str) -> bool {
+    let query = href.split('?').nth(1).unwrap_or("");
+    let has_action_edit = query.split('&').any(|p| p == "action=edit");
+    let has_redlink = query.split('&').any(|p| p == "redlink=1");
+    has_action_edit && has_redlink
+}
+
 /// Split a title into `(title, optional_fragment)`.
 fn split_fragment(title: &str) -> (String, Option<String>) {
     if let Some(pos) = title.find('#') {
@@ -396,10 +420,19 @@ fn unwrap_link(html: &mut String, href: &str) {
 
     // Find the <a tag containing this href
     if let Some(href_pos) = html.find(&search) {
-        // Walk backwards to find the opening <a
+        // Walk backwards to find the opening <a (byte-safe)
         let mut open_start = href_pos;
-        while open_start > 0 && &html[open_start..=open_start] != "<" {
+        loop {
+            if open_start == 0 {
+                break;
+            }
             open_start -= 1;
+            if !html.is_char_boundary(open_start) {
+                continue;
+            }
+            if html[open_start..].starts_with('<') {
+                break;
+            }
         }
 
         // Find the end of the opening tag
@@ -421,11 +454,12 @@ fn unwrap_link(html: &mut String, href: &str) {
     }
 }
 
-/// Escape special regex/search characters in a string for literal matching.
+/// Escape characters for matching against HTML attribute values.
+///
+/// The cleaner's serializer encodes `&` as `&amp;` inside attribute values,
+/// so we need to match that encoding when searching for href values.
 fn escape_for_search(s: &str) -> String {
-    // For simple string matching we just need to handle the characters
-    // that might appear in URLs and could interfere with our search.
-    s.to_string()
+    s.replace('&', "&amp;")
 }
 
 #[cfg(test)]
@@ -926,5 +960,73 @@ mod tests {
                 "https://www.rigpawiki.org/index.php?title=Domang_Monastery#History".to_string()
             ),
         );
+    }
+
+    // --- Rigpa Wiki red link (URL-based) tests ---
+
+    #[test]
+    fn test_classify_rigpa_red_link_unwrapped() {
+        let index = test_index();
+        let r = classify_and_rewrite(
+            "/index.php?title=Surmang_Monastery&action=edit&redlink=1",
+            &index,
+            "www.rigpawiki.org",
+            false,
+        );
+        assert_eq!(r.action, LinkAction::Unwrap);
+    }
+
+    #[test]
+    fn test_classify_rigpa_normal_link_not_unwrapped() {
+        let index = test_index();
+        let r = classify_and_rewrite(
+            "/index.php?title=Nyingma",
+            &index,
+            "www.rigpawiki.org",
+            false,
+        );
+        // Should be rewritten as external (not in test index for Rigpa Wiki)
+        assert!(matches!(r.action, LinkAction::Rewrite(_)));
+    }
+
+    #[test]
+    fn test_classify_red_link_alternate_param_order() {
+        let index = test_index();
+        let r = classify_and_rewrite(
+            "/index.php?redlink=1&action=edit&title=Foo",
+            &index,
+            "www.rigpawiki.org",
+            false,
+        );
+        assert_eq!(r.action, LinkAction::Unwrap);
+    }
+
+    #[test]
+    fn test_classify_parsoid_red_link_unwrapped() {
+        let index = test_index();
+        let r = classify_and_rewrite(
+            "./Quark_Matter_conference?action=edit&redlink=1",
+            &index,
+            "en.wikipedia.org",
+            false,
+        );
+        assert_eq!(r.action, LinkAction::Unwrap);
+    }
+
+    #[test]
+    fn test_is_mediawiki_red_link_true() {
+        assert!(is_mediawiki_red_link(
+            "/index.php?title=Foo&action=edit&redlink=1",
+        ));
+    }
+
+    #[test]
+    fn test_is_mediawiki_red_link_false_no_redlink() {
+        assert!(!is_mediawiki_red_link("/index.php?title=Foo&action=edit"));
+    }
+
+    #[test]
+    fn test_is_mediawiki_red_link_false_normal_link() {
+        assert!(!is_mediawiki_red_link("/index.php?title=Foo"));
     }
 }
