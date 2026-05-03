@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) and cleaned up manually -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="330"
+   height="200">
+  <title>Open and closed strings</title>
+  <metadata>
+    <rdf:RDF>
+      <cc:Work rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Open and closed strings</dc:title>
+        <dc:date>2013-06-09</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>http://commons.wikimedia.org/wiki/User:Xoneca</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>http://commons.wikimedia.org/wiki/User:Xoneca</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:relation>http://la.wikipedia.org/wiki/Fasciculus:Chorda_aperta_clausa.png</dc:relation>
+        <cc:license rdf:resource="http://creativecommons.org/licenses/publicdomain/" />
+        <dc:contributor>
+          <cc:Agent>
+            <dc:title>http://la.wikipedia.org/wiki/User:Mafrius</dc:title>
+          </cc:Agent>
+        </dc:contributor>
+      </cc:Work>
+      <cc:License rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs />
+  <path
+     d="M 15.437738,190.0033 C 16.923428,164.20383 39.350573,137.95783 59.144421,140.22067 103.7937,145.32499 125.39208,82.305762 101.81356,69.290176 75.8322,54.948213 89.12126,21.503 125.08762,9.9967015"
+     style="fill:none;stroke:#808080;stroke-width:3;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+  <path
+     d="m 250.78425,34.21793 c 2.81669,13.146271 16.41858,12.886559 24.96304,14.286848 15.89632,2.605128 27.69065,16.929603 30.45142,32.976574 3.46494,20.139948 17.86093,54.507178 -1.66243,73.701228 -14.36132,14.11907 -38.65837,12.70424 -49.59097,6.09227 -12.57815,-7.60719 -38.50475,-10.53206 -48.20394,-13.57157 -9.93502,-3.11341 -28.68424,-19.53402 -20.24121,-26.31358 9.45104,-7.58896 -7.50914,-33.819388 -13.8503,-33.812747 -11.68969,0.0123 -21.87237,-24.073565 3.32487,-44.331575 27.42562,-22.049575 71.06467,-26.505718 74.80952,-9.027449 z"
+     style="fill:none;stroke:#808080;stroke-width:3;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+</svg>

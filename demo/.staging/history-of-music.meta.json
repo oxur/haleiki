@@ -1,0 +1,10 @@
+{
+  "slug": "history-of-music",
+  "project": "en.wikipedia.org",
+  "title": "History of music",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/History_of_music",
+  "revision_id": "W/\"1349410977/8a0cdb8d-4739-11f1-92db-f11843c18243/view/html",
+  "fetched_at": "2026-05-03T22:20:17Z",
+  "http_status": 200,
+  "html_bytes": 956738
+}

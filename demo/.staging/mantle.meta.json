@@ -1,0 +1,10 @@
+{
+  "slug": "mantle",
+  "project": "en.wikipedia.org",
+  "title": "Mantle (geology)",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Mantle_(geology)",
+  "revision_id": "W/\"1319875674/1a213bd6-3cbf-11f1-bc60-4b9f975a5942/view/html",
+  "fetched_at": "2026-05-03T22:20:28Z",
+  "http_status": 200,
+  "html_bytes": 77737
+}

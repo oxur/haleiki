@@ -1,0 +1,10 @@
+{
+  "slug": "rust-language",
+  "project": "en.wikipedia.org",
+  "title": "Rust (programming language)",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Rust_(programming_language)",
+  "revision_id": "W/\"1352271508/1248999d-46b4-11f1-aa6c-21e03e723757/view/html",
+  "fetched_at": "2026-05-03T22:20:21Z",
+  "http_status": 200,
+  "html_bytes": 860227
+}

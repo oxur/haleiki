@@ -1,0 +1,10 @@
+{
+  "slug": "artificial-consciousness",
+  "project": "en.wikipedia.org",
+  "title": "Artificial consciousness",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Artificial_consciousness",
+  "revision_id": "W/\"1352251494/e6232b87-4738-11f1-a2c2-f17bbf0de682/view/html",
+  "fetched_at": "2026-05-03T22:20:23Z",
+  "http_status": 200,
+  "html_bytes": 423230
+}

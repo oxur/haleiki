@@ -1,0 +1,10 @@
+{
+  "slug": "eye",
+  "project": "en.wikipedia.org",
+  "title": "Eye",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Eye",
+  "revision_id": "W/\"1333899275/650a675c-4684-11f1-8188-f5a3f6de5f2c/view/html",
+  "fetched_at": "2026-05-03T22:20:23Z",
+  "http_status": 200,
+  "html_bytes": 317713
+}

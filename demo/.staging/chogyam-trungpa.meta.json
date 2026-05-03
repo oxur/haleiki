@@ -1,0 +1,10 @@
+{
+  "slug": "chogyam-trungpa",
+  "project": "www.rigpawiki.org",
+  "title": "Chögyam Trungpa",
+  "api_url": "https://www.rigpawiki.org/api.php?action=parse&page=Ch%C3%B6gyam+Trungpa&format=json&prop=text%7Crevid%7Cdisplaytitle",
+  "revision_id": "93256",
+  "fetched_at": "2026-05-03T22:20:12Z",
+  "http_status": 200,
+  "html_bytes": 8025
+}

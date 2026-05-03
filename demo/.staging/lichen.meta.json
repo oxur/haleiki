@@ -1,0 +1,10 @@
+{
+  "slug": "lichen",
+  "project": "en.wikipedia.org",
+  "title": "Lichen",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Lichen",
+  "revision_id": "W/\"1351715340/d3105896-4738-11f1-97ae-c71950ba9215/view/html",
+  "fetched_at": "2026-05-03T22:20:27Z",
+  "http_status": 200,
+  "html_bytes": 856036
+}

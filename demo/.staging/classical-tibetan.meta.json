@@ -1,0 +1,10 @@
+{
+  "slug": "classical-tibetan",
+  "project": "en.wikipedia.org",
+  "title": "Classical Tibetan",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Classical_Tibetan",
+  "revision_id": "W/\"1348242194/a4947eaa-473c-11f1-b526-af8d939b4d88/view/html",
+  "fetched_at": "2026-05-03T22:20:24Z",
+  "http_status": 200,
+  "html_bytes": 230617
+}

@@ -1,0 +1,10 @@
+{
+  "slug": "mycorrhiza",
+  "project": "en.wikipedia.org",
+  "title": "Mycorrhiza",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Mycorrhiza",
+  "revision_id": "W/\"1341534934/4023f328-4739-11f1-8690-1baadc867942/view/html",
+  "fetched_at": "2026-05-03T22:20:28Z",
+  "http_status": 200,
+  "html_bytes": 504982
+}

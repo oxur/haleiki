@@ -1,0 +1,10 @@
+{
+  "slug": "earths-crust",
+  "project": "en.wikipedia.org",
+  "title": "Earth's crust",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Earth's_crust",
+  "revision_id": "W/\"1350076942/70c71ac0-44f4-11f1-a2a2-b7b81d921545/view/html",
+  "fetched_at": "2026-05-03T22:20:29Z",
+  "http_status": 200,
+  "html_bytes": 110258
+}

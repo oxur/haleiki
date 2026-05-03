@@ -1,0 +1,213 @@
+---
+title: Homotopy type theory
+slug: homotopy-type-theory
+page_type: source
+category: mathematics
+subcategory: foundations
+tier: advanced
+keywords:
+- HoTT
+- univalence
+- higher inductive types
+tags:
+- foundations
+- type-theory
+- topology
+author: Wikipedia contributors
+date: 2026-05-03
+original_source:
+  title: Homotopy type theory
+  project: en.wikipedia.org
+  url: https://en.wikipedia.org/wiki/Homotopy_type_theory
+  license: CC BY-SA 4.0
+  fetched_at: 2026-05-03T22:20:17Z
+  revision_id: W/"1352123027/a5ff62d6-45e5-11f1-b9ab-411a4f549e23/view/html
+extraction_status: pending
+concepts_generated: []
+status: published
+---
+
+![Cover of Homotopy Type Theory: Univalent Foundations of Mathematics.](../media/homotopy-type-theory/Hott_book_cover.png)Cover of _Homotopy Type Theory: Univalent Foundations of Mathematics_.
+
+In [mathematical logic](https://en.wikipedia.org/wiki/Mathematical_logic "Mathematical logic") and [computer science](https://en.wikipedia.org/wiki/Computer_science "Computer science"), **homotopy type theory** (**HoTT**) includes various lines of development of [intuitionistic type theory](https://en.wikipedia.org/wiki/Intuitionistic_type_theory "Intuitionistic type theory"), based on the interpretation of types as objects to which the intuition of (abstract) [homotopy theory](https://en.wikipedia.org/wiki/Homotopy_theory "Homotopy theory") applies.
+
+This includes, among other lines of work, the construction of homotopical and [higher-categorical](https://en.wikipedia.org/wiki/Higher_category_theory "Higher category theory") [models](https://en.wikipedia.org/wiki/Model_\(mathematical_logic\) "Model (mathematical logic)") for such type theories; the use of type theory as a logic (or [internal language](https://en.wikipedia.org/wiki/Internal_language "Internal language")) for abstract homotopy theory and [higher category theory](https://en.wikipedia.org/wiki/Higher_category_theory "Higher category theory"); the development of mathematics within a type-theoretic [foundation](https://en.wikipedia.org/wiki/Foundation_of_mathematics "Foundation of mathematics") (including both previously existing mathematics and new mathematics that homotopical types make possible); and the [formalization](https://en.wikipedia.org/wiki/Formal_proof "Formal proof") of each of these in computer [proof assistants](https://en.wikipedia.org/wiki/Proof_assistant "Proof assistant").
+
+There is a large overlap between the work referred to as homotopy type theory, and that called the [univalent foundations](https://en.wikipedia.org/wiki/Univalent_foundations "Univalent foundations") project. Although neither is precisely delineated, and the terms are sometimes used interchangeably, the choice of usage also sometimes corresponds to differences in viewpoint and emphasis. As such, this article may not represent the views of all researchers in the fields equally. This kind of variability is unavoidable when a field is in rapid flux.
+
+## History
+
+### Groupoid model
+
+At one time, the idea that types in [intensional type theory](https://en.wikipedia.org/wiki/Intuitionistic_type_theory#Extensional_versus_intensional "Intuitionistic type theory") with their [identity types](https://en.wikipedia.org/wiki/Identity_type "Identity type") could be regarded as [groupoids](https://en.wikipedia.org/wiki/Groupoid "Groupoid") was [mathematical folklore](https://en.wikipedia.org/wiki/Mathematical_folklore "Mathematical folklore"). It was first made precise semantically in the 1994 paper of Martin Hofmann and [Thomas Streicher](https://en.wikipedia.org/wiki/Thomas_Streicher "Thomas Streicher") called "The groupoid model refutes uniqueness of identity proofs", in which they showed that intensional type theory had a model in the category of [groupoids](https://en.wikipedia.org/wiki/Groupoid "Groupoid"). This was the first truly "[homotopical](https://en.wikipedia.org/wiki/Homotopical_algebra "Homotopical algebra")" model of type theory, albeit only "1-[dimensional](https://en.wikipedia.org/wiki/Dimension "Dimension")" (the traditional models in the [category of sets](https://en.wikipedia.org/wiki/Category_of_sets "Category of sets") being homotopically 0-dimensional).
+
+Their follow-up paper foreshadowed several later developments in homotopy type theory. For instance, they noted that the groupoid model satisfies a rule they called "universe extensionality", which is none other than the restriction to 1-types of the _univalence axiom_ that [Vladimir Voevodsky](https://en.wikipedia.org/wiki/Vladimir_Voevodsky "Vladimir Voevodsky") proposed 10 years later. (The axiom for 1-types is notably simpler to formulate, however, since a [coherent](https://en.wikipedia.org/wiki/Coherence_condition "Coherence condition") notion of "equivalence" is not required.) They also defined "categories with isomorphism as equality" and conjectured that in a model using higher-dimensional groupoids, for such categories one would have "equivalence is equality"; this was later proven by Benedikt Ahrens, Krzysztof Kapulkin, and [Michael Shulman](https://en.wikipedia.org/wiki/Michael_Shulman_\(mathematician\) "Michael Shulman (mathematician)").
+
+### Early history: model categories and higher groupoids
+
+The first higher-dimensional models of intensional type theory were constructed by [Steve Awodey](https://en.wikipedia.org/wiki/Steve_Awodey "Steve Awodey") and his student Michael Warren in 2005 using [Quillen model categories](https://en.wikipedia.org/wiki/Model_category "Model category"). These results were first presented in public at the conference FMCS 2006 at which Warren gave a talk titled "Homotopy models of intensional type theory", which also served as his thesis prospectus (the dissertation committee present were Awodey, Nicola Gambino and Alex Simpson). A summary is contained in Warren's thesis prospectus abstract.
+
+At a subsequent workshop about identity types at [Uppsala University](https://en.wikipedia.org/wiki/Uppsala_University "Uppsala University") in 2006 there were two talks about the relation between intensional type theory and factorization systems: one by Richard Garner, "Factorisation systems for type theory", and one by Michael Warren, "Model categories and intensional identity types". Related ideas were discussed in the talks by Steve Awodey, "Type theory of higher-dimensional categories", and [Thomas Streicher](https://en.wikipedia.org/wiki/Thomas_Streicher "Thomas Streicher"), "Identity types vs. weak omega-groupoids: some ideas, some problems". At the same conference Benno van den Berg gave a talk titled "Types as weak omega-categories" where he outlined the ideas that later became the subject of a joint paper with Richard Garner.
+
+All early constructions of higher dimensional models had to deal with the problem of coherence typical of models of dependent type theory, and various solutions were developed. One such was given in 2009 by Voevodsky, another in 2010 by van den Berg and Garner. A general solution, building on Voevodsky's construction, was eventually given by Lumsdaine and Warren in 2014.
+
+At the PSSL86 in 2007 Awodey gave a talk titled "Homotopy type theory" (this was the first public usage of that term, which was coined by Awodey). Awodey and Warren summarized their results in the paper "Homotopy theoretic models of identity types", which was posted on the [ArXiv](https://en.wikipedia.org/wiki/ArXiv "ArXiv") preprint server in 2007 and published in 2009; a more detailed version appeared in Warren's thesis "Homotopy theoretic aspects of constructive type theory" in 2008.
+
+At about the same time, Vladimir Voevodsky was independently investigating type theory in the context of the search of a language for practical formalization of mathematics. In September 2006 he posted to the Types mailing list "A very short note on homotopy [lambda calculus](https://en.wikipedia.org/wiki/Lambda_calculus "Lambda calculus")", which sketched the outlines of a type theory with dependent products, sums and universes and of a model of this type theory in Kan [simplicial sets](https://en.wikipedia.org/wiki/Simplicial_set "Simplicial set"). It began by saying "The homotopy λ-calculus is a hypothetical (at the moment) type system" and ended with "At the moment much of what I said above is at the level of conjectures. Even the definition of the model of TS in the homotopy category is non-trivial" referring to the complex coherence issues that were not resolved until 2009. This note included a syntactic definition of "equality types" that were claimed to be interpreted in the model by path-spaces, but did not consider [Per Martin-Löf](https://en.wikipedia.org/wiki/Per_Martin-Löf "Per Martin-Löf")'s rules for identity types. It also stratified the universes by homotopy dimension in addition to size, an idea that later was mostly discarded.
+
+On the syntactic side, Benno van den Berg conjectured in 2006 that the tower of identity types of a type in intensional type theory should have the structure of an ω-category, and indeed a ω-groupoid, in the "globular, algebraic" sense of Michael Batanin. This was later proven independently by van den Berg and Garner in the paper "Types are weak omega-groupoids" (published 2008), and by Peter Lumsdaine in the paper "Weak ω-Categories from Intensional Type Theory" (published 2009) and as part of his 2010 Ph.D. thesis "Higher Categories from Type Theories".
+
+### The univalence axiom, synthetic homotopy theory, and higher inductive types
+
+The concept of a univalent fibration was introduced by Voevodsky in early 2006. However, because of the insistence of all presentations of the Martin-Löf type theory on the property that the identity types, in the empty context, may contain only reflexivity, Voevodsky did not recognize until 2009 that these identity types can be used in combination with the univalent universes. In particular, the idea that univalence can be introduced simply by adding an axiom to the existing Martin-Löf type theory appeared only in 2009.
+
+Also in 2009, Voevodsky worked out more of the details of a model of type theory in [Kan complexes](https://en.wikipedia.org/wiki/Kan_complex "Kan complex"), and observed that the existence of a universal [Kan fibration](https://en.wikipedia.org/wiki/Kan_fibration "Kan fibration") could be used to resolve the coherence problems for categorical models of type theory. He also proved, using an idea of A. K. Bousfield, that this universal fibration was univalent: the associated fibration of pairwise homotopy equivalences between the fibers is equivalent to the paths-space fibration of the base.
+
+To formulate univalence as an axiom Voevodsky found a way to define "equivalences" syntactically that had the important property that the type representing the statement "f is an equivalence" was (under the assumption of function extensionality) (-1)-truncated (i.e. contractible if inhabited). This enabled him to give a _syntactic_ statement of univalence, generalizing Hofmann and Streicher's "universe extensionality" to higher dimensions. He was also able to use these definitions of equivalences and contractibility to start developing significant amounts of "synthetic homotopy theory" in the proof assistant [Rocq](https://en.wikipedia.org/wiki/Rocq_\(software\) "Rocq (software)") (previously known as _Coq_); this formed the basis of the library later called "Foundations" and eventually "UniMath".
+
+Unification of the various threads began in February 2010 with an informal meeting at [Carnegie Mellon University](https://en.wikipedia.org/wiki/Carnegie_Mellon_University "Carnegie Mellon University"), where Voevodsky presented his model in Kan complexes, and his version of Rocq, to a group including Awodey, Warren, Lumsdaine, [Robert Harper](https://en.wikipedia.org/wiki/Robert_Harper_\(computer_scientist\) "Robert Harper (computer scientist)"), Dan Licata, [Michael Shulman](https://en.wikipedia.org/wiki/Michael_Shulman_\(mathematician\) "Michael Shulman (mathematician)"), and others. This meeting produced the outlines of a proof (by Warren, Lumsdaine, Licata, and Shulman) that every homotopy equivalence is an equivalence (in Voevodsky's good coherent sense), based on the idea from category theory of improving equivalences to adjoint equivalences. Soon afterwards, Voevodsky proved that the univalence axiom implies function extensionality.
+
+The next pivotal event was a mini-workshop at the [Mathematical Research Institute of Oberwolfach](https://en.wikipedia.org/wiki/Mathematical_Research_Institute_of_Oberwolfach "Mathematical Research Institute of Oberwolfach") in March 2011 organized by Steve Awodey, Richard Garner, Per Martin-Löf, and Vladimir Voevodsky, titled "The homotopy interpretation of constructive type theory". As part of a Coq tutorial for this workshop, Andrej Bauer wrote a small Coq library based on Voevodsky's ideas (but not actually using any of his code); this eventually became the kernel of the first version of the "HoTT" Coq library (the first commit of the latter by Michael Shulman notes "Development based on Andrej Bauer's files, with many ideas taken from Vladimir Voevodsky's files"). One of the most important things to come out of the Oberwolfach meeting was the basic idea of higher inductive types, due to Lumsdaine, Shulman, Bauer, and Warren. The participants also formulated a list of important open questions, such as whether the univalence axiom satisfies canonicity (still open, although some special cases have been resolved positively), whether the univalence axiom has nonstandard models (since answered positively by Shulman), and how to define (semi)simplicial types (still open in MLTT, although it can be done in Voevodsky's Homotopy Type System (HTS), a type theory with two equality types).
+
+Soon after the Oberwolfach workshop, the _Homotopy Type Theory website and blog_ was established, and the subject began to be popularized under that name. An idea of some of the important progress during this period can be obtained from the blog history.
+
+## Univalent foundations
+
+The phrase "univalent foundations" is agreed by all to be closely related to homotopy type theory, but not everyone uses it in the same way. It was originally used by Vladimir Voevodsky to refer to his vision of a foundational system for mathematics in which the basic objects are homotopy types, based on a type theory satisfying [§ the univalence axiom](/source/homotopy-type-theory/#The_univalence_axiom), and formalized in a computer proof assistant.
+
+As Voevodsky's work became integrated with the community of other researchers working on homotopy type theory, "univalent foundations" was sometimes used interchangeably with "homotopy type theory", and other times to refer only to its use as a foundational system (excluding, for example, the study of model-categorical semantics or computational metatheory). For instance, the subject of the IAS special year was officially given as "univalent foundations", although a lot of the work done there focused on semantics and metatheory in addition to foundations. The book produced by participants in the IAS program was titled "Homotopy type theory: Univalent foundations of mathematics"; although this could refer to either usage, since the book only discusses HoTT as a mathematical foundation.
+
+## Special Year on Univalent Foundations of Mathematics
+
+In 2012–13 researchers at the [Institute for Advanced Study](https://en.wikipedia.org/wiki/Institute_for_Advanced_Study "Institute for Advanced Study") held "A Special Year on Univalent Foundations of Mathematics". The special year brought together researchers in [topology](https://en.wikipedia.org/wiki/Topology "Topology"), [computer science](https://en.wikipedia.org/wiki/Computer_science "Computer science"), [category theory](/source/category-theory/ "Category theory"), and [mathematical logic](https://en.wikipedia.org/wiki/Mathematical_logic "Mathematical logic"). The program was organized by [Steve Awodey](https://en.wikipedia.org/wiki/Steve_Awodey "Steve Awodey"), [Thierry Coquand](https://en.wikipedia.org/wiki/Thierry_Coquand "Thierry Coquand") and [Vladimir Voevodsky](https://en.wikipedia.org/wiki/Vladimir_Voevodsky "Vladimir Voevodsky").
+
+During the program [Peter Aczel](https://en.wikipedia.org/wiki/Peter_Aczel "Peter Aczel"), who was one of the participants, initiated a working group which investigated how to do type theory informally but rigorously, in a style that is analogous to ordinary mathematicians doing [set theory](https://en.wikipedia.org/wiki/Set_theory "Set theory"). After initial experiments it became clear that this was not only possible but highly beneficial, and that a book (the so-called **HoTT Book**) could and should be written. Many other participants of the project then joined the effort with technical support, writing, proof reading, and offering ideas. Unusually for a mathematics text, it was developed collaboratively and in the open on [GitHub](https://en.wikipedia.org/wiki/GitHub "GitHub"), is released under a [Creative Commons license](https://en.wikipedia.org/wiki/Creative_Commons_license "Creative Commons license") that allows people to [fork](https://en.wikipedia.org/wiki/Fork_\(software_development\) "Fork (software development)") their own version of the book, and is both purchasable in print and downloadable free of charge.
+
+More generally, the special year was a catalyst for the development of the entire subject; the HoTT Book was only one, albeit the most visible, result.
+
+**Official participants in the special year**
+
+*   [Peter Aczel](https://en.wikipedia.org/wiki/Peter_Aczel "Peter Aczel")
+*   Benedikt Ahrens
+*   [Thorsten Altenkirch](https://en.wikipedia.org/wiki/Thorsten_Altenkirch "Thorsten Altenkirch")
+*   [Steve Awodey](https://en.wikipedia.org/wiki/Steve_Awodey "Steve Awodey")
+*   Bruno Barras
+*   Andrej Bauer
+*   Yves Bertot
+*   Marc Bezem
+*   [Thierry Coquand](https://en.wikipedia.org/wiki/Thierry_Coquand "Thierry Coquand")
+*   Eric Finster
+*   Daniel Grayson
+*   Hugo Herbelin
+*   [André Joyal](https://en.wikipedia.org/wiki/André_Joyal "André Joyal")
+*   Dan Licata
+*   Peter Lumsdaine
+*   Assia Mahboubi
+*   [Per Martin-Löf](https://en.wikipedia.org/wiki/Per_Martin-Löf "Per Martin-Löf")
+*   Sergey Melikhov
+*   Alvaro Pelayo
+*   Andrew Polonsky
+*   [Michael Shulman](https://en.wikipedia.org/wiki/Michael_Shulman_\(mathematician\) "Michael Shulman (mathematician)")
+*   Matthieu Sozeau
+*   Bas Spitters
+*   Benno van den Berg
+*   [Vladimir Voevodsky](https://en.wikipedia.org/wiki/Vladimir_Voevodsky "Vladimir Voevodsky")
+*   Michael Warren
+*   Khem al-Khem Kardasheva
+*   Noam Zeilberger
+
+_[ACM Computing Reviews](https://en.wikipedia.org/wiki/ACM_Computing_Reviews "ACM Computing Reviews")_ listed the book as a notable 2013 publication in the category "mathematics of computing".
+
+## Key concepts
+
+Intensional type theoryHomotopy theory
+
+types $A$
+
+spaces $A$
+
+terms $a$
+
+points $a$
+
+$a:A$
+
+$a\in A$
+
+[dependent type](https://en.wikipedia.org/wiki/Dependent_type "Dependent type") $x:A\ \vdash\ B(x)\$
+
+[fibration](https://en.wikipedia.org/wiki/Fibration "Fibration") $B \to A$
+
+[identity type](https://en.wikipedia.org/wiki/Intuitionistic_type_theory#Equality_type "Intuitionistic type theory") $\mathrm{Id}_A(a,b)$
+
+[path space](https://en.wikipedia.org/wiki/Path_space_\(algebraic_topology\) "Path space (algebraic topology)")
+
+$p:\mathrm{Id}_A(a,b)$
+
+[path](https://en.wikipedia.org/wiki/Path_\(topology\) "Path (topology)") $p:a\to b$
+
+$\alpha:\mathrm{Id}_{\mathrm{Id}_A(a,b)}(p,q)$
+
+[homotopy](/source/homotopy/ "Homotopy") $\alpha:p\Rightarrow q$
+
+### "Propositions as types"
+
+HoTT uses a modified version of the "[propositions as types](https://en.wikipedia.org/wiki/Propositions_as_types_principle "Propositions as types principle")" interpretation of type theory, according to which types can also represent propositions and terms can then represent proofs. In HoTT, however, unlike in standard "propositions as types", a special role is played by 'mere propositions' which, roughly speaking, are those types having at most one term, up to [propositional equality](https://en.wikipedia.org/wiki/Propositional_equality "Propositional equality"). These are more like conventional logical propositions than are general types, in that they are proof-irrelevant.
+
+### Equality
+
+The fundamental concept of homotopy type theory is the [path](https://en.wikipedia.org/wiki/Path_\(topology\) "Path (topology)"). In HoTT, the type $a = b$ is the type of all paths from the point $a$ to the point $b$. (Therefore, a proof that a point $a$ equals a point $b$ is the same thing as a path from the point $a$ to the point $b$.) For any point $a$, there exists a path of type $a = a$, corresponding to the reflexive property of equality. A path of type $a = b$ can be inverted, forming a path of type $b = a$, corresponding to the symmetric property of equality. Two paths of type $a = b$ resp. $b = c$ can be concatenated, forming a path of type $a = c$; this corresponds to the transitive property of equality.
+
+Most importantly, given a path $p:a=b$, and a proof of some property $P(a)$, the proof can be "transported" along the path $p$ to yield a proof of the property $P(b)$. (Equivalently stated, an object of type $P(a)$ can be turned into an object of type $P(b)$.) This corresponds to [the substitution property of equality](https://en.wikipedia.org/wiki/First-order_logic#Equality_and_its_axioms "First-order logic"). Here, an important difference between HoTT and classical mathematics comes in. In classical mathematics, once the equality of two values $a$ and $b$ has been established, $a$ and $b$ may be used interchangeably thereafter, with no regard to any distinction between them. In homotopy type theory, however, there may be multiple different paths $a = b$, and transporting an object along two different paths will yield two different results. Therefore, in homotopy type theory, when applying the substitution property, it is necessary to state which path is being used.
+
+In general, a "proposition" can have multiple different proofs. (For example, the type of all natural numbers, when considered as a proposition, has every natural number as a proof.) Even if a proposition has only one proof $a$, the space of paths $a = a$ may be non-trivial in some way. A "mere proposition" is any type which either is empty, or contains only one point with a trivial [path space](https://en.wikipedia.org/wiki/Path_space_\(algebraic_topology\) "Path space (algebraic topology)").
+
+Note that people write $a = b$ for $Id_A(a,b)$, thereby leaving the type $A$ of $a, b$ implicit. Do not confuse it with $id_A : A\to A$, denoting the [identity function](https://en.wikipedia.org/wiki/Identity_function "Identity function") on $A$.
+
+### Type equivalence
+
+Two functions $f,g:A\rightarrow B$ are _homotopies_ by pointwise identification:
+
+: $f \sim g :\equiv \prod_{x:A} f(x) = g(x)$
+
+_Equivalences_ between two types $A$ and $B$ belonging to some universe $U$ are defined by the functions $f:A\rightarrow B$ together with the proof of having [retractions and sections](https://en.wikipedia.org/wiki/Section_\(category_theory\) "Section (category theory)") with respect to homotopies:
+
+: $A \simeq B :\equiv \sum_{f:A\rightarrow B} \text{isequiv}(f)$, where : $\text{isequiv}(f) :\equiv \left( \sum_{g:B\rightarrow A} (f\circ g) \sim id_B \right) \times \left( \sum_{h:B\rightarrow A} (h\circ f) \sim id_A \right)$
+
+Together with the univalence axiom below, one receives a non-circular "$\infty$-isomorphism" expanded to identity.
+
+: $A \simeq B :\equiv \text{there are}\ f : A \leftrightarrows B : g\ \text{with}\ g \circ f \simeq id_A\ \text{and}\ f \circ g \simeq id_B$
+
+### The univalence axiom
+
+Having defined functions that are equivalences as above, one can show that there is a canonical way to turn paths to equivalences. In other words, there is a function of the type
+
+: $(A = B) \to (A \simeq B),$
+
+which expresses that types $A,B$ that are equal are, in particular, also equivalent.
+
+The **univalence axiom** states that this function is itself an equivalence. Therefore, we have
+
+: $(A = B) \simeq (A \simeq B)$
+
+"In other words, identity is equivalent to equivalence. In particular, one may say that 'equivalent types are identical'."
+
+Martín Hötzel Escardó has shown that the property of univalence is [independent](https://en.wikipedia.org/wiki/Independence_\(mathematical_logic\) "Independence (mathematical logic)") of [Martin-Löf Type Theory](https://en.wikipedia.org/wiki/Martin-Löf_Type_Theory "Martin-Löf Type Theory") (MLTT). This is because type equivalence is compatible with all constructions of the type theory.
+
+## Applications
+
+### Theorem proving
+
+Advocates claim that HoTT allows mathematical proofs to be translated into a [computer programming language](https://en.wikipedia.org/wiki/Computer_programming_language "Computer programming language") for computer [proof assistants](https://en.wikipedia.org/wiki/Proof_assistant "Proof assistant") much more easily than before. They argue this approach increases the potential for computers to check difficult proofs. However, these claims are not universally accepted and many research efforts and proof assistants are not based on HoTT.
+
+HoTT adopts the univalence axiom, which relates the equality of logical-mathematical propositions to homotopy theory. An equation such as $a=b$ is a mathematical proposition in which two different symbols have the same value. In homotopy type theory, this is taken to mean that the two shapes which represent the values of the symbols are topologically equivalent.
+
+These equivalence relationships, [ETH Zürich](https://en.wikipedia.org/wiki/ETH_Zürich "ETH Zürich") Institute for Theoretical Studies director [Giovanni Felder](https://en.wikipedia.org/wiki/Giovanni_Felder "Giovanni Felder") argues, can be better formulated in homotopy theory because it is more comprehensive: Homotopy theory explains not only why "a equals b" but also how to derive this. In set theory, this information would have to be defined additionally, which, advocates argue, makes the translation of mathematical propositions into programming languages more difficult.
+
+### Computer programming
+
+As of 2015, intense research work was underway to model and formally analyse the computational behavior of the univalence axiom in homotopy type theory.
+
+[Cubical type theory](https://en.wikipedia.org/wiki/Cubical_type_theory "Cubical type theory") is one attempt to give computational content to homotopy type theory.
+
+However, it is believed that certain objects, such as semi-simplicial types, cannot be constructed without reference to some notion of exact equality. Therefore, various _two-level type theories_ have been developed which partition their types into fibrant types, which respect paths, and non-fibrant types, which do not. Cartesian cubical computational type theory is the first two-level type theory which gives a full computational interpretation to homotopy type theory.

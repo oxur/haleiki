@@ -1,0 +1,10 @@
+{
+  "slug": "earths-inner-core",
+  "project": "en.wikipedia.org",
+  "title": "Earth's inner core",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Earth's_inner_core",
+  "revision_id": "W/\"1351453713/79c1a8f3-42a4-11f1-88fc-4b71f54c50aa/view/html",
+  "fetched_at": "2026-05-03T22:20:29Z",
+  "http_status": 200,
+  "html_bytes": 395969
+}

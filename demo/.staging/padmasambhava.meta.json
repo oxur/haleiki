@@ -1,0 +1,10 @@
+{
+  "slug": "padmasambhava",
+  "project": "en.wikipedia.org",
+  "title": "Padmasambhava",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Padmasambhava",
+  "revision_id": "W/\"1348186447/eec93414-473b-11f1-8261-335c54e3229c/view/html",
+  "fetched_at": "2026-05-03T22:20:12Z",
+  "http_status": 200,
+  "html_bytes": 580546
+}

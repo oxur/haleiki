@@ -1,0 +1,10 @@
+{
+  "slug": "homotopy-type-theory",
+  "project": "en.wikipedia.org",
+  "title": "Homotopy type theory",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Homotopy_type_theory",
+  "revision_id": "W/\"1352123027/a5ff62d6-45e5-11f1-b9ab-411a4f549e23/view/html",
+  "fetched_at": "2026-05-03T22:20:17Z",
+  "http_status": 200,
+  "html_bytes": 259107
+}

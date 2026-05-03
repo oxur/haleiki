@@ -1,0 +1,10 @@
+{
+  "slug": "dilgo-khyentse",
+  "project": "en.wikipedia.org",
+  "title": "Dilgo Khyentse",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Dilgo_Khyentse",
+  "revision_id": "W/\"1318645497/3a2e0eed-4739-11f1-83be-b1d625968765/view/html",
+  "fetched_at": "2026-05-03T22:20:10Z",
+  "http_status": 200,
+  "html_bytes": 260320
+}

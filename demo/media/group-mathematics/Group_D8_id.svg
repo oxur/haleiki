@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg x="0" y="0" width="160" height="135" version="1.1" 
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+
+<defs>
+<g id="square">
+	<rect x="-50" y="-50" width="100" height="100" fill="none" stroke="black" stroke-width="5"/>
+	<circle cx="-50" cy="-50" r="10"  stroke="none" fill="rgb(0,146,70)"/>
+	<circle cx="50" cy="-50" r="10"  stroke="none" fill="rgb(188,30,71)"/>
+	<circle cx="-50" cy="50" r="10"  stroke="none" fill="rgb(254,194,0)"/>
+	<circle cx="50" cy="50" r="10"  stroke="none" fill="rgb(0,129,205)"/>
+        <g text-anchor="middle" stroke="black" stroke-width="1" fill="white" 
+		font-family="helvetica; sans-serif" font-size="18" font-weight="bold"
+		transform="translate(0,7)">
+		<text x="-50" y="-50" >1</text>                                                                                       
+        <text x="50" y="-50">2</text>                                                                                        
+        <text x="50" y="50">3</text>                                                                                         
+        <text x="-50" y="50">4</text>
+	</g>
+</g>
+</defs>
+
+<g transform="translate(60,60)">
+	<use xlink:href="#square" opacity=".3"/>
+	<use xlink:href="#square" transform="translate(40,15)"/>
+</g>
+</svg>

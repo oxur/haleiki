@@ -1,0 +1,10 @@
+{
+  "slug": "artificial-intelligence",
+  "project": "en.wikipedia.org",
+  "title": "Artificial intelligence",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Artificial_intelligence",
+  "revision_id": "W/\"1352143051/cee447e8-4738-11f1-9bda-931328966526/view/html",
+  "fetched_at": "2026-05-03T22:20:22Z",
+  "http_status": 200,
+  "html_bytes": 1888570
+}

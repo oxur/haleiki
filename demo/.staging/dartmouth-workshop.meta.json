@@ -1,0 +1,10 @@
+{
+  "slug": "dartmouth-workshop",
+  "project": "en.wikipedia.org",
+  "title": "Dartmouth workshop",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Dartmouth_workshop",
+  "revision_id": "W/\"1316663384/3f74378c-4540-11f1-9c10-2776d629da20/view/html",
+  "fetched_at": "2026-05-03T22:20:22Z",
+  "http_status": 200,
+  "html_bytes": 101742
+}

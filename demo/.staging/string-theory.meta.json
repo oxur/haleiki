@@ -1,0 +1,10 @@
+{
+  "slug": "string-theory",
+  "project": "en.wikipedia.org",
+  "title": "String theory",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/String_theory",
+  "revision_id": "W/\"1351910100/a6f99e13-44de-11f1-a34a-7f028183f8bd/view/html",
+  "fetched_at": "2026-05-03T22:20:14Z",
+  "http_status": 200,
+  "html_bytes": 654505
+}

@@ -1,0 +1,10 @@
+{
+  "slug": "moss",
+  "project": "en.wikipedia.org",
+  "title": "Moss",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Moss",
+  "revision_id": "W/\"1348964046/0932e65d-466a-11f1-a211-2d8de7195db2/view/html",
+  "fetched_at": "2026-05-03T22:20:26Z",
+  "http_status": 200,
+  "html_bytes": 592892
+}

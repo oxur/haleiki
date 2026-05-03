@@ -1,0 +1,10 @@
+{
+  "slug": "sanskrit",
+  "project": "en.wikipedia.org",
+  "title": "Sanskrit",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Sanskrit",
+  "revision_id": "W/\"1351637967/db689541-4738-11f1-a479-6bd4e5a01d02/view/html",
+  "fetched_at": "2026-05-03T22:20:25Z",
+  "http_status": 200,
+  "html_bytes": 1827019
+}

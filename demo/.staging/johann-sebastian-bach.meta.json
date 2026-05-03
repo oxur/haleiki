@@ -1,0 +1,10 @@
+{
+  "slug": "johann-sebastian-bach",
+  "project": "en.wikipedia.org",
+  "title": "Johann Sebastian Bach",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Johann_Sebastian_Bach",
+  "revision_id": "W/\"1351945745/9133ed57-4739-11f1-83de-690613283bba/view/html",
+  "fetched_at": "2026-05-03T22:20:19Z",
+  "http_status": 200,
+  "html_bytes": 1079878
+}

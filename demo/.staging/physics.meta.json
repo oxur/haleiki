@@ -1,0 +1,10 @@
+{
+  "slug": "physics",
+  "project": "en.wikipedia.org",
+  "title": "Physics",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Physics",
+  "revision_id": "W/\"1351358789/f471449e-4738-11f1-a64f-63db3cae9aa1/view/html",
+  "fetched_at": "2026-05-03T22:20:15Z",
+  "http_status": 200,
+  "html_bytes": 563080
+}

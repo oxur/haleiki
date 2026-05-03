@@ -1,0 +1,10 @@
+{
+  "slug": "longchen-nyingtik",
+  "project": "www.rigpawiki.org",
+  "title": "Longchen Nyingtik",
+  "api_url": "https://www.rigpawiki.org/api.php?action=parse&page=Longchen+Nyingtik&format=json&prop=text%7Crevid%7Cdisplaytitle",
+  "revision_id": "96193",
+  "fetched_at": "2026-05-03T22:20:13Z",
+  "http_status": 200,
+  "html_bytes": 38152
+}

@@ -1,0 +1,10 @@
+{
+  "slug": "medieval-music",
+  "project": "en.wikipedia.org",
+  "title": "Medieval music",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Medieval_music",
+  "revision_id": "W/\"1340272631/1d6df106-46f1-11f1-ae71-273c7f6d16dd/view/html",
+  "fetched_at": "2026-05-03T22:20:19Z",
+  "http_status": 200,
+  "html_bytes": 591938
+}

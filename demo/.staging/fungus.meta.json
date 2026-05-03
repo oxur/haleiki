@@ -1,0 +1,10 @@
+{
+  "slug": "fungus",
+  "project": "en.wikipedia.org",
+  "title": "Fungus",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Fungus",
+  "revision_id": "W/\"1347754242/ea037bbc-4739-11f1-95ba-b77e7ad5290b/view/html",
+  "fetched_at": "2026-05-03T22:20:26Z",
+  "http_status": 200,
+  "html_bytes": 1607886
+}

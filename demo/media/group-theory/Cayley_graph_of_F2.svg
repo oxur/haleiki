@@ -1,0 +1,52 @@
+<?xml version="1.0" standalone="yes"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+	width="1024" height="1024" viewBox="0,0 414.059648,414.059648">
+<defs>
+<path id="1" d="M 0,0 H 3.2 M 2.2,-1 V 1" />
+<g id="2" transform="translate(4.84)">
+  <use xlink:href="#1" transform="rotate(90)" />
+  <use xlink:href="#1" />
+  <use xlink:href="#1" transform="rotate(-90)" />
+  <line x1="-4.84" y1="0" x2="0" y2="0" />
+</g>
+<g id="3" transform="translate(10.648)">
+  <use xlink:href="#2" transform="rotate(90)" />
+  <use xlink:href="#2" />
+  <use xlink:href="#2" transform="rotate(-90)" />
+  <line x1="-10.648" y1="0" x2="0" y2="0" />
+</g>
+<g id="4" transform="translate(23.4256)">
+  <use xlink:href="#3" transform="rotate(90)" />
+  <use xlink:href="#3" />
+  <use xlink:href="#3" transform="rotate(-90)" />
+  <line x1="-23.4256" y1="0" x2="0" y2="0" />
+</g>
+<g id="5" transform="translate(51.53632)">
+  <use xlink:href="#4" transform="rotate(90)" />
+  <use xlink:href="#4" />
+  <use xlink:href="#4" transform="rotate(-90)" />
+  <line x1="-51.53632" y1="0" x2="0" y2="0" />
+</g>
+<g id="6" transform="translate(113.379904)">
+  <use xlink:href="#5" transform="rotate(90)" />
+  <use xlink:href="#5" />
+  <use xlink:href="#5" transform="rotate(-90)" />
+</g>
+</defs>
+<g stroke="black" stroke-width="2.8" transform="translate(207.029824,207.029824)">
+<use xlink:href="#6" />
+<use xlink:href="#6" transform="rotate(90)" />
+<use xlink:href="#6" transform="rotate(180)" />
+<use xlink:href="#6" transform="rotate(270)" />
+<line stroke="red" x1="0" y1="0" x2="113.379904" y2="0" />
+<line stroke="blue" x1="0" y1="0" x2="0" y2="-113.379904" />
+<polyline fill="none" points="-113.379904,0 0,0 0,113.379904" />
+<circle r="4" />
+<circle r="4" cy="-113.379904" />
+<circle r="4" cx="113.379904" />
+<text x="2" y="-2" transform="scale(3)" stroke="none">e</text>
+<text x="30" y="-2" transform="scale(3)" stroke="none">a</text>
+<text x="2" y="-27" transform="scale(3)" stroke="none">b</text>
+</g>
+</svg>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--*-indent-tabs-mode:t;tab-width:4;-*- vim:se noet ts=4:-->
+<svg version="1.1" viewBox="0 0 1740 810" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="default">
+<title lang="en">UNESCO language endangerment classification</title>
+<defs>
+	<style type="text/css">
+		circle, line, path{
+			fill: none;
+			stroke: currentColor;
+			stroke-width: 2;
+		}
+		polygon, rect{
+			fill: currentColor;
+			stroke: none;
+		}
+		text, .l, .r, .t{
+			fill: currentColor;
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 80px;
+		}
+		.l, .r  { text-anchor: middle; }
+		.l      { font-size: 57px; }
+		.r      { font-size: 51px; }
+		.name   { font-weight: bold; color: #000; }
+		.invert { color: #fff !important; }
+
+		.arrow{
+			stroke-width: 6;
+			marker-end: url(#arrowhead);
+		}
+
+		#bracket{
+			stroke-width: 3;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+		}
+
+		/* Category colours */
+		#cr { color: #ff4050; }
+		#de { color: #f2f261; }
+		#ex { color: #000; }
+		#ne { color: #e5e5e5; }
+		#se { color: #e80; }
+		#vu { color: #97c135; }
+	</style>
+
+	<!-- Arrowhead -->
+	<marker id="arrowhead" viewBox="0 0 34 34" refX="17" refY="17" markerWidth="34" markerHeight="34" markerUnits="userSpaceOnUse" orient="auto"><polygon points="   14.3 16.8   0    0   34   17.2   0    34  "/></marker>
+
+	<!-- Circled symbols -->
+	<g id="circled-plus">
+		<circle cx="13.5" cy="13.5" r="12.5"/>
+		<line x1="13.5" y1="1.3" x2="13.5" y2="25.6"/>
+		<line x1="1.2" y1="13.5" x2="25.7" y2="13.5"/>
+	</g>
+	<g id="circled-minus">
+		<circle cx="13.5" cy="13.5" r="12.5"/>
+		<line x1="1.2" y1="13.5" x2="25.7" y2="13.5"/>
+	</g>
+</defs>
+<g id="left-margin">
+	<switch transform="translate(63.5 380) rotate(-90) scale(0.85 1)">
+		<text class="l" systemLanguage="de">Gefährdet</text>
+		<text class="l" systemLanguage="el">Κινδυνεύοντα</text>
+		<text class="l" systemLanguage="es">En peligro</text>
+		<text class="l" systemLanguage="fr">En danger</text>
+		<text class="l" systemLanguage="it">In pericolo</text>
+		<text class="l" systemLanguage="mk">Загрозен</text>
+		<text class="l" systemLanguage="prg">Entrintinis</text>
+		<text class="l" systemLanguage="br">En arvar</text>
+		<text class="l" systemLanguage="id">Terancam</text>
+		<text class="l" systemLanguage="ms">Terancam</text>
+		<text class="l">Endangered</text>
+	</switch>
+	<path id="bracket" d="   M 178.7 645.8   c -14.6 0 -28.3 -17.6 -28.3 -42   V 438.2   c 0 -19.6 -6.6 -45.9 -28 -47.4   c 21.4 -1.5 28 -27.9 28 -47.4   V 177.8   c 0 -24.4 13.8 -42 28.3 -42  "/>
+</g>
+<g id="right-margin">
+	<switch transform="translate(1718 445) rotate(-90) scale(0.9 1)">
+		<text class="r" systemLanguage="de">Gefährdungsstufe</text>
+		<text class="r" systemLanguage="el">Επίπεδο κινδύνου</text>
+		<text class="r" systemLanguage="es">Grado de peligro</text>
+		<text class="r" systemLanguage="fr">Niveau de danger</text>
+		<text class="r" systemLanguage="it">Livello di pericolo</text>
+		<text class="r" systemLanguage="mk">Степен на загрозеност</text>
+		<text class="r" systemLanguage="prg">Entrintines mats</text>
+		<text class="r" systemLanguage="br">Derez arvarusted</text>
+		<text class="r" systemLanguage="id">Tingkat bahaya</text>
+		<text class="r" systemLanguage="ms">Tahap bahaya</text>
+		<text class="r">Degree of Endangerment</text>
+	</switch>
+	<line class="arrow" x2="1626" y2="148" x1="1626" y1="448"/>
+	<line class="arrow" x1="1626" y1="448" x2="1626" y2="755"/>
+	<use xlink:href="#circled-plus" x="1613" y="92"/>
+	<use xlink:href="#circled-minus" x="1613" y="782"/>
+</g>
+
+<!-- Category list -->
+<g id="ex">
+	<rect x="196" width="1395" height="113"/>
+	<switch class="name invert" transform="scale(0.82 1) translate(355 77)">
+		<text class="t" systemLanguage="de">(EX) Ausgestorben</text>
+		<text class="t" systemLanguage="el">(EX) Εκλιπόντα</text>
+		<text class="t" systemLanguage="es">(EX) Extinta</text>
+		<text class="t" systemLanguage="fr">(EX) Éteint</text>
+		<text class="t" systemLanguage="it">(EX) Estinto</text>
+		<text class="t" systemLanguage="mk">(EX) Изумрен</text>
+		<text class="t" systemLanguage="prg">(EX) Aulaūwuns</text>
+		<text class="t" systemLanguage="br">(EX) Aet da get</text>
+		<text class="t" systemLanguage="id">(EX) Punah</text>
+		<text class="t" systemLanguage="ms">(EX) Pupus</text>
+		<text class="t">(EX) Extinct</text>
+	</switch>
+</g>
+<g id="cr">
+	<rect x="196" y="125" width="1395" height="113"/>
+	<switch class="name" transform="scale(0.82 1) translate(355 206)">
+		<text class="t" systemLanguage="de">(CR) Vom Aussterben bedroht</text>
+		<text class="t" systemLanguage="el">(CR) Άκρως απειλούμενο</text>
+		<text class="t" systemLanguage="es">(CR) En peligro crítico</text>
+		<text class="t" systemLanguage="fr">(CR) En danger critique d'extinction</text>
+		<text class="t" systemLanguage="it">(CR) In pericolo critico</text>
+		<text class="t" systemLanguage="mk">(CR) Критично загрозен</text>
+		<text class="t" systemLanguage="prg">(CR) Krītiskai entrintinis</text>
+		<text class="t" systemLanguage="br">(CR) En arvar bras da vervel</text>
+		<text class="t" systemLanguage="id">(CR) Terancam kritis</text>
+		<text class="t" systemLanguage="ms">(CR) Genting terancam</text>
+		<text class="t">(CR) Critically Endangered</text>
+	</switch>
+</g>
+<g id="se">
+	<rect x="196" y="262" width="1395" height="113"/>
+	<switch class="name" transform="scale(0.82 1) translate(355 341)">
+		<text class="t" systemLanguage="de">(SE) Stark bedroht</text>
+		<text class="t" systemLanguage="el">(SE) Σε σοβαρή απειλή</text>
+		<text class="t" systemLanguage="es">(SE) Severamente en peligro</text>
+		<text class="t" systemLanguage="fr">(SE) Gravement menacé</text>
+		<text class="t" systemLanguage="it">(SE) Gravemente in pericolo</text>
+		<text class="t" systemLanguage="mk">(SE) Тешко загрозен</text>
+		<text class="t" systemLanguage="prg">(SE) Stūrnawingiskai entrintinis</text>
+		<text class="t" systemLanguage="br">(SE) En arvar bras</text>
+		<text class="t" systemLanguage="id">(SE) Terancam berat</text>
+		<text class="t" systemLanguage="ms">(SE) Teruk terancam</text>
+		<text class="t">(SE) Severely Endangered</text>
+	</switch>
+</g>
+<g id="de">
+	<rect x="196" y="398" width="1395" height="113"/>
+	<switch class="name" transform="scale(0.82 1) translate(355 478)">
+		<text class="t" systemLanguage="de">(DE) Eindeutig gefährdet</text>
+		<text class="t" systemLanguage="el">(DE) Σε βέβαιο κίνδυνο</text>
+		<text class="t" systemLanguage="es">(DE) Definitivamente en peligro</text>
+		<text class="t" systemLanguage="fr">(DE) Définitivement en danger</text>
+		<text class="t" systemLanguage="it">(DE) Decisamente in pericolo</text>
+		<text class="t" systemLanguage="mk">(DE) Дефинитивно загрозен</text>
+		<text class="t" systemLanguage="prg">(DE) Eīsku entrintinis</text>
+		<text class="t" systemLanguage="br">(DE) En arvar da vat</text>
+		<text class="t" systemLanguage="id">(DE) Terancam</text>
+		<text class="t" systemLanguage="ms">(DE) Jelas terancam</text>
+		<text class="t">(DE) Definitely Endangered</text>
+	</switch>
+</g>
+<g id="vu">
+	<rect x="196" y="535" width="1395" height="113"/>
+	<switch class="name" transform="scale(0.82 1) translate(355 615)">
+		<text class="t" systemLanguage="de">(VU) Gefährdet</text>
+		<text class="t" systemLanguage="el">(VU) Ευάλωτος</text>
+		<text class="t" systemLanguage="es">(VU) Vulnerable</text>
+		<text class="t" systemLanguage="fr">(VU) Vulnérable</text>
+		<text class="t" systemLanguage="it">(VU) Vulnerabile</text>
+		<text class="t" systemLanguage="mk">(VU) Ранлив</text>
+		<text class="t" systemLanguage="prg">(VU) Etstegtun</text>
+		<text class="t" systemLanguage="br">(VU) Bresk</text>
+		<text class="t" systemLanguage="id">(VU) Rentan</text>
+		<text class="t" systemLanguage="ms">(VU) Terjelas</text>
+		<text class="t">(VU) Vulnerable</text>
+	</switch>
+</g>
+<g id="ne">
+	<rect x="196" y="671" width="1395" height="113"/>
+	<switch class="name" transform="scale(0.82 1) translate(355 751)">
+		<text class="t" systemLanguage="de">(NE) Nicht gefährdet</text>
+		<text class="t" systemLanguage="el">(NE) Δεν κινδυνεύει</text>
+		<text class="t" systemLanguage="es">(NE) No en peligro</text>
+		<text class="t" systemLanguage="fr">(NE) Non en danger</text>
+		<text class="t" systemLanguage="it">(NE) Non in pericolo</text>
+		<text class="t" systemLanguage="mk">(NE) Незагрозен</text>
+		<text class="t" systemLanguage="prg">(NE) Ni entrintinis</text>
+		<text class="t" systemLanguage="br">(NE) Diarvar</text>
+		<text class="t" systemLanguage="id">(NE) Aman / Tidak terancam</text>
+		<text class="t" systemLanguage="ms">(NE) Selamat / Tidak terancam</text>
+		<text class="t">(NE) Safe / Not Endangered</text>
+	</switch>
+</g>
+</svg>

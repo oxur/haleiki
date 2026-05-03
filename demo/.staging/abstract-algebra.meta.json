@@ -1,0 +1,10 @@
+{
+  "slug": "abstract-algebra",
+  "project": "en.wikipedia.org",
+  "title": "Abstract algebra",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Abstract_algebra",
+  "revision_id": "W/\"1352217844/882910c8-466c-11f1-8f7a-2fb9875e47bf/view/html",
+  "fetched_at": "2026-05-03T22:20:15Z",
+  "http_status": 200,
+  "html_bytes": 265468
+}

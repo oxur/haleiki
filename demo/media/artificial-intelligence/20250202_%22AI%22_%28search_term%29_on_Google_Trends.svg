@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="750" font-family="Liberation Sans,sans-serif" font-size="40" text-anchor="middle" fill="black">
+
+<rect width="1000" height="750" x="0" y="0" fill="#f8f8f8"/>
+<rect width="819" height="620" x="131" y="50" fill="#fafaff"/>
+
+<path stroke="none" fill="#fee" transform="translate(-12,0)" d="
+M236,658 L240,658 243,658 246,658 249,657 252,657 255,657 258,656 261,656 
+264,656 268,655 271,655 274,654 277,653 280,653 283,652 286,652 289,652 292,652 
+295,652 299,652 302,651 305,651 308,651 311,651 314,651 317,651 320,651 323,651 
+326,651 330,651 333,650 336,650 339,649 342,649 345,648 348,648 351,647 354,647 
+357,646 361,646 364,645 367,645 370,645 373,645 376,645 379,645 382,645 385,645 
+388,645 392,645 395,645 398,645 401,645 404,645 407,645 410,645 413,644 416,644 
+420,643 423,642 426,640 429,636 432,633 435,631 438,630 441,629 444,628 447,627 
+451,627 454,627 457,627 460,628 463,630 466,633 469,636 472,638 475,639 478,640 
+482,640 485,640 488,640 491,640 494,640 497,640 500,640 503,640 506,639 509,639 
+513,639 516,639 519,639 522,639 525,639 528,639 531,638 534,637 537,637 541,636 
+544,636 547,636 550,636 553,636 556,636 559,636 562,636 565,636 568,636 572,637 
+575,638 578,638 581,638 584,638 587,638 590,639 593,639 596,639 599,640 603,640 
+606,640 609,640 612,640 615,640 618,640 621,640 624,640 627,640 630,640 634,640 
+637,639 640,639 643,639 646,639 649,639 652,639 655,639 658,639 661,639 665,639 
+668,639 671,639 674,639 677,639 680,639 683,639 686,639 689,639 693,639 696,639 
+699,639 702,639 705,639 708,639 711,639 714,639 717,639 720,639 724,639 727,639 
+730,639 733,639 736,638 739,638 742,638 745,638 748,638 751,638 755,638 758,638 
+761,638 764,638 767,638 770,638 773,638 776,638 779,638 782,638 786,638 789,638 
+792,638 795,637 798,637 801,636 804,636 807,636 810,635 813,634 817,633 820,633 
+823,632 826,631 829,630 832,629 835,626 838,623 841,619 845,614 848,606 851,596 
+854,586 857,576 860,567 863,558 866,548 869,538 872,529 876,521 879,511 882,503 
+885,497 888,493 891,490 894,486 897,479 900,473 903,466 907,460 910,452 913,443 
+916,434 919,424 922,413 925,404 928,393 931,381 934,364 938,331 941,306 944,284 
+947,269
+V670 H236 V658
+"/>
+
+<path stroke="#ddd" stroke-width="3" d="
+M121,50 h10
+M121,112 h829 
+M121,174 h829 
+M121,236 h829 
+M121,298 h829 
+M121,360 h829 
+M121,422 h829 
+M121,484 h829 
+M121,546 h829 
+M121,608 h829 
+M121,670 h10
+"/>
+
+<g font-size="25" transform="translate(85.5,0)">
+<switch><text y="58.75" id="trsvg15-es" systemLanguage="es"><tspan id="trsvg1-es">100</tspan></text><text y="58.75" id="trsvg15-cs" systemLanguage="cs"><tspan id="trsvg1-cs">100</tspan></text><text y="58.75" id="trsvg15"><tspan id="trsvg1">100</tspan></text></switch>
+<switch><text y="368.75" id="trsvg16-es" systemLanguage="es"><tspan id="trsvg2-es">50</tspan></text><text y="368.75" id="trsvg16-cs" systemLanguage="cs"><tspan id="trsvg2-cs">50</tspan></text><text y="368.75" id="trsvg16"><tspan id="trsvg2">50</tspan></text></switch>
+<switch><text y="678.75" id="trsvg17"><tspan id="trsvg3">0</tspan></text></switch>
+</g>
+
+<path stroke="black" stroke-width="0.25" d=" M131,50 v630 M168.23,50 v630 M205.45,50 v630 M242.68,50 v630 M279.91,50 v630 M317.14,50 v630 M354.36,50 v630 M391.59,50 v630 M428.82,50 v630 M466.05,50 v630 M503.27,50 v630 M540.5,50 v630 M577.73,50 v630 M614.95,50 v630 M652.18,50 v630 M689.41,50 v630 M726.64,50 v630 M763.86,50 v630 M801.09,50 v630 M838.32,50 v630 M875.55,50 v630 M912.77,50 v630 "/>
+
+<g font-size="25" transform="translate(18.6,718.75)">
+<switch><text x="168" id="trsvg18-es" systemLanguage="es"><tspan id="trsvg4-es">2005</tspan></text><text x="168" id="trsvg18-cs" systemLanguage="cs"><tspan id="trsvg4-cs">2005</tspan></text><text x="168" id="trsvg18"><tspan id="trsvg4">2005</tspan></text></switch>
+<switch><text x="354" id="trsvg19-es" systemLanguage="es"><tspan id="trsvg5-es">2010</tspan></text><text x="354" id="trsvg19-cs" systemLanguage="cs"><tspan id="trsvg5-cs">2010</tspan></text><text x="354" id="trsvg19"><tspan id="trsvg5">2010</tspan></text></switch>
+<switch><text x="540" id="trsvg20-es" systemLanguage="es"><tspan id="trsvg6-es">2015</tspan></text><text x="540" id="trsvg20-cs" systemLanguage="cs"><tspan id="trsvg6-cs">2015</tspan></text><text x="540" id="trsvg20"><tspan id="trsvg6">2015</tspan></text></switch>
+<switch><text x="727" id="trsvg21-es" systemLanguage="es"><tspan id="trsvg7-es">2020</tspan></text><text x="727" id="trsvg21-cs" systemLanguage="cs"><tspan id="trsvg7-cs">2020</tspan></text><text x="727" id="trsvg21"><tspan id="trsvg7">2020</tspan></text></switch>
+<switch><text x="913" id="trsvg22-es" systemLanguage="es"><tspan id="trsvg8-es">2025</tspan></text><text x="913" id="trsvg22-cs" systemLanguage="cs"><tspan id="trsvg8-cs">2025</tspan></text><text x="913" id="trsvg22"><tspan id="trsvg8">2025</tspan></text></switch>
+</g>
+
+<g fill="#faa">
+<circle cx="202" cy="658" r="4"/><circle cx="205" cy="658" r="4"/><circle cx="209" cy="658" r="4"/><circle cx="212" cy="658" r="4"/><circle cx="215" cy="658" r="4"/><circle cx="218" cy="658" r="4"/><circle cx="221" cy="658" r="4"/><circle cx="224" cy="658" r="4"/><circle cx="227" cy="658" r="4"/><circle cx="230" cy="658" r="4"/>
+<circle cx="233" cy="658" r="4"/><circle cx="236" cy="658" r="4"/><circle cx="240" cy="658" r="4"/><circle cx="243" cy="658" r="4"/><circle cx="246" cy="658" r="4"/><circle cx="249" cy="651" r="4"/><circle cx="252" cy="658" r="4"/><circle cx="255" cy="651" r="4"/><circle cx="258" cy="651" r="4"/><circle cx="261" cy="651" r="4"/>
+<circle cx="264" cy="658" r="4"/><circle cx="268" cy="651" r="4"/><circle cx="271" cy="651" r="4"/><circle cx="274" cy="651" r="4"/><circle cx="277" cy="651" r="4"/><circle cx="280" cy="651" r="4"/><circle cx="283" cy="651" r="4"/><circle cx="286" cy="651" r="4"/><circle cx="289" cy="651" r="4"/><circle cx="292" cy="651" r="4"/>
+<circle cx="295" cy="651" r="4"/><circle cx="299" cy="651" r="4"/><circle cx="302" cy="651" r="4"/><circle cx="305" cy="651" r="4"/><circle cx="308" cy="651" r="4"/><circle cx="311" cy="651" r="4"/><circle cx="314" cy="651" r="4"/><circle cx="317" cy="651" r="4"/><circle cx="320" cy="651" r="4"/><circle cx="323" cy="651" r="4"/>
+<circle cx="326" cy="651" r="4"/><circle cx="330" cy="645" r="4"/><circle cx="333" cy="645" r="4"/><circle cx="336" cy="645" r="4"/><circle cx="339" cy="645" r="4"/><circle cx="342" cy="645" r="4"/><circle cx="345" cy="645" r="4"/><circle cx="348" cy="645" r="4"/><circle cx="351" cy="645" r="4"/><circle cx="354" cy="645" r="4"/>
+<circle cx="357" cy="645" r="4"/><circle cx="361" cy="645" r="4"/><circle cx="364" cy="645" r="4"/><circle cx="367" cy="645" r="4"/><circle cx="370" cy="645" r="4"/><circle cx="373" cy="645" r="4"/><circle cx="376" cy="645" r="4"/><circle cx="379" cy="645" r="4"/><circle cx="382" cy="645" r="4"/><circle cx="385" cy="645" r="4"/>
+<circle cx="388" cy="645" r="4"/><circle cx="392" cy="645" r="4"/><circle cx="395" cy="645" r="4"/><circle cx="398" cy="645" r="4"/><circle cx="401" cy="639" r="4"/><circle cx="404" cy="645" r="4"/><circle cx="407" cy="645" r="4"/><circle cx="410" cy="645" r="4"/><circle cx="413" cy="639" r="4"/><circle cx="416" cy="639" r="4"/>
+<circle cx="420" cy="639" r="4"/><circle cx="423" cy="633" r="4"/><circle cx="426" cy="614" r="4"/><circle cx="429" cy="602" r="4"/><circle cx="432" cy="608" r="4"/><circle cx="435" cy="620" r="4"/><circle cx="438" cy="627" r="4"/><circle cx="441" cy="633" r="4"/><circle cx="444" cy="633" r="4"/><circle cx="447" cy="639" r="4"/>
+<circle cx="451" cy="639" r="4"/><circle cx="454" cy="639" r="4"/><circle cx="457" cy="639" r="4"/><circle cx="460" cy="639" r="4"/><circle cx="463" cy="639" r="4"/><circle cx="466" cy="645" r="4"/><circle cx="469" cy="645" r="4"/><circle cx="472" cy="639" r="4"/><circle cx="475" cy="639" r="4"/><circle cx="478" cy="639" r="4"/>
+<circle cx="482" cy="639" r="4"/><circle cx="485" cy="639" r="4"/><circle cx="488" cy="639" r="4"/><circle cx="491" cy="639" r="4"/><circle cx="494" cy="639" r="4"/><circle cx="497" cy="639" r="4"/><circle cx="500" cy="639" r="4"/><circle cx="503" cy="639" r="4"/><circle cx="506" cy="639" r="4"/><circle cx="509" cy="639" r="4"/>
+<circle cx="513" cy="639" r="4"/><circle cx="516" cy="639" r="4"/><circle cx="519" cy="639" r="4"/><circle cx="522" cy="639" r="4"/><circle cx="525" cy="639" r="4"/><circle cx="528" cy="639" r="4"/><circle cx="531" cy="633" r="4"/><circle cx="534" cy="627" r="4"/><circle cx="537" cy="633" r="4"/><circle cx="541" cy="633" r="4"/>
+<circle cx="544" cy="639" r="4"/><circle cx="547" cy="639" r="4"/><circle cx="550" cy="639" r="4"/><circle cx="553" cy="633" r="4"/><circle cx="556" cy="639" r="4"/><circle cx="559" cy="639" r="4"/><circle cx="562" cy="639" r="4"/><circle cx="565" cy="639" r="4"/><circle cx="568" cy="639" r="4"/><circle cx="572" cy="639" r="4"/>
+<circle cx="575" cy="639" r="4"/><circle cx="578" cy="639" r="4"/><circle cx="581" cy="639" r="4"/><circle cx="584" cy="639" r="4"/><circle cx="587" cy="639" r="4"/><circle cx="590" cy="639" r="4"/><circle cx="593" cy="639" r="4"/><circle cx="596" cy="639" r="4"/><circle cx="599" cy="645" r="4"/><circle cx="603" cy="639" r="4"/>
+<circle cx="606" cy="639" r="4"/><circle cx="609" cy="639" r="4"/><circle cx="612" cy="639" r="4"/><circle cx="615" cy="639" r="4"/><circle cx="618" cy="639" r="4"/><circle cx="621" cy="639" r="4"/><circle cx="624" cy="639" r="4"/><circle cx="627" cy="639" r="4"/><circle cx="630" cy="639" r="4"/><circle cx="634" cy="639" r="4"/>
+<circle cx="637" cy="639" r="4"/><circle cx="640" cy="639" r="4"/><circle cx="643" cy="639" r="4"/><circle cx="646" cy="639" r="4"/><circle cx="649" cy="639" r="4"/><circle cx="652" cy="639" r="4"/><circle cx="655" cy="639" r="4"/><circle cx="658" cy="639" r="4"/><circle cx="661" cy="639" r="4"/><circle cx="665" cy="639" r="4"/>
+<circle cx="668" cy="639" r="4"/><circle cx="671" cy="639" r="4"/><circle cx="674" cy="639" r="4"/><circle cx="677" cy="639" r="4"/><circle cx="680" cy="639" r="4"/><circle cx="683" cy="639" r="4"/><circle cx="686" cy="639" r="4"/><circle cx="689" cy="639" r="4"/><circle cx="693" cy="639" r="4"/><circle cx="696" cy="639" r="4"/>
+<circle cx="699" cy="639" r="4"/><circle cx="702" cy="639" r="4"/><circle cx="705" cy="639" r="4"/><circle cx="708" cy="639" r="4"/><circle cx="711" cy="639" r="4"/><circle cx="714" cy="639" r="4"/><circle cx="717" cy="639" r="4"/><circle cx="720" cy="639" r="4"/><circle cx="724" cy="639" r="4"/><circle cx="727" cy="639" r="4"/>
+<circle cx="730" cy="639" r="4"/><circle cx="733" cy="639" r="4"/><circle cx="736" cy="633" r="4"/><circle cx="739" cy="639" r="4"/><circle cx="742" cy="639" r="4"/><circle cx="745" cy="639" r="4"/><circle cx="748" cy="639" r="4"/><circle cx="751" cy="639" r="4"/><circle cx="755" cy="639" r="4"/><circle cx="758" cy="639" r="4"/>
+<circle cx="761" cy="639" r="4"/><circle cx="764" cy="639" r="4"/><circle cx="767" cy="639" r="4"/><circle cx="770" cy="633" r="4"/><circle cx="773" cy="639" r="4"/><circle cx="776" cy="639" r="4"/><circle cx="779" cy="639" r="4"/><circle cx="782" cy="639" r="4"/><circle cx="786" cy="639" r="4"/><circle cx="789" cy="639" r="4"/>
+<circle cx="792" cy="633" r="4"/><circle cx="795" cy="633" r="4"/><circle cx="798" cy="633" r="4"/><circle cx="801" cy="633" r="4"/><circle cx="804" cy="633" r="4"/><circle cx="807" cy="633" r="4"/><circle cx="810" cy="627" r="4"/><circle cx="813" cy="633" r="4"/><circle cx="817" cy="627" r="4"/><circle cx="820" cy="633" r="4"/>
+<circle cx="823" cy="627" r="4"/><circle cx="826" cy="627" r="4"/><circle cx="829" cy="620" r="4"/><circle cx="832" cy="620" r="4"/><circle cx="835" cy="596" r="4"/><circle cx="838" cy="602" r="4"/><circle cx="841" cy="583" r="4"/><circle cx="845" cy="571" r="4"/><circle cx="848" cy="540" r="4"/><circle cx="851" cy="503" r="4"/>
+<circle cx="854" cy="509" r="4"/><circle cx="857" cy="515" r="4"/><circle cx="860" cy="515" r="4"/><circle cx="863" cy="521" r="4"/><circle cx="866" cy="503" r="4"/><circle cx="869" cy="496" r="4"/><circle cx="872" cy="496" r="4"/><circle cx="876" cy="496" r="4"/><circle cx="879" cy="472" r="4"/><circle cx="882" cy="465" r="4"/>
+<circle cx="885" cy="472" r="4"/><circle cx="888" cy="459" r="4"/><circle cx="891" cy="465" r="4"/><circle cx="894" cy="465" r="4"/><circle cx="897" cy="441" r="4"/><circle cx="900" cy="447" r="4"/><circle cx="903" cy="422" r="4"/><circle cx="907" cy="416" r="4"/><circle cx="910" cy="403" r="4"/><circle cx="913" cy="385" r="4"/>
+<circle cx="916" cy="366" r="4"/><circle cx="919" cy="341" r="4"/><circle cx="922" cy="348" r="4"/><circle cx="925" cy="348" r="4"/><circle cx="928" cy="335" r="4"/><circle cx="931" cy="317" r="4"/><circle cx="934" cy="242" r="4"/><circle cx="938" cy="50" r="4"/><circle cx="941" cy="124" r="4"/><circle cx="944" cy="149" r="4"/>
+<circle cx="947" cy="217" r="4"/>
+
+</g>
+
+<path stroke="#d02" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round" transform="translate(-12,0)" d="
+M236,658 L240,658 243,658 246,658 249,657 252,657 255,657 258,656 261,656 
+264,656 268,655 271,655 274,654 277,653 280,653 283,652 286,652 289,652 292,652 
+295,652 299,652 302,651 305,651 308,651 311,651 314,651 317,651 320,651 323,651 
+326,651 330,651 333,650 336,650 339,649 342,649 345,648 348,648 351,647 354,647 
+357,646 361,646 364,645 367,645 370,645 373,645 376,645 379,645 382,645 385,645 
+388,645 392,645 395,645 398,645 401,645 404,645 407,645 410,645 413,644 416,644 
+420,643 423,642 426,640 429,636 432,633 435,631 438,630 441,629 444,628 447,627 
+451,627 454,627 457,627 460,628 463,630 466,633 469,636 472,638 475,639 478,640 
+482,640 485,640 488,640 491,640 494,640 497,640 500,640 503,640 506,639 509,639 
+513,639 516,639 519,639 522,639 525,639 528,639 531,638 534,637 537,637 541,636 
+544,636 547,636 550,636 553,636 556,636 559,636 562,636 565,636 568,636 572,637 
+575,638 578,638 581,638 584,638 587,638 590,639 593,639 596,639 599,640 603,640 
+606,640 609,640 612,640 615,640 618,640 621,640 624,640 627,640 630,640 634,640 
+637,639 640,639 643,639 646,639 649,639 652,639 655,639 658,639 661,639 665,639 
+668,639 671,639 674,639 677,639 680,639 683,639 686,639 689,639 693,639 696,639 
+699,639 702,639 705,639 708,639 711,639 714,639 717,639 720,639 724,639 727,639 
+730,639 733,639 736,638 739,638 742,638 745,638 748,638 751,638 755,638 758,638 
+761,638 764,638 767,638 770,638 773,638 776,638 779,638 782,638 786,638 789,638 
+792,638 795,637 798,637 801,636 804,636 807,636 810,635 813,634 817,633 820,633 
+823,632 826,631 829,630 832,629 835,626 838,623 841,619 845,614 848,606 851,596 
+854,586 857,576 860,567 863,558 866,548 869,538 872,529 876,521 879,511 882,503 
+885,497 888,493 891,490 894,486 897,479 900,473 903,466 907,460 910,452 913,443 
+916,434 919,424 922,413 925,404 928,393 931,381 934,364 938,331 941,306 944,284 
+947,269 
+
+"/>
+
+<g transform="translate(540,105)" font-size="50">
+<switch><text id="trsvg23-es" systemLanguage="es"><tspan id="trsvg9-es">«AI» (término de búsqueda)</tspan></text><text id="trsvg23-cs" systemLanguage="cs"><tspan id="trsvg9-cs">AI (hledaný výraz)</tspan></text><text id="trsvg23"><tspan id="trsvg9">"AI" (search term)</tspan></text></switch>
+<switch><text y="62" id="trsvg24-es" systemLanguage="es"><tspan id="trsvg10-es">en Google Trends</tspan></text><text y="62" id="trsvg24-cs" systemLanguage="cs"><tspan id="trsvg10-cs">na Google Trends</tspan></text><text y="62" id="trsvg24"><tspan id="trsvg10">on Google Trends</tspan></text></switch>
+<switch><text y="90" font-size="10" id="trsvg25-es" systemLanguage="es"><tspan id="trsvg11-es">(En todo el mundo, Todas las categorías, Búsqueda web)</tspan></text><text y="90" font-size="10" id="trsvg25-cs" systemLanguage="cs"><tspan id="trsvg11-cs">(celosvětově, všechny kategorie, webové hledání)</tspan></text><text y="90" font-size="10" id="trsvg25"><tspan id="trsvg11">(Worldwide, All categories, Web search)</tspan></text></switch>
+</g>
+
+<switch><text transform="translate(48,360) rotate(-90)" font-size="40" id="trsvg26-es" systemLanguage="es"><tspan id="trsvg12-es">«Escala de interés» de Google</tspan></text><text transform="translate(48,360) rotate(-90)" font-size="40" id="trsvg26-cs" systemLanguage="cs"><tspan id="trsvg12-cs">Google "škála zájmu"</tspan></text><text transform="translate(48,360) rotate(-90)" font-size="40" id="trsvg26"><tspan id="trsvg12">Google "interest scale"</tspan></text></switch>
+
+   <g transform="translate(168,323)">
+<path d="M0,0 h37.23 v10 h-37.23 z" fill="#d02"/>
+<circle cx="20" cy="67" r="12" stroke="black" stroke-width="0.3" fill="#faa"/>
+
+<g text-anchor="start" font-size="35">
+<switch><text x="60" y="17" id="trsvg27-es" systemLanguage="es"><tspan id="trsvg13-es">Promedio centrado de 12 meses</tspan></text><text x="60" y="17" id="trsvg27-cs" systemLanguage="cs"><tspan id="trsvg13-cs">12měsíční střední průměr</tspan></text><text x="60" y="17" id="trsvg27"><tspan id="trsvg13">12-month centered average</tspan></text></switch>
+<switch><text x="60" y="79" id="trsvg28-es" systemLanguage="es"><tspan id="trsvg14-es">Mensual</tspan></text><text x="60" y="79" id="trsvg28-cs" systemLanguage="cs"><tspan id="trsvg14-cs">měsíčně</tspan></text><text x="60" y="79" id="trsvg28"><tspan id="trsvg14">Monthly</tspan></text></switch>
+</g>
+   </g>
+
+         <!-- Cover edges of plot area -->
+<rect width="819" height="620" x="131" y="50" stroke="#888888" stroke-width="1" fill="none"/>
+
+</svg>

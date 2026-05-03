@@ -1,0 +1,10 @@
+{
+  "slug": "avestan",
+  "project": "en.wikipedia.org",
+  "title": "Avestan",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Avestan",
+  "revision_id": "W/\"1351713013/909b5bfe-4739-11f1-a800-035513fffa33/view/html",
+  "fetched_at": "2026-05-03T22:20:25Z",
+  "http_status": 200,
+  "html_bytes": 408589
+}

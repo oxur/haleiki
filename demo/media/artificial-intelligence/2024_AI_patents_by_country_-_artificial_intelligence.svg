@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg  width="1200" height="750" xmlns="http://www.w3.org/2000/svg" font-family="Liberation Sans,sans-serif" text-anchor="end" fill="black" font-size="45">
+
+<rect width="1200" height="750" fill="#f8f8f8"/>
+
+<g transform="translate(375,375)" stroke="white" stroke-linejoin="round" stroke-width="1">
+<path transform="rotate(0)" d="M0,0 v-300 A300,300 0 0 1 25.437,298.92 z" fill="firebrick"/>
+<path transform="rotate(175.136)" d="M0,0 v-300 A300,300 0 0 1 268.543,133.733 z" fill="dodgerblue"/>
+<path transform="rotate(291.609)" d="M0,0 v-300 A300,300 0 0 1 106.503,-280.459 z" fill="mediumseagreen"/>
+<path transform="rotate(312.403)" d="M0,0 v-300 A300,300 0 0 1 106.503,-280.459 z" fill="darkblue"/>
+<path transform="rotate(333.197)" d="M0,0 v-300 A300,300 0 0 1 55.221,-294.874 z" fill="lightblue"/>
+<path transform="rotate(343.804)" d="M0,0 v-300 A300,300 0 0 1 26.105,-298.862 z" fill="salmon"/>
+<path transform="rotate(348.796)" d="M0,0 v-300 A300,300 0 0 1 17.63,-299.482 z" fill="green"/>
+<path transform="rotate(352.165)" d="M0,0 v-300 A300,300 0 0 1 17.206,-299.506 z" fill="dodgerblue"/>
+<path transform="rotate(355.453)" d="M0,0 v-300 A300,300 0 0 1 12.746,-299.729 z" fill="firebrick"/>
+<path transform="rotate(357.888)" d="M0,0 v-300 A300,300 0 0 1 11.051,-299.796 z" fill="mediumseagreen"/>
+</g>
+
+<g transform="translate(720,0)" text-anchor="start" font-family="Liberation Sans,sans-serif">
+<path fill="firebrick" d="M0,105 v45 h45 v-45 z" />
+<path fill="dodgerblue" d="M0,161 v45 h45 v-45 z" />
+<path fill="mediumseagreen" d="M0,217 v45 h45 v-45 z" />
+<path fill="darkblue" d="M0,274 v45 h45 v-45 z" />
+<path fill="lightblue" d="M0,330 v45 h45 v-45 z" />
+<path fill="salmon" d="M0,386 v45 h45 v-45 z" />
+<path fill="green" d="M0,442 v45 h45 v-45 z" />
+<path fill="dodgerblue" d="M0,499 v45 h45 v-45 z" />
+<path fill="firebrick" d="M0,555 v45 h45 v-45 z" />
+<path fill="mediumseagreen" d="M0,611 v45 h45 v-45 z" />
+
+<g transform="translate(60,0)">
+<text y="145">China</text>
+<text y="202">US</text>
+<text y="258">S. Korea</text>
+<text y="314">Japan</text>
+<text y="370">Germany</text>
+<text y="427">UK</text>
+<text y="483">Netherlands</text>
+<text y="539">Sweden</text>
+<text y="595">Finland</text>
+<text y="652">Taiwan</text>
+</g>
+</g>
+
+<text font-size="70" x="1150" y="70">A.I. patents – 2024</text>
+<text font-size="15" x="1110" y="95">Jan. - Oct.</text>
+
+<g fill="white" font-size="35" text-anchor="middle">
+<text x="520" y="375">12,945</text>
+<text x="250" y="475">8,609</text>
+</g>
+
+</svg>

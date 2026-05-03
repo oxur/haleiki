@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="600" height="400" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <radialGradient id="b" cx="1019.3" cy="972.62" r="16.018" gradientTransform="matrix(-1.2228 0 0 -3.3049 1409.2 3538.4)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#f00" offset="0"/>
+   <stop stop-color="#ffd700" offset="1"/>
+  </radialGradient>
+ </defs>
+ <rect x="310" y="20" width="270" height="360" fill="#c9eaff" stroke="#000" stroke-width="1.5"/>
+ <path d="m310 319.43h270v60.573h-270z" fill="#803300" stroke="#000" stroke-width="1.5"/>
+ <rect x="20" y="20" width="270" height="360" fill="#000039"/>
+ <g id="a" transform="translate(-11.23)">
+  <rect x="393.9" y="177.89" width="124.66" height="139.48" rx="2.8145" ry="2.8145" fill="#fff"/>
+  <rect x="393.9" y="177.89" width="124.66" height="139.48" rx="2.8145" ry="2.8145" fill="none" stroke="#008f8f" stroke-width="6"/>
+  <circle cx="471.5" cy="204.65" r="12.293" fill="#ffbfbf" stroke="#00008f" stroke-width="6"/>
+  <g fill="none">
+   <g stroke="#00008f" stroke-width="6">
+    <path d="m475 218.52v51.793"/>
+    <path d="m446.2 312.08 28.778-41.909 17.742 43.865"/>
+    <path d="m430.7 231.75 44.284-2.9336 16.764 29.756"/>
+   </g>
+   <path d="m430.4 232.17c-14.669 0-19.278 65.937-19.278 65.937" stroke="#000" stroke-dasharray="1.6, 4.7" stroke-width="1.5"/>
+  </g>
+  <circle cx="410.9" cy="305.51" r="8" fill="#f00"/>
+ </g>
+ <g transform="rotate(18 210.91 168.51)">
+  <path d="m174.53 316.25c4.3674 10.596 8.7346 21.191 7.351 31.965s-8.5164 21.726-12.666 27.202c-4.149 5.4756-5.3136 5.4756-6.4769 5.4756s-2.3279 0-6.4769-5.4756c-4.1491-5.4756-11.282-16.428-12.666-27.202-1.3836-10.774 2.9837-21.369 7.3511-31.965" fill="url(#b)"/>
+  <path d="m162.74 41.316-66.353 78.014v163.72h44.769l-10.357 35.715h63.883l-10.357-35.715h44.769v-163.72z" fill="#008f8f"/>
+  <use transform="translate(-282.26 -53.57)" xlink:href="#a"/>
+ </g>
+</svg>

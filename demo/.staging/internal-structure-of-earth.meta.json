@@ -1,0 +1,10 @@
+{
+  "slug": "internal-structure-of-earth",
+  "project": "en.wikipedia.org",
+  "title": "Internal structure of Earth",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Internal_structure_of_Earth",
+  "revision_id": "W/\"1350519615/146a66e8-3f08-11f1-a26b-f16a03596185/view/html",
+  "fetched_at": "2026-05-03T22:20:29Z",
+  "http_status": 200,
+  "html_bytes": 274544
+}

@@ -1,0 +1,10 @@
+{
+  "slug": "earths-internal-heat-budget",
+  "project": "en.wikipedia.org",
+  "title": "Earth's internal heat budget",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Earth's_internal_heat_budget",
+  "revision_id": "W/\"1314896248/28357f50-470b-11f1-9ba3-4da27ff08ff4/view/html",
+  "fetched_at": "2026-05-03T22:20:28Z",
+  "http_status": 200,
+  "html_bytes": 100811
+}

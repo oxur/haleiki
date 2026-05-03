@@ -1,0 +1,10 @@
+{
+  "slug": "amanda-askell",
+  "project": "en.wikipedia.org",
+  "title": "Amanda Askell",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Amanda_Askell",
+  "revision_id": "W/\"1347844459/fb43918a-4727-11f1-aa6b-2341cc2a147a/view/html",
+  "fetched_at": "2026-05-03T22:20:22Z",
+  "http_status": 200,
+  "html_bytes": 107445
+}

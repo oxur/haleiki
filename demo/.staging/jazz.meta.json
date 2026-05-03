@@ -1,0 +1,10 @@
+{
+  "slug": "jazz",
+  "project": "en.wikipedia.org",
+  "title": "Jazz",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Jazz",
+  "revision_id": "W/\"1349768506/5ecab730-4689-11f1-8375-6768a98a556d/view/html",
+  "fetched_at": "2026-05-03T22:20:20Z",
+  "http_status": 200,
+  "html_bytes": 870179
+}

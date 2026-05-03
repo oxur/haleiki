@@ -1,0 +1,10 @@
+{
+  "slug": "m-theory",
+  "project": "en.wikipedia.org",
+  "title": "M-theory",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/M-theory",
+  "revision_id": "W/\"1335197328/649c5873-42ab-11f1-9e95-15813c2ec276/view/html",
+  "fetched_at": "2026-05-03T22:20:14Z",
+  "http_status": 200,
+  "html_bytes": 351454
+}

@@ -1,0 +1,10 @@
+{
+  "slug": "john-mccarthy",
+  "project": "en.wikipedia.org",
+  "title": "John McCarthy (computer scientist)",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/John_McCarthy_(computer_scientist)",
+  "revision_id": "W/\"1351505736/ebc4488c-4727-11f1-aa6b-2341cc2a147a/view/html",
+  "fetched_at": "2026-05-03T22:20:22Z",
+  "http_status": 200,
+  "html_bytes": 363739
+}

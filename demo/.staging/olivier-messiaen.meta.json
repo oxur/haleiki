@@ -1,0 +1,10 @@
+{
+  "slug": "olivier-messiaen",
+  "project": "en.wikipedia.org",
+  "title": "Olivier Messiaen",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Olivier_Messiaen",
+  "revision_id": "W/\"1351066084/48306d25-473a-11f1-96cb-af6c6c7c45ef/view/html",
+  "fetched_at": "2026-05-03T22:20:17Z",
+  "http_status": 200,
+  "html_bytes": 450774
+}

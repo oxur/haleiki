@@ -1,0 +1,10 @@
+{
+  "slug": "jamgon-kongtrul",
+  "project": "en.wikipedia.org",
+  "title": "Jamgon Kongtrul",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Jamgon_Kongtrul",
+  "revision_id": "W/\"1334019508/b676214f-473c-11f1-a11b-9b7ed126201c/view/html",
+  "fetched_at": "2026-05-03T22:20:12Z",
+  "http_status": 200,
+  "html_bytes": 243147
+}

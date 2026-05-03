@@ -1,0 +1,10 @@
+{
+  "slug": "vajrayana",
+  "project": "en.wikipedia.org",
+  "title": "Vajrayana",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Vajrayana",
+  "revision_id": "W/\"1347790044/fb98627c-4738-11f1-891a-3d9cd85ab5ba/view/html",
+  "fetched_at": "2026-05-03T22:20:12Z",
+  "http_status": 200,
+  "html_bytes": 807003
+}

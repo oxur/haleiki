@@ -1,0 +1,10 @@
+{
+  "slug": "earth",
+  "project": "en.wikipedia.org",
+  "title": "Earth",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Earth",
+  "revision_id": "W/\"1352359480/d31063e8-4738-11f1-a493-153e7dcf1267/view/html",
+  "fetched_at": "2026-05-03T22:20:29Z",
+  "http_status": 200,
+  "html_bytes": 1483747
+}

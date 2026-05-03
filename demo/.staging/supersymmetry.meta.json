@@ -1,0 +1,10 @@
+{
+  "slug": "supersymmetry",
+  "project": "en.wikipedia.org",
+  "title": "Supersymmetry",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Supersymmetry",
+  "revision_id": "W/\"1346190564/f31734c2-3cbf-11f1-9fb4-71c06184c723/view/html",
+  "fetched_at": "2026-05-03T22:20:14Z",
+  "http_status": 200,
+  "html_bytes": 573193
+}

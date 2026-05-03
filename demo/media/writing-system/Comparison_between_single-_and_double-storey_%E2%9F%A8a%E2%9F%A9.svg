@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" height="160" width="320">
+  <path stroke="currentColor" stroke-width="2" d="m160 0v160"/>
+  <text font-size="224" y="132" text-anchor="middle" text-align="center">
+    <tspan x="25%">a</tspan><tspan x="75%" fill="#900">ɑ</tspan>
+  </text>
+</svg>
+

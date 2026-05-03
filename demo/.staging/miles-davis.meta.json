@@ -1,0 +1,10 @@
+{
+  "slug": "miles-davis",
+  "project": "en.wikipedia.org",
+  "title": "Miles Davis",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Miles_Davis",
+  "revision_id": "W/\"1351497075/2d89cb8f-46f9-11f1-896e-bff8698bc4e2/view/html",
+  "fetched_at": "2026-05-03T22:20:20Z",
+  "http_status": 200,
+  "html_bytes": 941066
+}

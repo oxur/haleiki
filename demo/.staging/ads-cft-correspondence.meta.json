@@ -1,0 +1,10 @@
+{
+  "slug": "ads-cft-correspondence",
+  "project": "en.wikipedia.org",
+  "title": "AdS/CFT correspondence",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/AdS%2FCFT_correspondence",
+  "revision_id": "W/\"1351909919/816c9927-44de-11f1-9305-3924ca983330/view/html",
+  "fetched_at": "2026-05-03T22:20:15Z",
+  "http_status": 200,
+  "html_bytes": 389406
+}

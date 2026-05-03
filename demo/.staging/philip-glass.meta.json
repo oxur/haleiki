@@ -1,0 +1,10 @@
+{
+  "slug": "philip-glass",
+  "project": "en.wikipedia.org",
+  "title": "Philip Glass",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Philip_Glass",
+  "revision_id": "W/\"1351889063/cd5e5713-4727-11f1-923a-d371f200f7d8/view/html",
+  "fetched_at": "2026-05-03T22:20:18Z",
+  "http_status": 200,
+  "html_bytes": 835678
+}

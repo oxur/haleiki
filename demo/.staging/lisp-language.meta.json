@@ -1,0 +1,10 @@
+{
+  "slug": "lisp-language",
+  "project": "en.wikipedia.org",
+  "title": "Lisp (programming language)",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Lisp_(programming_language)",
+  "revision_id": "W/\"1350208827/984ff722-468a-11f1-82f6-a1ffff3a8029/view/html",
+  "fetched_at": "2026-05-03T22:20:21Z",
+  "http_status": 200,
+  "html_bytes": 526762
+}

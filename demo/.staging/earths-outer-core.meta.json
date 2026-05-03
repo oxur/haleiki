@@ -1,0 +1,10 @@
+{
+  "slug": "earths-outer-core",
+  "project": "en.wikipedia.org",
+  "title": "Earth's outer core",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Earth's_outer_core",
+  "revision_id": "W/\"1345715979/b0316ab2-469e-11f1-a801-0b85118b882a/view/html",
+  "fetched_at": "2026-05-03T22:20:29Z",
+  "http_status": 200,
+  "html_bytes": 212273
+}

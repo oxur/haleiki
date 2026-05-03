@@ -1,0 +1,12 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" width="155" height="90">
+<rect x="10" y="10" height="40" width="50" stroke-width="3" stroke="black" fill-opacity="0%"/>
+<rect x="60" y="10" height="40" width="50" stroke-width="3" stroke="black" fill-opacity="0%"/>
+<circle cx="35" cy="30" r="3" fill="black"/>
+<circle cx="85" cy="30" r="3" fill="black"/>
+<line x1="35" y1="30" x2="35" y2="70" stroke-width="3" stroke="black"/>
+<line x1="85" y1="30" x2="135" y2="30" stroke-width="3" stroke="black"/>
+<path d="M135 30 L 129 24 L 147 30 L 129 36 Z" fill="black"/>
+<path d="M35 70 L 29 64 L 35 82 L 41 64 Z" fill="black"/>
+</svg>

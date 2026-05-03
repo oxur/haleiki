@@ -1,0 +1,10 @@
+{
+  "slug": "writing-system",
+  "project": "en.wikipedia.org",
+  "title": "Writing system",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Writing_system",
+  "revision_id": "W/\"1350896570/46ff386a-473a-11f1-a546-b1f59a30194c/view/html",
+  "fetched_at": "2026-05-03T22:20:24Z",
+  "http_status": 200,
+  "html_bytes": 424849
+}

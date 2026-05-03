@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="280">
+  <g font-family="sans-serif" font-size="24" text-anchor="middle">
+    <g font-weight="700">
+      <text x="140" y="40">English</text>
+      <text x="410" y="40">ASL</text>
+    </g>
+    <text x="80" y="160">spoken</text>
+    <text x="350" y="160">signed</text>
+    <text x="200" y="240">written</text>
+    <g font-size="18" text-anchor="start">
+      <text x="380" y="230">representation</text>
+      <text x="380" y="250">correspondence</text>
+    </g>
+  </g>
+  <g stroke="currentColor" stroke-width="3">
+    <path d="M280 0v280"/>
+    <path d="m110 50-30 75"/>
+    <path d="m390 50-30 75"/>
+    <path d="m170 50 30 155"/>
+    <path d="M320 225h50"/>
+    <g stroke-dasharray="9 6">
+      <path d="m145 230-65-55"/>
+      <path d="m255 230 65-55"/>
+      <path d="M320 245h50"/>
+    </g>
+  </g>
+  <g stroke="currentColor" stroke-width="3">
+    <path d="m357 131-1-11 11 4z"/>
+    <path d="m77 131-1-11 11 4z"/>
+    <path d="m325 171-4 11-8-9z"/>
+    <path d="m75 171 12 2-8 9z"/>
+    <path d="m201 212-8-9 12-3z"/>
+    <path d="m150 234-12-2 8-9z"/>
+    <path d="m250 234 4-11 8 9z"/>
+  </g>
+</svg>

@@ -1,0 +1,10 @@
+{
+  "slug": "proto-indo-european",
+  "project": "en.wikipedia.org",
+  "title": "Proto-Indo-European language",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Proto-Indo-European_language",
+  "revision_id": "W/\"1352304105/e0c5e20c-4738-11f1-8f9f-1f898662e1e2/view/html",
+  "fetched_at": "2026-05-03T22:20:24Z",
+  "http_status": 200,
+  "html_bytes": 500414
+}

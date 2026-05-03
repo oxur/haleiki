@@ -1,0 +1,28 @@
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="9.578ex" height="3.509ex" style="vertical-align: -0.838ex;" viewBox="0 -1150.1 4123.9 1510.9" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<title id="MathJax-SVG-1-Title">{\displaystyle {\begin{array}{c}\hline \vdash 0:{\mathsf {nat}}\\\end{array}}}</title>
+<defs aria-hidden="true">
+<path stroke-width="1" id="E1-MJMAIN-22A2" d="M55 678Q55 679 56 681T58 684T61 688T65 691T70 693T77 694Q88 692 95 679V367H540Q555 359 555 347Q555 334 540 327H95V15Q88 2 77 0Q73 0 70 1T65 3T61 6T59 9T57 13T55 16V678Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-30" d="M96 585Q152 666 249 666Q297 666 345 640T423 548Q460 465 460 320Q460 165 417 83Q397 41 362 16T301 -15T250 -22Q224 -22 198 -16T137 16T82 83Q39 165 39 320Q39 494 96 585ZM321 597Q291 629 250 629Q208 629 178 597Q153 571 145 525T137 333Q137 175 145 125T181 46Q209 16 250 16Q290 16 318 46Q347 76 354 130T362 333Q362 478 354 524T321 597Z"></path>
+<path stroke-width="1" id="E1-MJMAIN-3A" d="M78 370Q78 394 95 412T138 430Q162 430 180 414T199 371Q199 346 182 328T139 310T96 327T78 370ZM78 60Q78 84 95 102T138 120Q162 120 180 104T199 61Q199 36 182 18T139 0T96 17T78 60Z"></path>
+<path stroke-width="1" id="E1-MJSS-6E" d="M160 392Q214 446 283 454Q285 454 292 454T303 455H306Q417 455 438 354Q442 331 443 164V0H350V157Q349 315 348 320Q334 378 259 378H253Q224 378 204 358Q180 334 173 301T165 209Q165 198 165 172T166 129V0H73V450H160V392Z"></path>
+<path stroke-width="1" id="E1-MJSS-61" d="M236 387Q209 387 184 382T141 370T111 355T91 342T83 337L82 355Q80 373 79 393T77 417Q77 419 81 421Q86 423 91 426Q155 460 227 460H238Q319 460 368 400Q393 371 400 341T408 252Q408 240 408 207T407 152V0H317V39L306 32Q244 -10 159 -10H152Q109 -10 77 22Q38 61 38 126Q38 142 39 146Q55 199 130 223T295 252H314V277Q314 305 313 310Q308 342 287 364T236 387ZM303 186Q124 180 124 126Q124 105 144 86T208 66Q284 66 309 124Q314 137 314 166V186H303Z"></path>
+<path stroke-width="1" id="E1-MJSS-74" d="M333 27Q333 24 314 16T257 -1T184 -10H172Q146 -10 128 14T105 58T99 91Q95 113 95 251V371H18V444H98V571H182V444H316V371H182V253Q183 128 189 104Q199 68 234 68Q277 72 314 98Q315 93 323 61T333 27Z"></path>
+</defs>
+<g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)" aria-hidden="true">
+<g transform="translate(275,0)">
+<g transform="translate(-11,0)">
+<g transform="translate(0,-50)">
+ <use xlink:href="#E1-MJMAIN-22A2" x="0" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-30" x="889" y="0"></use>
+ <use xlink:href="#E1-MJMAIN-3A" x="1667" y="0"></use>
+<g transform="translate(2223,0)">
+ <use xlink:href="#E1-MJSS-6E" x="0" y="0"></use>
+ <use xlink:href="#E1-MJSS-61" x="517" y="0"></use>
+ <use xlink:href="#E1-MJSS-74" x="999" y="0"></use>
+</g>
+</g>
+</g>
+</g>
+<line stroke-linecap="square" stroke-width="75" y2="37" y1="37" x1="37" x2="4086" transform="translate(0,950)"></line>
+</g>
+</svg>

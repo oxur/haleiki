@@ -1,0 +1,10 @@
+{
+  "slug": "erlang-language",
+  "project": "en.wikipedia.org",
+  "title": "Erlang (programming language)",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Erlang_(programming_language)",
+  "revision_id": "W/\"1337491566/7d32b625-468d-11f1-babf-4f9fa340c64d/view/html",
+  "fetched_at": "2026-05-03T22:20:21Z",
+  "http_status": 200,
+  "html_bytes": 248368
+}

@@ -1,0 +1,10 @@
+{
+  "slug": "quantum-mechanics",
+  "project": "en.wikipedia.org",
+  "title": "Quantum mechanics",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Quantum_mechanics",
+  "revision_id": "W/\"1351268698/7c037f26-4691-11f1-9d67-cd23579a9fa6/view/html",
+  "fetched_at": "2026-05-03T22:20:15Z",
+  "http_status": 200,
+  "html_bytes": 787784
+}

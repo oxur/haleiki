@@ -1,0 +1,10 @@
+{
+  "slug": "yangthang-rinpoche",
+  "project": "www.rigpawiki.org",
+  "title": "Yangthang Rinpoche",
+  "api_url": "https://www.rigpawiki.org/api.php?action=parse&page=Yangthang+Rinpoche&format=json&prop=text%7Crevid%7Cdisplaytitle",
+  "revision_id": "94101",
+  "fetched_at": "2026-05-03T22:20:11Z",
+  "http_status": 200,
+  "html_bytes": 9582
+}

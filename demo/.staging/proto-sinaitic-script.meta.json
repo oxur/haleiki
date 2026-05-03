@@ -1,0 +1,10 @@
+{
+  "slug": "proto-sinaitic-script",
+  "project": "en.wikipedia.org",
+  "title": "Proto-Sinaitic script",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Proto-Sinaitic_script",
+  "revision_id": "W/\"1347756208/b6c0f359-4739-11f1-b6f0-758474aa04e4/view/html",
+  "fetched_at": "2026-05-03T22:20:25Z",
+  "http_status": 200,
+  "html_bytes": 568728
+}

@@ -1,0 +1,10 @@
+{
+  "slug": "dzogchen",
+  "project": "en.wikipedia.org",
+  "title": "Dzogchen",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Dzogchen",
+  "revision_id": "W/\"1351995149/271b4dad-4739-11f1-b07c-3d20df6e2bc8/view/html",
+  "fetched_at": "2026-05-03T22:20:10Z",
+  "http_status": 200,
+  "html_bytes": 451375
+}

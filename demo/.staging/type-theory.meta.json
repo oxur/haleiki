@@ -1,0 +1,10 @@
+{
+  "slug": "type-theory",
+  "project": "en.wikipedia.org",
+  "title": "Type theory",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Type_theory",
+  "revision_id": "W/\"1349281143/232f4edf-3ff6-11f1-80c6-7d0061b7e75f/view/html",
+  "fetched_at": "2026-05-03T22:20:17Z",
+  "http_status": 200,
+  "html_bytes": 647026
+}

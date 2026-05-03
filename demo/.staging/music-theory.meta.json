@@ -1,0 +1,10 @@
+{
+  "slug": "music-theory",
+  "project": "en.wikipedia.org",
+  "title": "Music theory",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Music_theory",
+  "revision_id": "W/\"1348020138/589416c4-4739-11f1-ba94-65097547c1c6/view/html",
+  "fetched_at": "2026-05-03T22:20:17Z",
+  "http_status": 200,
+  "html_bytes": 753227
+}

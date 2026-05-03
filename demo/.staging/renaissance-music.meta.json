@@ -1,0 +1,10 @@
+{
+  "slug": "renaissance-music",
+  "project": "en.wikipedia.org",
+  "title": "Renaissance music",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Renaissance_music",
+  "revision_id": "W/\"1351470986/b91949da-468c-11f1-8188-f5a3f6de5f2c/view/html",
+  "fetched_at": "2026-05-03T22:20:19Z",
+  "http_status": 200,
+  "html_bytes": 360397
+}

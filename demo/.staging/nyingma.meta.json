@@ -1,0 +1,10 @@
+{
+  "slug": "nyingma",
+  "project": "en.wikipedia.org",
+  "title": "Nyingma",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Nyingma",
+  "revision_id": "W/\"1345182538/48c9035c-473a-11f1-bad6-efd0cfc5787e/view/html",
+  "fetched_at": "2026-05-03T22:20:12Z",
+  "http_status": 200,
+  "html_bytes": 461400
+}

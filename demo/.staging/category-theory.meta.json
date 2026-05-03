@@ -1,0 +1,10 @@
+{
+  "slug": "category-theory",
+  "project": "en.wikipedia.org",
+  "title": "Category theory",
+  "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Category_theory",
+  "revision_id": "W/\"1350452473/1f2ed844-3dea-11f1-ac57-07a399f5d09b/view/html",
+  "fetched_at": "2026-05-03T22:20:16Z",
+  "http_status": 200,
+  "html_bytes": 289677
+}
