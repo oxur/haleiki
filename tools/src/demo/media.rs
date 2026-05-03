@@ -658,7 +658,7 @@ async fn download_single_image(
                 .and_then(|h| h.to_str().ok())
                 .and_then(parse_retry_after_value)
                 .unwrap_or_else(|| u64::from(1_u32 << attempt).min(30));
-            let wait_secs = wait_secs.min(60);
+            let wait_secs = (wait_secs + 30).min(120);
             eprintln!("  Rate limited (429), waiting {wait_secs}s before retry...");
             tokio::time::sleep(std::time::Duration::from_secs(wait_secs)).await;
             continue;
