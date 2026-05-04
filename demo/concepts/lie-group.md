@@ -22,6 +22,12 @@ keywords:
 derived_from:
   - slug: "group-theory"
     title: "Group theory"
+  - slug: "group-mathematics"
+    title: "Group (mathematics)"
+  - slug: "abstract-algebra"
+    title: "Abstract algebra"
+  - slug: "history-of-group-theory"
+    title: "History of group theory"
 
 # === CONFIDENCE ===
 extraction_confidence: "high"

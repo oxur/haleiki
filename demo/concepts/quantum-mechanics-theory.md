@@ -22,6 +22,8 @@ keywords:
 derived_from:
   - slug: "quantum-mechanics"
     title: "Quantum mechanics"
+  - slug: "physics"
+    title: "Physics"
 
 # === CONFIDENCE ===
 extraction_confidence: "high"
