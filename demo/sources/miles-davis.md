@@ -22,8 +22,10 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:20Z
   revision_id: W/"1351497075/2d89cb8f-46f9-11f1-896e-bff8698bc4e2/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - miles-davis-musician
+last_extracted: 2026-05-04
 status: published
 ---
 

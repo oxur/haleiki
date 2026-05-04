@@ -21,8 +21,12 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:25Z
   revision_id: W/"1347756208/b6c0f359-4739-11f1-b6f0-758474aa04e4/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - abjad
+  - alphabet
+  - proto-sinaitic-script
+last_extracted: 2026-05-04
 status: published
 ---
 

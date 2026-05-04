@@ -21,8 +21,13 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:14Z
   revision_id: W/"1335197328/649c5873-42ab-11f1-9e95-15813c2ec276/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - brane
+  - extra-dimensions
+  - m-theory-physics
+  - supersymmetry-physics
+last_extracted: 2026-05-04
 status: published
 ---
 

@@ -21,8 +21,14 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:28Z
   revision_id: W/"1314896248/28357f50-470b-11f1-9ba3-4da27ff08ff4/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - geodynamo
+  - mantle-convection
+  - plate-tectonics
+  - primordial-heat
+  - radiogenic-heat
+last_extracted: 2026-05-04
 status: published
 ---
 

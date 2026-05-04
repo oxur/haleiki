@@ -22,8 +22,17 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:15Z
   revision_id: W/"1350593521/ecb1a180-4738-11f1-9ff3-4979dfaa1061/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - black-hole
+  - classical-mechanics
+  - einstein-field-equations
+  - equivalence-principle
+  - general-relativity-theory
+  - gravitational-wave
+  - spacetime
+  - special-relativity
+last_extracted: 2026-05-04
 status: published
 ---
 

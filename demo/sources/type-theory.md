@@ -22,8 +22,14 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:17Z
   revision_id: W/"1349281143/232f4edf-3ff6-11f1-80c6-7d0061b7e75f/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - curry-howard-correspondence
+  - homotopy-type-theory-concept
+  - lambda-calculus
+  - type-theory-foundations
+  - univalence-axiom
+last_extracted: 2026-05-04
 status: published
 ---
 

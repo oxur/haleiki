@@ -22,8 +22,10 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:10Z
   revision_id: W/"1318645497/3a2e0eed-4739-11f1-83be-b1d625968765/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - dilgo-khyentse-teacher
+last_extracted: 2026-05-04
 status: published
 ---
 

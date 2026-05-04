@@ -21,8 +21,17 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:20Z
   revision_id: W/"1349768506/5ecab730-4689-11f1-8375-6768a98a556d/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - bebop
+  - cool-jazz
+  - harmony
+  - jazz
+  - miles-davis-musician
+  - modal-jazz
+  - mode-music
+  - rhythm
+last_extracted: 2026-05-04
 status: published
 ---
 

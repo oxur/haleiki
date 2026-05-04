@@ -21,8 +21,12 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:22Z
   revision_id: W/"1351505736/ebc4488c-4727-11f1-aa6b-2341cc2a147a/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - garbage-collection
+  - john-mccarthy-computer-scientist
+  - lisp
+last_extracted: 2026-05-04
 status: published
 ---
 

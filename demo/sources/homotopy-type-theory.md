@@ -22,8 +22,11 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:17Z
   revision_id: W/"1352123027/a5ff62d6-45e5-11f1-b9ab-411a4f549e23/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - homotopy-type-theory-concept
+  - univalence-axiom
+last_extracted: 2026-05-04
 status: published
 ---
 

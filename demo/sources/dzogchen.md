@@ -23,8 +23,13 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:10Z
   revision_id: W/"1351995149/271b4dad-4739-11f1-b07c-3d20df6e2bc8/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - dzogchen
+  - longchen-nyingtik
+  - rigpa
+  - vimalamitra-teacher
+last_extracted: 2026-05-04
 status: published
 ---
 

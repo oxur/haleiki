@@ -22,8 +22,11 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:27Z
   revision_id: W/"1351798064/cbe9511b-4738-11f1-bfb1-e7dac0788884/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - angiosperm
+  - eucalyptus-genus
+last_extracted: 2026-05-04
 status: published
 ---
 

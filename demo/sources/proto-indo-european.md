@@ -21,8 +21,13 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:24Z
   revision_id: W/"1352304105/e0c5e20c-4738-11f1-8f9f-1f898662e1e2/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - comparative-method
+  - language-family
+  - proto-indo-european
+  - sanskrit
+last_extracted: 2026-05-04
 status: published
 ---
 

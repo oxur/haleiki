@@ -21,8 +21,10 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:22Z
   revision_id: W/"1347844459/fb43918a-4727-11f1-aa6b-2341cc2a147a/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - amanda-askell-researcher
+last_extracted: 2026-05-04
 status: published
 ---
 

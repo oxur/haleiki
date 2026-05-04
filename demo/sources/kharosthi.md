@@ -21,8 +21,13 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:26Z
   revision_id: W/"1339001255/2d122e66-473b-11f1-9d09-ddd779470544/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - abugida
+  - edicts-of-ashoka-epigraphy
+  - gandhara-region
+  - kharosthi
+last_extracted: 2026-05-04
 status: published
 ---
 

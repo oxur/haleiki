@@ -23,8 +23,11 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:12Z
   revision_id: W/"1334019508/b676214f-473c-11f1-a11b-9b7ed126201c/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - jamgon-kongtrul-scholar
+  - rime-movement
+last_extracted: 2026-05-04
 status: published
 ---
 

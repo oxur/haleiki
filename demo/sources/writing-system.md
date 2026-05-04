@@ -22,8 +22,14 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:24Z
   revision_id: W/"1350896570/46ff386a-473a-11f1-a546-b1f59a30194c/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - abjad
+  - abugida
+  - alphabet
+  - proto-sinaitic-script
+  - writing-system
+last_extracted: 2026-05-04
 status: published
 ---
 

@@ -22,8 +22,17 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:15Z
   revision_id: W/"1351268698/7c037f26-4691-11f1-9d67-cd23579a9fa6/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - quantum-entanglement
+  - quantum-mechanics-theory
+  - quantum-superposition
+  - quantum-tunnelling
+  - schrodinger-equation
+  - uncertainty-principle
+  - wave-function
+  - wave-particle-duality
+last_extracted: 2026-05-04
 status: published
 ---
 

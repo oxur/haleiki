@@ -22,8 +22,17 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:29Z
   revision_id: W/"1350519615/146a66e8-3f08-11f1-a26b-f16a03596185/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - earths-crust-concept
+  - earths-inner-core-concept
+  - earths-outer-core-concept
+  - geodynamo
+  - lithosphere
+  - mantle-convection
+  - mantle-geology
+  - plate-tectonics
+last_extracted: 2026-05-04
 status: published
 ---
 

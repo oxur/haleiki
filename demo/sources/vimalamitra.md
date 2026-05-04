@@ -22,8 +22,10 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:12Z
   revision_id: W/"1262832921/b5dd99a5-473c-11f1-bf51-23a443aa1966/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - vimalamitra-teacher
+last_extracted: 2026-05-04
 status: published
 ---
 

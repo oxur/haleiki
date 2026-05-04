@@ -22,8 +22,12 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:25Z
   revision_id: W/"1351637967/db689541-4738-11f1-a479-6bd4e5a01d02/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - avestan
+  - proto-indo-european
+  - sanskrit
+last_extracted: 2026-05-04
 status: published
 ---
 

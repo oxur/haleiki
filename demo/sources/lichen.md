@@ -21,8 +21,11 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:27Z
   revision_id: W/"1351715340/d3105896-4738-11f1-97ae-c71950ba9215/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - lichen-organism
+  - symbiosis
+last_extracted: 2026-05-04
 status: published
 ---
 

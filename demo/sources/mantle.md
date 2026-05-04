@@ -21,8 +21,10 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:28Z
   revision_id: W/"1319875674/1a213bd6-3cbf-11f1-bc60-4b9f975a5942/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - mantle-geology
+last_extracted: 2026-05-04
 status: published
 ---
 

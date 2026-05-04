@@ -21,8 +21,10 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:26Z
   revision_id: W/"1348964046/0932e65d-466a-11f1-a211-2d8de7195db2/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - moss-plant
+last_extracted: 2026-05-04
 status: published
 ---
 

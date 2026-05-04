@@ -22,8 +22,10 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:14Z
   revision_id: W/"1346190564/f31734c2-3cbf-11f1-9fb4-71c06184c723/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - supersymmetry-physics
+last_extracted: 2026-05-04
 status: published
 ---
 

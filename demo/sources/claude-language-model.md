@@ -21,8 +21,12 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:23Z
   revision_id: W/"1352385583/02759865-473e-11f1-b21b-f116b41bf7d6/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - claude-ai
+  - constitutional-ai
+  - large-language-model
+last_extracted: 2026-05-04
 status: published
 ---
 

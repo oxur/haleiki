@@ -22,8 +22,26 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:17Z
   revision_id: W/"1348020138/589416c4-4739-11f1-ba94-65097547c1c6/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - canon-music
+  - chord
+  - composition-music
+  - consonance-and-dissonance
+  - counterpoint
+  - david-lewin-theorist
+  - fugue
+  - harmony
+  - homophony
+  - melody
+  - mode-music
+  - monophony
+  - polyphony
+  - rhythm
+  - scale-music
+  - temperament-music
+  - transformational-theory
+last_extracted: 2026-05-04
 status: published
 ---
 

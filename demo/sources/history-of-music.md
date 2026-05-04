@@ -21,8 +21,12 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:17Z
   revision_id: W/"1349410977/8a0cdb8d-4739-11f1-92db-f11843c18243/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - gregorian-chant
+  - jazz
+  - medieval-music-period
+last_extracted: 2026-05-04
 status: published
 ---
 

@@ -21,8 +21,10 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:17Z
   revision_id: W/"1351066084/48306d25-473a-11f1-96cb-af6c6c7c45ef/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - olivier-messiaen-composer
+last_extracted: 2026-05-04
 status: published
 ---
 

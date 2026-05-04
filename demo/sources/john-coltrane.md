@@ -22,8 +22,10 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:20Z
   revision_id: W/"1352058630/7dcc4059-468f-11f1-b7ca-b15b60a6449b/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - john-coltrane-musician
+last_extracted: 2026-05-04
 status: published
 ---
 

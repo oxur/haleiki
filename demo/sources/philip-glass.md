@@ -21,8 +21,11 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:18Z
   revision_id: W/"1351889063/cd5e5713-4727-11f1-923a-d371f200f7d8/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - minimalism-music
+  - philip-glass-composer
+last_extracted: 2026-05-04
 status: published
 ---
 

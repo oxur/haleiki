@@ -21,8 +21,14 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:16Z
   revision_id: W/"1348266671/581e69ca-3cbf-11f1-bb1d-0b09208a070c/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - abstract-algebra-field
+  - algebraic-structure-concept
+  - category-theory-mathematics
+  - field-mathematics
+  - ring-mathematics
+last_extracted: 2026-05-04
 status: published
 ---
 

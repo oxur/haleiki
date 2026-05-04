@@ -22,8 +22,11 @@ original_source:
   license: CC BY-SA 3.0
   fetched_at: 2026-05-03T22:20:13Z
   revision_id: '92688'
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - jikme-lingpa-terton
+  - longchen-nyingtik
+last_extracted: 2026-05-04
 status: published
 ---
 

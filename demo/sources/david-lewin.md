@@ -21,8 +21,11 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:18Z
   revision_id: W/"1347495665/0eecefe0-468b-11f1-bf36-cf48db572b0b/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - david-lewin-theorist
+  - transformational-theory
+last_extracted: 2026-05-04
 status: published
 ---
 

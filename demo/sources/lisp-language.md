@@ -21,8 +21,15 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:21Z
   revision_id: W/"1350208827/984ff722-468a-11f1-82f6-a1ffff3a8029/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - functional-programming
+  - garbage-collection
+  - homoiconicity
+  - john-mccarthy-computer-scientist
+  - lisp
+  - s-expression
+last_extracted: 2026-05-04
 status: published
 ---
 

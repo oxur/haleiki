@@ -21,8 +21,18 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:21Z
   revision_id: W/"1327584240/dbaa567b-468a-11f1-8397-e3b88caca15d/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - actor-model
+  - beam-vm
+  - erlang
+  - functional-programming
+  - homoiconicity
+  - lfe
+  - lisp
+  - message-passing
+  - s-expression
+last_extracted: 2026-05-04
 status: published
 ---
 

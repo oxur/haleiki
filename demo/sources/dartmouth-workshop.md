@@ -22,8 +22,11 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:22Z
   revision_id: W/"1316663384/3f74378c-4540-11f1-9c10-2776d629da20/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - artificial-intelligence-field
+  - dartmouth-workshop-event
+last_extracted: 2026-05-04
 status: published
 ---
 

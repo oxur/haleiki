@@ -22,8 +22,12 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:26Z
   revision_id: W/"1347754242/ea037bbc-4739-11f1-95ba-b77e7ad5290b/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - fungus-kingdom
+  - lichen-organism
+  - mycorrhiza
+last_extracted: 2026-05-04
 status: published
 ---
 

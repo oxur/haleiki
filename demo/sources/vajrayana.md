@@ -21,8 +21,12 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:12Z
   revision_id: W/"1347790044/fb98627c-4738-11f1-891a-3d9cd85ab5ba/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - deity-yoga
+  - sunyata
+  - vajrayana
+last_extracted: 2026-05-04
 status: published
 ---
 

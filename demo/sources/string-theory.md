@@ -21,8 +21,15 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:14Z
   revision_id: W/"1351910100/a6f99e13-44de-11f1-a34a-7f028183f8bd/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - ads-cft-correspondence-concept
+  - black-hole
+  - brane
+  - extra-dimensions
+  - m-theory-physics
+  - string-theory-physics
+last_extracted: 2026-05-04
 status: published
 ---
 

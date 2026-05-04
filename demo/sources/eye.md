@@ -22,8 +22,10 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:23Z
   revision_id: W/"1333899275/650a675c-4684-11f1-8188-f5a3f6de5f2c/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - eye-anatomy
+last_extracted: 2026-05-04
 status: published
 ---
 

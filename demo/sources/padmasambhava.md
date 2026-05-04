@@ -22,8 +22,14 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:12Z
   revision_id: W/"1348186447/eec93414-473b-11f1-8261-335c54e3229c/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - dzogchen
+  - nyingma
+  - padmasambhava-teacher
+  - terma
+  - vajrayana
+last_extracted: 2026-05-04
 status: published
 ---
 

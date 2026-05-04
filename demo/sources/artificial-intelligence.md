@@ -19,8 +19,13 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:22Z
   revision_id: W/"1352143051/cee447e8-4738-11f1-9bda-931328966526/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - artificial-intelligence-field
+  - deep-learning
+  - large-language-model
+  - machine-learning
+last_extracted: 2026-05-04
 status: published
 ---
 

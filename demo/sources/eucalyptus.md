@@ -21,8 +21,10 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:27Z
   revision_id: W/"1351966468/95d17c90-4520-11f1-852c-1fe4b680a033/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - eucalyptus-genus
+last_extracted: 2026-05-04
 status: published
 ---
 

@@ -20,8 +20,16 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:23Z
   revision_id: W/"1352007695/aefa1f20-4560-11f1-af60-d5eeeec54a42/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - consciousness-philosophy
+  - dualism-philosophy
+  - functionalism-philosophy
+  - hard-problem-of-consciousness
+  - mind-body-problem
+  - physicalism-philosophy
+  - qualia
+last_extracted: 2026-05-04
 status: published
 ---
 

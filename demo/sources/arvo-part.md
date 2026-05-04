@@ -22,8 +22,12 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:18Z
   revision_id: W/"1351557648/d3f5c1d4-4739-11f1-ae22-cfdeea9e4e77/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - arvo-part-composer
+  - minimalism-music
+  - tintinnabuli
+last_extracted: 2026-05-04
 status: published
 ---
 

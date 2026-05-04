@@ -21,8 +21,15 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:15Z
   revision_id: W/"1347761314/480d54d5-4529-11f1-914b-6b1725eda538/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - finite-group
+  - group-theory-mathematics
+  - lie-group
+  - permutation-group
+  - representation-theory
+  - symmetry-group
+last_extracted: 2026-05-04
 status: published
 ---
 

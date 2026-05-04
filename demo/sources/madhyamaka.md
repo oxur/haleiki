@@ -23,8 +23,11 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:10Z
   revision_id: W/"1352003014/db1dcafc-473b-11f1-ad19-8fa7b19f664d/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - madhyamaka
+  - sunyata
+last_extracted: 2026-05-04
 status: published
 ---
 

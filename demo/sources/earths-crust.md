@@ -21,8 +21,12 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:29Z
   revision_id: W/"1350076942/70c71ac0-44f4-11f1-a2a2-b7b81d921545/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - earths-crust-concept
+  - lithosphere
+  - subduction
+last_extracted: 2026-05-04
 status: published
 ---
 

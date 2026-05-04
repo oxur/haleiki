@@ -21,8 +21,12 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:20Z
   revision_id: W/"1348402057/762289aa-4622-11f1-8cd7-634955d83e85/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - bebop
+  - cool-jazz
+  - miles-davis-musician
+last_extracted: 2026-05-04
 status: published
 ---
 

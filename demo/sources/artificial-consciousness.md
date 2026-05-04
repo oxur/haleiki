@@ -21,8 +21,13 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:23Z
   revision_id: W/"1352251494/e6232b87-4738-11f1-a2c2-f17bbf0de682/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - artificial-consciousness-concept
+  - consciousness-philosophy
+  - hard-problem-of-consciousness
+  - qualia
+last_extracted: 2026-05-04
 status: published
 ---
 

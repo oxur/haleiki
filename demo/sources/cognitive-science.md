@@ -22,8 +22,13 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:23Z
   revision_id: W/"1348109510/d4da2d83-4738-11f1-82b8-d543146adf23/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - cognitive-science-field
+  - consciousness-philosophy
+  - functionalism-philosophy
+  - perception-philosophy
+last_extracted: 2026-05-04
 status: published
 ---
 

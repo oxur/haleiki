@@ -21,8 +21,13 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:16Z
   revision_id: W/"1350452473/1f2ed844-3dea-11f1-ac57-07a399f5d09b/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - category-theory-mathematics
+  - functor
+  - morphism
+  - natural-transformation
+last_extracted: 2026-05-04
 status: published
 ---
 

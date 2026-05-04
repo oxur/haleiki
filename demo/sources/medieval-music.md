@@ -21,8 +21,19 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:19Z
   revision_id: W/"1340272631/1d6df106-46f1-11f1-ae71-273c7f6d16dd/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - canon-music
+  - counterpoint
+  - gregorian-chant
+  - medieval-music-period
+  - mode-music
+  - monophony
+  - motet
+  - organum
+  - polyphony
+  - rhythm
+last_extracted: 2026-05-04
 status: published
 ---
 

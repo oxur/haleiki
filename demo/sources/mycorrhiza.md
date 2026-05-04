@@ -22,8 +22,13 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:28Z
   revision_id: W/"1341534934/4023f328-4739-11f1-8690-1baadc867942/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - arbuscular-mycorrhiza
+  - ectomycorrhiza
+  - mycorrhiza
+  - symbiosis
+last_extracted: 2026-05-04
 status: published
 ---
 

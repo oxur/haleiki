@@ -21,8 +21,12 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:18Z
   revision_id: W/"1352364108/f3401b27-4738-11f1-96c0-b96a66700485/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - claude-debussy-composer
+  - impressionism-music
+  - olivier-messiaen-composer
+last_extracted: 2026-05-04
 status: published
 ---
 

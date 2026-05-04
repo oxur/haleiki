@@ -21,8 +21,12 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:12Z
   revision_id: W/"1345182538/48c9035c-473a-11f1-bad6-efd0cfc5787e/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - nine-yanas
+  - nyingma
+  - rime-movement
+last_extracted: 2026-05-04
 status: published
 ---
 

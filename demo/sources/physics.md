@@ -21,8 +21,18 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:15Z
   revision_id: W/"1351358789/f471449e-4738-11f1-a64f-63db3cae9aa1/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - classical-mechanics
+  - classical-physics
+  - general-relativity-theory
+  - modern-physics
+  - physics-science
+  - quantum-mechanics-theory
+  - spacetime
+  - special-relativity
+  - string-theory-physics
+last_extracted: 2026-05-04
 status: published
 ---
 

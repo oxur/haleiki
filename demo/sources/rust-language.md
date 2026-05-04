@@ -21,8 +21,15 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:21Z
   revision_id: W/"1352271508/1248999d-46b4-11f1-aa6c-21e03e723757/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - borrow-checker
+  - borrowing-rust
+  - lifetimes-rust
+  - ownership-rust
+  - pattern-matching-rust
+  - traits-rust
+last_extracted: 2026-05-04
 status: published
 ---
 

@@ -21,8 +21,13 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:19Z
   revision_id: W/"1351945745/9133ed57-4739-11f1-83de-690613283bba/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - canon-music
+  - counterpoint
+  - fugue
+  - johann-sebastian-bach-composer
+last_extracted: 2026-05-04
 status: published
 ---
 

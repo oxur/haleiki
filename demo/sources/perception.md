@@ -21,8 +21,10 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:23Z
   revision_id: W/"1350973977/06eb8f1d-4739-11f1-9517-6964bb287b3b/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - perception-philosophy
+last_extracted: 2026-05-04
 status: published
 ---
 

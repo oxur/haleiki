@@ -22,8 +22,10 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:18Z
   revision_id: W/"1352337770/46b274e2-4739-11f1-9631-17b4606ca520/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - max-richter-composer
+last_extracted: 2026-05-04
 status: published
 ---
 

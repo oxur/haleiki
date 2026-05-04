@@ -22,8 +22,9 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:10Z
   revision_id: W/"1194757564/9fcfc8c0-473c-11f1-9493-9b4f938a402f/view/html
-extraction_status: pending
+extraction_status: skipped
 concepts_generated: []
+last_extracted: 2026-05-04
 status: published
 ---
 

@@ -22,8 +22,17 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:15Z
   revision_id: W/"1352217844/882910c8-466c-11f1-8f7a-2fb9875e47bf/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - abelian-group
+  - abstract-algebra-field
+  - algebraic-structure-concept
+  - field-mathematics
+  - galois-theory
+  - group-theory-mathematics
+  - lie-group
+  - ring-mathematics
+last_extracted: 2026-05-04
 status: published
 ---
 

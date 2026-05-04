@@ -22,8 +22,12 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:26Z
   revision_id: W/"1349863677/6e0937aa-4739-11f1-8690-1baadc867942/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - avestan
+  - gandhara-region
+  - kharosthi
+last_extracted: 2026-05-04
 status: published
 ---
 

@@ -21,8 +21,12 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:16Z
   revision_id: W/"1342409368/e40d9f83-4739-11f1-aa6b-2341cc2a147a/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - fundamental-group
+  - homotopy-concept
+  - homotopy-equivalence
+last_extracted: 2026-05-04
 status: published
 ---
 

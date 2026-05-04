@@ -23,8 +23,10 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:14Z
   revision_id: W/"1347228341/82dd3e4f-366f-11f1-87ce-434892c2be6b/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - topological-qft-concept
+last_extracted: 2026-05-04
 status: published
 ---
 

@@ -22,8 +22,13 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:16Z
   revision_id: W/"1345059764/2da9c0c7-4739-11f1-8567-090deca303bd/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - abelian-group
+  - galois-theory
+  - group-theory-mathematics
+  - lie-group
+last_extracted: 2026-05-04
 status: published
 ---
 

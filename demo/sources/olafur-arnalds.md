@@ -23,8 +23,10 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:18Z
   revision_id: W/"1347986708/a2322d77-473c-11f1-bbbe-a343b29720b6/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - olafur-arnalds-composer
+last_extracted: 2026-05-04
 status: published
 ---
 

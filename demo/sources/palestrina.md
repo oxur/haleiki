@@ -21,8 +21,11 @@ original_source:
   license: CC BY-SA 4.0
   fetched_at: 2026-05-03T22:20:19Z
   revision_id: W/"1352166061/a869e398-4727-11f1-8c71-9f89629ca534/view/html
-extraction_status: pending
-concepts_generated: []
+extraction_status: complete
+concepts_generated:
+  - counterpoint
+  - palestrina-composer
+last_extracted: 2026-05-04
 status: published
 ---
 
