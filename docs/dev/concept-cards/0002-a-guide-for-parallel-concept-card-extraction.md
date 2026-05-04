@@ -1,23 +1,22 @@
-# A Guide for Parallel Concept Card Re-Extraction (v3.2)
+# A Guide for Parallel Concept Card Extraction
 
-This guide documents how to re-extract concept cards from primary sources that already have an existing card inventory, upgrading them to the v3 template using Claude Code with Opus agents working in parallel.
+**Haleiki v1.**
 
-This is an adaptation of the v3 parallel extraction guide for the specific case where cards already exist but were created with an older template missing required fields and sections.
+This guide documents how to extract concept cards from a Haleiki source-page corpus using Claude Code with Opus agents working in parallel. It assumes familiarity with [`0001-howto-wiki-concept-card-extraction.md`](./0001-howto-wiki-concept-card-extraction.md), which covers the schema and per-card extraction mechanics — this doc focuses on coordinating extraction at corpus scale.
 
-**v3.2 Changes (from v3.1):**
+The procedure is designed to be merge-aware from the start. Whether the target deployment has zero, some, or many existing concept cards, the extraction pattern is the same: agents check for existing cards at each candidate slug, augment if present (multi-source `derived_from`), create fresh otherwise.
 
-- Updated all paths to the unified `ai-engineering` repo layout: work lives under a per-knowledge-base directory `knowledge/<kb>/` rather than at the project root.
-- Replaced the cluttered `sources-<format>/` convention with per-format subdirectories under a single `sources/` directory: `sources/md/`, `sources/pdf/`, `sources/epub/`, `sources/html/`.
-- Fixed the howto-guide reference in Prerequisites and in the Phase 2 agent prompt: the howto is `docs/dev/concept-cards/0007-howto-concept-card-extraction-with-claude-code-v3.2.md`, not `0004-concept-card-extraction-howto-v3.1.md` (which does not exist) or `crates/design/dev/skill/0004-...` (a legacy path that never matched this repo).
-- Updated Phase 0 audit scripts to the new paths.
-- No changes to the v3 frontmatter schema, body sections, Phase 0/1/2/3 structure, confidence scoring, typed relationships, or CQ framework — the extraction machinery itself is untouched.
+---
 
-**v3.1 Changes (retained):**
+## Lineage
 
-- Phase 0 Step 0.0: Audit existing cards before planning
-- Phase 2 agent prompts with merge-aware re-extraction instructions
-- Phase 3 preservation checks (card count comparison, content spot-check)
-- All other v3 improvements inherited: confidence scoring, typed relationships, CQ framework
+This guide derives from Billo Systems' AI Engineering parallel re-extraction guide v3.2, adapted for the Haleiki wiki framework. Major adaptations:
+
+- **Source shape** — Reframed from book-with-chapters (single source split into chapter files) to wiki-source-page-cluster (many source pages, each its own document, networked by manifest and graph). Phase 1 analysis uses the manifest and source-page taxonomy rather than chapter sequence.
+- **Agent assignment** — Agents work on coherent source-page *clusters* (typically a category subset, sometimes a tier subset within a category) rather than sequential chapter ranges. The unit of work is "all source pages in this cluster" rather than "chapters N through M."
+- **Cross-source merging** — Promoted from a re-extraction afterthought to a first-class step. The wiki use case has cross-page concept overlap as the *normal case* (encyclopedia articles cross-reference each other constantly), so the validation phase explicitly checks for missed merges.
+- **Schema** — Phase 2 agent prompts use the Haleiki concept-card schema from 0001 (with `derived_from`/`external_references` instead of book-citation fields, plus `disambiguator`, `subject_headings`, `trust_level`, `canon_status`, etc.).
+- **Paths** — `content/concepts/` (flat) and `content/sources/` rather than ai-engineering's `knowledge/<kb>/...` layout.
 
 ---
 
@@ -25,10 +24,10 @@ This is an adaptation of the v3 parallel extraction guide for the specific case 
 
 This is a **four-phase process**:
 
-1. **Phase 0: Requirements & Scope** — Audit existing cards, define competency questions, domain customizations
-2. **Phase 1: Analysis & Planning** — Analyze source material, cross-reference existing inventory, create extraction plans
-3. **Phase 2: Parallel Re-Extraction** — Five Opus agents re-extract concept cards simultaneously
-4. **Phase 3: Validation & Preservation Check** — Verify structural compliance and content preservation
+1. **Phase 0: Requirements & Scope** — Define competency questions, domain customizations, scope (which source pages, which deployment profile)
+2. **Phase 1: Analysis & Planning** — Analyze source-page corpus, identify cross-page concept overlap, build agent assignments
+3. **Phase 2: Parallel Extraction** — Five Opus agents extract concept cards simultaneously from assigned clusters, merge-aware
+4. **Phase 3: Validation & Cross-Source Merge** — Verify structural compliance, resolve missed merges, check graph integrity
 
 ---
 
@@ -37,699 +36,661 @@ This is a **four-phase process**:
 ### 1. Environment Setup
 
 - **Claude Code** installed and configured
-- **Model access**: Coordinator should use **Opus model**, with access to spawn Opus agents
-- **Source files** in place at `knowledge/<kb>/sources/md/<source-slug>/` with chapter/section files as `.md`. (If the source originated as PDF or EPUB, it should have been converted to Markdown already — see docs 0005 and 0006 for the conversion prompts.)
-- **Existing cards** at `knowledge/<kb>/concept-cards/<source-slug>/` (will be overwritten in place)
-- **Howto guide** available: reference `docs/dev/concept-cards/0007-howto-concept-card-extraction-with-claude-code-v3.2.md` for template and field definitions
+- **Model access**: Coordinator should use **Opus model**, with access to spawn Opus sub-agents
+- **Source pages** in place at `content/sources/` (one `.md` per source page, with valid Haleiki frontmatter)
+- **Existing concept cards** at `content/concepts/` if any (will be merged into during Phase 2)
+- **Profile and taxonomy** declared in `content/profile.yaml` and/or `content/taxonomy.yaml`
+- **Howto guide** available: reference `docs/dev/concept-cards/0001-howto-wiki-concept-card-extraction.md` for the schema, body section structure, and per-card quality bar
 
 ### 2. Directory Structure
 
-All extraction work lives under a per-knowledge-base directory, `knowledge/<kb>/`, in the unified `ai-engineering` repo. The knowledge-base slug (`<kb>`) is a short name for the domain — for example, `go`, `js`, `rust`, `design`, `biome`, `deno`, `tailwindcss`.
-
 ```
-ai-engineering/
+haleiki/
+├── content/
+│   ├── profile.yaml                # deployment profile (encyclopedia/writer/knowledge-site)
+│   ├── taxonomy.yaml               # categories, subcategories, tiers
+│   ├── sources/                    # input — wiki source pages
+│   │   ├── rust-language.md
+│   │   ├── music-theory.md
+│   │   ├── padmasambhava.md
+│   │   └── ...
+│   ├── concepts/                   # output — concept cards (flat)
+│   │   ├── ownership-rust.md
+│   │   ├── major-scale.md
+│   │   └── ...
+│   └── _analysis/                  # extraction analysis records (machine-generated)
+│       └── <source-slug>/
+│           ├── analysis.json
+│           ├── concept-map.json
+│           └── merge-log.json
 ├── docs/
 │   └── dev/
-│       └── concept-cards/                # meta-level process docs
-└── knowledge/
-    └── <kb>/
-        ├── SKILL.md                      # or SKILL-<sub>.md for multi-skill KBs
-        ├── sources/
-        │   ├── md/
-        │   │   └── <source-slug>/
-        │   │       ├── 00-frontmatter.md
-        │   │       ├── 01-introduction.md
-        │   │       ├── 02-chapter-two.md
-        │   │       └── ...               # additional chapters/sections
-        │   ├── pdf/
-        │   │   └── <source-slug>/
-        │   │       └── book.pdf          # raw PDF (converted to md/)
-        │   ├── epub/
-        │   │   └── <source-slug>/
-        │   │       └── book.epub         # raw EPUB (converted to md/)
-        │   └── html/
-        │       └── <source-slug>/
-        ├── concept-cards/
-        │   └── <source-slug>/
-        │       ├── existing-card-1.md    # old format, will be overwritten
-        │       ├── existing-card-2.md
-        │       └── ...
-        ├── extraction-metadata/
-        │   └── <source-slug>/
-        │       ├── competency-questions.md
-        │       └── extraction-log.md
-        └── guides/
-            └── NN-<topic-slug>.md
+│       └── concept-cards/
+│           ├── 0001-howto-wiki-concept-card-extraction.md
+│           └── 0002-a-guide-for-parallel-concept-card-extraction.md
+└── ...
 ```
 
-**Note:** The markdown form at `knowledge/<kb>/sources/md/<source-slug>/` is the canonical extraction input, regardless of the original format. PDF, EPUB, and HTML originals live alongside the converted markdown under `sources/pdf/`, `sources/epub/`, and `sources/html/` respectively, and are preserved for re-conversion if needed — but the extractors always read from `sources/md/`.
+The flat `content/concepts/{slug}.md` layout means agents writing concurrently can collide on filename — see *Phase 2: Coordination* for the avoidance strategy.
 
 ### 3. Source Material Requirements
 
-- Source must be split into logical divisions (chapters, sections, papers)
-- Each division should be a separate `.md` file
-- Files should be in a single directory: `knowledge/<kb>/sources/md/<source-slug>/`
+- Source pages have valid Haleiki frontmatter (slug, title, page_type: source, category, tier, genre)
+- The slug index is unique (validator should confirm pre-flight)
+- For mixed-genre corpora (encyclopedia + conversations + worldbuilding), each source page's `genre` is set; trust-level inheritance defaults follow accordingly
+- For demo corpora pulled by `haleiki demo fetch`: the pipeline guarantees frontmatter validity
 
 ---
 
 ## Phase 0: Requirements & Scope
 
-**Purpose**: Understand the current state, define what the knowledge base must accomplish.
+**Purpose**: Establish what the concept-card extraction must accomplish before touching the source corpus.
 
-### Step 0.0: Audit Existing Cards (from v3.1)
+### Step 0.0: Audit the Corpus
 
-Before planning extraction, audit the existing card inventory to understand the gap. Run these from the repo root:
+Before planning, audit current state. Run from the repo root:
 
 ```bash
-# Pick your knowledge base and source
-KB=<kb>           # e.g., go, js, rust, design
-SRC=<source-slug> # e.g., effective-go, uber
+SOURCES="content/sources"
+CONCEPTS="content/concepts"
 
-CARDS="knowledge/${KB}/concept-cards/${SRC}"
+# Count source pages
+echo "Source pages: $(find "${SOURCES}" -name '*.md' -not -name '.gitkeep' | wc -l)"
 
-# Count existing cards
-find "${CARDS}/" -name '*.md' | wc -l
+# Count existing concept cards (may be 0 for fresh extraction)
+echo "Existing concept cards: $(find "${CONCEPTS}" -name '*.md' -not -name '.gitkeep' | wc -l)"
 
-# Check which frontmatter fields are missing
-for field in slug subcategory tier source_slug extraction_confidence \
-             aliases prerequisites extends related contrasts_with \
-             answers_questions section; do
-  missing=$(grep -rL "^${field}:" "${CARDS}/" | wc -l)
-  total=$(find "${CARDS}/" -name '*.md' | wc -l)
-  echo "$field: $missing / $total missing"
-done
+# Categorize source pages by category
+for f in "${SOURCES}"/*.md; do
+  category=$(grep '^category:' "$f" | head -1 | sed 's/^category: *//; s/"//g')
+  echo "$category"
+done | sort | uniq -c | sort -rn
 
-# Check body section presence
-for section in "# Quick Definition" "# Core Definition" "# Prerequisites" \
-               "# Key Properties" "# Construction" "# Context & Application" \
-               "# Examples" "# Relationships" "# Common Errors" \
-               "# Common Confusions" "# Source Reference" "# Verification Notes"; do
-  count=$(grep -rl "$section" "${CARDS}/" | wc -l)
-  total=$(find "${CARDS}/" -name '*.md' | wc -l)
-  echo "\"$section\": $count / $total present"
-done
+# Categorize source pages by tier
+for f in "${SOURCES}"/*.md; do
+  tier=$(grep '^tier:' "$f" | head -1 | sed 's/^tier: *//; s/"//g')
+  echo "$tier"
+done | sort | uniq -c
 
-# Check for LLM artifacts
-grep -rl "Wait.*let me\|Let me recalculate\|I apologize\|As an AI" \
-  "${CARDS}/"
+# Categorize source pages by genre (if present)
+for f in "${SOURCES}"/*.md; do
+  genre=$(grep '^genre:' "$f" | head -1 | sed 's/^genre: *//; s/"//g')
+  echo "${genre:-encyclopedia}"   # default to encyclopedia if unset
+done | sort | uniq -c
+
+# Check for existing concept cards' provenance
+if [ -d "${CONCEPTS}" ] && [ "$(ls -A "${CONCEPTS}" 2>/dev/null | grep -v gitkeep)" ]; then
+  echo "Existing cards' derived_from references:"
+  grep -A 5 '^derived_from:' "${CONCEPTS}"/*.md 2>/dev/null | grep '^\s*-\s*slug:' | sort | uniq -c | sort -rn
+fi
+
+# LLM artifact check (if existing cards)
+grep -rl "Wait.*let me\|Let me recalculate\|I apologize\|As an AI" "${CONCEPTS}/" 2>/dev/null
 ```
 
-Record the results. This tells you:
+Record the results:
 
-- How many cards exist (baseline for post-extraction comparison)
-- What's missing (confirms re-extraction is needed)
-- Any LLM artifacts to watch for
+- Total source pages (and breakdown by category, tier, genre)
+- Existing concept-card count (zero is normal for fresh extraction)
+- Source-page categories with high or low concept-card density (informs Phase 1 priorities)
+- Any LLM artifacts in existing cards
 
 ### Step 0.1: Competency Question Elicitation
 
-Before analyzing the source, identify **30-50 competency questions** the knowledge base should answer. Organize by type:
+Identify **30-50 competency questions** the concept-card layer should answer. For wiki deployments, CQs typically cover:
 
 | Type | Count Target | Example |
 |------|--------------|---------|
-| Definitional | 10-15 | "What is a dominant seventh chord?" |
-| Relational | 8-12 | "How does the dominant relate to the tonic?" |
-| Procedural | 8-12 | "How do I construct a major scale?" |
+| Definitional | 10-15 | "What is rigpa?" "What is a major scale?" |
+| Relational | 8-12 | "How does dzogchen relate to nyingma?" "How do scales relate to keys?" |
+| Procedural | 5-10 | "How do I construct a major scale?" "How is ownership transferred in Rust?" |
 | Prerequisite | 5-8 | "What must I know before learning sonata form?" |
-| Diagnostic | 5-8 | "What distinguishes major from minor mode?" |
-
-**For re-extraction**: You can reference the existing cards to help generate CQs — scan card titles and "Related Concepts" sections for topics that should be queryable.
+| Diagnostic | 5-8 | "What distinguishes the encyclopedia trust levels from the writer ones?" |
+| Comparative | 5-8 | "How does Rust ownership differ from C++ RAII?" |
 
 **Methods for generating CQs:**
 
-1. Review source table of contents and chapter summaries
-2. Identify learning objectives stated in the source
-3. Consider typical user queries for this domain
-4. Ask: "What questions would a learner at each level ask?"
-5. Scan existing card titles for topic coverage (re-extraction only)
+1. Review source-page titles and categories — what questions does this corpus naturally invite?
+2. Identify learning objectives implicit in source-page tier assignments (foundational pages often introduce CQ-worthy concepts)
+3. Consider typical user queries for the deployment domain
+4. Ask: "What questions would a learner at each tier ask?"
+5. For mixed-corpus deployments: include CQs that span genres (e.g., "How do real and fictional treatments of X differ?")
 
-Save to `knowledge/<kb>/extraction-metadata/<source-slug>/competency-questions.md`:
+Save to `content/_analysis/_corpus/competency-questions.md`:
 
 ```markdown
-# Competency Questions for <Source Title>
+# Competency Questions for <Deployment Name>
 
 ## Definitional (What is X?)
-1. What is a major scale?
-2. What is a chord inversion?
+1. What is rigpa?
+2. What is a major scale?
 ...
 
 ## Relational (How does X relate to Y?)
-1. How does the subdominant function relate to the dominant?
+1. How does dzogchen relate to nyingma?
 ...
 
 ## Procedural (How do I do X?)
-1. How do I identify the key of a piece?
+1. How do I construct a major scale?
 ...
 
 ## Prerequisite (What before X?)
-1. What concepts must I know before understanding secondary dominants?
+1. What concepts must I know before understanding sonata form?
 ...
 
 ## Diagnostic (What distinguishes X from Y?)
-1. What is the difference between a half cadence and a deceptive cadence?
+1. What is the difference between rigpa and shamatha?
 ...
 ```
 
-### Step 0.2: Domain Taxonomy
+### Step 0.2: Domain Taxonomy Confirmation
 
-Define the category values for this domain. Categories should be:
+Confirm the deployment's `taxonomy.yaml` matches what extraction will need. Categories should be:
 
 - Mutually exclusive (each concept fits one primary category)
 - Collectively exhaustive (every concept has a category)
-- Hierarchical if needed (category + subcategory)
+- Aligned with the source-page corpus
 
-**Example for Music Theory:**
+For deployments using subject_headings (cross-cutting topical tags), enumerate the controlled vocabulary upfront. Subject headings are looser than categories — they're tags for cross-tagging, not the primary classification.
 
-```
-Categories:
-- fundamentals (pitch, rhythm, notation basics)
-- scales-modes (scale structures, mode relationships)
-- intervals (interval types, qualities, recognition)
-- chords (chord construction, types, inversions)
-- harmony (harmonic function, progressions, voice leading)
-- form (structural patterns, sections, large-scale organization)
-- rhythm-meter (time signatures, rhythmic patterns)
-- counterpoint (voice relationships, species)
+**Example (for the Haleiki demo wiki):**
 
-Tiers:
-- foundational (no prerequisites from this source)
-- intermediate (requires foundational concepts)
-- advanced (requires intermediate concepts)
+```yaml
+categories:
+  tibetan-buddhism, theoretical-physics, mathematics, music,
+  programming-languages, artificial-intelligence, philosophy-of-mind,
+  linguistics, botany, geology
+
+subject_headings (cross-cutting):
+  history, biography, foundations, systems, mathematics, philosophy,
+  practice, language, symbiosis, structure
 ```
 
-### Step 0.3: Notation Conventions
+Note that some category names also appear as subject_headings — that's fine. A concept primarily classified under `mathematics` (category) might also cross-tag into `foundations` (subject heading) if it's foundational.
 
-Document domain-specific notation requirements:
+### Step 0.3: Notation and Domain Conventions
 
-```markdown
-# Notation Conventions for <Source>
+Document domain-specific notation requirements that agents will need to honor:
 
-## Scale Degrees
-- Use caret notation: ^1, ^2, ^3, ^4, ^5, ^6, ^7
-- For chromatic alterations: ^#4, ^b7
+- Mathematical notation: LaTeX in `$...$` or `$$...$$` (matches the convention from the demo math fix)
+- Code: fenced blocks with language hints
+- Multilingual scripts: preserve as Unicode (Tibetan, Sanskrit, etc.)
+- Pronunciation guides: optional `pronunciation:` field in concept frontmatter (or in body Quick Definition)
+- Romanization conventions: per source
 
-## Chord Symbols
-- Roman numerals: I, ii, iii, IV, V, vi, vii*
-- Lead-sheet: Cmaj7, Dm7, G7
+### Step 0.4: Profile and Trust/Canon Decisions
 
-## Intervals
-- Format: quality + number (e.g., M3, m7, P5, A4, d5)
-```
+Confirm the deployment profile (`encyclopedia` / `writer` / `knowledge-site`). For each:
+
+- Determine whether trust_level is enabled and what the default is
+- Determine whether canon_status is enabled and what the default is
+- Resolve any per-genre trust overrides (e.g., conversations default to `provisional`, encyclopedia articles to `credible`)
+
+This matters for Phase 2 agent prompts: agents need to know what trust/canon to assign by default, and when to override.
 
 ---
 
 ## Phase 1: Analysis & Planning
 
-**Model**: Use Opus for this phase
+**Model**: Use Opus for this phase.
 
-### Step 1.1: Initial Source Analysis
+### Step 1.1: Corpus Analysis
 
 Use the **Explore agent** with "very thorough" mode:
 
 ```
-Please analyze the source material in knowledge/<kb>/sources/md/<source-slug>/ to create a comprehensive concept extraction plan. Use very thorough exploration mode.
+Please analyze the source-page corpus in content/sources/ to create a comprehensive concept extraction plan. Use very thorough exploration mode.
 
-Also cross-reference against the existing card inventory in knowledge/<kb>/concept-cards/<source-slug>/:
-- How many existing cards are there?
-- Which chapters are well-covered vs. sparse?
-- Are there concepts in the source not yet captured as cards?
+Cross-reference against the existing concept-card inventory in content/concepts/:
+- How many existing concept cards are there?
+- Which source-page categories are well-covered vs. sparse?
+- Are there source pages whose concepts are not yet captured as cards?
+- For existing cards, which source pages are listed in derived_from?
 ```
 
 The analysis should produce:
 
-1. **Source metadata:**
-   - Full title, authors, publication type
-   - Subject area and scope
-   - PDF page numbers from chapter metadata headers (or `null` for non-PDF-origin sources)
+1. **Corpus metadata**:
+   - Total source-page count, breakdown by category, tier, genre
+   - Most-cross-referenced source pages (the "hub" pages whose concepts likely appear in many other pages)
+   - Source pages with the highest concept density (long technical articles vs. short biographies)
 
-2. **Chapter inventory:**
-   - Total chapters with titles and brief descriptions
-   - Length/complexity assessment per chapter
-   - PDF page numbers (from metadata headers)
-
-3. **Concept inventory:**
-   - Complete concept list per chapter
-   - Estimated card counts (ranges)
-   - Total estimated cards
+2. **Concept inventory**:
+   - Per source page: estimated concept count and key concepts
+   - Total estimated concept cards (typical: ~3-7 cards per source page, varying by depth)
    - Comparison with existing card count
 
-4. **Categorization:**
-   - Major thematic divisions
-   - Category assignment per chapter
-   - Tier assignment (foundational/intermediate/advanced)
+3. **Cross-page overlap detection** (the wiki-specific step):
+   - Concepts likely to appear in multiple source pages (these become merge candidates)
+   - Concepts with high disambiguation risk (multiple source pages with the same concept name but different domains)
+   - Source pages that primarily cite or extend other source pages (should be processed after the cited pages)
 
-5. **Cross-reference mapping:**
-   - Concepts that appear in multiple chapters
-   - Prerequisite chains visible in chapter sequencing
+4. **Categorization plan**:
+   - Category and tier assignment per concept (typically inherits from source page, with exceptions noted)
+   - Subject headings for cross-cutting concepts
 
-6. **Existing card inventory** (re-extraction only):
-   - Cards per chapter (estimated from filenames)
-   - Cards that may need splitting or merging
-   - Cards with no clear source chapter match
+5. **Disambiguation list**:
+   - Concept names likely to collide (e.g., "Ownership" — Rust + property law)
+   - Proposed disambiguator suffixes for each
 
 ### Step 1.2: Competency Question Mapping
 
-Map each competency question to the chapters/concepts that should answer it:
+Map each competency question to the source pages and candidate concepts that should answer it:
 
 ```markdown
-# CQ-to-Chapter Mapping
+# CQ-to-Source Mapping
 
-## "What is a major scale?" (Definitional)
-- Primary: Chapter 3 (Scales)
-- Concepts needed: major-scale, scale-degree, whole-step, half-step
+## "What is rigpa?" (Definitional)
+- Source pages: dzogchen, longchenpa, longchen-nyingtik, jikme-lingpa
+- Candidate concept: rigpa (foundational, derived_from multiple)
 
-## "How do I construct a dominant seventh chord?" (Procedural)
-- Primary: Chapter 7 (Seventh Chords)
-- Concepts needed: dominant-seventh-chord, root, third, fifth, seventh, chord-construction
+## "How does Rust manage memory without a garbage collector?" (Procedural)
+- Source pages: rust-language
+- Candidate concepts: ownership-rust, borrow-checker, lifetimes (derived_from rust-language)
+
+## "What distinguishes major from minor mode?" (Diagnostic)
+- Source pages: music-theory
+- Candidate concepts: major-scale, minor-scale, mode-quality (with contrasts_with relationships)
 ```
 
 This mapping reveals:
 
-- Extraction priorities (concepts that answer multiple CQs)
-- Coverage gaps (CQs with no clear chapter mapping)
-- Completeness requirements (all concepts needed per CQ)
+- Concepts answering multiple CQs (high-priority, may justify hand-authoring as seed cards)
+- Coverage gaps (CQs with no clear source-page match — indicates the corpus may need expansion or the CQ is out of scope)
+- Cross-source concept candidates (concepts with multiple source pages in the mapping → multi-source `derived_from`)
 
-### Step 1.3: Create Balanced Agent Assignments
+### Step 1.3: Agent Cluster Assignment
 
-Divide work among **exactly 5 agents**:
+Divide work among **exactly 5 agents**. Unlike the upstream book-shaped guide (where agents take chapter ranges), wiki extraction divides by *cluster* — typically a category subset, sometimes a tier subset.
 
-1. **Group chapters sequentially** — maintain order, no gaps
-2. **Balance workload** — aim for +/-20% card count variance
-3. **Respect natural divisions** — don't split major themes across agents
-4. **Match competency coverage** — each agent should address some CQs fully
-5. **Factor in existing card count** — agents with more existing cards may need more time for merge checks
+Cluster strategies:
+
+- **By category**: Agent A takes math + foundations of physics; Agent B takes the rest of physics + theoretical-physics; etc. Best when categories are roughly balanced.
+- **By tier within category**: Agent A takes foundational across all categories; Agent B takes intermediate; Agent C takes advanced; D and E split rebalancing. Best when categories are imbalanced and you want each agent to extract concepts at a similar depth.
+- **By topical cluster (LoC-style)**: Agent A takes the math/physics/foundations cluster; Agent B takes the music cluster; etc. Best when subject_headings reveal natural cross-cutting clusters that don't follow the category boundary.
+
+Whichever you pick, optimize for:
+
+1. **Balanced workload** — Aim for ±20% concept-card-count variance across agents.
+2. **Coherent clusters** — An agent should work on related source pages so cross-references within their work are local.
+3. **Minimized merge collisions** — Concepts likely to appear in multiple agents' clusters should be flagged upfront. Agents should know which concepts may already be in flight by other agents.
+4. **CQ coverage distribution** — Each agent should address some CQs in their cluster.
 
 **Assignment verification checklist:**
 
-- [ ] Every chapter assigned to exactly one agent
-- [ ] No gaps in chapter ranges
-- [ ] Card count estimates balanced (+/-20%)
-- [ ] Each agent has clear thematic coherence
+- [ ] Every source page assigned to exactly one agent
+- [ ] No gaps in coverage
+- [ ] Concept count estimates balanced (±20%)
+- [ ] Each agent has a thematically coherent cluster
 - [ ] CQ coverage distributed across agents
+- [ ] Cross-cluster concepts (likely to need merging post-extraction) flagged in agent prompts
 
-### Step 1.4: Compile Agent Instructions
+### Step 1.4: Coordination Strategy for Cross-Cluster Concepts
+
+Some concepts will appear in source pages assigned to multiple agents. Two strategies:
+
+**Strategy A — Defer to Phase 3**: Each agent extracts independently. If the same concept gets two cards (from different agents), Phase 3's merge resolution catches it and merges. Simpler agent prompts; more Phase 3 work.
+
+**Strategy B — Pre-assign cross-cutting concepts**: Identify likely cross-cutting concepts in Phase 1.3 and assign each to a specific agent (the one whose cluster has the most authoritative source). Other agents skip those concepts. Less Phase 3 work; more complex agent prompts.
+
+For the demo and most fresh extractions, **Strategy A is recommended** — agents work independently, Phase 3 handles merging. The merge-aware extraction in 0001 (each agent checks for existing cards at the candidate slug) handles the within-agent case; Phase 3 handles the cross-agent case.
+
+### Step 1.5: Compile Agent Instructions
 
 For each agent, compile:
 
-1. **Chapter assignments** with titles and page numbers
-2. **Category guidance** for their chapters
-3. **Tier assignments** for expected concept levels
-4. **Domain-specific notes** (notation, terminology)
-5. **CQs to address** (the questions their concepts should answer)
-6. **Cross-reference alerts** (concepts shared with other agents' chapters)
-7. **Existing card count** for their chapter range (re-extraction context)
+1. **Cluster assignment** — list of source-page slugs and their categories/tiers/genres
+2. **Category guidance** for their cluster
+3. **Tier defaults** for expected concept depth
+4. **Notation conventions** (math, code, multilingual)
+5. **CQs to address** — competency questions their concepts should help answer
+6. **Cross-cluster concept alerts** — concepts that may appear in other agents' clusters (so they know to write disambiguator if needed, or expect Phase 3 merging)
+7. **Profile axes** — trust/canon defaults and inheritance rules
+8. **Existing cards in cluster** — slugs of existing concept cards in their assigned source-page range (for merge-aware extraction)
 
 ---
 
-## Phase 2: Parallel Re-Extraction
+## Phase 2: Parallel Extraction
 
-### Concept Card Template (v3)
+### Concept Card Template
 
-```markdown
+Use the v1 Haleiki concept card template as documented in `0001-howto-wiki-concept-card-extraction.md` § "Complete Frontmatter Example". Reproduced briefly here for reference:
+
+```yaml
 ---
 # === CORE IDENTIFICATION ===
-concept: [Concept Name - properly capitalized]
-slug: [lowercase-hyphenated-filename-without-extension]
+concept: "[Concept Name]"
+slug: "[concept-slug]"
+page_type: "concept"
+disambiguator: "[only when needed for collision]"
 
 # === CLASSIFICATION ===
-category: [primary category from domain taxonomy]
-subcategory: [optional: more specific classification]
-tier: [foundational/intermediate/advanced]
+category: "[primary]"
+subcategory: "[optional]"
+tier: "[foundational/intermediate/advanced]"
+subject_headings:
+  - "[cross-cutting tag]"
+keywords:
+  - "[search hint]"
 
 # === PROVENANCE ===
-source: <SourceTitle>
-source_slug: <SourceSlug>
-authors: <AuthorList>
-chapter: "<ChapterTitle>"
-chapter_number: [number]
-pdf_page: [PDF page number, or null]
-section: [section heading if identifiable, or null]
+derived_from:
+  - slug: "[source-page-slug]"
+    title: "[Source Page Title]"
+external_references:
+  - title: "[external source]"
+    url: "[url]"
+    license: "[license]"
 
 # === CONFIDENCE ===
-extraction_confidence: [high/medium/low]
-# high: Concept explicitly defined in source
-# medium: Concept present but requires synthesis
-# low: Concept inferred from context
+extraction_confidence: "[high/medium/low]"
 
-# === VARIANTS (authority control) ===
-# Quote any alias containing a colon — YAML treats `key: value` as a mapping.
+# === VARIANTS ===
 aliases:
-  - [alternative name]
-  - [abbreviated form]
-  - [notational form]
+  - "[variant]"
 
 # === TYPED RELATIONSHIPS ===
 prerequisites:
-  - [concept-slug-that-must-be-known-first]
+  - "[concept-slug]"
 extends:
-  - [concept-slug-this-builds-upon]
+  - "[concept-slug]"
 related:
-  - [associated-concept-slug]
+  - "[concept-slug]"
 contrasts_with:
-  - [commonly-confused-concept-slug]
+  - "[concept-slug]"
+
+# === PROFILE AXES ===
+trust_level: "[corroborated/credible/provisional/speculative]"
+canon_status: "[established/proposed/developing/seed]"   # writer profile only
 
 # === COMPETENCY QUESTIONS ===
 answers_questions:
-  - "What is [concept]?"
-  - [other CQs this card helps answer]
+  - "[CQ this card addresses]"
+
+# === LIFECYCLE ===
+status: "published"
+last_reviewed: "[YYYY-MM-DD]"
 ---
 
 # Quick Definition
-
-[1-2 sentence accessible definition for quick reference. Write for someone who needs a reminder, not a full explanation.]
-
 # Core Definition
-
-[Precise technical definition with proper terminology. This is the authoritative reference definition from the source. Quote directly where possible.]
-
 # Prerequisites
-
-[List concepts that must be understood before this one. For each, briefly state WHY it's needed:]
-
-- **[Prerequisite Concept]** — [What knowledge it provides that this concept requires]
-- **[Another Prerequisite]** — [Rationale]
-
-[For foundational concepts with no prerequisites, state: "This is a foundational concept with no prerequisites within this source."]
-
 # Key Properties
-
-[Enumerate the defining characteristics — what makes this concept what it is:]
-
-1. [Property 1]
-2. [Property 2]
-3. [Property 3]
-
 # Construction / Recognition
-
-[Procedural knowledge: How to build, identify, or apply this concept.]
-
-## To Construct/Create:
-1. [Step 1]
-2. [Step 2]
-3. [Step 3]
-
-## To Identify/Recognize:
-1. [Recognition step 1]
-2. [Recognition step 2]
-
-[If construction/recognition doesn't apply, explain the typical procedure or workflow involving this concept.]
-
 # Context & Application
-
-[When, where, and why this concept is used. Be specific to the domain:]
-
-- **Typical contexts**: [Where this appears]
-- **Common applications**: [How it's used]
-- **Historical/stylistic notes**: [If relevant]
-
 # Examples
-
-[Specific examples FROM THE SOURCE TEXT. Always cite page/section. Avoid generic examples.]
-
-**Example 1** (p. XX): [Description of example from source]
-
-**Example 2** (p. XX): [Another example from source]
-
-## Worked Example
-
-[If the source provides a step-by-step walkthrough, include it here:]
-
-1. [Step from source's worked example]
-2. [Next step]
-3. [Result]
-
 # Relationships
-
-## Builds Upon
-[Concepts this one extends or elaborates:]
-- **[Concept]** — [How this concept elaborates it]
-
-## Enables
-[Concepts that require this one as foundation:]
-- **[Concept]** — [Why this is a prerequisite for it]
-
-## Related
-[Associated concepts, non-hierarchical:]
-- **[Concept]** — [Nature of the relationship]
-
-## Contrasts With
-[Commonly confused concepts and distinguishing features:]
-- **[Concept]** — [Key difference to remember]
-
 # Common Errors
-
-[Practical mistakes when APPLYING this concept:]
-
-- **Error**: [What people do wrong]
-  **Correction**: [How to do it correctly]
-
-- **Error**: [Another mistake]
-  **Correction**: [Fix]
-
 # Common Confusions
-
-[Conceptual misunderstandings about what this concept IS:]
-
-- **Confusion**: [What people wrongly believe]
-  **Clarification**: [The correct understanding]
-
 # Source Reference
-
-Chapter <ChapterNum>: <ChapterTitle>, [Section X.X if applicable], pages XX-XX.
-
-[Include specific figure, table, or example references if the source provides them.]
-
 # Verification Notes
-
-[INTERNAL - for extraction quality tracking:]
-
-- Definition source: [Direct quote from p. X / Synthesized from pp. X-Y / Inferred]
-- Confidence rationale: [Why high/medium/low]
-- Uncertainties: [Any aspects that need expert review]
-- Cross-reference status: [Verified concept names exist / Unverified]
-- Re-extraction notes: [What was preserved from old card, if applicable]
 ```
 
-### Agent Prompt Template (Re-Extraction)
+See 0001 for full body section guidance.
+
+### Agent Prompt Template (Fresh Extraction, Merge-Aware)
 
 ```
-Re-extract concept cards from "<SourceTitle>" Chapters <ChStart>-<ChEnd> (<ChGroupName>), upgrading existing cards to the v3 template.
+Extract concept cards from the Haleiki source-page cluster <ClusterName>, writing them to content/concepts/. Be merge-aware: if a candidate slug already has a card in content/concepts/, augment it (add this source to derived_from) rather than overwriting.
 
-## Your Scope
+## Your Cluster
 
-Chapters <ChStart>-<ChEnd>:
-- Ch <ChStart>: <ChapterTitle> (pdf p. XX)
-- Ch <ChStart+1>: <ChapterTitle> (pdf p. XX)
-... [list all chapters]
-- Ch <ChEnd>: <ChapterTitle> (pdf p. XX)
+Source pages assigned to you:
+- content/sources/<slug-1>.md (category: X, tier: Y, genre: encyclopedia)
+- content/sources/<slug-2>.md (category: X, tier: Y, genre: encyclopedia)
+... [list all source pages in your cluster]
 
-**Target**: ~<EstimatedCardRangeTotal> concept cards
-**Existing cards in this range**: ~<ExistingCardCount>
+Total source pages: <N>
+Estimated concept cards: ~<RangeStart>-<RangeEnd>
+Existing concept cards in this cluster's expected slugs: <ExistingCount>
 
-## Paths
+## Reference Documents
 
-- **Source files**: `knowledge/<KB>/sources/md/<SourceSlug>/`
-- **Output directory**: `knowledge/<KB>/concept-cards/<SourceSlug>/`
-- **Howto reference**: `docs/dev/concept-cards/0007-howto-concept-card-extraction-with-claude-code-v3.2.md`
+- **Schema and per-card extraction**: docs/dev/concept-cards/0001-howto-wiki-concept-card-extraction.md (read this first)
+- **Deployment profile**: content/profile.yaml (currently <profile name>)
+- **Taxonomy**: content/taxonomy.yaml
 
-## Re-Extraction Instructions
+## Profile Axes
 
-This is a RE-EXTRACTION task. Cards already exist at `knowledge/<KB>/concept-cards/<SourceSlug>/` but were created with an older template missing required fields and sections.
-
-For each concept you extract:
-
-1. **Extract fresh** from the source chapter using the v3 template below
-2. **Check** if `knowledge/<KB>/concept-cards/<SourceSlug>/<slug>.md` already exists
-3. **If it exists**: Read the old card and scan for content worth preserving:
-   - Hand-curated corrections to definitions
-   - Additional examples not in the source (with citations)
-   - Domain-expert commentary or notes
-   - Any content not duplicated by your fresh extraction
-4. **Merge** any preserved content into the appropriate section of your new card
-5. **Write** the merged card, overwriting the old file
-6. **Note** in Verification Notes what was preserved: "Re-extracted from v2 card; preserved: [list]"
-
-If no old card exists for a concept, simply write a fresh card.
+- trust_level: <enabled/disabled>; default for this profile: <default>; per-genre defaults apply (see 0001 § "Genre and Trust Defaults")
+- canon_status: <enabled/disabled>; default: <default>
 
 ## Competency Questions to Address
 
-Your extracted concepts should help answer these questions:
-<CQsForThisAgent>
+Your concepts should help answer:
+<CQsForThisCluster>
 
-## Taxonomy for Your Chapters
+## Cross-Cluster Concept Alerts
 
-Categories to use:
-- <category1>: [description]
-- <category2>: [description]
+The following concepts may also be extracted by other agents working on different clusters. If you encounter them in your source pages, extract them normally but expect that Phase 3 may merge with or augment your cards:
 
-Tiers:
-- foundational: Chapters X-Y
-- intermediate: Chapters Z
-- advanced: Chapter W
+- <slug>: also appears in <other-cluster>'s <source-page-slug>
+- ...
 
-## Concept Card Template
+## Disambiguation List
 
-[Insert the v3 template from above]
+These concept names are known to collide with other concepts in this corpus. Always use the disambiguated slug:
 
-## Key Concepts to Extract
+- "Ownership" → use slug `ownership-rust` (your cluster's sense), NOT `ownership`
+- "Group" → use slug `group-mathematics` (your cluster's sense), NOT `group`
+- ...
 
-- Ch <ChStart>: <ListOfConcepts> (~<EstimatedCardRangeCh> cards)
-- Ch <ChStart+1>: <ListOfConcepts> (~<EstimatedCardRangeCh> cards)
-... [all chapters]
+## Extraction Process
 
-## Important Notes
+For each source page in your cluster:
 
-<ImportantNotes>
-
-## Extraction Guidelines
-
-1. **One concept per card** — Don't combine related concepts
-2. **Source material is primary** — Extract from `knowledge/<KB>/sources/md/<SourceSlug>/`, not from old cards
-3. **Old cards are secondary** — Read them only to check for unique content to preserve
-4. **Confidence scoring** — Assign high/medium/low based on:
-   - High: Explicit definition in source
-   - Medium: Concept present but requires synthesis
-   - Low: Inferred from context
-5. **Collect variants** — Note abbreviations, alternative names, notational forms. **Quote any value containing a colon** (e.g., `"Kotlin variant: panache-kotlin"`) to prevent YAML from parsing it as a mapping.
-6. **Type relationships** — Distinguish prerequisites/extends/related/contrasts
-7. **Source-specific examples** — Use examples from the text, not generic ones
-8. **Prerequisites explicit** — Every non-foundational concept needs prerequisites
-9. **CQ linkage** — Note which questions each card helps answer
-10. **Cross-reference by slug** — Use exact concept slugs for relationship fields
+1. **Read the source page** in full to identify substantive concepts (not just the page's main topic)
+2. **List candidate concepts** with their proposed slugs (apply disambiguation suffix where needed)
+3. **For each candidate slug, check** content/concepts/<slug>.md:
+   - **If the file does not exist**: extract fresh per the v1 template in 0001
+   - **If the file exists**: read it, then merge-extract:
+     - Add this source page to `derived_from`
+     - Augment Examples and Context & Application sections with new source content
+     - Reconcile trust_level (lowest among combined sources)
+     - Update last_reviewed to today
+     - Note the merge in Verification Notes
+4. **Write the card** to content/concepts/<slug>.md
+5. **Track your progress** — note which concepts came from which source pages, which were merges, which were fresh
 
 ## Quality Requirements
 
 Each card MUST have:
 - [ ] All frontmatter fields populated (use null/empty array where N/A)
-- [ ] Quick Definition <= 2 sentences
-- [ ] Core Definition with source attribution
-- [ ] At least one example from source text
+- [ ] page_type: concept
+- [ ] disambiguator set if the concept name is in the disambiguation list
+- [ ] Quick Definition ≤ 2 sentences
+- [ ] Core Definition with source-page citation (use slug-based markdown links)
+- [ ] At least one example from the source page text
 - [ ] Prerequisites section (even if "foundational, no prerequisites")
-- [ ] At least one competency question in `answers_questions`
+- [ ] At least one competency question in answers_questions
 - [ ] Confidence rationale in Verification Notes
-- [ ] Re-extraction note if old card existed
+- [ ] Multi-source merge note in Verification Notes if you augmented an existing card
+- [ ] trust_level set per profile and genre defaults
+- [ ] canon_status set if profile enables canon
 
 ## File Naming
 
-- Filename: `[slug].md` (lowercase, hyphenated, no numerical prefix)
-- The slug MUST match the `slug:` frontmatter field exactly
-- OK: `major-scale.md`, `dominant-seventh-chord.md`
-- BAD: `001-major-scale.md`, `Major_Scale.md`, `chord.yaml`
+- Filename: <slug>.md (lowercase, hyphenated, no numerical prefix)
+- The slug MUST match the slug: frontmatter field exactly
+- The file path is content/concepts/<slug>.md (flat, no subdirectories)
+- OK: ownership-rust.md, major-scale.md, rigpa.md
+- BAD: 001-ownership-rust.md, Ownership_Rust.md, content/concepts/programming/ownership.md
 
-Work systematically through each chapter. Prioritize quality over speed.
+Work systematically through your cluster. Prioritize quality over speed. Coordinate with other agents only via the merge-aware reads — agents do not need to communicate directly.
 ```
 
 **Model:** opus
 
+### Coordination: Concurrent Filename Collisions
+
+Five agents writing concurrently to a flat `content/concepts/` directory can race on the same filename when both try to handle a cross-cluster concept. Three avoidance strategies:
+
+- **A. Pre-assign in Phase 1.4** (Strategy B from earlier): each cross-cluster concept is owned by exactly one agent. Other agents skip it. Eliminates the race.
+- **B. Lock-by-write on first arrival**: agents check for the file and create-with-O_EXCL semantics. The second agent gets a "already exists" and switches to merge-mode. The merge-mode read-then-write isn't fully atomic but in practice agents work on different concepts most of the time, so collisions are rare.
+- **C. Phase-3 deduplication**: agents create with their own scoped slug suffix (e.g., `mark-and-sweep-from-garbage-collection.md`), Phase 3 detects duplicates by `concept` field and merges into a canonical slug.
+
+For most fresh extractions, **B is the right choice** — agents handle the rare race naturally as a merge. Strategy A adds prompt complexity; Strategy C adds Phase-3 complexity and produces ugly intermediate filenames.
+
 ---
 
-## Phase 3: Validation & Preservation Check
+## Phase 3: Validation & Cross-Source Merge
 
-### Structural Validation Checklist
+### Step 3.1: Structural Validation
 
-After extraction, verify:
-
-**Completeness Checks:**
+After all agents complete, run validation:
 
 ```bash
-KB=<kb>
-SRC=<source-slug>
-CARDS="knowledge/${KB}/concept-cards/${SRC}"
+CONCEPTS="content/concepts"
 
-# Check all cards have required frontmatter
-for file in "${CARDS}"/*.md; do
-  grep -q "^concept:" "$file" || echo "Missing concept: $file"
-  grep -q "^slug:" "$file" || echo "Missing slug: $file"
-  grep -q "^tier:" "$file" || echo "Missing tier: $file"
-  grep -q "^extraction_confidence:" "$file" || echo "Missing confidence: $file"
-  grep -q "^prerequisites:" "$file" || echo "Missing prerequisites: $file"
-  grep -q "^answers_questions:" "$file" || echo "Missing answers_questions: $file"
-  grep -q "^source_slug:" "$file" || echo "Missing source_slug: $file"
+# Frontmatter completeness
+for file in "${CONCEPTS}"/*.md; do
+  for field in concept slug page_type category tier extraction_confidence \
+               aliases prerequisites answers_questions derived_from \
+               last_reviewed; do
+    grep -q "^${field}:" "$file" || echo "Missing $field: $file"
+  done
 done
-```
 
-**Slug/Filename Consistency:**
-
-```bash
-# Verify slug matches filename for all cards
-for file in "${CARDS}"/*.md; do
+# Slug/filename consistency
+for file in "${CONCEPTS}"/*.md; do
   filename=$(basename "$file" .md)
-  slug=$(grep "^slug:" "$file" | sed 's/^slug: *//')
+  slug=$(grep '^slug:' "$file" | head -1 | sed 's/^slug: *//; s/"//g')
   if [ "$filename" != "$slug" ]; then
     echo "MISMATCH: file=$filename slug=$slug"
   fi
 done
+
+# page_type sanity
+grep -L '^page_type: *concept' "${CONCEPTS}"/*.md | head
+
+# Profile axes presence (only required if profile enables them)
+PROFILE_TRUST=$(grep -A 5 '^trust:' content/profile.yaml | grep '^\s*enabled:' | head -1)
+if [[ "$PROFILE_TRUST" == *"true"* ]]; then
+  for file in "${CONCEPTS}"/*.md; do
+    grep -q '^trust_level:' "$file" || echo "Missing trust_level: $file"
+  done
+fi
 ```
 
-**Cross-Reference Consistency:**
+### Step 3.2: Slug Uniqueness and Cross-Reference Resolution
 
 ```bash
-# Extract all slugs
-ls "${CARDS}"/*.md | xargs -n1 basename | sed 's/.md$//' > /tmp/slugs.txt
+# Extract all concept slugs
+ls "${CONCEPTS}"/*.md | xargs -n1 basename | sed 's/.md$//' > /tmp/concept-slugs.txt
 
-# Extract all referenced concepts from prerequisites/extends/related fields
-grep -h "^  - " "${CARDS}"/*.md | sed 's/^  - //' > /tmp/refs.txt
+# Extract all source-page slugs
+ls content/sources/*.md | xargs -n1 basename | sed 's/.md$//' > /tmp/source-slugs.txt
 
-# Find references to non-existent concepts
-comm -23 <(sort /tmp/refs.txt | uniq) <(sort /tmp/slugs.txt)
+# All defined slugs (concepts + sources, since both use the same namespace)
+cat /tmp/concept-slugs.txt /tmp/source-slugs.txt | sort | uniq > /tmp/all-slugs.txt
+
+# Check for duplicate slugs (should be impossible since filename = slug, but YAML body could disagree)
+sort /tmp/concept-slugs.txt | uniq -d
+
+# Extract all cross-references from typed relationship fields
+grep -hE '^\s*-\s*"?[a-z][a-z0-9-]*"?\s*$' "${CONCEPTS}"/*.md | sed 's/^\s*-\s*"\?//; s/"\?\s*$//' | sort | uniq > /tmp/refs.txt
+
+# Find references to non-existent concepts/sources
+comm -23 /tmp/refs.txt /tmp/all-slugs.txt > /tmp/dangling-refs.txt
+[ -s /tmp/dangling-refs.txt ] && echo "Dangling references:" && cat /tmp/dangling-refs.txt
 ```
 
-**Orphan Detection:**
+### Step 3.3: Cross-Source Merge Resolution
+
+This is the wiki-specific Phase 3 step. After parallel extraction, look for concept cards that should have been merged but ended up as separate cards.
+
+**Detection signals:**
+
+- Multiple cards with the same `concept` field but different `slug` values, where the disambiguator is *not* set (suggests accidental separate cards rather than deliberate disambiguation)
+- Cards whose body content overlaps substantially (same examples, same prerequisites)
+- Cards whose `derived_from` lists overlap (same source pages cited by both → likely the same concept extracted twice)
 
 ```bash
-# Concepts with no incoming relationships (never referenced as prerequisite/related)
-# and no outgoing relationships (empty relationship fields)
-# These may be legitimate foundational concepts OR extraction gaps
+# Find concept-name collisions where disambiguator isn't set
+declare -A concepts_seen
+for file in "${CONCEPTS}"/*.md; do
+  concept=$(grep '^concept:' "$file" | head -1 | sed 's/^concept: *//; s/"//g')
+  disambig=$(grep '^disambiguator:' "$file" | head -1 | sed 's/^disambiguator: *//; s/"//g')
+  if [ -n "${concepts_seen[$concept]}" ] && [ -z "$disambig" ]; then
+    echo "Collision (no disambiguator): '$concept' in ${concepts_seen[$concept]} and $file"
+  fi
+  concepts_seen[$concept]="$file"
+done
 ```
 
-### Preservation Checks (Re-Extraction Specific)
+**Resolution per collision:**
 
-**Card Count Comparison:**
+1. **If they're truly the same concept**: merge — combine `derived_from`, `aliases`, `prerequisites`, `related`, `contrasts_with`; combine body sections (Examples especially); reconcile trust_level (lowest); delete the redundant file; update cross-references in other cards.
+2. **If they're different concepts that happen to share a name**: add disambiguator to both (or one) and rename slugs accordingly; update cross-references.
+3. **If unclear**: flag for human review. Do not silently merge or split.
+
+### Step 3.4: Trust/Canon Inheritance Audit
+
+If the profile enables trust_level:
 
 ```bash
-# Compare old vs new card count
-# (Run before re-extraction to record baseline)
-old_count=$(find "${CARDS}/" -name '*.md' | wc -l)
-# (Run after re-extraction)
-new_count=$(find "${CARDS}/" -name '*.md' | wc -l)
-echo "Old: $old_count  New: $new_count  Diff: $((new_count - old_count))"
+# For each concept with multiple derived_from, verify trust_level is the lowest among sources
+for file in "${CONCEPTS}"/*.md; do
+  trust=$(grep '^trust_level:' "$file" | head -1 | sed 's/^trust_level: *//; s/"//g')
+  source_slugs=$(awk '/^derived_from:/,/^[a-z]/{if (/^\s*-\s*slug:/) print $0}' "$file" | sed 's/^\s*-\s*slug: *//; s/"//g')
 
-# If new_count < old_count, investigate which cards were dropped
+  # Skip if no derived_from
+  [ -z "$source_slugs" ] && continue
+
+  # For each source, get its trust_level
+  source_trusts=()
+  while read -r slug; do
+    src_trust=$(grep '^trust_level:' "content/sources/${slug}.md" 2>/dev/null | head -1 | sed 's/^trust_level: *//; s/"//g')
+    source_trusts+=("$src_trust")
+  done <<< "$source_slugs"
+
+  # Compute the minimum trust (corroborated > credible > provisional > speculative)
+  # ... [comparison logic, skipped here for brevity]
+
+  # Compare with the card's trust_level; flag if not the conservative minimum
+done
 ```
 
-**Content Preservation Spot-Check:**
+In practice this is easier in the validator (Rust) than in shell — but the audit principle stands: cards should default to the conservative minimum, and explicit overrides should be documented in Verification Notes.
 
-Sample 5 cards per agent (25 total) and verify:
-
-- [ ] If old card had unique content, it appears in the new card
-- [ ] Verification Notes mention what was preserved
-- [ ] No hand-curated corrections were lost
-
-**LLM Artifact Check:**
-
-```bash
-# Search for generation artifacts from previous extractions
-grep -rl "Wait.*let me\|Let me recalculate\|I apologize\|As an AI\|I'm sorry" \
-  "${CARDS}/"
-```
-
-### CQ Coverage Check
+### Step 3.5: CQ Coverage Check
 
 For each competency question, verify that:
 
 1. At least one concept card lists it in `answers_questions`
-2. The card(s) actually contain enough information to answer it
+2. The card(s) actually contain enough information to answer it (sample-check)
 
-### Quality Verification Sampling
+```bash
+# CQs not covered by any card
+while IFS= read -r cq; do
+  matches=$(grep -l "$cq" "${CONCEPTS}"/*.md | wc -l)
+  if [ "$matches" -eq 0 ]; then
+    echo "Uncovered CQ: $cq"
+  fi
+done < <(grep '^[0-9]\.' content/_analysis/_corpus/competency-questions.md | sed 's/^[0-9]*\.\s*//')
+```
 
-Sample 3-5 cards from each agent and verify:
+### Step 3.6: LLM Artifact Check
 
-- [ ] Definitions accurate to source
+```bash
+grep -rl "Wait.*let me\|Let me recalculate\|I apologize\|As an AI\|I'm sorry" "${CONCEPTS}/"
+```
+
+These signal unedited generation artifacts. Each should be reviewed and cleaned.
+
+### Step 3.7: Quality Verification Sampling
+
+Sample 3-5 cards from each agent's output and verify:
+
+- [ ] Definitions accurate to source pages
 - [ ] Confidence scoring justified in Verification Notes
 - [ ] Prerequisites form valid chains (no circular dependencies)
-- [ ] Examples cite specific source locations
+- [ ] Examples cite specific source pages
 - [ ] Variants capture alternative terminology
 - [ ] Relationships use valid slugs
-- [ ] Section names match v3 template exactly
+- [ ] Section names match the v1 template exactly
+- [ ] Multi-source cards have merge documentation in Verification Notes
+- [ ] Disambiguators set wherever names collide
 
 ---
 
@@ -737,73 +698,74 @@ Sample 3-5 cards from each agent and verify:
 
 ### Issue: Low confidence scores across many cards
 
-**Cause**: Source doesn't provide explicit definitions (common in advanced texts)
+**Cause**: Source pages don't provide explicit definitions (common when source pages are conversations or worldbuilding entries rather than encyclopedia articles).
 
 **Solution**:
-
-- Accept medium confidence as normal for synthesis-heavy sources
-- Flag low confidence cards for expert review
-- Consider adding competency questions that match source's implicit assumptions
+- Accept medium confidence as normal for synthesis-heavy genres
+- Flag low-confidence cards for expert review
+- Consider whether the trust_level inheritance default (per genre) is doing the right thing
 
 ### Issue: Circular prerequisites detected
 
-**Cause**: Mutually dependent concepts extracted without proper ordering
+**Cause**: Mutually dependent concepts extracted without proper ordering.
 
 **Solution**:
-
 - Identify the foundational concept in the cycle
-- Mark it as foundational (no prerequisites)
+- Mark it as `tier: foundational` (no prerequisites)
 - Re-run affected agent with guidance on which concept is base
 
 ### Issue: Many orphaned concepts
 
-**Cause**: Insufficient relationship extraction
+**Cause**: Insufficient relationship extraction; concepts have no incoming or outgoing edges.
 
 **Solution**:
-
-- Review orphans — are they truly isolated or missing relationships?
-- Re-extract with explicit instruction to connect each concept
+- Review orphans — are they truly isolated foundational concepts, or missing relationships?
+- Re-extract with explicit instruction to connect each concept to at least one other
 - Some foundational concepts legitimately have only outgoing edges
 
 ### Issue: Competency questions unanswered
 
-**Cause**: Coverage gap — needed concepts not extracted
+**Cause**: Coverage gap — needed concepts not extracted.
 
 **Solution**:
+- Map unanswered CQs to source pages
+- Re-extract from those pages with specific CQ guidance
+- If source pages don't cover the CQ, document as out-of-scope
 
-- Map unanswered CQs to source sections
-- Re-extract from those sections with specific CQ guidance
-- If source doesn't cover the CQ, document as out-of-scope
+### Issue: Multiple cards for the same concept
 
-### Issue: Card count decreased after re-extraction
-
-**Cause**: Agent merged concepts that should remain separate, or missed concepts
-
-**Solution**:
-
-- Diff the old and new file lists to find missing filenames
-- Check if missing concepts were legitimately merged (document in Verification Notes)
-- Re-run agent for missing concepts if they were dropped
-
-### Issue: Old unique content not preserved
-
-**Cause**: Agent didn't read old cards before overwriting
+**Cause**: Two agents extracted the same concept independently (cross-cluster overlap).
 
 **Solution**:
+- Run Phase 3.3 cross-source merge resolution
+- For each collision: merge cleanly (combining `derived_from`, examples, etc.) or disambiguate (different concepts that happen to share a name)
+- If the corpus has many cross-cluster concepts, switch to Strategy A (pre-assign in Phase 1.4) for the next extraction round
 
-- Check agent output for merge notes in Verification Notes
-- If no merge notes, re-run with explicit reminder to read old cards first
-- Provide the old card content directly in the agent prompt if needed
+### Issue: Disambiguator collisions discovered late
+
+**Cause**: A concept name collision wasn't anticipated in Phase 1.3, so two cards have the same bare slug.
+
+**Solution**:
+- Rename the conflicting slugs with disambiguators (`ownership-rust`, `ownership-property-law`)
+- Update cross-references via search-and-replace in `content/concepts/*.md` and `content/sources/*.md`
+- Add to the disambiguation list for future extractions
+
+### Issue: Trust level inheritance produces too-conservative defaults
+
+**Cause**: A concept that's well-established in domain literature is extracted from a source page with a `provisional` trust level (e.g., a conversation), so the default conservative inheritance assigns it `provisional`.
+
+**Solution**:
+- Override `trust_level` explicitly in the card frontmatter
+- Document in Verification Notes: "Trust level overridden from default `provisional` (inherited from conversation source) to `credible` because the concept is well-established in [domain]; the conversation merely re-introduces it."
 
 ### Issue: Cards written to the wrong path
 
-**Cause**: Agent used a legacy path like `concept-cards/<source-slug>/` at the repo root, or `sources-md/` for reading
+**Cause**: An agent used a legacy path (e.g., `concepts/<source-slug>/<concept-slug>.md` from the upstream book-shaped doc) instead of the flat Haleiki layout.
 
 **Solution**:
-
-- Verify the agent prompt spells out `knowledge/<KB>/concept-cards/<SourceSlug>/` and `knowledge/<KB>/sources/md/<SourceSlug>/` explicitly
-- Move any mis-located cards into the correct KB directory
-- If `<KB>` is ambiguous, confirm the target KB with the coordinator before re-running
+- Verify the agent prompt spells out `content/concepts/<concept-slug>.md` as the flat target
+- Move any mis-located cards to the correct location
+- Update cross-references if any cards in the wrong location were referenced
 
 ---
 
@@ -811,47 +773,48 @@ Sample 3-5 cards from each agent and verify:
 
 ### Phase 0: Requirements (30-60 minutes)
 
-1. Audit existing cards (run gap analysis scripts)
+1. Audit corpus state (run gap-analysis scripts)
 2. Generate 30-50 competency questions
-3. Define domain taxonomy (categories, tiers)
+3. Confirm domain taxonomy and subject_headings vocabulary
 4. Document notation conventions
-5. Save to `knowledge/<kb>/extraction-metadata/<source-slug>/`
+5. Confirm profile axes (trust/canon) settings
+6. Save to `content/_analysis/_corpus/`
 
-### Phase 1: Analysis (20-30 minutes)
+### Phase 1: Analysis (20-40 minutes)
 
-1. Run Explore agent on source, cross-referencing existing inventory
-2. Map CQs to chapters/concepts
-3. Create 5 balanced agent assignments
-4. Compile agent-specific instructions
-5. Verify assignments (no gaps, balanced, CQ coverage)
+1. Run Explore agent on source-page corpus
+2. Map CQs to source pages and candidate concepts
+3. Identify cross-page concept overlap and disambiguation candidates
+4. Choose cluster strategy (by category, by tier, by topical cluster)
+5. Compile 5 balanced agent assignments
+6. Verify assignments (no gaps, balanced, CQ coverage, cross-cluster concepts flagged)
 
-### Phase 2: Re-Extraction (20-40 minutes)
+### Phase 2: Parallel Extraction (30-90 minutes wall, depending on corpus size)
 
-1. Launch all 5 agents in parallel
-2. Monitor for completion
-3. Run post-processing cleanup
+1. Launch all 5 agents in parallel with cluster-specific prompts
+2. Monitor for completion; agents handle merge-aware extraction independently
+3. Optionally: post-processing cleanup (whitespace, heading consistency)
 
-### Phase 3: Validation (15-30 minutes)
+### Phase 3: Validation & Cross-Source Merge (20-40 minutes)
 
-1. Run structural validation checks
-2. Check slug/filename consistency
-3. Run preservation checks (card count, content spot-check)
-4. Check for LLM artifacts
-5. Verify CQ coverage
-6. Sample quality check (3-5 cards per agent)
-7. Re-extract if needed
+1. Structural validation (frontmatter, body sections)
+2. Slug uniqueness and cross-reference resolution
+3. Cross-source merge resolution (the wiki-specific step)
+4. Trust/canon inheritance audit
+5. CQ coverage check
+6. LLM artifact check
+7. Quality verification sampling
+8. Re-extract or merge as needed
 
-**Total: ~90-160 minutes** for complete, validated re-extraction of one source
+**Total: ~100-230 minutes** for complete, validated extraction across a corpus.
+
+For Haleiki's 91-source-page demo, expect Phase 2 to take 60-90 minutes (the source pages are diverse and many; CC's parallel agents are throughput-bound on extraction quality, not API latency) and Phase 3 to take 30-45 minutes if cross-cluster concepts are common.
 
 ---
 
 ## Version History
 
-- **v1**: Original template (basic frontmatter, no relationships)
-- **v2**: Updated for graph databases and full-text search (flat relationships)
-- **v3**: Enhanced with confidence scoring, authority control, typed relationships, CQ framework, structural validation
-- **v3.1**: Adapted for re-extracting over existing card inventory; added audit step, merge instructions, preservation checks
-- **v3.2**: Updated paths for the unified `ai-engineering` repo (`knowledge/<kb>/...`) and replaced `sources-<format>/` with `sources/<format>/` subdirectories; fixed the howto-guide reference to point at doc 0007 (not the nonexistent 0004); updated Phase 0 audit scripts to the new paths. No changes to the v3 frontmatter schema, body sections, or extraction machinery.
+- **v1** (Haleiki): First version. Adapted from Billo Systems' AI Engineering parallel re-extraction guide v3.2 (`workbench/0010-a-guide-for-parallel-concept-card-re-extraction-v3.2.md` for reference). Reframed from book-shaped re-extraction to wiki-shaped fresh-and-merge extraction; replaced chapter-based agent assignment with source-page-cluster-based assignment; promoted cross-source concept merging to a first-class Phase 3 step; updated path conventions to Haleiki's flat `content/concepts/` layout; updated agent prompts to use the v1 Haleiki concept-card schema (with `derived_from`, `external_references`, `disambiguator`, `subject_headings`, `trust_level`, `canon_status`); added genre-aware trust inheritance to agent prompts. The four-phase structure, parallel-Opus pattern, validation checklist, and quality bar are unchanged.
 
 ---
 
@@ -861,7 +824,7 @@ Sample 3-5 cards from each agent and verify:
 
 | Level | Criteria |
 |-------|----------|
-| High | Source explicitly defines concept; extraction is straightforward |
+| High | Source page explicitly defines concept; extraction is straightforward |
 | Medium | Concept discussed but not formally defined; requires synthesis |
 | Low | Concept inferred or reconstructed from context |
 
@@ -874,34 +837,65 @@ Sample 3-5 cards from each agent and verify:
 | related | Symmetric | Associated, non-hierarchical |
 | contrasts_with | Symmetric | Often confused with |
 
+Profiles may add: `inspires`, `supersedes`, `real_world_analogue`, `narrative_adaptation_of`, `contradicts_in_universe` (writer profile).
+
+### Trust Level Inheritance
+
+For multi-source concept cards (`derived_from` has multiple entries):
+
+- **Default**: lowest trust_level among the source pages (conservative)
+- **Override**: explicit per-card setting, documented in Verification Notes
+
+### Genre Trust Defaults (per source page)
+
+| Genre | Default trust_level |
+|-------|---------------------|
+| encyclopedia | credible |
+| conversation | provisional |
+| worldbuilding | speculative |
+| essay / blog | credible |
+
 ### Required Frontmatter Fields
 
 ```yaml
-concept:              # REQUIRED
-slug:                 # REQUIRED
-category:             # REQUIRED
-tier:                 # REQUIRED
-source:               # REQUIRED
-source_slug:          # REQUIRED
-chapter:              # REQUIRED
-chapter_number:       # REQUIRED (integer or null)
-pdf_page:             # REQUIRED (integer or null)
-extraction_confidence: # REQUIRED
-aliases:              # REQUIRED (empty array if none)
-prerequisites:        # REQUIRED (empty array if foundational)
-answers_questions:    # REQUIRED (at least one CQ)
+concept:                # REQUIRED
+slug:                   # REQUIRED
+page_type: concept      # REQUIRED
+category:               # REQUIRED
+tier:                   # REQUIRED
+derived_from:           # REQUIRED (empty array allowed for hand-authored seed cards)
+extraction_confidence:  # REQUIRED
+aliases:                # REQUIRED (empty array if none)
+prerequisites:          # REQUIRED (empty array if foundational)
+answers_questions:      # REQUIRED (at least one CQ)
+last_reviewed:          # REQUIRED (date)
+status:                 # REQUIRED (typically "published")
+trust_level:            # REQUIRED if profile enables trust
+canon_status:           # REQUIRED if profile enables canon
+disambiguator:          # OPTIONAL (only when concept name collides)
+subcategory:            # OPTIONAL
+subject_headings:       # OPTIONAL
+keywords:               # OPTIONAL
+extends:                # OPTIONAL (empty array allowed)
+related:                # OPTIONAL (empty array allowed)
+contrasts_with:         # OPTIONAL (empty array allowed)
+external_references:    # OPTIONAL
+stable_since:           # OPTIONAL
 ```
 
-### Re-Extraction Checklist (Per Card)
+### Per-Card Extraction Checklist (Agent Self-Check)
 
 ```
-[ ] Extracted fresh from source chapter
-[ ] Checked for existing card at same filename
-[ ] Read old card (if exists) for unique content
-[ ] Merged preserved content into v3 template
-[ ] Noted preservation in Verification Notes
-[ ] All frontmatter fields populated
-[ ] All body sections present
+[ ] Source page read in full
+[ ] Concept boundaries identified
+[ ] Disambiguator suffix applied to slug if name collides
+[ ] Existing card checked at candidate slug (merge if exists, fresh otherwise)
+[ ] All frontmatter fields populated per schema
+[ ] All body sections present per template
 [ ] Slug matches filename
-[ ] Card is under knowledge/<kb>/concept-cards/<source-slug>/
+[ ] Card path is content/concepts/<slug>.md (flat)
+[ ] derived_from cites the source page slug correctly
+[ ] trust_level set per profile + genre defaults (or explicit override with rationale)
+[ ] At least one competency question in answers_questions
+[ ] Verification Notes document confidence rationale and any merge actions
 ```
