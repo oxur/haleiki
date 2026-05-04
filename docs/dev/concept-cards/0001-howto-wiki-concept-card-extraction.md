@@ -82,15 +82,22 @@ Not all extractions are equally reliable. Signal this in the `extraction_confide
 | **medium** | Concept is present but definition must be synthesized from context |
 | **low** | Concept is inferred, implied, or reconstructed |
 
-### 5. Provenance Is Sacred
+### 5. Provenance Is Sacred (and Bidirectional)
 
-Every assertion should be traceable. In Haleiki, concept cards point to source pages via `derived_from`; source pages carry upstream attribution (Wikipedia URL, license, revision_id) in their own frontmatter. Concept cards inherit the upstream chain transitively — they don't need to re-cite the upstream URL.
+Every assertion should be traceable. In Haleiki, the concept↔source link is bidirectional and must be maintained on both sides:
+
+- **Concept → source** (`derived_from` in concept-card frontmatter): list of source-page slugs the concept was extracted from.
+- **Source → concept** (`concepts_generated` in source-page frontmatter): list of concept slugs extracted from this source page. Plus `extraction_status` (workflow state) and `last_extracted` (date the extraction was last run against this source).
+
+Concept cards inherit upstream attribution (Wikipedia URL, license, revision_id) transitively from their `derived_from` source pages — they don't need to re-cite the upstream URL.
 
 When a source page itself adapts external material that warrants an explicit reference at the concept-card level (e.g., a specific RFC, a technical paper, a primary text not represented as a source page), use `external_references`. This is rare in practice — most concept cards just need `derived_from`.
 
 Within the body, cite source pages by slug for traceability:
 
 > The major scale is a diatonic scale consisting of seven distinct pitch classes... ([music-theory](/source/music-theory/))
+
+**Why bidirectional:** Human editors looking at a source page can see at a glance what concepts came out of it. The validator can detect staleness when a source page is updated after `last_extracted`. The build pipeline can compute either direction from either side, but the bidirectional state is the canonical truth — keep both ends in sync during extraction.
 
 ### 6. Disambiguate When Concepts Collide
 
@@ -862,7 +869,37 @@ Before considering a card complete, verify:
 5. **Extract in dependency order** (foundational first within the page).
 6. **Cross-reference** as you extract — note slugs for later cards.
 7. **Disambiguate** when needed (check for slug collisions before writing).
-8. **Validate** frontmatter and body completeness via the Quality Checklist.
+8. **Update the source page's frontmatter** with the back-link metadata (see *Source Page Updates* below).
+9. **Validate** frontmatter and body completeness via the Quality Checklist.
+
+### Source Page Updates (Back-Link Maintenance)
+
+After extracting concepts from a source page, update the source page's frontmatter to record what was extracted. This maintains the source→concept side of the bidirectional provenance link.
+
+Three fields to update:
+
+```yaml
+extraction_status: complete       # was: pending
+concepts_generated:
+  - <concept-slug-extracted-from-this-page>
+  - <another-concept-slug>
+  - ...
+last_extracted: 2026-05-04        # date this extraction pass ran (ISO date)
+```
+
+**Multi-source case:** When a concept is extracted from multiple source pages (e.g., `nyingma` from both `padmasambhava` and `longchenpa`), the concept slug appears in `concepts_generated` of *every* source page it was substantively extracted from. The slug is in both pages' arrays, not just the first one. This is correct — both source pages contributed.
+
+**Skipped concepts:** A concept that was identified as a candidate but skipped (e.g., because it was a mere mention rather than substantive coverage) does NOT appear in `concepts_generated`. Only substantively-extracted concepts.
+
+**Empty case:** If no concepts were extracted from a source page (the page exists but doesn't yield substantive concept material), set `extraction_status: skipped` and `concepts_generated: []`. This is rare but legitimate (e.g., a very short or purely-narrative source page).
+
+**Surgical updates:** When updating source-page frontmatter, prefer line-based edits that preserve the existing field order and formatting. Don't round-trip through full YAML parse-and-dump unless you can guarantee field order preservation — the demo source pages have a deliberate frontmatter structure that's nice to keep.
+
+**Why this matters:**
+
+- Human editors viewing a source page can see at a glance what concepts came from it
+- The validator can detect staleness — if a source page's content hash changes after `last_extracted`, derived concept cards are flagged for review
+- The build pipeline can verify bidirectional consistency (every concept-card's `derived_from` slug should appear in the corresponding source page's `concepts_generated`, and vice versa)
 
 ### Substantive Coverage Threshold
 
@@ -1007,3 +1044,4 @@ The demo and bootstrap deployments may include hand-authored concept cards that 
 
 - **v1** (Haleiki): First version. Adapted from Billo Systems' AI Engineering concept-card howto v3.2 (`workbench/0009-howto-concept-card-extraction-with-claude-code-v3.2.md` for reference). Replaced book-citation provenance with wiki-pointer provenance (`derived_from` / `external_references`); added `disambiguator`, `subject_headings`, `trust_level`, `canon_status`, `page_type`, `status`, `last_reviewed`, and `stable_since` fields; added genre-aware trust defaults; added cross-source concept merging guidance; flattened file organization to `content/concepts/{slug}.md`; updated examples to draw from the Haleiki demo cluster (Tibetan Buddhism, theoretical physics, mathematics, music, programming languages, AI, philosophy of mind, linguistics, botany, geology). The confidence framework, typed relationship vocabulary, body section structure, and competency-question framework are unchanged.
 - **v1.1** (Haleiki): Refinements from the 5-article pilot extraction (group-theory, quantum-mechanics, rust-language, padmasambhava, longchenpa). Added the source-page-vs-concept-card slug-collision case to disambiguation guidance (Golden Rule 6 and the Disambiguation Strategy section), with role/category suffix examples (`-teacher`, `-scholar`, `-field`, `-mathematics`). Added a "Substantive Coverage Threshold" section to the Extraction Workflow with concrete extract-vs-skip examples. Refined disambiguation guidance into three explicit cases: cross-domain collision (a), source-page collision (b), anticipated future collision (c). No schema changes; no existing pilot cards need renaming.
+- **v1.2** (Haleiki): Source-page back-link maintenance. Updated Golden Rule 5 ("Provenance Is Sacred and Bidirectional") to make the bidirectional source↔concept link explicit. Added "Source Page Updates" subsection to the Extraction Workflow specifying that extraction agents update each source page's frontmatter (`extraction_status`, `concepts_generated`, `last_extracted`) when concepts are extracted from it. This was the design intent in arch doc 0001 §3.1 but wasn't called out as an extraction step in v1/v1.1. Multi-source concepts appear in `concepts_generated` of every source page they were substantively extracted from. Existing pre-v1.2 source pages need a one-time back-fill (concept cards' `derived_from` is correct; source pages need updating from a scan of the concept-card index).

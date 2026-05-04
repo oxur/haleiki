@@ -568,7 +568,12 @@ For each source page in your cluster:
      - Update last_reviewed to today
      - Note the merge in Verification Notes
 4. **Write the card** to content/concepts/<slug>.md
-5. **Track your progress** — note which concepts came from which source pages, which were merges, which were fresh
+5. **Update the source page's frontmatter** (per 0001 § "Source Page Updates"):
+   - Set `extraction_status: complete`
+   - Set `concepts_generated` to the list of concept slugs you extracted from THIS source page (substantive only — not skipped mentions)
+   - Set `last_extracted: <today's date>`
+   - Use line-based edits to preserve existing frontmatter formatting; do not round-trip through a YAML parser unless you can guarantee field-order preservation
+6. **Track your progress** — note which concepts came from which source pages, which were merges, which were fresh, in `content/_analysis/<source-slug>/extraction-log.md`
 
 ## Quality Requirements
 
@@ -748,6 +753,47 @@ while IFS= read -r cq; do
 done < <(grep '^[0-9]\.' content/_analysis/_corpus/competency-questions.md | sed 's/^[0-9]*\.\s*//')
 ```
 
+### Step 3.5.5: Bidirectional Provenance Consistency
+
+Verify that every concept card's `derived_from` slug appears in the corresponding source page's `concepts_generated`, and vice versa. Any inconsistency is a back-link maintenance failure during extraction.
+
+```bash
+CONCEPTS="content/concepts"
+SOURCES="content/sources"
+
+# For each concept card, check that each derived_from source has this concept in its concepts_generated
+for card in "${CONCEPTS}"/*.md; do
+  [ "$(basename "$card")" = ".gitkeep" ] && continue
+  card_slug=$(basename "$card" .md)
+  # Extract derived_from source slugs
+  source_slugs=$(awk '/^derived_from:/,/^[a-z_]+:/{if (/^\s*-\s*slug:/) print}' "$card" | sed 's/^\s*-\s*slug: *//; s/"//g')
+  for src_slug in $source_slugs; do
+    src_file="${SOURCES}/${src_slug}.md"
+    [ ! -f "$src_file" ] && echo "MISSING SOURCE: $card_slug derives from $src_slug (not found)" && continue
+    # Check the source page's concepts_generated includes this concept
+    if ! grep -q "^\s*-\s*${card_slug}\s*$" "$src_file"; then
+      echo "BACK-LINK MISSING: $src_slug should list $card_slug in concepts_generated"
+    fi
+  done
+done
+
+# Reverse direction: for each source page, every concepts_generated entry should have a card with this source in its derived_from
+for src in "${SOURCES}"/*.md; do
+  [ "$(basename "$src")" = ".gitkeep" ] && continue
+  src_slug=$(basename "$src" .md)
+  generated=$(awk '/^concepts_generated:/,/^[a-z_]+:/{if (/^\s*-\s*[a-z]/) print}' "$src" | sed 's/^\s*-\s*//; s/"//g')
+  for concept_slug in $generated; do
+    card_file="${CONCEPTS}/${concept_slug}.md"
+    [ ! -f "$card_file" ] && echo "MISSING CARD: $src_slug claims to have generated $concept_slug (card not found)" && continue
+    if ! grep -A 20 '^derived_from:' "$card_file" | grep -q "slug: *\"\?${src_slug}\"\?"; then
+      echo "FORWARD-LINK MISSING: $concept_slug should list $src_slug in derived_from"
+    fi
+  done
+done
+```
+
+If either direction shows missing links, fix them before reporting Phase 3 complete.
+
 ### Step 3.6: LLM Artifact Check
 
 ```bash
@@ -894,6 +940,7 @@ For Haleiki's 91-source-page demo, expect Phase 2 to take 60-90 minutes (the sou
 
 - **v1** (Haleiki): First version. Adapted from Billo Systems' AI Engineering parallel re-extraction guide v3.2 (`workbench/0010-a-guide-for-parallel-concept-card-re-extraction-v3.2.md` for reference). Reframed from book-shaped re-extraction to wiki-shaped fresh-and-merge extraction; replaced chapter-based agent assignment with source-page-cluster-based assignment; promoted cross-source concept merging to a first-class Phase 3 step; updated path conventions to Haleiki's flat `content/concepts/` layout; updated agent prompts to use the v1 Haleiki concept-card schema (with `derived_from`, `external_references`, `disambiguator`, `subject_headings`, `trust_level`, `canon_status`); added genre-aware trust inheritance to agent prompts. The four-phase structure, parallel-Opus pattern, validation checklist, and quality bar are unchanged.
 - **v1.1** (Haleiki): Refinements from the 5-article pilot extraction. Added Step 1.2.5 — pre-flight disambiguation audit before agent assignment, producing a corpus-level disambiguation list covering all three cases (cross-domain, source-page, anticipated future). Added Step 1.6 — source-page processing order within an agent's cluster (foundational and concept-dense first). Updated the agent prompt template to embed the corpus-wide disambiguation list and to explicitly call out merge-aware augmentation of any pre-existing concept cards (e.g., from prior pilot extractions). No changes to the four-phase structure or validation checklist.
+- **v1.2** (Haleiki): Source-page back-link maintenance. Updated the Phase 2 agent prompt template to include a mandatory source-page-update step (set `extraction_status`, populate `concepts_generated`, set `last_extracted`) after extracting concepts from each source page. Added Step 3.5.5 — bidirectional provenance consistency check verifying that concept cards' `derived_from` and source pages' `concepts_generated` agree in both directions. Pre-v1.2 corpora need a one-time back-fill (the concept cards' `derived_from` is correct; only source pages need updating from a scan of the concept-card index).
 
 ---
 
