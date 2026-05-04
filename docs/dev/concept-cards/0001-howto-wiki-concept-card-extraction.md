@@ -94,14 +94,42 @@ Within the body, cite source pages by slug for traceability:
 
 ### 6. Disambiguate When Concepts Collide
 
-Multiple concepts may share a human-readable name. Slugs must be globally unique, so add a disambiguator suffix:
+Slugs are globally unique across both source pages and concept cards (they share a single namespace). When the bare concept name would produce a slug collision, add a disambiguator suffix.
+
+There are three cases that require disambiguation:
+
+**(a) Cross-domain collision** — the same name names different concepts in different domains:
 
 - `ownership-rust` (Rust's ownership concept)
 - `ownership-property-law` (property law's ownership concept)
-- `quantum-mechanics` (the physics theory)
-- `quantum-mechanics-kala-sara` (a fictional worldbuilding version)
+- `quantum-mechanics` (the physics theory) / `quantum-mechanics-kala-sara` (a fictional worldbuilding version)
 
-The `concept` field carries the human-readable name (which can repeat); the `slug` is unique with disambiguation; the `disambiguator` field ("Rust", "property law", "Kāla Sāra") drives display in UI tiles, breadcrumbs, search results, and the article overline.
+**(b) Source-page-vs-concept-card collision** — a concept card extracted from a source page about the same entity needs a slug different from the source page's slug:
+
+- Source page `padmasambhava` (the Wikipedia article) + concept card `padmasambhava-teacher` (the cross-cutting concept of Padmasambhava as a teacher figure)
+- Source page `longchenpa` (the Rigpa Wiki article) + concept card `longchenpa-scholar` (Longchenpa as a scholarly authority)
+- Source page `group-theory` (the Wikipedia article) + concept card `group-theory-mathematics` (group theory as the mathematical field)
+
+For this case, choose a role/category suffix that captures the concept's *function* in the wiki: `-teacher`, `-scholar`, `-field`, `-mathematics`, `-language`, etc. The suffix should make sense as a disambiguator value in display (e.g., "Padmasambhava (teacher)" reads naturally).
+
+When a concept card would have the same identity as a source page about it, you have two options:
+
+1. Don't extract a concept card for the entity — let the source page be the canonical representation, and use concept cards for atomic facts *about* the entity.
+2. Extract the concept card with a role/category suffix (the case above) — useful when the concept is heavily cross-referenced from other articles and benefits from cross-cutting metadata.
+
+Use option 2 when the concept is cited or extended by many other source pages; use option 1 when the source page is mostly self-contained and other articles only mention the entity by name.
+
+**(c) Anticipated future collision** — the bare name is so widely used across domains that even if no collision exists in the corpus today, one is plausible:
+
+- `traits-rust` (Rust traits) — "traits" is also used in psychology, biology, character analysis
+- `pattern-matching-rust` (Rust pattern matching) — also used in cognition, vision systems
+- `borrowing-rust` (Rust's borrow rules) — also used for loans, library books, etc.
+
+For (c), apply the suffix proactively even when the bare slug is currently free. The cost is small (a few extra characters in the slug); the benefit is stable URLs as the corpus grows.
+
+For names that are *nearly uniquely* tied to one domain — `rigpa`, `eigenvalue`, `palestrina`, `tectonics` — bare slugs are fine. Don't add suffixes "just in case" for unambiguous names. The judgment call is whether the bare name plausibly means something else in another domain you might add later.
+
+The `concept` field carries the human-readable name (which can repeat); the `slug` is unique with disambiguation; the `disambiguator` field drives display in UI tiles, breadcrumbs, search results, and the article overline.
 
 If you discover a collision after the fact, the validator will surface it. Renaming a slug means updating cross-references in all cards that point to it — search-and-replace works since slugs appear as bare strings in YAML lists.
 
@@ -590,7 +618,9 @@ If you find yourself wanting subdirectories, the answer is almost always "use `s
 
 ### Disambiguation Strategy
 
-When a concept name is shared across domains, the slug carries a domain or context suffix:
+Three cases (recap from Golden Rule 6):
+
+**(a) Cross-domain name collision:**
 
 | Bare concept | Disambiguated slugs | Disambiguator field |
 |--------------|---------------------|---------------------|
@@ -599,9 +629,38 @@ When a concept name is shared across domains, the slug carries a domain or conte
 | Group | `group-mathematics`, `group-music-theory` | "mathematics", "music theory" |
 | Composition | `composition-music`, `composition-functional-programming` | "music", "functional programming" |
 
-The "canonical" version of a concept (the most-asked-for, most-linked variant) typically gets the bare slug; competing senses get suffixes. Use judgment — there's no automated rule that determines which is canonical.
+**(b) Source-page-vs-concept-card collision:**
 
-The `disambiguator` field is what shows in display contexts:
+| Source page slug | Concept card slug | Disambiguator field |
+|------------------|-------------------|---------------------|
+| `padmasambhava` | `padmasambhava-teacher` | "teacher" |
+| `longchenpa` | `longchenpa-scholar` | "scholar" |
+| `group-theory` | `group-theory-mathematics` | "mathematics" |
+| `rust-language` | (no card needed; use atomic concepts derived from the source page) | — |
+
+For (b), the suffix is a role or category that captures the concept's function in the wiki. Pick a suffix that reads naturally as a disambiguator value in display ("Padmasambhava (teacher)", "Group theory (mathematics)").
+
+**(c) Anticipated future collision:**
+
+| Bare concept | Suffixed slug | Rationale |
+|--------------|---------------|-----------|
+| Traits | `traits-rust` | "traits" is also psychology, biology, character — likely future collision |
+| Borrowing | `borrowing-rust` | "borrowing" is also library, loans, etc. |
+| Pattern matching | `pattern-matching-rust` | "pattern matching" appears in cognition, vision, etc. |
+
+For (c), apply the suffix proactively. For names nearly uniquely tied to one domain (`rigpa`, `eigenvalue`, `palestrina`, `tectonics`, `parinirvana`), use bare slugs — don't add suffixes for unambiguous names.
+
+**Choosing the canonical slug:**
+
+When two concepts genuinely share a name across domains, one typically gets the bare slug and others get suffixes. The canonical (bare-slug) version is usually:
+
+- The most widely searched-for in the wiki's domain
+- The most extensively cross-referenced from other articles
+- The earliest established in the corpus
+
+There's no automated rule. Use judgment. If unclear, give *both* concepts a suffix and reserve the bare slug for future use.
+
+**The `disambiguator` field in display:**
 
 - Article overline: "Ownership (Rust) · memory-model"
 - Search result: "Ownership (Rust)"
@@ -797,13 +856,37 @@ Before considering a card complete, verify:
 ### For Each Source Page (Single-Page Extraction)
 
 1. **Read the source page** to identify concepts. Note all the substantive concepts the page discusses, not just the topic of the page itself.
-2. **List concepts** with estimated importance/complexity.
+2. **List concepts** with estimated importance/complexity. Apply the *substantive coverage* threshold (see below) — extract a concept only if the source page provides substantive treatment, not just a passing mention.
 3. **Determine tiers** based on prerequisite analysis within the corpus.
 4. **Check for existing cards** at the candidate slugs. If a card exists, plan a merge (add this source page to its `derived_from`); if not, plan a fresh extraction.
 5. **Extract in dependency order** (foundational first within the page).
 6. **Cross-reference** as you extract — note slugs for later cards.
 7. **Disambiguate** when needed (check for slug collisions before writing).
 8. **Validate** frontmatter and body completeness via the Quality Checklist.
+
+### Substantive Coverage Threshold
+
+A concept is **substantively covered** by a source page (and therefore extractable from that page) when at least one of these holds:
+
+- The source provides a definition, explicit or recoverable from context
+- The source dedicates a paragraph or more to the concept
+- The source provides examples or worked treatments of the concept
+- The source places the concept in relationship with other concepts the page covers
+
+A concept is a **mere mention** (and not extractable from this page) when:
+
+- The source name-drops the concept in a single sentence without definition or elaboration
+- The concept appears only in a "see also" or "related topics" list
+- The concept is referenced only as the name of a person, work, or thing, with no semantic content beyond the name
+
+When in doubt, err toward skipping. A thin card derived from a passing mention is worse than no card — the same concept will likely be substantively covered by another source page in the corpus, and that's where the card should originate.
+
+**Examples:**
+
+- `quantum-mechanics` source page mentions "group theory" in a single sentence about symmetries. **Skip** — extract group-theory from the `group-theory` source page instead.
+- `padmasambhava` source page dedicates several paragraphs to the founding of the Nyingma school. **Extract** — `nyingma` is substantively covered.
+- `longchenpa` source page describes Longchenpa's role in systematizing Nyingma teachings, with multiple references to the school's structure. **Extract and merge** — `nyingma` already has a card from `padmasambhava`; this becomes a multi-source card.
+- `rust-language` source page lists "traits, generics, and macros" in a feature summary without elaborating on macros. **Skip macros** — would be extracted from a dedicated `rust-macros` source page if one were added; otherwise the corpus has a coverage gap for that concept.
 
 ### For Each Concept
 
@@ -923,3 +1006,4 @@ The demo and bootstrap deployments may include hand-authored concept cards that 
 ## Version History
 
 - **v1** (Haleiki): First version. Adapted from Billo Systems' AI Engineering concept-card howto v3.2 (`workbench/0009-howto-concept-card-extraction-with-claude-code-v3.2.md` for reference). Replaced book-citation provenance with wiki-pointer provenance (`derived_from` / `external_references`); added `disambiguator`, `subject_headings`, `trust_level`, `canon_status`, `page_type`, `status`, `last_reviewed`, and `stable_since` fields; added genre-aware trust defaults; added cross-source concept merging guidance; flattened file organization to `content/concepts/{slug}.md`; updated examples to draw from the Haleiki demo cluster (Tibetan Buddhism, theoretical physics, mathematics, music, programming languages, AI, philosophy of mind, linguistics, botany, geology). The confidence framework, typed relationship vocabulary, body section structure, and competency-question framework are unchanged.
+- **v1.1** (Haleiki): Refinements from the 5-article pilot extraction (group-theory, quantum-mechanics, rust-language, padmasambhava, longchenpa). Added the source-page-vs-concept-card slug-collision case to disambiguation guidance (Golden Rule 6 and the Disambiguation Strategy section), with role/category suffix examples (`-teacher`, `-scholar`, `-field`, `-mathematics`). Added a "Substantive Coverage Threshold" section to the Extraction Workflow with concrete extract-vs-skip examples. Refined disambiguation guidance into three explicit cases: cross-domain collision (a), source-page collision (b), anticipated future collision (c). No schema changes; no existing pilot cards need renaming.

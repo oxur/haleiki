@@ -299,6 +299,47 @@ This mapping reveals:
 - Coverage gaps (CQs with no clear source-page match — indicates the corpus may need expansion or the CQ is out of scope)
 - Cross-source concept candidates (concepts with multiple source pages in the mapping → multi-source `derived_from`)
 
+### Step 1.2.5: Pre-Flight Disambiguation Audit
+
+Before assigning agents, sweep the corpus for slug collisions and build the disambiguation list upfront. Three sources of collision to detect:
+
+**(a) Cross-domain collisions** — concept names likely to appear with different meanings across the corpus. Common collision-prone names: `ownership`, `group`, `composition`, `traits`, `borrowing`, `lifetimes`, `pattern matching`, `quantum mechanics`, `field`. For each, identify which source pages would extract a concept with that name and decide on disambiguator suffixes.
+
+**(b) Source-page-vs-concept-card collisions** — for each source page, anticipate whether the concept extracted from it will need a slug different from the source page's own slug. Source pages about a single entity (biography, "X (programming language)") will typically produce a concept card with a role/category suffix (`-teacher`, `-language`, `-field`).
+
+**(c) Within-corpus same-name source pages** — the manifest itself may have multiple source pages with overlapping concept names. For Haleiki's demo corpus, both `group-theory` (the field) and `group-mathematics` (the algebraic structure) are present; concepts extracted from these need careful slug coordination.
+
+Save the disambiguation list to `content/_analysis/_corpus/disambiguation-list.md`:
+
+```markdown
+# Disambiguation List for <Deployment Name>
+
+## Cross-domain collisions (case a)
+
+| Bare concept | Disambiguated slug | Disambiguator | Source page(s) |
+|--------------|--------------------|--------------|-----------------|
+| Ownership | ownership-rust | "Rust" | rust-language |
+| ... | | | |
+
+## Source-page collisions (case b)
+
+| Source page slug | Concept card slug | Disambiguator |
+|------------------|-------------------|---------------|
+| padmasambhava | padmasambhava-teacher | "teacher" |
+| longchenpa | longchenpa-scholar | "scholar" |
+| group-theory | group-theory-mathematics | "mathematics" |
+| ... | | |
+
+## Anticipated future collisions (case c)
+
+| Bare concept | Suffixed slug | Rationale |
+|--------------|---------------|-----------|
+| Traits | traits-rust | Also psychology, biology |
+| ... | | |
+```
+
+This list goes into every Phase 2 agent prompt. Agents apply it directly rather than independently judging disambiguation case-by-case.
+
 ### Step 1.3: Agent Cluster Assignment
 
 Divide work among **exactly 5 agents**. Unlike the upstream book-shaped guide (where agents take chapter ranges), wiki extraction divides by *cluster* — typically a category subset, sometimes a tier subset.
@@ -347,6 +388,19 @@ For each agent, compile:
 6. **Cross-cluster concept alerts** — concepts that may appear in other agents' clusters (so they know to write disambiguator if needed, or expect Phase 3 merging)
 7. **Profile axes** — trust/canon defaults and inheritance rules
 8. **Existing cards in cluster** — slugs of existing concept cards in their assigned source-page range (for merge-aware extraction)
+9. **Disambiguation list** — the corpus-level list from Step 1.2.5 (every agent gets the full list, not just their cluster's slice)
+
+### Step 1.6: Source-Page Processing Order Within a Cluster
+
+Within an agent's cluster, processing order can affect merge outcomes. Concepts that appear across multiple source pages get their first card from whichever page is processed first; subsequent pages augment via merge.
+
+For the cleanest provenance, suggest agents process in this order within their cluster:
+
+1. **Foundational-tier source pages first** — these typically introduce the concepts most likely to be cross-referenced from intermediate/advanced pages.
+2. **Concept-dense source pages before biographical pages** — a topic article ("Music theory") usually defines a concept more cleanly than a biographical article that mentions the concept ("Bach"). Process the topic article first so the concept card is established with strong definitional content; the biographical article augments with examples.
+3. **Within a tier, process by category coherence** — keep related source pages adjacent in the processing order so cross-references within the cluster resolve naturally.
+
+Order doesn't always matter — many concepts are cluster-local. But when it matters, foundational-first is the default.
 
 ---
 
@@ -467,13 +521,37 @@ The following concepts may also be extracted by other agents working on differen
 - <slug>: also appears in <other-cluster>'s <source-page-slug>
 - ...
 
-## Disambiguation List
+## Disambiguation List (corpus-wide, from Phase 1.2.5)
 
-These concept names are known to collide with other concepts in this corpus. Always use the disambiguated slug:
+This is the corpus-level disambiguation list, applicable to every agent. Apply these slugs as written; do not invent variants.
 
-- "Ownership" → use slug `ownership-rust` (your cluster's sense), NOT `ownership`
-- "Group" → use slug `group-mathematics` (your cluster's sense), NOT `group`
+**Cross-domain collisions:**
+
+- "Ownership" → use slug `ownership-rust` (Rust sense), NOT `ownership`
+- "Group" → use slug `group-mathematics` (math sense), NOT `group`
 - ...
+
+**Source-page collisions** (your concept card slug must differ from the source page slug it derives from):
+
+- Source page `padmasambhava` → concept card slug `padmasambhava-teacher`
+- Source page `longchenpa` → concept card slug `longchenpa-scholar`
+- Source page `group-theory` → concept card slug `group-theory-mathematics`
+- ...
+
+**Anticipated future collisions:**
+
+- "Traits" → use slug `traits-rust` (Rust sense), NOT `traits`
+- "Borrowing" → use slug `borrowing-rust`, NOT `borrowing`
+- ...
+
+## Existing Concept Cards in Your Cluster's Slug Range
+
+The following concept cards already exist in `content/concepts/`. When you encounter a candidate that matches one of these slugs, you must MERGE (augment `derived_from`, augment body, reconcile `trust_level` to lowest) rather than overwrite. Per 0001 § "Merge Mechanics."
+
+- <slug>: derived from [<source-page-slugs>]
+- ...
+
+If your cluster's concepts produce a slug that matches an existing card from a previous extraction round, the same merge rule applies — read the existing card before writing.
 
 ## Extraction Process
 
@@ -815,6 +893,7 @@ For Haleiki's 91-source-page demo, expect Phase 2 to take 60-90 minutes (the sou
 ## Version History
 
 - **v1** (Haleiki): First version. Adapted from Billo Systems' AI Engineering parallel re-extraction guide v3.2 (`workbench/0010-a-guide-for-parallel-concept-card-re-extraction-v3.2.md` for reference). Reframed from book-shaped re-extraction to wiki-shaped fresh-and-merge extraction; replaced chapter-based agent assignment with source-page-cluster-based assignment; promoted cross-source concept merging to a first-class Phase 3 step; updated path conventions to Haleiki's flat `content/concepts/` layout; updated agent prompts to use the v1 Haleiki concept-card schema (with `derived_from`, `external_references`, `disambiguator`, `subject_headings`, `trust_level`, `canon_status`); added genre-aware trust inheritance to agent prompts. The four-phase structure, parallel-Opus pattern, validation checklist, and quality bar are unchanged.
+- **v1.1** (Haleiki): Refinements from the 5-article pilot extraction. Added Step 1.2.5 — pre-flight disambiguation audit before agent assignment, producing a corpus-level disambiguation list covering all three cases (cross-domain, source-page, anticipated future). Added Step 1.6 — source-page processing order within an agent's cluster (foundational and concept-dense first). Updated the agent prompt template to embed the corpus-wide disambiguation list and to explicitly call out merge-aware augmentation of any pre-existing concept cards (e.g., from prior pilot extractions). No changes to the four-phase structure or validation checklist.
 
 ---
 
