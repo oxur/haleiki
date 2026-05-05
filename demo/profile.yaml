@@ -1,0 +1,20 @@
+profile:
+  name: "Haleiki Demo Wiki"
+  personality: "encyclopedia"
+
+trust:
+  enabled: true
+  default: "credible"
+
+canon:
+  enabled: false
+
+page_types:
+  - source
+  - concept
+
+relationships:
+  - prerequisite
+  - extends
+  - related
+  - contrasts_with

@@ -20,13 +20,29 @@ pub struct Cli {
 #[derive(Debug, Subcommand)]
 pub enum Command {
     /// Build the knowledge base (graph JSON, indices, derived data).
-    Build,
+    Build {
+        /// Path to the content directory.
+        #[arg(long, default_value = "content")]
+        content_dir: PathBuf,
+        /// Path to the output directory for generated JSON files.
+        /// Defaults to `{content_dir}/_data`.
+        #[arg(long)]
+        output_dir: Option<PathBuf>,
+    },
 
     /// Validate all content references and frontmatter.
-    Validate,
+    Validate {
+        /// Path to the content directory.
+        #[arg(long, default_value = "content")]
+        content_dir: PathBuf,
+    },
 
     /// Show statistics about the knowledge base.
-    Stats,
+    Stats {
+        /// Path to the content directory.
+        #[arg(long, default_value = "content")]
+        content_dir: PathBuf,
+    },
 
     /// Generate the search index (wraps Pagefind).
     Search,

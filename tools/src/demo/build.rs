@@ -28,6 +28,8 @@ pub fn run() -> Result<()> {
     let source_count = process_sources()?;
     let concept_count = process_concepts()?;
 
+    run_haleiki_build()?;
+
     generate_index(source_count, concept_count)?;
     run_cobalt_build()?;
 
@@ -95,7 +97,7 @@ fn process_sources() -> Result<usize> {
     for entry in fs::read_dir(src_dir).context("failed to read demo/sources/")? {
         let entry = entry?;
         let path = entry.path();
-        if path.extension().map_or(true, |ext| ext != "md") {
+        if path.extension().is_none_or(|ext| ext != "md") {
             continue;
         }
         let filename = entry.file_name();
@@ -111,7 +113,10 @@ fn process_sources() -> Result<usize> {
         let processed = inject_frontmatter(&content, "source.liquid", &permalink);
         let processed = rewrite_media_paths(&processed);
 
-        fs::write(format!("{dest_dir}/{}", filename.to_string_lossy()), &processed)?;
+        fs::write(
+            format!("{dest_dir}/{}", filename.to_string_lossy()),
+            &processed,
+        )?;
         count += 1;
     }
 
@@ -128,7 +133,7 @@ fn process_concepts() -> Result<usize> {
     for entry in fs::read_dir(src_dir).context("failed to read demo/concepts/")? {
         let entry = entry?;
         let path = entry.path();
-        if path.extension().map_or(true, |ext| ext != "md") {
+        if path.extension().is_none_or(|ext| ext != "md") {
             continue;
         }
         let filename = entry.file_name();
@@ -144,7 +149,10 @@ fn process_concepts() -> Result<usize> {
         let processed = inject_frontmatter(&content, "concept.liquid", &permalink);
         let processed = rewrite_media_paths(&processed);
 
-        fs::write(format!("{dest_dir}/{}", filename.to_string_lossy()), &processed)?;
+        fs::write(
+            format!("{dest_dir}/{}", filename.to_string_lossy()),
+            &processed,
+        )?;
         count += 1;
     }
 
@@ -195,6 +203,29 @@ fn setup_site_media() -> Result<()> {
     Ok(())
 }
 
+fn run_haleiki_build() -> Result<()> {
+    eprintln!("  Running haleiki build (graph + data)...");
+    let content_dir = Path::new("demo");
+    let output_dir = Path::new("demo/_build/_data");
+    let corpus = crate::parser::parse_corpus(content_dir)?;
+    let report = crate::validator::validate(&corpus);
+    if report.has_errors() {
+        report.print();
+        bail!("Demo content validation failed.");
+    }
+    if !report.warnings.is_empty() {
+        report.print();
+    }
+    let graph = crate::graph::HaleikiGraph::build(&corpus);
+    crate::generator::generate(&corpus, &graph, output_dir)?;
+    let stats = graph.stats(&corpus);
+    eprintln!(
+        "  Generated data: {} nodes, {} edges, 6 JSON files",
+        stats.total_nodes, stats.total_edges
+    );
+    Ok(())
+}
+
 fn run_cobalt_build() -> Result<()> {
     eprintln!("  Running cobalt build...");
     let output = Command::new("cobalt")
@@ -233,7 +264,12 @@ fn inject_frontmatter(content: &str, layout: &str, permalink: &str) -> String {
     let title = fm_content
         .lines()
         .find(|l| l.starts_with("title:"))
-        .map(|l| l.trim_start_matches("title:").trim().trim_matches('"').to_string())
+        .map(|l| {
+            l.trim_start_matches("title:")
+                .trim()
+                .trim_matches('"')
+                .to_string()
+        })
         .unwrap_or_default();
 
     // For concept cards: fall back to concept + disambiguator if no title field
@@ -241,12 +277,22 @@ fn inject_frontmatter(content: &str, layout: &str, permalink: &str) -> String {
         let concept = fm_content
             .lines()
             .find(|l| l.starts_with("concept:"))
-            .map(|l| l.trim_start_matches("concept:").trim().trim_matches('"').to_string())
+            .map(|l| {
+                l.trim_start_matches("concept:")
+                    .trim()
+                    .trim_matches('"')
+                    .to_string()
+            })
             .unwrap_or_default();
         let disambiguator = fm_content
             .lines()
             .find(|l| l.starts_with("disambiguator:"))
-            .map(|l| l.trim_start_matches("disambiguator:").trim().trim_matches('"').to_string())
+            .map(|l| {
+                l.trim_start_matches("disambiguator:")
+                    .trim()
+                    .trim_matches('"')
+                    .to_string()
+            })
             .filter(|d| !d.is_empty());
         match disambiguator {
             Some(d) => format!("{concept} ({d})"),
