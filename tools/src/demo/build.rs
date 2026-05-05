@@ -233,8 +233,28 @@ fn inject_frontmatter(content: &str, layout: &str, permalink: &str) -> String {
     let title = fm_content
         .lines()
         .find(|l| l.starts_with("title:"))
-        .map(|l| l.trim_start_matches("title:").trim().to_string())
+        .map(|l| l.trim_start_matches("title:").trim().trim_matches('"').to_string())
         .unwrap_or_default();
+
+    // For concept cards: fall back to concept + disambiguator if no title field
+    let title = if title.is_empty() && layout == "concept.liquid" {
+        let concept = fm_content
+            .lines()
+            .find(|l| l.starts_with("concept:"))
+            .map(|l| l.trim_start_matches("concept:").trim().trim_matches('"').to_string())
+            .unwrap_or_default();
+        let disambiguator = fm_content
+            .lines()
+            .find(|l| l.starts_with("disambiguator:"))
+            .map(|l| l.trim_start_matches("disambiguator:").trim().trim_matches('"').to_string())
+            .filter(|d| !d.is_empty());
+        match disambiguator {
+            Some(d) => format!("{concept} ({d})"),
+            None => concept,
+        }
+    } else {
+        title
+    };
 
     // Build Cobalt-compatible frontmatter:
     // - Known Cobalt fields at top level
