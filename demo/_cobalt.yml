@@ -1,0 +1,19 @@
+# Haleiki Demo Site — Cobalt Configuration
+# Copied to demo/_build/ during `haleiki demo build`.
+
+source: "."
+destination: "../_site"
+include_drafts: false
+
+ignore:
+  - "_cobalt.yml"
+  - "_data"
+
+site:
+  title: "Haleiki Demo"
+  description: "A demonstration knowledge base"
+  base_url: ""
+
+pages:
+  default:
+    excerpt_separator: ""

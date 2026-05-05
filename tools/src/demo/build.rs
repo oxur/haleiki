@@ -1,0 +1,273 @@
+//! Demo site build — assembles a Cobalt-ready working directory and runs the build.
+//!
+//! Creates `demo/_build/` with symlinked layouts, media, and processed content
+//! (frontmatter injection + media path rewriting), then shells out to `cobalt build`.
+
+use std::fs;
+use std::path::Path;
+use std::process::Command;
+
+use anyhow::{Context, Result, bail};
+
+const BUILD_DIR: &str = "demo/_build";
+const LAYOUTS_SRC: &str = "demo/_layouts";
+const COBALT_YML: &str = "demo/_cobalt.yml";
+const SOURCES_DIR: &str = "demo/sources";
+const CONCEPTS_DIR: &str = "demo/concepts";
+
+/// Entry point for `haleiki demo build`.
+pub fn run() -> Result<()> {
+    eprintln!("Building demo site...");
+
+    clean_build_dir()?;
+    setup_cobalt_config()?;
+    setup_layouts()?;
+    setup_media()?;
+    setup_data()?;
+
+    let source_count = process_sources()?;
+    let concept_count = process_concepts()?;
+
+    generate_index(source_count, concept_count)?;
+    run_cobalt_build()?;
+
+    setup_site_media()?;
+
+    eprintln!("Done. Site built to demo/_site/");
+    eprintln!("To preview: cd demo/_build && cobalt serve");
+
+    Ok(())
+}
+
+fn clean_build_dir() -> Result<()> {
+    let path = Path::new(BUILD_DIR);
+    if path.exists() {
+        fs::remove_dir_all(path).context("failed to remove demo/_build/")?;
+    }
+    fs::create_dir_all(path).context("failed to create demo/_build/")?;
+    Ok(())
+}
+
+fn setup_cobalt_config() -> Result<()> {
+    fs::copy(COBALT_YML, format!("{BUILD_DIR}/_cobalt.yml"))
+        .context("failed to copy _cobalt.yml")?;
+    Ok(())
+}
+
+fn setup_layouts() -> Result<()> {
+    let dest_dir = format!("{BUILD_DIR}/_layouts");
+    fs::create_dir_all(&dest_dir)?;
+
+    for entry in fs::read_dir(LAYOUTS_SRC).context("failed to read demo/_layouts/")? {
+        let entry = entry?;
+        let filename = entry.file_name();
+        let filename_str = filename.to_string_lossy();
+        if filename_str.ends_with(".liquid") {
+            let src = format!("{LAYOUTS_SRC}/{filename_str}");
+            let dest = format!("{dest_dir}/{filename_str}");
+            fs::copy(&src, &dest)
+                .with_context(|| format!("failed to copy layout {filename_str}"))?;
+        }
+    }
+    Ok(())
+}
+
+fn setup_media() -> Result<()> {
+    let link = format!("{BUILD_DIR}/media");
+    std::os::unix::fs::symlink("../media", &link).context("failed to symlink media")?;
+    Ok(())
+}
+
+fn setup_data() -> Result<()> {
+    let data_dir = format!("{BUILD_DIR}/_data");
+    fs::create_dir_all(&data_dir)?;
+    std::os::unix::fs::symlink("../../taxonomy.yaml", format!("{data_dir}/taxonomy.yaml"))
+        .context("failed to symlink taxonomy.yaml")?;
+    Ok(())
+}
+
+fn process_sources() -> Result<usize> {
+    let src_dir = Path::new(SOURCES_DIR);
+    let dest_dir = format!("{BUILD_DIR}/sources");
+    fs::create_dir_all(&dest_dir)?;
+
+    let mut count = 0;
+    for entry in fs::read_dir(src_dir).context("failed to read demo/sources/")? {
+        let entry = entry?;
+        let path = entry.path();
+        if path.extension().map_or(true, |ext| ext != "md") {
+            continue;
+        }
+        let filename = entry.file_name();
+        let slug = path.file_stem().unwrap_or_default().to_string_lossy();
+        if slug == ".gitkeep" {
+            continue;
+        }
+
+        let content = fs::read_to_string(&path)
+            .with_context(|| format!("failed to read {}", path.display()))?;
+
+        let permalink = format!("/source/{slug}/");
+        let processed = inject_frontmatter(&content, "source.liquid", &permalink);
+        let processed = rewrite_media_paths(&processed);
+
+        fs::write(format!("{dest_dir}/{}", filename.to_string_lossy()), &processed)?;
+        count += 1;
+    }
+
+    eprintln!("  Processed {count} source pages");
+    Ok(count)
+}
+
+fn process_concepts() -> Result<usize> {
+    let src_dir = Path::new(CONCEPTS_DIR);
+    let dest_dir = format!("{BUILD_DIR}/concepts");
+    fs::create_dir_all(&dest_dir)?;
+
+    let mut count = 0;
+    for entry in fs::read_dir(src_dir).context("failed to read demo/concepts/")? {
+        let entry = entry?;
+        let path = entry.path();
+        if path.extension().map_or(true, |ext| ext != "md") {
+            continue;
+        }
+        let filename = entry.file_name();
+        let slug = path.file_stem().unwrap_or_default().to_string_lossy();
+        if slug == ".gitkeep" {
+            continue;
+        }
+
+        let content = fs::read_to_string(&path)
+            .with_context(|| format!("failed to read {}", path.display()))?;
+
+        let permalink = format!("/{slug}/");
+        let processed = inject_frontmatter(&content, "concept.liquid", &permalink);
+        let processed = rewrite_media_paths(&processed);
+
+        fs::write(format!("{dest_dir}/{}", filename.to_string_lossy()), &processed)?;
+        count += 1;
+    }
+
+    eprintln!("  Processed {count} concept cards");
+    Ok(count)
+}
+
+fn generate_index(source_count: usize, concept_count: usize) -> Result<()> {
+    let content = format!(
+        r#"---
+layout: default.liquid
+title: Home
+permalink: /
+---
+
+# Haleiki Demo
+
+A demonstration knowledge base with {source_count} source pages and {concept_count} concept cards.
+
+## Sample Source Pages
+
+- [Dzogchen](/source/dzogchen/) — Tibetan Buddhism
+- [Quantum Mechanics](/source/quantum-mechanics/) — Theoretical Physics
+- [Rust (programming language)](/source/rust-language/) — Programming Languages
+- [Padmasambhava](/source/padmasambhava/) — Tibetan Buddhism
+- [Johann Sebastian Bach](/source/johann-sebastian-bach/) — Music
+
+## Sample Concept Cards
+
+- [Ownership (Rust)](/ownership-rust/) — Programming Languages
+- [Uncertainty Principle](/uncertainty-principle/) — Physics
+- [Nyingma](/nyingma/) — Tibetan Buddhism
+- [Counterpoint](/counterpoint/) — Music
+- [Plate Tectonics](/plate-tectonics/) — Geology
+"#
+    );
+
+    fs::write(format!("{BUILD_DIR}/index.md"), content)?;
+    Ok(())
+}
+
+fn setup_site_media() -> Result<()> {
+    let site_media = "demo/_site/media";
+    if !Path::new(site_media).exists() {
+        std::os::unix::fs::symlink("../media", site_media)
+            .context("failed to symlink media into _site/")?;
+    }
+    Ok(())
+}
+
+fn run_cobalt_build() -> Result<()> {
+    eprintln!("  Running cobalt build...");
+    let output = Command::new("cobalt")
+        .arg("build")
+        .current_dir(BUILD_DIR)
+        .output()
+        .context("failed to run 'cobalt build' — is cobalt-bin installed? (cargo install cobalt-bin --locked)")?;
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        bail!("cobalt build failed:\n{stderr}");
+    }
+
+    Ok(())
+}
+
+/// Transform frontmatter for Cobalt compatibility.
+///
+/// Cobalt only accepts known fields at the top level (title, layout, permalink,
+/// slug, description, tags, etc.). All other fields must go under `data:`.
+/// This function extracts the title, injects layout/permalink, and wraps
+/// remaining fields under `data:`.
+fn inject_frontmatter(content: &str, layout: &str, permalink: &str) -> String {
+    let Some(first_fence) = content.find("---\n") else {
+        return content.to_string();
+    };
+    let after_first = first_fence + 4;
+
+    let Some(second_fence) = content[after_first..].find("\n---") else {
+        return content.to_string();
+    };
+    let fm_content = &content[after_first..after_first + second_fence];
+    let body = &content[after_first + second_fence + 4..];
+
+    // Extract title from original frontmatter
+    let title = fm_content
+        .lines()
+        .find(|l| l.starts_with("title:"))
+        .map(|l| l.trim_start_matches("title:").trim().to_string())
+        .unwrap_or_default();
+
+    // Build Cobalt-compatible frontmatter:
+    // - Known Cobalt fields at top level
+    // - Everything else indented under `data:`
+    let mut new_fm = String::new();
+    new_fm.push_str(&format!("layout: {layout}\n"));
+    new_fm.push_str(&format!("permalink: \"{permalink}\"\n"));
+    new_fm.push_str(&format!("title: {title}\n"));
+    new_fm.push_str("data:\n");
+
+    for line in fm_content.lines() {
+        // Skip title (already promoted) and blank lines at start
+        if line.starts_with("title:") {
+            continue;
+        }
+        // Skip YAML comment-only section headers for cleanliness
+        if line.starts_with("# ===") {
+            continue;
+        }
+        if line.is_empty() {
+            continue;
+        }
+        // Indent everything else under data:
+        new_fm.push_str("  ");
+        new_fm.push_str(line);
+        new_fm.push('\n');
+    }
+
+    // Wrap body in {% raw %} to prevent Liquid from parsing {{ }} in content
+    format!("---\n{new_fm}---\n{{% raw %}}{body}{{% endraw %}}")
+}
+
+/// Rewrite relative media paths to absolute for correct resolution after permalink routing.
+fn rewrite_media_paths(content: &str) -> String {
+    content.replace("](../media/", "](/media/")
+}

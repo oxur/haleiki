@@ -4,6 +4,7 @@
 //! for fetching, building, serving, and validating a demonstration knowledge
 //! base built from publicly licensed content.
 
+pub mod build;
 pub mod clean;
 pub mod convert;
 pub mod fetch;
@@ -169,7 +170,7 @@ pub fn run(cmd: &DemoCommand) -> anyhow::Result<()> {
                 category.as_deref(),
             ))?;
         }
-        DemoCommand::Build => println!("demo build: not yet implemented"),
+        DemoCommand::Build => build::run()?,
         DemoCommand::Serve => println!("demo serve: not yet implemented"),
         DemoCommand::Status => {
             status::run()?;

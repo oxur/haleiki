@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page.title }} — Haleiki Demo</title>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/">Haleiki Demo</a>
+    </nav>
+  </header>
+  <main>
+    <article class="source-page">
+      <header>
+        <p class="overline">Source Page</p>
+        <h1>{{ page.title }}</h1>
+        <p class="meta">{{ page.data.category }} · {{ page.data.tier }}</p>
+      </header>
+      <div class="content">
+        {{ page.content }}
+      </div>
+    </article>
+  </main>
+  <footer>
+    <p>Haleiki Demo Site</p>
+  </footer>
+</body>
+</html>
