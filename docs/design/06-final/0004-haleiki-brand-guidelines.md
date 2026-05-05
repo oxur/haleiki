@@ -5,8 +5,8 @@ author: "multiplying the"
 component: All
 tags: [change-me]
 created: 2026-03-18
-updated: 2026-03-18
-state: Draft
+updated: 2026-05-04
+state: Final
 supersedes: null
 superseded-by: null
 version: 1.0

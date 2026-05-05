@@ -5,14 +5,14 @@ author: "category and"
 component: All
 tags: [change-me]
 created: 2026-05-03
-updated: 2026-05-03
-state: Draft
+updated: 2026-05-04
+state: Final
 supersedes: null
 superseded-by: null
 version: 1.0
 ---
 
-# Haleiki Site Build — Cobalt Templates and Static Rendering Project Plan
+# M1 Haleiki Site Build — Cobalt Templates and Static Rendering Project Plan
 
 **Phase 6 · Static Demo Rendering**
 
