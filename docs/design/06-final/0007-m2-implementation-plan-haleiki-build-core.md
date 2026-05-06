@@ -5,8 +5,8 @@ author: "splitting on"
 component: All
 tags: [change-me]
 created: 2026-05-04
-updated: 2026-05-04
-state: Active
+updated: 2026-05-05
+state: Final
 supersedes: null
 superseded-by: null
 version: 1.0
