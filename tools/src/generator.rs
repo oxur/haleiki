@@ -4,7 +4,7 @@
 //! and provenance links from the knowledge graph, then writes them as JSON
 //! files consumed by the static-site build layer.
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::fs;
 use std::path::Path;
 
@@ -17,22 +17,58 @@ use crate::parser::Corpus;
 
 /// Trust level description for the profile output.
 #[derive(Debug, Clone, Serialize)]
-struct TrustDescription {
+struct TrustLevelDescription {
     label: String,
     description: String,
 }
 
-/// Resolved profile output written to `profile.json`.
+/// Nested trust configuration in profile.json.
+#[derive(Debug, Clone, Serialize)]
+struct TrustOutput {
+    enabled: bool,
+    default: String,
+    levels: BTreeMap<String, TrustLevelDescription>,
+    level_order: Vec<String>,
+}
+
+/// Nested canon configuration in profile.json.
+#[derive(Debug, Clone, Serialize)]
+struct CanonOutput {
+    enabled: bool,
+}
+
+/// A taxonomy category entry in profile.json.
+#[derive(Debug, Clone, Serialize)]
+struct TaxonomyCategoryOutput {
+    name: String,
+    description: String,
+}
+
+/// A taxonomy tier entry in profile.json.
+#[derive(Debug, Clone, Serialize)]
+struct TaxonomyTierOutput {
+    name: String,
+    description: String,
+    order: u32,
+}
+
+/// Nested taxonomy in profile.json.
+#[derive(Debug, Clone, Serialize)]
+struct TaxonomyOutput {
+    categories: Vec<TaxonomyCategoryOutput>,
+    tiers: Vec<TaxonomyTierOutput>,
+}
+
+/// Resolved profile output written to `profile.json` (nested shape per 0005 §8.1).
 #[derive(Debug, Clone, Serialize)]
 struct ProfileOutput {
-    name: String,
     personality: String,
-    trust_enabled: bool,
-    trust_default: String,
-    trust_descriptions: HashMap<String, TrustDescription>,
-    canon_enabled: bool,
+    name: String,
+    trust: TrustOutput,
+    canon: CanonOutput,
     page_types: Vec<String>,
     relationships: Vec<String>,
+    taxonomy: TaxonomyOutput,
 }
 
 /// A single node in the graph JSON output.
@@ -126,6 +162,8 @@ fn write_graph_json(corpus: &Corpus, graph: &HaleikiGraph, output_dir: &Path) ->
             title,
         });
     }
+    // Sort nodes by slug for deterministic output
+    nodes.sort_by(|a, b| a.slug.cmp(&b.slug));
 
     let mut edges = Vec::new();
     for edge_ref in graph.graph.edge_references() {
@@ -145,6 +183,13 @@ fn write_graph_json(corpus: &Corpus, graph: &HaleikiGraph, output_dir: &Path) ->
             relationship: relationship.to_string(),
         });
     }
+    // Sort edges by (source, target, relationship) for deterministic output
+    edges.sort_by(|a, b| {
+        a.source
+            .cmp(&b.source)
+            .then_with(|| a.target.cmp(&b.target))
+            .then_with(|| a.relationship.cmp(&b.relationship))
+    });
 
     let output = GraphOutput { nodes, edges };
     write_json(output_dir, "graph.json", &output)
@@ -156,7 +201,7 @@ fn write_categories_json(corpus: &Corpus, graph: &HaleikiGraph, output_dir: &Pat
 }
 
 fn write_breadcrumbs_json(corpus: &Corpus, graph: &HaleikiGraph, output_dir: &Path) -> Result<()> {
-    let mut breadcrumbs: HashMap<String, Vec<crate::graph::Breadcrumb>> = HashMap::new();
+    let mut breadcrumbs: BTreeMap<String, Vec<crate::graph::Breadcrumb>> = BTreeMap::new();
 
     for slug in corpus.sources.keys() {
         breadcrumbs.insert(slug.clone(), graph.breadcrumbs(slug, corpus));
@@ -169,16 +214,27 @@ fn write_breadcrumbs_json(corpus: &Corpus, graph: &HaleikiGraph, output_dir: &Pa
 }
 
 fn write_see_also_json(corpus: &Corpus, graph: &HaleikiGraph, output_dir: &Path) -> Result<()> {
-    let mut see_also: HashMap<String, Vec<crate::graph::SeeAlsoEntry>> = HashMap::new();
+    let mut see_also: BTreeMap<String, Vec<crate::graph::SeeAlsoEntry>> = BTreeMap::new();
 
     for slug in corpus.sources.keys() {
-        let entries = graph.see_also(slug, corpus);
+        let mut entries = graph.see_also(slug, corpus);
+        // Sort by relationship type then slug for deterministic output
+        entries.sort_by(|a, b| {
+            a.relationship
+                .cmp(&b.relationship)
+                .then_with(|| a.slug.cmp(&b.slug))
+        });
         if !entries.is_empty() {
             see_also.insert(slug.clone(), entries);
         }
     }
     for slug in corpus.concepts.keys() {
-        let entries = graph.see_also(slug, corpus);
+        let mut entries = graph.see_also(slug, corpus);
+        entries.sort_by(|a, b| {
+            a.relationship
+                .cmp(&b.relationship)
+                .then_with(|| a.slug.cmp(&b.slug))
+        });
         if !entries.is_empty() {
             see_also.insert(slug.clone(), entries);
         }
@@ -188,7 +244,7 @@ fn write_see_also_json(corpus: &Corpus, graph: &HaleikiGraph, output_dir: &Path)
 }
 
 fn write_provenance_json(corpus: &Corpus, output_dir: &Path) -> Result<()> {
-    let mut provenance: HashMap<String, ProvenanceEntry> = HashMap::new();
+    let mut provenance: BTreeMap<String, ProvenanceEntry> = BTreeMap::new();
 
     // For each source: which concepts derive from it
     for (slug, page) in &corpus.sources {
@@ -207,6 +263,8 @@ fn write_provenance_json(corpus: &Corpus, output_dir: &Path) -> Result<()> {
                 });
             }
         }
+        // Sort links by slug for deterministic output
+        links.sort_by(|a, b| a.slug.cmp(&b.slug));
         if !links.is_empty() {
             provenance.insert(slug.clone(), ProvenanceEntry { links });
         }
@@ -224,6 +282,8 @@ fn write_provenance_json(corpus: &Corpus, output_dir: &Path) -> Result<()> {
                 });
             }
         }
+        // Sort links by slug for deterministic output
+        links.sort_by(|a, b| a.slug.cmp(&b.slug));
         if !links.is_empty() {
             provenance.insert(slug.clone(), ProvenanceEntry { links });
         }
@@ -233,27 +293,65 @@ fn write_provenance_json(corpus: &Corpus, output_dir: &Path) -> Result<()> {
 }
 
 fn write_profile_json(corpus: &Corpus, output_dir: &Path) -> Result<()> {
+    let trust_levels = build_trust_levels();
+    let level_order = vec![
+        "corroborated".to_string(),
+        "credible".to_string(),
+        "provisional".to_string(),
+        "speculative".to_string(),
+    ];
+
+    let taxonomy_output = TaxonomyOutput {
+        categories: corpus
+            .taxonomy
+            .categories
+            .iter()
+            .map(|c| TaxonomyCategoryOutput {
+                name: c.name.clone(),
+                description: c.description.clone(),
+            })
+            .collect(),
+        tiers: corpus
+            .taxonomy
+            .tiers
+            .iter()
+            .map(|t| TaxonomyTierOutput {
+                name: t.name.clone(),
+                description: t.description.clone(),
+                order: t.order,
+            })
+            .collect(),
+    };
+
     let profile_output = if let Some(profile) = &corpus.profile {
-        let trust_descriptions = build_trust_descriptions(&profile.profile.personality);
         ProfileOutput {
-            name: profile.profile.name.clone(),
             personality: profile.profile.personality.clone(),
-            trust_enabled: profile.trust.enabled,
-            trust_default: profile.trust.default.clone(),
-            trust_descriptions,
-            canon_enabled: profile.canon.enabled,
+            name: profile.profile.name.clone(),
+            trust: TrustOutput {
+                enabled: profile.trust.enabled,
+                default: profile.trust.default.clone(),
+                levels: trust_levels,
+                level_order,
+            },
+            canon: CanonOutput {
+                enabled: profile.canon.enabled,
+            },
             page_types: profile.page_types.clone(),
             relationships: profile.relationships.clone(),
+            taxonomy: taxonomy_output,
         }
     } else {
         // Defaults when no profile exists
         ProfileOutput {
-            name: String::new(),
             personality: "encyclopedia".to_string(),
-            trust_enabled: false,
-            trust_default: "credible".to_string(),
-            trust_descriptions: build_trust_descriptions("encyclopedia"),
-            canon_enabled: false,
+            name: String::new(),
+            trust: TrustOutput {
+                enabled: false,
+                default: "credible".to_string(),
+                levels: trust_levels,
+                level_order,
+            },
+            canon: CanonOutput { enabled: false },
             page_types: vec!["source".to_string(), "concept".to_string()],
             relationships: vec![
                 "prerequisite".to_string(),
@@ -261,53 +359,47 @@ fn write_profile_json(corpus: &Corpus, output_dir: &Path) -> Result<()> {
                 "related".to_string(),
                 "contrasts_with".to_string(),
             ],
+            taxonomy: taxonomy_output,
         }
     };
 
     write_json(output_dir, "profile.json", &profile_output)
 }
 
-/// Build trust-level descriptions based on the personality.
+/// Build trust-level descriptions.
 ///
-/// Currently only the "encyclopedia" personality has hardcoded defaults.
-fn build_trust_descriptions(personality: &str) -> HashMap<String, TrustDescription> {
-    let mut descs = HashMap::new();
-
-    // Encyclopedia personality defaults (from design doc 0005).
-    // Currently only one personality exists; others will be added later.
-    let _ = personality;
-    {
-        descs.insert(
-            "corroborated".to_string(),
-            TrustDescription {
-                label: "Corroborated".to_string(),
-                description: "Verified from multiple reliable sources".to_string(),
-            },
-        );
-        descs.insert(
-            "credible".to_string(),
-            TrustDescription {
-                label: "Credible".to_string(),
-                description: "Well-sourced, reasonable interpretation".to_string(),
-            },
-        );
-        descs.insert(
-            "provisional".to_string(),
-            TrustDescription {
-                label: "Provisional".to_string(),
-                description: "Partial evidence, subject to revision".to_string(),
-            },
-        );
-        descs.insert(
-            "speculative".to_string(),
-            TrustDescription {
-                label: "Speculative".to_string(),
-                description: "Limited or fragmentary basis".to_string(),
-            },
-        );
-    }
-
-    descs
+/// Uses `BTreeMap` for deterministic key ordering in JSON output.
+fn build_trust_levels() -> BTreeMap<String, TrustLevelDescription> {
+    let mut levels = BTreeMap::new();
+    levels.insert(
+        "corroborated".to_string(),
+        TrustLevelDescription {
+            label: "Corroborated".to_string(),
+            description: "Verified from multiple reliable sources".to_string(),
+        },
+    );
+    levels.insert(
+        "credible".to_string(),
+        TrustLevelDescription {
+            label: "Credible".to_string(),
+            description: "Well-sourced, reasonable interpretation".to_string(),
+        },
+    );
+    levels.insert(
+        "provisional".to_string(),
+        TrustLevelDescription {
+            label: "Provisional".to_string(),
+            description: "Partial evidence, subject to revision".to_string(),
+        },
+    );
+    levels.insert(
+        "speculative".to_string(),
+        TrustLevelDescription {
+            label: "Speculative".to_string(),
+            description: "Limited or fragmentary basis".to_string(),
+        },
+    );
+    levels
 }
 
 /// Write a serializable value as pretty-printed JSON.
@@ -435,7 +527,7 @@ mod tests {
     }
 
     #[test]
-    fn test_profile_json_contains_trust_descriptions() {
+    fn test_profile_json_nested_shape() {
         let corpus = make_test_corpus();
         let graph = HaleikiGraph::build(&corpus);
         let tmp = std::env::temp_dir().join("haleiki-gen-test-profile");
@@ -448,12 +540,23 @@ mod tests {
 
         assert_eq!(value["name"], "Test Wiki");
         assert_eq!(value["personality"], "encyclopedia");
-        assert!(value["trust_enabled"].as_bool().unwrap());
-        assert!(value["trust_descriptions"]["corroborated"].is_object());
+        // Nested trust object
+        assert!(value["trust"]["enabled"].as_bool().unwrap());
+        assert_eq!(value["trust"]["default"], "credible");
+        assert!(value["trust"]["levels"]["corroborated"].is_object());
         assert_eq!(
-            value["trust_descriptions"]["credible"]["description"],
+            value["trust"]["levels"]["credible"]["description"],
             "Well-sourced, reasonable interpretation"
         );
+        // level_order array
+        let level_order = value["trust"]["level_order"].as_array().unwrap();
+        assert_eq!(level_order[0], "corroborated");
+        assert_eq!(level_order[3], "speculative");
+        // Nested canon
+        assert!(!value["canon"]["enabled"].as_bool().unwrap());
+        // Taxonomy block
+        assert!(value["taxonomy"]["categories"].is_array());
+        assert!(value["taxonomy"]["tiers"].is_array());
 
         let _ = fs::remove_dir_all(&tmp);
     }
@@ -479,12 +582,12 @@ mod tests {
     }
 
     #[test]
-    fn test_build_trust_descriptions_encyclopedia() {
-        let descs = build_trust_descriptions("encyclopedia");
-        assert_eq!(descs.len(), 4);
-        assert!(descs.contains_key("corroborated"));
-        assert!(descs.contains_key("credible"));
-        assert!(descs.contains_key("provisional"));
-        assert!(descs.contains_key("speculative"));
+    fn test_build_trust_levels() {
+        let levels = build_trust_levels();
+        assert_eq!(levels.len(), 4);
+        assert!(levels.contains_key("corroborated"));
+        assert!(levels.contains_key("credible"));
+        assert!(levels.contains_key("provisional"));
+        assert!(levels.contains_key("speculative"));
     }
 }

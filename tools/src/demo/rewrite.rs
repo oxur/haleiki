@@ -108,6 +108,7 @@ enum LinkAction {
 }
 
 /// Classify a link and determine the rewrite action.
+#[allow(clippy::too_many_lines)]
 fn classify_and_rewrite(
     href: &str,
     title_index: &HashMap<String, String>,

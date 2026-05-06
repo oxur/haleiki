@@ -301,13 +301,13 @@ This mapping reveals:
 
 ### Step 1.2.5: Pre-Flight Disambiguation Audit
 
-Before assigning agents, sweep the corpus for slug collisions and build the disambiguation list upfront. Three sources of collision to detect:
+Before assigning agents, sweep the corpus for slug collisions and build the disambiguation list upfront. Two sources of collision to detect:
 
 **(a) Cross-domain collisions** — concept names likely to appear with different meanings across the corpus. Common collision-prone names: `ownership`, `group`, `composition`, `traits`, `borrowing`, `lifetimes`, `pattern matching`, `quantum mechanics`, `field`. For each, identify which source pages would extract a concept with that name and decide on disambiguator suffixes.
 
-**(b) Source-page-vs-concept-card collisions** — for each source page, anticipate whether the concept extracted from it will need a slug different from the source page's own slug. Source pages about a single entity (biography, "X (programming language)") will typically produce a concept card with a role/category suffix (`-teacher`, `-language`, `-field`).
-
 **(c) Within-corpus same-name source pages** — the manifest itself may have multiple source pages with overlapping concept names. For Haleiki's demo corpus, both `group-theory` (the field) and `group-mathematics` (the algebraic structure) are present; concepts extracted from these need careful slug coordination.
+
+Note: Source pages and concept cards may share slugs (Path B — type-namespaced slugs). This is not a collision; URLs are disambiguated by prefix (`/source/<slug>/` vs `/<slug>/`). Only within-type duplicates (two concept cards with the same slug, or two source pages with the same slug) require disambiguation.
 
 Save the disambiguation list to `content/_analysis/_corpus/disambiguation-list.md`:
 
@@ -320,15 +320,6 @@ Save the disambiguation list to `content/_analysis/_corpus/disambiguation-list.m
 |--------------|--------------------|--------------|-----------------|
 | Ownership | ownership-rust | "Rust" | rust-language |
 | ... | | | |
-
-## Source-page collisions (case b)
-
-| Source page slug | Concept card slug | Disambiguator |
-|------------------|-------------------|---------------|
-| padmasambhava | padmasambhava-teacher | "teacher" |
-| longchenpa | longchenpa-scholar | "scholar" |
-| group-theory | group-theory-mathematics | "mathematics" |
-| ... | | |
 
 ## Anticipated future collisions (case c)
 
@@ -531,13 +522,6 @@ This is the corpus-level disambiguation list, applicable to every agent. Apply t
 - "Group" → use slug `group-mathematics` (math sense), NOT `group`
 - ...
 
-**Source-page collisions** (your concept card slug must differ from the source page slug it derives from):
-
-- Source page `padmasambhava` → concept card slug `padmasambhava-teacher`
-- Source page `longchenpa` → concept card slug `longchenpa-scholar`
-- Source page `group-theory` → concept card slug `group-theory-mathematics`
-- ...
-
 **Anticipated future collisions:**
 
 - "Traits" → use slug `traits-rust` (Rust sense), NOT `traits`
@@ -680,7 +664,7 @@ comm -23 /tmp/refs.txt /tmp/all-slugs.txt > /tmp/dangling-refs.txt
 
 ### Step 3.3: Cross-Source Merge Resolution
 
-This is the wiki-specific Phase 3 step. After parallel extraction, look for concept cards that should have been merged but ended up as separate cards.
+This is the wiki-specific Phase 3 step. After parallel extraction, look for concept cards that should have been merged but ended up as separate cards. Note: collisions only matter for *within-type* duplication (two concept cards with the same slug). A concept card sharing a slug with a source page is correct-by-design under Path B (type-namespaced slugs).
 
 **Detection signals:**
 
@@ -941,6 +925,7 @@ For Haleiki's 91-source-page demo, expect Phase 2 to take 60-90 minutes (the sou
 - **v1** (Haleiki): First version. Adapted from Billo Systems' AI Engineering parallel re-extraction guide v3.2 (`workbench/0010-a-guide-for-parallel-concept-card-re-extraction-v3.2.md` for reference). Reframed from book-shaped re-extraction to wiki-shaped fresh-and-merge extraction; replaced chapter-based agent assignment with source-page-cluster-based assignment; promoted cross-source concept merging to a first-class Phase 3 step; updated path conventions to Haleiki's flat `content/concepts/` layout; updated agent prompts to use the v1 Haleiki concept-card schema (with `derived_from`, `external_references`, `disambiguator`, `subject_headings`, `trust_level`, `canon_status`); added genre-aware trust inheritance to agent prompts. The four-phase structure, parallel-Opus pattern, validation checklist, and quality bar are unchanged.
 - **v1.1** (Haleiki): Refinements from the 5-article pilot extraction. Added Step 1.2.5 — pre-flight disambiguation audit before agent assignment, producing a corpus-level disambiguation list covering all three cases (cross-domain, source-page, anticipated future). Added Step 1.6 — source-page processing order within an agent's cluster (foundational and concept-dense first). Updated the agent prompt template to embed the corpus-wide disambiguation list and to explicitly call out merge-aware augmentation of any pre-existing concept cards (e.g., from prior pilot extractions). No changes to the four-phase structure or validation checklist.
 - **v1.2** (Haleiki): Source-page back-link maintenance. Updated the Phase 2 agent prompt template to include a mandatory source-page-update step (set `extraction_status`, populate `concepts_generated`, set `last_extracted`) after extracting concepts from each source page. Added Step 3.5.5 — bidirectional provenance consistency check verifying that concept cards' `derived_from` and source pages' `concepts_generated` agree in both directions. Pre-v1.2 corpora need a one-time back-fill (the concept cards' `derived_from` is correct; only source pages need updating from a scan of the concept-card index).
+- **v1.3** (Haleiki): Path B for slug namespace: source pages and concept cards live in separate slug namespaces; URL prefix `/source/` disambiguates. Removed disambiguation case (b) from pre-flight audit (Step 1.2.5) and agent prompt template — source/concept slug overlap is now correct-by-design. Updated Step 3.3 to clarify that collisions only matter for within-type duplication. Validator no longer flags forward references.
 
 ---
 

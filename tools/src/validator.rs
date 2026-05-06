@@ -1,10 +1,19 @@
 //! Content validation rules.
 //!
-//! This module checks that all cross-references resolve, frontmatter conforms
-//! to the schema, and relationship edges point to existing nodes. It produces
-//! a [`ValidationReport`] with typed errors and warnings.
+//! This module checks that frontmatter conforms to the schema, categories and
+//! tiers match the taxonomy, provenance links are consistent, and no duplicate
+//! slugs exist within a content type. It produces a [`ValidationReport`] with
+//! typed errors and warnings.
+//!
+//! Note: forward references (typed-relationship slugs pointing to content not
+//! yet in the corpus) are intentionally NOT flagged — they are normal in a wiki.
+//! Use [`count_forward_refs`] for an informational count.
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
+use std::fs;
+use std::path::Path;
+
+use anyhow::Context;
 
 use crate::parser::Corpus;
 
@@ -16,13 +25,13 @@ pub enum Severity {
 }
 
 /// Categorization of a validation finding.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[allow(dead_code)]
 pub enum ValidationKind {
     DuplicateSlug,
     SlugFilenameMismatch,
     UnknownCategory,
     UnknownTier,
-    BrokenCrossRef,
     DanglingProvenance,
     MissingConceptCard,
     BidirectionalMismatch,
@@ -32,6 +41,7 @@ pub enum ValidationKind {
 
 /// A single validation finding.
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct ValidationItem {
     pub severity: Severity,
     pub kind: ValidationKind,
@@ -59,13 +69,56 @@ impl ValidationReport {
         !self.errors.is_empty()
     }
 
-    /// Print the report to stderr.
+    /// Print the report to stderr, grouped by kind with summary counts first.
     pub fn print(&self) {
+        // Group errors by kind
+        let mut error_groups: HashMap<&ValidationKind, Vec<&ValidationItem>> = HashMap::new();
         for item in &self.errors {
-            eprintln!("  ERROR [{}]: {}", item.slug, item.message);
+            error_groups.entry(&item.kind).or_default().push(item);
         }
+
+        // Group warnings by kind
+        let mut warning_groups: HashMap<&ValidationKind, Vec<&ValidationItem>> = HashMap::new();
         for item in &self.warnings {
-            eprintln!("  WARN  [{}]: {}", item.slug, item.message);
+            warning_groups.entry(&item.kind).or_default().push(item);
+        }
+
+        // Print summary counts first
+        if !self.errors.is_empty() {
+            eprintln!("  Errors:");
+            let mut kinds: Vec<_> = error_groups.keys().collect();
+            kinds.sort_by_key(|k| format!("{k:?}"));
+            for kind in &kinds {
+                eprintln!("    {:?}: {}", kind, error_groups[*kind].len());
+            }
+        }
+        if !self.warnings.is_empty() {
+            eprintln!("  Warnings:");
+            let mut kinds: Vec<_> = warning_groups.keys().collect();
+            kinds.sort_by_key(|k| format!("{k:?}"));
+            for kind in &kinds {
+                eprintln!("    {:?}: {}", kind, warning_groups[*kind].len());
+            }
+        }
+
+        // Print detail
+        if !self.errors.is_empty() {
+            eprintln!();
+            for item in &self.errors {
+                eprintln!(
+                    "  ERROR [{:?}] [{}]: {}",
+                    item.kind, item.slug, item.message
+                );
+            }
+        }
+        if !self.warnings.is_empty() {
+            eprintln!();
+            for item in &self.warnings {
+                eprintln!(
+                    "  WARN  [{:?}] [{}]: {}",
+                    item.kind, item.slug, item.message
+                );
+            }
         }
     }
 
@@ -92,13 +145,16 @@ impl ValidationReport {
 ///
 /// Returns a report containing errors (which should block the build) and
 /// warnings (informational).
-pub fn validate(corpus: &Corpus) -> ValidationReport {
+///
+/// The `content_dir` parameter is needed for the filesystem-level duplicate slug
+/// check (the parser's `HashMap` silently overwrites duplicates, so we must re-walk
+/// the filesystem to detect them).
+pub fn validate(corpus: &Corpus, content_dir: &Path) -> ValidationReport {
     let mut report = ValidationReport::new();
 
-    check_duplicate_slugs(corpus, &mut report);
+    check_duplicate_slugs(content_dir, &mut report);
     check_unknown_categories(corpus, &mut report);
     check_unknown_tiers(corpus, &mut report);
-    check_broken_cross_refs(corpus, &mut report);
     check_dangling_provenance(corpus, &mut report);
     check_concepts_generated(corpus, &mut report);
     check_bidirectional_mismatch(corpus, &mut report);
@@ -108,17 +164,126 @@ pub fn validate(corpus: &Corpus) -> ValidationReport {
     report
 }
 
+/// Count forward references (typed-relationship slugs referencing content not yet
+/// in the corpus). Returns the count for informational display in `stats`.
+pub fn count_forward_refs(corpus: &Corpus) -> usize {
+    let all_slugs: HashSet<&str> = corpus
+        .sources
+        .keys()
+        .chain(corpus.concepts.keys())
+        .map(String::as_str)
+        .collect();
+
+    let mut count = 0;
+    for card in corpus.concepts.values() {
+        for prereq in &card.prerequisites {
+            if !all_slugs.contains(prereq.as_str()) {
+                count += 1;
+            }
+        }
+        for ext in &card.extends {
+            if !all_slugs.contains(ext.as_str()) {
+                count += 1;
+            }
+        }
+        for rel in &card.related {
+            if !all_slugs.contains(rel.as_str()) {
+                count += 1;
+            }
+        }
+        for contrast in &card.contrasts_with {
+            if !all_slugs.contains(contrast.as_str()) {
+                count += 1;
+            }
+        }
+    }
+    count
+}
+
 /// Check for slugs that appear more than once within the same content type.
 ///
-/// Note: sources and concepts may share the same slug by design (a source page
-/// and its corresponding concept card often have the same slug). We only flag
-/// true duplicates within a single type, which would indicate a filesystem error
-/// since each slug maps to a filename.
-fn check_duplicate_slugs(_corpus: &Corpus, _report: &mut ValidationReport) {
-    // Duplicate slugs within sources or within concepts would be caught by the
-    // HashMap insertion in the parser (last-in wins). Since the parser uses the
-    // slug field as the key, a duplicate would silently overwrite. For now this
-    // is a no-op; a future enhancement could track filenames to detect this.
+/// Re-walks the filesystem and parses just the `slug` field from each file's
+/// frontmatter. Groups by slug within sources and within concepts separately.
+/// Cross-type duplicates (a source and a concept sharing a slug) are NOT errors
+/// per Path B (type-namespaced slugs).
+///
+/// This catches cases where the parser's `HashMap` would silently overwrite.
+fn check_duplicate_slugs(content_dir: &Path, report: &mut ValidationReport) {
+    check_duplicate_slugs_in_dir(content_dir, "sources", report);
+    check_duplicate_slugs_in_dir(content_dir, "concepts", report);
+}
+
+/// Walk a subdirectory and detect duplicate slug fields.
+fn check_duplicate_slugs_in_dir(content_dir: &Path, subdir: &str, report: &mut ValidationReport) {
+    let dir = content_dir.join(subdir);
+    if !dir.exists() {
+        return;
+    }
+
+    let entries =
+        match fs::read_dir(&dir).with_context(|| format!("failed to read {}", dir.display())) {
+            Ok(entries) => entries,
+            Err(e) => {
+                report.error(
+                    ValidationKind::DuplicateSlug,
+                    subdir,
+                    format!("could not read directory for duplicate check: {e}"),
+                );
+                return;
+            }
+        };
+
+    let mut slug_to_files: HashMap<String, Vec<String>> = HashMap::new();
+
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if path.extension().is_none_or(|ext| ext != "md") {
+            continue;
+        }
+        let filename = path
+            .file_name()
+            .unwrap_or_default()
+            .to_string_lossy()
+            .to_string();
+
+        if let Ok(content) = fs::read_to_string(&path) {
+            if let Some(slug) = extract_slug_field(&content) {
+                slug_to_files.entry(slug).or_default().push(filename);
+            }
+        }
+    }
+
+    for (slug, files) in &slug_to_files {
+        if files.len() > 1 {
+            report.error(
+                ValidationKind::DuplicateSlug,
+                slug,
+                format!(
+                    "duplicate slug in {subdir}/: found in files [{}]",
+                    files.join(", ")
+                ),
+            );
+        }
+    }
+}
+
+/// Extract just the `slug` field from YAML frontmatter without fully parsing.
+fn extract_slug_field(content: &str) -> Option<String> {
+    let first_fence = content.find("---\n")?;
+    let after_first = first_fence + 4;
+    let second_fence = content[after_first..].find("\n---")?;
+    let yaml_str = &content[after_first..after_first + second_fence];
+
+    for line in yaml_str.lines() {
+        let trimmed = line.trim();
+        if let Some(rest) = trimmed.strip_prefix("slug:") {
+            let value = rest.trim().trim_matches('"').trim_matches('\'');
+            if !value.is_empty() {
+                return Some(value.to_string());
+            }
+        }
+    }
+    None
 }
 
 /// Check that category fields match taxonomy entries.
@@ -177,60 +342,6 @@ fn check_unknown_tiers(corpus: &Corpus, report: &mut ValidationReport) {
                 slug,
                 format!("unknown tier '{}'", card.tier),
             );
-        }
-    }
-}
-
-/// Check that all cross-references (prerequisites, extends, related, `contrasts_with`) resolve.
-///
-/// Unresolved references are reported as warnings rather than errors because
-/// concept cards may reference content that has not yet been extracted or
-/// generated. This allows the build to proceed while flagging forward references
-/// for eventual resolution.
-fn check_broken_cross_refs(corpus: &Corpus, report: &mut ValidationReport) {
-    let all_slugs: HashSet<&str> = corpus
-        .sources
-        .keys()
-        .chain(corpus.concepts.keys())
-        .map(String::as_str)
-        .collect();
-
-    for (slug, card) in &corpus.concepts {
-        for prereq in &card.prerequisites {
-            if !all_slugs.contains(prereq.as_str()) {
-                report.warn(
-                    ValidationKind::BrokenCrossRef,
-                    slug,
-                    format!("prerequisite '{prereq}' not found in corpus"),
-                );
-            }
-        }
-        for ext in &card.extends {
-            if !all_slugs.contains(ext.as_str()) {
-                report.warn(
-                    ValidationKind::BrokenCrossRef,
-                    slug,
-                    format!("extends '{ext}' not found in corpus"),
-                );
-            }
-        }
-        for rel in &card.related {
-            if !all_slugs.contains(rel.as_str()) {
-                report.warn(
-                    ValidationKind::BrokenCrossRef,
-                    slug,
-                    format!("related '{rel}' not found in corpus"),
-                );
-            }
-        }
-        for contrast in &card.contrasts_with {
-            if !all_slugs.contains(contrast.as_str()) {
-                report.warn(
-                    ValidationKind::BrokenCrossRef,
-                    slug,
-                    format!("contrasts_with '{contrast}' not found in corpus"),
-                );
-            }
         }
     }
 }
@@ -366,6 +477,13 @@ mod tests {
         ConceptCard, Corpus, DerivedFromEntry, SourcePage, Taxonomy, TaxonomyEntry, TierEntry,
     };
     use std::collections::HashMap;
+    use std::path::PathBuf;
+
+    fn test_content_dir() -> PathBuf {
+        // Use a non-existent path; the duplicate slug check gracefully handles
+        // missing directories by returning early.
+        PathBuf::from("/tmp/haleiki-validator-test-nonexistent")
+    }
 
     fn make_taxonomy() -> Taxonomy {
         Taxonomy {
@@ -452,7 +570,7 @@ mod tests {
             profile: None,
         };
 
-        let report = validate(&corpus);
+        let report = validate(&corpus, &test_content_dir());
         assert!(
             !report.has_errors(),
             "unexpected errors: {:?}",
@@ -475,7 +593,7 @@ mod tests {
             profile: None,
         };
 
-        let report = validate(&corpus);
+        let report = validate(&corpus, &test_content_dir());
         assert!(report.has_errors());
         assert_eq!(report.errors[0].kind, ValidationKind::UnknownCategory);
     }
@@ -492,16 +610,17 @@ mod tests {
             profile: None,
         };
 
-        let report = validate(&corpus);
+        let report = validate(&corpus, &test_content_dir());
         assert!(report.has_errors());
         assert_eq!(report.errors[0].kind, ValidationKind::UnknownTier);
     }
 
     #[test]
-    fn test_validate_broken_cross_ref_warning() {
+    fn test_count_forward_refs() {
         let mut concepts = HashMap::new();
         let mut card = make_concept("c1", "math", "foundational");
         card.prerequisites = vec!["nonexistent".to_string()];
+        card.related = vec!["also-missing".to_string()];
         concepts.insert("c1".to_string(), card);
 
         let corpus = Corpus {
@@ -511,15 +630,13 @@ mod tests {
             profile: None,
         };
 
-        let report = validate(&corpus);
-        // Broken cross-refs are warnings (forward references to future content)
+        // Forward references are counted but not flagged as errors/warnings
+        let count = count_forward_refs(&corpus);
+        assert_eq!(count, 2);
+
+        let report = validate(&corpus, &test_content_dir());
+        // No errors from forward refs
         assert!(!report.has_errors());
-        assert!(
-            report
-                .warnings
-                .iter()
-                .any(|w| w.kind == ValidationKind::BrokenCrossRef)
-        );
     }
 
     #[test]
@@ -539,7 +656,7 @@ mod tests {
             profile: None,
         };
 
-        let report = validate(&corpus);
+        let report = validate(&corpus, &test_content_dir());
         assert!(report.has_errors());
         assert_eq!(report.errors[0].kind, ValidationKind::DanglingProvenance);
     }
@@ -558,7 +675,7 @@ mod tests {
             profile: None,
         };
 
-        let report = validate(&corpus);
+        let report = validate(&corpus, &test_content_dir());
         assert!(report.has_errors());
         assert_eq!(report.errors[0].kind, ValidationKind::MissingConceptCard);
     }
@@ -578,7 +695,7 @@ mod tests {
             profile: None,
         };
 
-        let report = validate(&corpus);
+        let report = validate(&corpus, &test_content_dir());
         assert!(!report.has_errors());
         assert!(
             report
@@ -601,7 +718,7 @@ mod tests {
             profile: None,
         };
 
-        let report = validate(&corpus);
+        let report = validate(&corpus, &test_content_dir());
         assert!(!report.has_errors());
         assert!(
             report
@@ -625,7 +742,7 @@ mod tests {
             profile: None,
         };
 
-        let report = validate(&corpus);
+        let report = validate(&corpus, &test_content_dir());
         assert!(!report.has_errors());
         assert!(
             !report
@@ -655,7 +772,7 @@ mod tests {
             profile: None,
         };
 
-        let report = validate(&corpus);
+        let report = validate(&corpus, &test_content_dir());
         assert!(!report.has_errors());
         assert!(
             report

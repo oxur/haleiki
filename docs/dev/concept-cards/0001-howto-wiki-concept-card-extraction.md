@@ -111,20 +111,7 @@ There are three cases that require disambiguation:
 - `ownership-property-law` (property law's ownership concept)
 - `quantum-mechanics` (the physics theory) / `quantum-mechanics-kala-sara` (a fictional worldbuilding version)
 
-**(b) Source-page-vs-concept-card collision** — a concept card extracted from a source page about the same entity needs a slug different from the source page's slug:
-
-- Source page `padmasambhava` (the Wikipedia article) + concept card `padmasambhava-teacher` (the cross-cutting concept of Padmasambhava as a teacher figure)
-- Source page `longchenpa` (the Rigpa Wiki article) + concept card `longchenpa-scholar` (Longchenpa as a scholarly authority)
-- Source page `group-theory` (the Wikipedia article) + concept card `group-theory-mathematics` (group theory as the mathematical field)
-
-For this case, choose a role/category suffix that captures the concept's *function* in the wiki: `-teacher`, `-scholar`, `-field`, `-mathematics`, `-language`, etc. The suffix should make sense as a disambiguator value in display (e.g., "Padmasambhava (teacher)" reads naturally).
-
-When a concept card would have the same identity as a source page about it, you have two options:
-
-1. Don't extract a concept card for the entity — let the source page be the canonical representation, and use concept cards for atomic facts *about* the entity.
-2. Extract the concept card with a role/category suffix (the case above) — useful when the concept is heavily cross-referenced from other articles and benefits from cross-cutting metadata.
-
-Use option 2 when the concept is cited or extended by many other source pages; use option 1 when the source page is mostly self-contained and other articles only mention the entity by name.
+**(b) Shared slug between source page and concept card** — A source page and a concept card may share a slug. URLs are namespaced (`/source/<slug>/` for sources, `/<slug>/` for concepts), and cross-references resolve via the rule in the "Cross-Reference Resolution" section below. This is the documented pattern for entities that have both a source page and a concept card (e.g., `nyingma` as both a source page and a concept card).
 
 **(c) Anticipated future collision** — the bare name is so widely used across domains that even if no collision exists in the corpus today, one is plausible:
 
@@ -636,16 +623,7 @@ Three cases (recap from Golden Rule 6):
 | Group | `group-mathematics`, `group-music-theory` | "mathematics", "music theory" |
 | Composition | `composition-music`, `composition-functional-programming` | "music", "functional programming" |
 
-**(b) Source-page-vs-concept-card collision:**
-
-| Source page slug | Concept card slug | Disambiguator field |
-|------------------|-------------------|---------------------|
-| `padmasambhava` | `padmasambhava-teacher` | "teacher" |
-| `longchenpa` | `longchenpa-scholar` | "scholar" |
-| `group-theory` | `group-theory-mathematics` | "mathematics" |
-| `rust-language` | (no card needed; use atomic concepts derived from the source page) | — |
-
-For (b), the suffix is a role or category that captures the concept's function in the wiki. Pick a suffix that reads naturally as a disambiguator value in display ("Padmasambhava (teacher)", "Group theory (mathematics)").
+**(b) Shared slug:** Source pages and concept cards may share a slug. URLs are namespaced (`/source/<slug>/` for sources, `/<slug>/` for concepts). No disambiguation suffix is required for cross-type overlap.
 
 **(c) Anticipated future collision:**
 
@@ -674,6 +652,18 @@ There's no automated rule. Use judgment. If unclear, give *both* concepts a suff
 - See-also tile: "Ownership (Rust)"
 
 Without `disambiguator`, the display falls back to just the `concept` name. For non-collision cases, leave `disambiguator` unset.
+
+---
+
+### Cross-Reference Resolution
+
+When a relationship field references a slug, resolution depends on the field:
+
+- `derived_from` (concept -> source) — always resolves to the source page.
+- `concepts_generated` (source -> concept) — always resolves to the concept card.
+- `prerequisites`, `extends`, `related`, `contrasts_with` — concept-first: if a concept card with that slug exists, resolve to it; otherwise resolve to the source page if one exists with that slug; otherwise unresolved (forward reference, see below).
+
+Forward references (slugs that don't resolve to any existing page) are normal in a wiki — they may be planned future content or simply gaps. The validator does not flag them.
 
 ---
 
@@ -1045,3 +1035,4 @@ The demo and bootstrap deployments may include hand-authored concept cards that 
 - **v1** (Haleiki): First version. Adapted from Billo Systems' AI Engineering concept-card howto v3.2 (`workbench/0009-howto-concept-card-extraction-with-claude-code-v3.2.md` for reference). Replaced book-citation provenance with wiki-pointer provenance (`derived_from` / `external_references`); added `disambiguator`, `subject_headings`, `trust_level`, `canon_status`, `page_type`, `status`, `last_reviewed`, and `stable_since` fields; added genre-aware trust defaults; added cross-source concept merging guidance; flattened file organization to `content/concepts/{slug}.md`; updated examples to draw from the Haleiki demo cluster (Tibetan Buddhism, theoretical physics, mathematics, music, programming languages, AI, philosophy of mind, linguistics, botany, geology). The confidence framework, typed relationship vocabulary, body section structure, and competency-question framework are unchanged.
 - **v1.1** (Haleiki): Refinements from the 5-article pilot extraction (group-theory, quantum-mechanics, rust-language, padmasambhava, longchenpa). Added the source-page-vs-concept-card slug-collision case to disambiguation guidance (Golden Rule 6 and the Disambiguation Strategy section), with role/category suffix examples (`-teacher`, `-scholar`, `-field`, `-mathematics`). Added a "Substantive Coverage Threshold" section to the Extraction Workflow with concrete extract-vs-skip examples. Refined disambiguation guidance into three explicit cases: cross-domain collision (a), source-page collision (b), anticipated future collision (c). No schema changes; no existing pilot cards need renaming.
 - **v1.2** (Haleiki): Source-page back-link maintenance. Updated Golden Rule 5 ("Provenance Is Sacred and Bidirectional") to make the bidirectional source↔concept link explicit. Added "Source Page Updates" subsection to the Extraction Workflow specifying that extraction agents update each source page's frontmatter (`extraction_status`, `concepts_generated`, `last_extracted`) when concepts are extracted from it. This was the design intent in arch doc 0001 §3.1 but wasn't called out as an extraction step in v1/v1.1. Multi-source concepts appear in `concepts_generated` of every source page they were substantively extracted from. Existing pre-v1.2 source pages need a one-time back-fill (concept cards' `derived_from` is correct; source pages need updating from a scan of the concept-card index).
+- **v1.3** (Haleiki): Path B for slug namespace: source pages and concept cards live in separate slug namespaces; URL prefix `/source/` disambiguates. Cross-reference resolution rule added (§ "Cross-Reference Resolution"). Disambiguation case (b) updated — source/concept slug overlap is now correct-by-design (no suffix needed). The 17 corpus overlaps (`nyingma`, `kagyu`, `dzogchen`, `vajrayana`, `madhyamaka`, `longchen-nyingtik`, `mycorrhiza`, `cool-jazz`, `jazz`, `language`, `sanskrit`, `proto-indo-european`, `proto-sinaitic-script`, `kharosthi`, `classical-tibetan`, `avestan`, `writing-system`) are the documented pattern. Validator no longer flags forward references. No schema changes.

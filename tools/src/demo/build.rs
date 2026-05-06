@@ -3,6 +3,7 @@
 //! Creates `demo/_build/` with symlinked layouts, media, and processed content
 //! (frontmatter injection + media path rewriting), then shells out to `cobalt build`.
 
+use std::fmt::Write as _;
 use std::fs;
 use std::path::Path;
 use std::process::Command;
@@ -162,32 +163,21 @@ fn process_concepts() -> Result<usize> {
 
 fn generate_index(source_count: usize, concept_count: usize) -> Result<()> {
     let content = format!(
-        r#"---
-layout: default.liquid
-title: Home
-permalink: /
----
-
-# Haleiki Demo
-
-A demonstration knowledge base with {source_count} source pages and {concept_count} concept cards.
-
-## Sample Source Pages
-
-- [Dzogchen](/source/dzogchen/) — Tibetan Buddhism
-- [Quantum Mechanics](/source/quantum-mechanics/) — Theoretical Physics
-- [Rust (programming language)](/source/rust-language/) — Programming Languages
-- [Padmasambhava](/source/padmasambhava/) — Tibetan Buddhism
-- [Johann Sebastian Bach](/source/johann-sebastian-bach/) — Music
-
-## Sample Concept Cards
-
-- [Ownership (Rust)](/ownership-rust/) — Programming Languages
-- [Uncertainty Principle](/uncertainty-principle/) — Physics
-- [Nyingma](/nyingma/) — Tibetan Buddhism
-- [Counterpoint](/counterpoint/) — Music
-- [Plate Tectonics](/plate-tectonics/) — Geology
-"#
+        "---\nlayout: default.liquid\ntitle: Home\npermalink: /\n---\n\n\
+         # Haleiki Demo\n\n\
+         A demonstration knowledge base with {source_count} source pages and {concept_count} concept cards.\n\n\
+         ## Sample Source Pages\n\n\
+         - [Dzogchen](/source/dzogchen/) — Tibetan Buddhism\n\
+         - [Quantum Mechanics](/source/quantum-mechanics/) — Theoretical Physics\n\
+         - [Rust (programming language)](/source/rust-language/) — Programming Languages\n\
+         - [Padmasambhava](/source/padmasambhava/) — Tibetan Buddhism\n\
+         - [Johann Sebastian Bach](/source/johann-sebastian-bach/) — Music\n\n\
+         ## Sample Concept Cards\n\n\
+         - [Ownership (Rust)](/ownership-rust/) — Programming Languages\n\
+         - [Uncertainty Principle](/uncertainty-principle/) — Physics\n\
+         - [Nyingma](/nyingma/) — Tibetan Buddhism\n\
+         - [Counterpoint](/counterpoint/) — Music\n\
+         - [Plate Tectonics](/plate-tectonics/) — Geology\n"
     );
 
     fs::write(format!("{BUILD_DIR}/index.md"), content)?;
@@ -208,7 +198,7 @@ fn run_haleiki_build() -> Result<()> {
     let content_dir = Path::new("demo");
     let output_dir = Path::new("demo/_build/_data");
     let corpus = crate::parser::parse_corpus(content_dir)?;
-    let report = crate::validator::validate(&corpus);
+    let report = crate::validator::validate(&corpus, content_dir);
     if report.has_errors() {
         report.print();
         bail!("Demo content validation failed.");
@@ -306,9 +296,9 @@ fn inject_frontmatter(content: &str, layout: &str, permalink: &str) -> String {
     // - Known Cobalt fields at top level
     // - Everything else indented under `data:`
     let mut new_fm = String::new();
-    new_fm.push_str(&format!("layout: {layout}\n"));
-    new_fm.push_str(&format!("permalink: \"{permalink}\"\n"));
-    new_fm.push_str(&format!("title: {title}\n"));
+    let _ = writeln!(new_fm, "layout: {layout}");
+    let _ = writeln!(new_fm, "permalink: \"{permalink}\"");
+    let _ = writeln!(new_fm, "title: {title}");
     new_fm.push_str("data:\n");
 
     for line in fm_content.lines() {

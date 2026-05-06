@@ -340,6 +340,7 @@ fn parse_frontmatter<T: serde::de::DeserializeOwned>(content: &str) -> Result<(T
 }
 
 #[cfg(test)]
+#[allow(clippy::needless_raw_string_hashes)]
 mod tests {
     use super::*;
 
@@ -478,7 +479,7 @@ relationships:
     }
 
     #[test]
-    #[ignore] // requires demo corpus on disk
+    #[ignore = "requires demo corpus on disk"]
     fn test_parse_corpus_demo() {
         let corpus = parse_corpus(Path::new("demo")).unwrap();
         assert!(corpus.sources.len() >= 90);

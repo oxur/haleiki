@@ -9,8 +9,10 @@ mod cli;
 mod demo;
 mod error;
 mod generator;
+#[allow(dead_code)]
 mod graph;
 mod merger;
+#[allow(dead_code)]
 mod parser;
 mod search;
 mod validator;
@@ -89,7 +91,7 @@ fn run_build(content_dir: &Path, output_dir: &Path) -> anyhow::Result<()> {
     );
 
     eprintln!("Validating...");
-    let report = validator::validate(&corpus);
+    let report = validator::validate(&corpus, content_dir);
     if report.has_errors() {
         report.print();
         anyhow::bail!("Validation failed with {} error(s).", report.errors.len());
@@ -124,7 +126,7 @@ fn run_validate(content_dir: &Path) -> anyhow::Result<()> {
     );
 
     eprintln!("Validating...");
-    let report = validator::validate(&corpus);
+    let report = validator::validate(&corpus, content_dir);
 
     if report.has_errors() {
         report.print();
@@ -152,6 +154,7 @@ fn run_stats(content_dir: &Path) -> anyhow::Result<()> {
     let corpus = parser::parse_corpus(content_dir)?;
     let hgraph = graph::HaleikiGraph::build(&corpus);
     let stats = hgraph.stats(&corpus);
+    let forward_refs = validator::count_forward_refs(&corpus);
 
     println!("Knowledge Base Statistics");
     println!("========================");
@@ -168,6 +171,11 @@ fn run_stats(content_dir: &Path) -> anyhow::Result<()> {
     println!("Orphan nodes:         {}", stats.orphan_count);
     println!("Categories:           {}", corpus.taxonomy.categories.len());
     println!("Tiers:                {}", corpus.taxonomy.tiers.len());
+    if forward_refs > 0 {
+        println!(
+            "Forward references:   {forward_refs} (typed-relationship slugs referencing content not yet in the corpus)"
+        );
+    }
 
     Ok(())
 }

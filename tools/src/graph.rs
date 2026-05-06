@@ -4,7 +4,7 @@
 //! and source pages, with typed edges representing relationships such as
 //! prerequisites, see-also links, and provenance chains.
 
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 
 use petgraph::Direction;
 use petgraph::graph::{Graph, NodeIndex};
@@ -70,6 +70,23 @@ pub struct GraphStats {
     pub derived_from_edges: usize,
     pub concepts_generated_edges: usize,
     pub orphan_count: usize,
+}
+
+/// A single category entry in the category index JSON output.
+#[derive(Debug, Clone, Serialize)]
+pub struct CategoryIndexEntry {
+    pub name: String,
+    pub description: String,
+    pub sources: Vec<String>,
+    pub concepts: Vec<String>,
+    pub subcategories: BTreeMap<String, SubcategoryEntry>,
+}
+
+/// A subcategory entry within a category.
+#[derive(Debug, Clone, Serialize)]
+pub struct SubcategoryEntry {
+    pub sources: Vec<String>,
+    pub concepts: Vec<String>,
 }
 
 /// The Haleiki knowledge graph wrapping petgraph.
@@ -161,7 +178,14 @@ impl HaleikiGraph {
 
     /// Get see-also entries for a given slug.
     ///
-    /// Collects all neighbors by edge type, resolving titles from the corpus.
+    /// Collects all neighbors by edge type, resolving titles and URLs from the
+    /// corpus per the v1.3 cross-reference resolution rule:
+    ///
+    /// - `derived_from` -> always source page URL
+    /// - `concepts_generated` -> always concept card URL
+    /// - `prerequisites`, `extends`, `related`, `contrasts_with` -> concept-first:
+    ///   if a concept card with that slug exists, resolve to it; otherwise resolve
+    ///   to the source page if one exists; otherwise drop (unresolved forward ref).
     pub fn see_also(&self, slug: &str, corpus: &Corpus) -> Vec<SeeAlsoEntry> {
         let Some(&node_idx) = self.index.get(slug) else {
             return Vec::new();
@@ -191,7 +215,7 @@ impl HaleikiGraph {
             }
 
             let title = resolve_title(target_slug, corpus);
-            let url = resolve_url(target_slug, corpus);
+            let url = resolve_url_by_edge(target_slug, edge_kind, corpus);
             let relationship = match edge_kind {
                 EdgeKind::Prerequisite => "prerequisite",
                 EdgeKind::Extends => "extends",
@@ -257,10 +281,16 @@ impl HaleikiGraph {
         crumbs
     }
 
-    /// Build a category index: category -> subcategory -> list of slugs.
+    /// Build a category index with the nested shape required by the spec.
+    ///
+    /// Returns: category -> `CategoryIndexEntry` with `name`, `description`,
+    /// top-level `sources`/`concepts` arrays, and nested `subcategories`.
+    /// Uses `BTreeMap` for deterministic key ordering.
     #[allow(clippy::unused_self)]
-    pub fn category_index(&self, corpus: &Corpus) -> HashMap<String, HashMap<String, Vec<String>>> {
-        let mut index: HashMap<String, HashMap<String, Vec<String>>> = HashMap::new();
+    pub fn category_index(&self, corpus: &Corpus) -> BTreeMap<String, CategoryIndexEntry> {
+        type SubcatMap = HashMap<String, (Vec<String>, Vec<String>)>;
+        // Intermediate structure: category -> subcategory -> (sources, concepts)
+        let mut raw: HashMap<String, SubcatMap> = HashMap::new();
 
         for (slug, page) in &corpus.sources {
             if !page.category.is_empty() {
@@ -269,11 +299,11 @@ impl HaleikiGraph {
                 } else {
                     page.subcategory.clone()
                 };
-                index
-                    .entry(page.category.clone())
+                raw.entry(page.category.clone())
                     .or_default()
                     .entry(subcat)
                     .or_default()
+                    .0
                     .push(slug.clone());
             }
         }
@@ -285,13 +315,74 @@ impl HaleikiGraph {
                 } else {
                     card.subcategory.clone()
                 };
-                index
-                    .entry(card.category.clone())
+                raw.entry(card.category.clone())
                     .or_default()
                     .entry(subcat)
                     .or_default()
+                    .1
                     .push(slug.clone());
             }
+        }
+
+        // Build description lookup from taxonomy
+        let cat_descriptions: HashMap<&str, &str> = corpus
+            .taxonomy
+            .categories
+            .iter()
+            .map(|c| (c.name.as_str(), c.description.as_str()))
+            .collect();
+
+        // Build the final structure with BTreeMap for deterministic ordering
+        let mut index: BTreeMap<String, CategoryIndexEntry> = BTreeMap::new();
+
+        for (cat_name, subcats) in &raw {
+            let description = cat_descriptions
+                .get(cat_name.as_str())
+                .unwrap_or(&"")
+                .to_string();
+
+            // Collect all sources and concepts across subcategories
+            let mut all_sources: Vec<String> = Vec::new();
+            let mut all_concepts: Vec<String> = Vec::new();
+            let mut subcategories: BTreeMap<String, SubcategoryEntry> = BTreeMap::new();
+
+            for (subcat_name, (sources, concepts)) in subcats {
+                all_sources.extend(sources.clone());
+                all_concepts.extend(concepts.clone());
+
+                // Don't include _uncategorized as a named subcategory
+                if subcat_name != "_uncategorized" {
+                    let mut sub_sources = sources.clone();
+                    let mut sub_concepts = concepts.clone();
+                    sub_sources.sort();
+                    sub_concepts.sort();
+                    sub_sources.dedup();
+                    sub_concepts.dedup();
+                    subcategories.insert(
+                        subcat_name.clone(),
+                        SubcategoryEntry {
+                            sources: sub_sources,
+                            concepts: sub_concepts,
+                        },
+                    );
+                }
+            }
+
+            all_sources.sort();
+            all_sources.dedup();
+            all_concepts.sort();
+            all_concepts.dedup();
+
+            index.insert(
+                cat_name.clone(),
+                CategoryIndexEntry {
+                    name: cat_name.clone(),
+                    description,
+                    sources: all_sources,
+                    concepts: all_concepts,
+                    subcategories,
+                },
+            );
         }
 
         index
@@ -372,9 +463,41 @@ fn resolve_title(slug: &str, corpus: &Corpus) -> String {
     title_case(slug)
 }
 
-/// Resolve a slug to its URL.
+/// Resolve a slug to its URL based on the edge type (v1.3 cross-reference resolution).
+///
+/// - `DerivedFrom` -> always source page URL
+/// - `ConceptsGenerated` -> always concept card URL
+/// - `Prerequisite`, `Extends`, `Related`, `ContrastsWith` -> concept-first:
+///   if a concept card exists with that slug, resolve to `/<slug>/` (concept);
+///   otherwise resolve to `/source/<slug>/` (source); otherwise just `/<slug>/`.
+fn resolve_url_by_edge(slug: &str, edge_kind: EdgeKind, corpus: &Corpus) -> String {
+    match edge_kind {
+        EdgeKind::DerivedFrom => format!("/source/{slug}/"),
+        EdgeKind::ConceptsGenerated => format!("/{slug}/"),
+        EdgeKind::Prerequisite
+        | EdgeKind::Extends
+        | EdgeKind::Related
+        | EdgeKind::ContrastsWith => {
+            // Concept-first resolution
+            if corpus.concepts.contains_key(slug) {
+                format!("/{slug}/")
+            } else if corpus.sources.contains_key(slug) {
+                format!("/source/{slug}/")
+            } else {
+                // Forward reference — shouldn't normally appear in graph edges
+                // (edges only exist when target is in the index), but handle gracefully
+                format!("/{slug}/")
+            }
+        }
+    }
+}
+
+/// Resolve a slug to its URL (used by breadcrumbs and other non-edge contexts).
+#[allow(dead_code)]
 fn resolve_url(slug: &str, corpus: &Corpus) -> String {
-    if corpus.sources.contains_key(slug) {
+    if corpus.concepts.contains_key(slug) {
+        format!("/{slug}/")
+    } else if corpus.sources.contains_key(slug) {
         format!("/source/{slug}/")
     } else {
         format!("/{slug}/")
@@ -396,6 +519,7 @@ fn title_case(s: &str) -> String {
 }
 
 #[cfg(test)]
+#[allow(clippy::too_many_lines)]
 mod tests {
     use super::*;
     use crate::parser::{
@@ -582,8 +706,17 @@ mod tests {
         let cat_idx = graph.category_index(&corpus);
         assert!(cat_idx.contains_key("math"));
         let math = &cat_idx["math"];
-        assert!(math.contains_key("algebra"));
-        assert_eq!(math["algebra"].len(), 3); // src-1, concept-a, concept-b
+        assert_eq!(math.name, "math");
+        assert_eq!(math.description, "Mathematics");
+        // Top-level sources: src-1
+        assert_eq!(math.sources.len(), 1);
+        // Top-level concepts: concept-a, concept-b
+        assert_eq!(math.concepts.len(), 2);
+        // Subcategory "algebra" should contain all items
+        assert!(math.subcategories.contains_key("algebra"));
+        let algebra = &math.subcategories["algebra"];
+        assert_eq!(algebra.sources.len(), 1);
+        assert_eq!(algebra.concepts.len(), 2);
     }
 
     #[test]
