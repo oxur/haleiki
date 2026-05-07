@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Perception",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Perception",
-  "revision_id": "W/\"1350973977/06eb8f1d-4739-11f1-9517-6964bb287b3b/view/html",
-  "fetched_at": "2026-05-03T22:20:23Z",
+  "revision_id": "W/\"1352843079/003e4f82-495f-11f1-a8b0-9f0f8fb0f19c/view/html",
+  "fetched_at": "2026-05-07T02:37:05Z",
   "http_status": 200,
-  "html_bytes": 664042
+  "html_bytes": 664632
 }

@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Quantum mechanics",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Quantum_mechanics",
-  "revision_id": "W/\"1351268698/7c037f26-4691-11f1-9d67-cd23579a9fa6/view/html",
-  "fetched_at": "2026-05-03T22:20:15Z",
+  "revision_id": "W/\"1351268698/bdf03937-49ad-11f1-9ff0-cd929bb7c0f2/view/html",
+  "fetched_at": "2026-05-07T02:36:57Z",
   "http_status": 200,
   "html_bytes": 787784
 }

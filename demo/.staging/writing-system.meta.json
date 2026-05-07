@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Writing system",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Writing_system",
-  "revision_id": "W/\"1350896570/46ff386a-473a-11f1-a546-b1f59a30194c/view/html",
-  "fetched_at": "2026-05-03T22:20:24Z",
+  "revision_id": "W/\"1352447987/a484ce8a-4980-11f1-9838-e7771c2109f7/view/html",
+  "fetched_at": "2026-05-07T02:37:05Z",
   "http_status": 200,
   "html_bytes": 424849
 }

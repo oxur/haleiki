@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Philosophy of mind",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Philosophy_of_mind",
-  "revision_id": "W/\"1352007695/aefa1f20-4560-11f1-af60-d5eeeec54a42/view/html",
-  "fetched_at": "2026-05-03T22:20:23Z",
+  "revision_id": "W/\"1352849888/a17cdf69-4966-11f1-81fb-8dd4cd0949d7/view/html",
+  "fetched_at": "2026-05-07T02:37:04Z",
   "http_status": 200,
-  "html_bytes": 666609
+  "html_bytes": 666619
 }

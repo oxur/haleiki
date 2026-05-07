@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Gandhara",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Gandhara",
-  "revision_id": "W/\"1349863677/6e0937aa-4739-11f1-8690-1baadc867942/view/html",
-  "fetched_at": "2026-05-03T22:20:26Z",
+  "revision_id": "W/\"1349863677/5084ddad-4996-11f1-acb9-f103a76aae26/view/html",
+  "fetched_at": "2026-05-07T02:37:07Z",
   "http_status": 200,
   "html_bytes": 767274
 }

@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Arvo Pärt",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Arvo_P%C3%A4rt",
-  "revision_id": "W/\"1351557648/d3f5c1d4-4739-11f1-ae22-cfdeea9e4e77/view/html",
-  "fetched_at": "2026-05-03T22:20:18Z",
+  "revision_id": "W/\"1351557648/977dc4d4-49ac-11f1-ac90-5b84c8b7ed91/view/html",
+  "fetched_at": "2026-05-07T02:37:00Z",
   "http_status": 200,
-  "html_bytes": 382434
+  "html_bytes": 382273
 }

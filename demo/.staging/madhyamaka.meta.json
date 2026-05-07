@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Madhyamaka",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Madhyamaka",
-  "revision_id": "W/\"1352003014/db1dcafc-473b-11f1-ad19-8fa7b19f664d/view/html",
-  "fetched_at": "2026-05-03T22:20:10Z",
+  "revision_id": "W/\"1352789286/c1d58006-491f-11f1-a873-adc7f93bda0a/view/html",
+  "fetched_at": "2026-05-07T02:36:53Z",
   "http_status": 200,
   "html_bytes": 986328
 }

@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Sanskrit",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Sanskrit",
-  "revision_id": "W/\"1351637967/db689541-4738-11f1-a479-6bd4e5a01d02/view/html",
-  "fetched_at": "2026-05-03T22:20:25Z",
+  "revision_id": "W/\"1352548315/fcc7bcbe-4998-11f1-8921-99ce44975e62/view/html",
+  "fetched_at": "2026-05-07T02:37:06Z",
   "http_status": 200,
-  "html_bytes": 1827019
+  "html_bytes": 1823024
 }

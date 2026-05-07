@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Max Richter",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Max_Richter",
-  "revision_id": "W/\"1352337770/46b274e2-4739-11f1-9631-17b4606ca520/view/html",
-  "fetched_at": "2026-05-03T22:20:18Z",
+  "revision_id": "W/\"1352337770/dd3b8a9f-49ae-11f1-8648-fd88b974e8b7/view/html",
+  "fetched_at": "2026-05-07T02:37:00Z",
   "http_status": 200,
   "html_bytes": 517343
 }

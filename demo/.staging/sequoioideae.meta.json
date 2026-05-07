@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Sequoioideae",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Sequoioideae",
-  "revision_id": "W/\"1349327208/f625444b-3e17-11f1-bd1a-b959e909d079/view/html",
-  "fetched_at": "2026-05-03T22:20:27Z",
+  "revision_id": "W/\"1352680943/daa049fc-48a3-11f1-837b-a1e8d2c2e72d/view/html",
+  "fetched_at": "2026-05-07T02:37:08Z",
   "http_status": 200,
-  "html_bytes": 174936
+  "html_bytes": 182030
 }

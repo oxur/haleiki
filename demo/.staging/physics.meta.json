@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Physics",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Physics",
-  "revision_id": "W/\"1351358789/f471449e-4738-11f1-a64f-63db3cae9aa1/view/html",
-  "fetched_at": "2026-05-03T22:20:15Z",
+  "revision_id": "W/\"1351358789/9af860bb-497a-11f1-a77f-c9b6048a4f41/view/html",
+  "fetched_at": "2026-05-07T02:36:57Z",
   "http_status": 200,
-  "html_bytes": 563080
+  "html_bytes": 565870
 }

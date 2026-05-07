@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Cognitive science",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Cognitive_science",
-  "revision_id": "W/\"1348109510/d4da2d83-4738-11f1-82b8-d543146adf23/view/html",
-  "fetched_at": "2026-05-03T22:20:23Z",
+  "revision_id": "W/\"1348109510/1f63a30e-4749-11f1-a794-6dea0b21dcd7/view/html",
+  "fetched_at": "2026-05-07T02:37:04Z",
   "http_status": 200,
-  "html_bytes": 469347
+  "html_bytes": 469443
 }

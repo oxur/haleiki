@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Mycorrhiza",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Mycorrhiza",
-  "revision_id": "W/\"1341534934/4023f328-4739-11f1-8690-1baadc867942/view/html",
-  "fetched_at": "2026-05-03T22:20:28Z",
+  "revision_id": "W/\"1352690114/d416c798-48ad-11f1-a1d0-55be06ea257d/view/html",
+  "fetched_at": "2026-05-07T02:37:08Z",
   "http_status": 200,
   "html_bytes": 504982
 }

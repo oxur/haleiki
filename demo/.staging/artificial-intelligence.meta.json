@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Artificial intelligence",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Artificial_intelligence",
-  "revision_id": "W/\"1352143051/cee447e8-4738-11f1-9bda-931328966526/view/html",
-  "fetched_at": "2026-05-03T22:20:22Z",
+  "revision_id": "W/\"1352608430/7fa44a88-49a8-11f1-b816-c59d02c7ebe8/view/html",
+  "fetched_at": "2026-05-07T02:37:03Z",
   "http_status": 200,
-  "html_bytes": 1888570
+  "html_bytes": 1888722
 }

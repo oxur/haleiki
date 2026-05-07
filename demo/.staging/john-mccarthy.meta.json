@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "John McCarthy (computer scientist)",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/John_McCarthy_(computer_scientist)",
-  "revision_id": "W/\"1351505736/ebc4488c-4727-11f1-aa6b-2341cc2a147a/view/html",
-  "fetched_at": "2026-05-03T22:20:22Z",
+  "revision_id": "W/\"1351505736/b7ae9286-49ae-11f1-908a-0f9251b085f4/view/html",
+  "fetched_at": "2026-05-07T02:37:03Z",
   "http_status": 200,
   "html_bytes": 363739
 }

@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Claude Debussy",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Claude_Debussy",
-  "revision_id": "W/\"1352364108/f3401b27-4738-11f1-96c0-b96a66700485/view/html",
-  "fetched_at": "2026-05-03T22:20:18Z",
+  "revision_id": "W/\"1352573723/10325503-49b0-11f1-86b4-4fe20803d746/view/html",
+  "fetched_at": "2026-05-07T02:37:00Z",
   "http_status": 200,
-  "html_bytes": 613075
+  "html_bytes": 613073
 }

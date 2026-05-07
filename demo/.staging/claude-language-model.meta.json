@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Claude (language model)",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Claude_(language_model)",
-  "revision_id": "W/\"1352385583/02759865-473e-11f1-b21b-f116b41bf7d6/view/html",
-  "fetched_at": "2026-05-03T22:20:23Z",
+  "revision_id": "W/\"1352713463/31903cec-49aa-11f1-8670-b3f8c4a763cc/view/html",
+  "fetched_at": "2026-05-07T02:37:04Z",
   "http_status": 200,
-  "html_bytes": 502319
+  "html_bytes": 502041
 }

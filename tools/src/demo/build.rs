@@ -23,6 +23,8 @@ pub fn run() -> Result<()> {
     clean_build_dir()?;
     setup_cobalt_config()?;
     setup_layouts()?;
+    setup_assets()?;
+    setup_favicon()?;
     setup_media()?;
     setup_data()?;
 
@@ -33,8 +35,6 @@ pub fn run() -> Result<()> {
 
     generate_index(source_count, concept_count)?;
     run_cobalt_build()?;
-
-    setup_site_media()?;
 
     eprintln!("Done. Site built to demo/_site/");
     eprintln!("To preview: cd demo/_build && cobalt serve");
@@ -75,9 +75,50 @@ fn setup_layouts() -> Result<()> {
     Ok(())
 }
 
+fn setup_assets() -> Result<()> {
+    let src = Path::new("assets");
+    let dest = Path::new(BUILD_DIR).join("assets");
+    copy_dir_for_cobalt(src, &dest).context("failed to copy assets into _build/")?;
+    Ok(())
+}
+
+fn copy_dir_for_cobalt(src: &Path, dest: &Path) -> Result<()> {
+    fs::create_dir_all(dest)?;
+    for entry in fs::read_dir(src)? {
+        let entry = entry?;
+        let src_path = entry.path();
+        let dest_path = dest.join(entry.file_name());
+        let name = entry.file_name();
+        let name_str = name.to_string_lossy();
+        // Skip directories Cobalt doesn't need
+        if matches!(name_str.as_ref(), "mockups" | "ai" | "images") {
+            continue;
+        }
+        if src_path.is_dir() {
+            copy_dir_for_cobalt(&src_path, &dest_path)?;
+        } else {
+            fs::copy(&src_path, &dest_path)?;
+        }
+    }
+    Ok(())
+}
+
+fn setup_favicon() -> Result<()> {
+    let src = Path::new("assets/icons/favicon.ico");
+    if src.exists() {
+        fs::copy(src, format!("{BUILD_DIR}/favicon.ico"))
+            .context("failed to copy favicon.ico")?;
+    }
+    Ok(())
+}
+
 fn setup_media() -> Result<()> {
-    let link = format!("{BUILD_DIR}/media");
-    std::os::unix::fs::symlink("../media", &link).context("failed to symlink media")?;
+    let src = Path::new("demo/media");
+    let dest = Path::new(BUILD_DIR).join("media");
+    // Copy media into _build/ so cobalt copies it to _site/ during build.
+    // We use regular copies (not hard links) to avoid data loss when
+    // clean_build_dir() removes _build/ on the next run.
+    copy_dir_for_cobalt(src, &dest).context("failed to copy media into _build/")?;
     Ok(())
 }
 
@@ -181,15 +222,6 @@ fn generate_index(source_count: usize, concept_count: usize) -> Result<()> {
     );
 
     fs::write(format!("{BUILD_DIR}/index.md"), content)?;
-    Ok(())
-}
-
-fn setup_site_media() -> Result<()> {
-    let site_media = "demo/_site/media";
-    if !Path::new(site_media).exists() {
-        std::os::unix::fs::symlink("../media", site_media)
-            .context("failed to symlink media into _site/")?;
-    }
     Ok(())
 }
 

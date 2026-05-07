@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Eye",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Eye",
-  "revision_id": "W/\"1333899275/650a675c-4684-11f1-8188-f5a3f6de5f2c/view/html",
-  "fetched_at": "2026-05-03T22:20:23Z",
+  "revision_id": "W/\"1333899275/0cec9257-49b3-11f1-9aaa-33525639a7e3/view/html",
+  "fetched_at": "2026-05-07T02:37:05Z",
   "http_status": 200,
   "html_bytes": 317713
 }

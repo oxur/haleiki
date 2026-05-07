@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "General relativity",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/General_relativity",
-  "revision_id": "W/\"1350593521/ecb1a180-4738-11f1-9ff3-4979dfaa1061/view/html",
-  "fetched_at": "2026-05-03T22:20:15Z",
+  "revision_id": "W/\"1350593521/9ad37004-4930-11f1-9718-b731963364da/view/html",
+  "fetched_at": "2026-05-07T02:36:57Z",
   "http_status": 200,
   "html_bytes": 1378036
 }

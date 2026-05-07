@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Jazz",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Jazz",
-  "revision_id": "W/\"1349768506/5ecab730-4689-11f1-8375-6768a98a556d/view/html",
-  "fetched_at": "2026-05-03T22:20:20Z",
+  "revision_id": "W/\"1349768506/2689db7d-49ab-11f1-b7ed-638b94b820db/view/html",
+  "fetched_at": "2026-05-07T02:37:02Z",
   "http_status": 200,
-  "html_bytes": 870179
+  "html_bytes": 870289
 }

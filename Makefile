@@ -166,6 +166,19 @@ build-release: clean $(BIN_DIR)
 	@echo "$(GREEN)✓ Release build complete$(RESET)"
 	@echo "$(CYAN)→ Optimized binaries in $(BIN_DIR)/$(RESET)"
 
+# Demo site targets
+.PHONY: build-demo
+build-demo: build
+	@echo "$(BLUE)Building demo site...$(RESET)"
+	@$(BIN_DIR)/haleiki demo build
+	@echo "$(GREEN)✓ Demo site built to demo/_site/$(RESET)"
+
+.PHONY: run-demo
+run-demo: build-demo
+	@echo "$(BLUE)Starting demo site server...$(RESET)"
+	@echo "$(CYAN)→ http://localhost:1024$(RESET)"
+	@cd demo/_build && cobalt serve
+
 # Cleaning targets
 .PHONY: clean
 clean:

@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Nyingma",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Nyingma",
-  "revision_id": "W/\"1345182538/48c9035c-473a-11f1-bad6-efd0cfc5787e/view/html",
-  "fetched_at": "2026-05-03T22:20:12Z",
+  "revision_id": "W/\"1345182538/788ef4e6-4768-11f1-8cb0-3f209d877a17/view/html",
+  "fetched_at": "2026-05-07T02:36:55Z",
   "http_status": 200,
   "html_bytes": 461400
 }

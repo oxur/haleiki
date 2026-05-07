@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Edward Witten",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Edward_Witten",
-  "revision_id": "W/\"1351971857/9720d1d6-4727-11f1-93b6-89517daa4029/view/html",
-  "fetched_at": "2026-05-03T22:20:14Z",
+  "revision_id": "W/\"1351971857/dd8a5521-49b3-11f1-ab1c-85f509d08b7e/view/html",
+  "fetched_at": "2026-05-07T02:36:56Z",
   "http_status": 200,
   "html_bytes": 302092
 }

@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Johann Sebastian Bach",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Johann_Sebastian_Bach",
-  "revision_id": "W/\"1351945745/9133ed57-4739-11f1-83de-690613283bba/view/html",
-  "fetched_at": "2026-05-03T22:20:19Z",
+  "revision_id": "W/\"1351945745/63a5a3c9-49b2-11f1-9cec-fbb553c9f1ab/view/html",
+  "fetched_at": "2026-05-07T02:37:01Z",
   "http_status": 200,
-  "html_bytes": 1079878
+  "html_bytes": 1080000
 }

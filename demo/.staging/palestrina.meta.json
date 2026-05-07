@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Giovanni Pierluigi da Palestrina",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Giovanni_Pierluigi_da_Palestrina",
-  "revision_id": "W/\"1352166061/a869e398-4727-11f1-8c71-9f89629ca534/view/html",
-  "fetched_at": "2026-05-03T22:20:19Z",
+  "revision_id": "W/\"1352166061/b92a8d20-49ab-11f1-b13d-e587d261f21e/view/html",
+  "fetched_at": "2026-05-07T02:37:01Z",
   "http_status": 200,
   "html_bytes": 253102
 }

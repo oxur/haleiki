@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "John Coltrane",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/John_Coltrane",
-  "revision_id": "W/\"1352058630/7dcc4059-468f-11f1-b7ca-b15b60a6449b/view/html",
-  "fetched_at": "2026-05-03T22:20:20Z",
+  "revision_id": "W/\"1352058630/f4c643dd-49ad-11f1-9a45-5f7d3221c9f7/view/html",
+  "fetched_at": "2026-05-07T02:37:02Z",
   "http_status": 200,
-  "html_bytes": 500500
+  "html_bytes": 500820
 }

@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "Kagyu",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/Kagyu",
-  "revision_id": "W/\"1344992357/19b29068-473a-11f1-935d-33951d01e2a2/view/html",
-  "fetched_at": "2026-05-03T22:20:13Z",
+  "revision_id": "W/\"1344992357/949398fd-476a-11f1-91b9-0f02be2b518c/view/html",
+  "fetched_at": "2026-05-07T02:36:55Z",
   "http_status": 200,
   "html_bytes": 441575
 }

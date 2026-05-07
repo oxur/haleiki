@@ -1,0 +1,74 @@
+/* ═══════════════════════════════════════════════════════════════
+   BASE — Element-level typography and link styles
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── PROSE: Article body styles ── */
+.prose {
+    max-width: var(--content-max);
+}
+
+.prose p {
+    margin-bottom: var(--space-s);
+}
+
+.prose h2 {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.015em;
+    margin-top: var(--space-m-xl);
+    margin-bottom: var(--space-xs);
+    line-height: 1.2;
+}
+
+.prose h3 {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-top: var(--space-m-l);
+    margin-bottom: var(--space-2xs);
+    line-height: 1.25;
+}
+
+.prose a {
+    color: var(--accent-text);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-subtle);
+    text-underline-offset: 2px;
+    transition: text-decoration-color 0.15s ease;
+}
+
+.prose a:hover {
+    text-decoration-color: var(--accent-primary);
+}
+
+.prose strong {
+    font-weight: 650;
+    color: var(--text-primary);
+}
+
+.prose code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: var(--code-surface);
+    border: 1px solid var(--code-border);
+    padding: 0.1em 0.35em;
+    border-radius: var(--radius-s);
+    color: var(--code-text);
+}
+
+.prose ul,
+.prose ol {
+    margin-bottom: var(--space-s);
+    padding-left: var(--space-m);
+}
+
+.prose li {
+    margin-bottom: var(--space-3xs);
+}
+
+.prose em {
+    font-style: italic;
+}

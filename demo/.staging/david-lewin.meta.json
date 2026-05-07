@@ -3,8 +3,8 @@
   "project": "en.wikipedia.org",
   "title": "David Lewin",
   "api_url": "https://en.wikipedia.org/api/rest_v1/page/html/David_Lewin",
-  "revision_id": "W/\"1347495665/0eecefe0-468b-11f1-bf36-cf48db572b0b/view/html",
-  "fetched_at": "2026-05-03T22:20:18Z",
+  "revision_id": "W/\"1347495665/f47c8537-49b2-11f1-883b-33312cbb991c/view/html",
+  "fetched_at": "2026-05-07T02:37:00Z",
   "http_status": 200,
   "html_bytes": 75931
 }
