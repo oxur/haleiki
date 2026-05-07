@@ -706,13 +706,6 @@ async fn run_single(
         })?;
 
     let html_path = staging_html_path(&article.slug);
-    if html_path.exists() && !force {
-        eprintln!(
-            "Already fetched: {} (use --force to re-fetch)",
-            html_path.display()
-        );
-        return Ok(());
-    }
 
     if dry_run {
         let url = manifest.api_url(article);
@@ -720,6 +713,14 @@ async fn run_single(
         println!("  URL: {url}");
         println!("  Project: {}", manifest.effective_project(article));
         println!("  Destination: {}", html_path.display());
+        return Ok(());
+    }
+
+    if html_path.exists() && !force {
+        eprintln!(
+            "Already fetched: {} (use --force to re-fetch)",
+            html_path.display()
+        );
         return Ok(());
     }
 

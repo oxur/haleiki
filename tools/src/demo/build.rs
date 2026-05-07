@@ -106,8 +106,7 @@ fn copy_dir_for_cobalt(src: &Path, dest: &Path) -> Result<()> {
 fn setup_favicon() -> Result<()> {
     let src = Path::new("assets/icons/favicon.ico");
     if src.exists() {
-        fs::copy(src, format!("{BUILD_DIR}/favicon.ico"))
-            .context("failed to copy favicon.ico")?;
+        fs::copy(src, format!("{BUILD_DIR}/favicon.ico")).context("failed to copy favicon.ico")?;
     }
     Ok(())
 }
