@@ -117,7 +117,7 @@ Tiny script, no dependencies. ~30 lines of JS.
 - `assets/fonts/` → `_site/assets/fonts/` (if local fonts)
 - `assets/images/logo/` → `_site/assets/images/logo/`
 
-Also: the M1 build orchestrator (`tools/src/demo/build.rs`) currently sets up `demo/_build/` ephemerally. Decide whether the framework's `assets/` symlinks into `demo/_build/assets/` (like the way layouts are copied in M1) or whether Cobalt copies directly from the repo root — probably the symlink approach to keep the build directory pattern consistent. Update `setup_layouts()` style logic to add `setup_assets()`.
+Also: the M1 build orchestrator (`tools/src/demo/build.rs`) currently sets up `demo/_build/` ephemerally. The framework's `assets/` are copied (not symlinked) into `demo/_build/assets/` because cobalt-bin doesn't reliably traverse symlinks for asset directories. Update `setup_layouts()` style logic to add `setup_assets()` using `copy_dir_for_cobalt`.
 
 ### 7. Default layout updates
 

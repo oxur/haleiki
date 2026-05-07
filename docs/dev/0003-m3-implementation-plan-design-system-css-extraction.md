@@ -26,7 +26,7 @@ On first load: check `localStorage('haleiki-theme')` → if unset, check `prefer
 
 ### Asset location: Repo root (`assets/`)
 
-Framework-level assets live at repo root (`assets/css/`, `assets/js/`, `assets/fonts/`). The M1 build orchestrator symlinks them into `demo/_build/assets/` for Cobalt, same pattern as layouts. This matches arch doc §3.6 and keeps the framework/demo distinction clean.
+Framework-level assets live at repo root (`assets/css/`, `assets/js/`, `assets/fonts/`). The M1 build orchestrator copies them into `demo/_build/assets/` for Cobalt (copy rather than symlink because cobalt-bin doesn't reliably traverse symlinks). This matches arch doc §3.6 and keeps the framework/demo distinction clean.
 
 ### Trust token forward-compat (M6)
 
@@ -60,7 +60,7 @@ M3 structures `01-tokens.css` so M6 simply adds compound-selector blocks (`[data
 | `demo/_layouts/default.liquid` | Add CSS link, JS script, `data-theme` inline init |
 | `demo/_layouts/source.liquid` | Add body class for page-type styling |
 | `demo/_layouts/concept.liquid` | Add body class for page-type styling |
-| `tools/src/demo/build.rs` | Add `setup_assets()` to symlink `assets/` into `demo/_build/` |
+| `tools/src/demo/build.rs` | Add `setup_assets()` to copy `assets/` into `demo/_build/` (not symlink — cobalt doesn't traverse symlinks) |
 | `demo/_cobalt.yml` | No change needed (Cobalt copies all non-md/liquid files by default) |
 
 ## Implementation Details
@@ -174,13 +174,14 @@ Page-specific components extracted from mockups:
 
 ### 9. Build orchestrator update (`tools/src/demo/build.rs`)
 
-Add `setup_assets()` after `setup_layouts()`:
+Add `setup_assets()` after `setup_layouts()`. Copy rather than symlink because cobalt-bin doesn't reliably traverse symlinks for asset directories — see commit `06284a7`.
 
 ```rust
 fn setup_assets() -> Result<()> {
-    let link = format!("{BUILD_DIR}/assets");
-    std::os::unix::fs::symlink("../../assets", &link)
-        .context("failed to symlink assets")?;
+    let src = Path::new("assets");
+    let dest = Path::new(BUILD_DIR).join("assets");
+    copy_dir_for_cobalt(src, &dest)
+        .context("failed to copy assets into _build/")?;
     Ok(())
 }
 ```
