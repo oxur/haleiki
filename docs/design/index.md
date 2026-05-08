@@ -6,7 +6,8 @@ This index is automatically generated. Do not edit manually.
 
 | Number | Title | State | Updated |
 |--------|-------|-------|----------|
-| 0009 | Source and Concept Page Templates with Full Chrome | Active | 2026-05-07 |
+| 0010 | M5 Implementation Plan: Home, Category, and Browse Pages | Active | 2026-05-07 |
+| 0009 | Source and Concept Page Templates with Full Chrome | Final | 2026-05-07 |
 | 0008 | Design System CSS Extraction | Final | 2026-05-07 |
 | 0007 | `haleiki build` Core | Final | 2026-05-05 |
 | 0006 | Cobalt Templates and Static Rendering Project Plan | Final | 2026-05-04 |
@@ -20,6 +21,7 @@ This index is automatically generated. Do not edit manually.
 
 ### Final
 
+- [0009 - Source and Concept Page Templates with Full Chrome](06-final/0009-m4-implementation-plan-source-and-concept-page-templates-with-full-chrome.md)
 - [0008 - Design System CSS Extraction](06-final/0008-m3-implementation-plan-design-system-css-extraction.md)
 - [0007 - `haleiki build` Core](06-final/0007-m2-implementation-plan-haleiki-build-core.md)
 - [0006 - Cobalt Templates and Static Rendering Project Plan](06-final/0006-haleiki-site-build-cobalt-templates-and-static-rendering-project-plan.md)
@@ -28,7 +30,7 @@ This index is automatically generated. Do not edit manually.
 
 ### Active
 
-- [0009 - M4 Implementation Plan: Source and Concept Page Templates with Full Chrome](05-active/0009-m4-implementation-plan-source-and-concept-page-templates-with-full-chrome.md)
+- [0010 - M5 Implementation Plan: Home, Category, and Browse Pages](05-active/0010-m5-implementation-plan-home-category-and-browse-pages.md)
 - [0003 - Haleiki Demo Site — Project Plan](05-active/0003-haleiki-demo-site-project-plan.md)
 - [0002 - Haleiki Demo Site — Design Document](05-active/0002-haleiki-demo-site-design-document.md)
 
