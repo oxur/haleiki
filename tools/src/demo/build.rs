@@ -12,6 +12,7 @@ use anyhow::{Context, Result, bail};
 
 const BUILD_DIR: &str = "demo/_build";
 const LAYOUTS_SRC: &str = "demo/_layouts";
+const INCLUDES_SRC: &str = "demo/_includes";
 const COBALT_YML: &str = "demo/_cobalt.yml";
 const SOURCES_DIR: &str = "demo/sources";
 const CONCEPTS_DIR: &str = "demo/concepts";
@@ -23,6 +24,7 @@ pub fn run() -> Result<()> {
     clean_build_dir()?;
     setup_cobalt_config()?;
     setup_layouts()?;
+    setup_includes()?;
     setup_assets()?;
     setup_favicon()?;
     setup_media()?;
@@ -70,6 +72,26 @@ fn setup_layouts() -> Result<()> {
             let dest = format!("{dest_dir}/{filename_str}");
             fs::copy(&src, &dest)
                 .with_context(|| format!("failed to copy layout {filename_str}"))?;
+        }
+    }
+    Ok(())
+}
+
+fn setup_includes() -> Result<()> {
+    let src = Path::new(INCLUDES_SRC);
+    if !src.exists() {
+        return Ok(());
+    }
+    let dest_dir = format!("{BUILD_DIR}/_includes");
+    fs::create_dir_all(&dest_dir)?;
+
+    for entry in fs::read_dir(src).context("failed to read demo/_includes/")? {
+        let entry = entry?;
+        let filename = entry.file_name();
+        let filename_str = filename.to_string_lossy();
+        if filename_str.ends_with(".liquid") {
+            fs::copy(entry.path(), format!("{dest_dir}/{filename_str}"))
+                .with_context(|| format!("failed to copy include {filename_str}"))?;
         }
     }
     Ok(())

@@ -1,0 +1,15 @@
+{% if site.data.breadcrumbs contains page.slug %}
+{% assign crumbs = site.data.breadcrumbs[page.slug] %}
+{% if crumbs.size > 0 %}
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  {% for crumb in crumbs %}
+    {% if forloop.last %}
+      <span>{{ crumb.label }}</span>
+    {% else %}
+      <a href="{{ crumb.url }}">{{ crumb.label }}</a>
+      <span class="sep">&#8250;</span>
+    {% endif %}
+  {% endfor %}
+</nav>
+{% endif %}
+{% endif %}

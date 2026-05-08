@@ -1,0 +1,53 @@
+<aside class="sidebar">
+  <div class="info-card">
+    <div class="info-card-header">{{ page.data.concept }}</div>
+    <div class="info-card-body">
+      <div class="info-row">
+        <span class="info-label">Category</span>
+        <span class="info-value"><a href="/category/{{ page.data.category }}/" class="tag">{{ page.data.category }}</a></span>
+      </div>
+      {% if page.data.subcategory %}
+      <div class="info-row">
+        <span class="info-label">Subcategory</span>
+        <span class="info-value">{{ page.data.subcategory }}</span>
+      </div>
+      {% endif %}
+      <div class="info-row">
+        <span class="info-label">Tier</span>
+        <span class="info-value"><span class="tag">{{ page.data.tier }}</span></span>
+      </div>
+      {% if page.data.subject_headings.size > 0 %}
+      <div class="info-card-section">
+        <div class="info-card-section-title">Subject Headings</div>
+        <div class="tag-list">
+          {% for heading in page.data.subject_headings %}
+          <span class="tag">{{ heading }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      {% if page.data.aliases.size > 0 %}
+      <div class="info-card-section">
+        <div class="info-card-section-title">Aliases</div>
+        <ul class="alias-list">
+          {% for alias in page.data.aliases %}
+          <li>{{ alias }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+      {% if page.data.status and page.data.status != "published" %}
+      <div class="info-row">
+        <span class="info-label">Status</span>
+        <span class="info-value">{{ page.data.status }}</span>
+      </div>
+      {% endif %}
+      {% if page.data.stable_since %}
+      <div class="info-row">
+        <span class="info-label">Stable Since</span>
+        <span class="info-value">{{ page.data.stable_since }}</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</aside>

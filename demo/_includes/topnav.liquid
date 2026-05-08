@@ -1,0 +1,43 @@
+<nav class="topnav">
+  <a href="/" class="topnav-brand">
+    <span class="brand-mark">H</span>
+    Haleiki
+  </a>
+  <div class="search-container">
+    <!-- Search placeholder — future milestone -->
+  </div>
+  <div class="topnav-links">
+    <a href="/browse/">Browse</a>
+    <a href="/about/">About</a>
+  </div>
+  <div class="theme-toggle" role="radiogroup" aria-label="Theme">
+    <button class="theme-toggle-option" data-theme-choice="day" aria-label="Day theme" onclick="haleikiToggleTheme()">&#9728;</button>
+    <button class="theme-toggle-option" data-theme-choice="night" aria-label="Night theme" onclick="haleikiToggleTheme()">&#9790;</button>
+  </div>
+</nav>
+<script>
+(function() {
+  var theme = document.documentElement.getAttribute('data-theme') || 'day';
+  var buttons = document.querySelectorAll('.theme-toggle-option');
+  for (var i = 0; i < buttons.length; i++) {
+    if (buttons[i].getAttribute('data-theme-choice') === theme) {
+      buttons[i].classList.add('active');
+    } else {
+      buttons[i].classList.remove('active');
+    }
+  }
+  var origToggle = window.haleikiToggleTheme;
+  window.haleikiToggleTheme = function() {
+    origToggle();
+    var t = document.documentElement.getAttribute('data-theme');
+    var btns = document.querySelectorAll('.theme-toggle-option');
+    for (var j = 0; j < btns.length; j++) {
+      if (btns[j].getAttribute('data-theme-choice') === t) {
+        btns[j].classList.add('active');
+      } else {
+        btns[j].classList.remove('active');
+      }
+    }
+  };
+})();
+</script>

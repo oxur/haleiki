@@ -1,0 +1,17 @@
+{% if site.data.provenance contains page.slug %}
+{% assign prov = site.data.provenance[page.slug] %}
+{% if prov.links.size > 0 %}
+<section class="info-card-section">
+  {% if page.data.page_type == "concept" %}
+  <h2>Derived From</h2>
+  {% else %}
+  <h2>Concepts in This Source</h2>
+  {% endif %}
+  <ul>
+    {% for link in prov.links %}
+    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endif %}

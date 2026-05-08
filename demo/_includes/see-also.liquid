@@ -1,0 +1,22 @@
+{% if site.data.see_also contains page.slug %}
+{% assign see_also = site.data.see_also[page.slug] %}
+{% if see_also.size > 0 %}
+<section class="see-also" id="see-also">
+  <div class="see-also-title">See Also</div>
+  {% assign types = "prerequisite,extends,related,contrasts_with" | split: "," %}
+  {% for type in types %}
+    {% assign items = see_also | where: "relationship", type %}
+    {% if items.size > 0 %}
+    <h3>{{ type | replace: "_", " " | capitalize }}</h3>
+    <div class="see-also-grid">
+      {% for item in items %}
+      <a href="{{ item.url }}" class="see-also-card">
+        <div class="see-also-card-title">{{ item.title }}</div>
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% endfor %}
+</section>
+{% endif %}
+{% endif %}

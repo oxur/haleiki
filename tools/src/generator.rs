@@ -112,7 +112,7 @@ struct ProvenanceLink {
 /// Generate all output JSON files to the given directory.
 ///
 /// Writes: `graph.json`, `categories.json`, `breadcrumbs.json`,
-/// `see-also.json`, `provenance.json`, `profile.json`.
+/// `see_also.json`, `provenance.json`, `profile.json`.
 ///
 /// # Errors
 ///
@@ -240,7 +240,7 @@ fn write_see_also_json(corpus: &Corpus, graph: &HaleikiGraph, output_dir: &Path)
         }
     }
 
-    write_json(output_dir, "see-also.json", &see_also)
+    write_json(output_dir, "see_also.json", &see_also)
 }
 
 fn write_provenance_json(corpus: &Corpus, output_dir: &Path) -> Result<()> {
@@ -518,7 +518,7 @@ mod tests {
         assert!(tmp.join("graph.json").exists());
         assert!(tmp.join("categories.json").exists());
         assert!(tmp.join("breadcrumbs.json").exists());
-        assert!(tmp.join("see-also.json").exists());
+        assert!(tmp.join("see_also.json").exists());
         assert!(tmp.join("provenance.json").exists());
         assert!(tmp.join("profile.json").exists());
 

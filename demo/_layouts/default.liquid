@@ -20,16 +20,10 @@
   <script src="/assets/js/theme.js" defer></script>
 </head>
 <body>
-  <header>
-    <nav>
-      <a href="/">Haleiki Demo</a>
-    </nav>
-  </header>
+  {% include "topnav.liquid" %}
   <main>
     {{ page.content }}
   </main>
-  <footer>
-    <p>Haleiki Demo Site</p>
-  </footer>
+  {% include "footer.liquid" %}
 </body>
 </html>

@@ -20,28 +20,29 @@
   <script src="/assets/js/theme.js" defer></script>
 </head>
 <body class="page-concept">
-  <header>
-    <nav>
-      <a href="/">Haleiki Demo</a>
-    </nav>
-  </header>
-  <main>
-    <article class="concept-card">
-      <header>
-        <p class="article-overline">Concept</p>
-        <h1 class="article-title">{{ page.data.concept }}{% if page.data.disambiguator %} <span class="disambiguator">({{ page.data.disambiguator }})</span>{% endif %}</h1>
-        <div class="article-meta">
-          <span class="tag">{{ page.data.category }}</span>
-          <span class="tag">{{ page.data.tier }}</span>
+  {% include "topnav.liquid" %}
+  <main class="page-layout">
+    {% include "left-nav-toc.liquid" %}
+    <div class="content-area">
+      {% include "breadcrumb.liquid" %}
+      <article class="concept-card">
+        <header class="article-header">
+          <div class="article-overline">Concept</div>
+          <h1 class="article-title">{{ page.data.concept }}{% if page.data.disambiguator %} <span class="disambiguator">({{ page.data.disambiguator }})</span>{% endif %}</h1>
+          <div class="article-meta">
+            <span class="tag">{{ page.data.category }}</span>
+            <span class="tag">{{ page.data.tier }}</span>
+          </div>
+        </header>
+        <div class="prose">
+          {{ page.content }}
         </div>
-      </header>
-      <div class="prose">
-        {{ page.content }}
-      </div>
-    </article>
+        {% include "provenance.liquid" %}
+        {% include "see-also.liquid" %}
+      </article>
+    </div>
+    {% include "sidebar-taxonomy.liquid" %}
   </main>
-  <footer>
-    <p>Haleiki Demo Site</p>
-  </footer>
+  {% include "footer.liquid" %}
 </body>
 </html>
