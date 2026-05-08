@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="day">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ site.data.profile.name }} — Haleiki</title>
+  <script>
+    (function(){
+      var t = localStorage.getItem('haleiki-theme');
+      if (!t) t = window.matchMedia('(prefers-color-scheme:dark)').matches ? 'night' : 'day';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="icon" href="/assets/icons/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/assets/icons/site.webmanifest">
+  <script src="/assets/js/theme.js" defer></script>
+</head>
+<body class="page-home">
+  {% include "topnav.liquid" %}
+  <main class="home-content">
+
+    <!-- ══ HERO ══ -->
+    <section class="hero">
+      <div class="hero-brand-mark">H</div>
+      <h1 class="hero-title">{{ site.data.profile.name }}</h1>
+      <p class="hero-subtitle">A knowledge base for encyclopedic exploration</p>
+      <div class="hero-search">
+        <input type="text" class="hero-search-input" placeholder="Search articles..." disabled>
+      </div>
+      <div class="hero-stats">
+        {% assign total_sources = 0 %}
+        {% assign total_concepts = 0 %}
+        {% for cat_pair in site.data.categories %}
+          {% assign cat = cat_pair[1] %}
+          {% assign total_sources = total_sources | plus: cat.sources.size %}
+          {% assign total_concepts = total_concepts | plus: cat.concepts.size %}
+        {% endfor %}
+        {{ total_sources }} source pages &middot; {{ total_concepts }} concept cards &middot; {{ site.data.profile.taxonomy.categories.size }} categories
+      </div>
+    </section>
+
+    <!-- ══ CATEGORIES ══ -->
+    <section class="category-section">
+      <div class="section-overline">Explore</div>
+      <h2 class="section-heading">Categories</h2>
+      <div class="category-grid">
+        {% for cat_entry in site.data.profile.taxonomy.categories %}
+          {% assign slug = cat_entry.name %}
+          {% if site.data.categories contains slug %}
+            {% assign cat_data = site.data.categories[slug] %}
+            {% assign article_count = cat_data.sources.size | plus: cat_data.concepts.size %}
+            <div class="category-card">
+              <div class="category-card-header">
+                <a href="/category/{{ slug }}/" class="category-card-title">{{ cat_data.name }}</a>
+                <span class="category-card-count">{{ article_count }}</span>
+              </div>
+              <p class="category-card-desc">{{ cat_data.description }}</p>
+              <ul class="category-card-articles">
+                {% for src_slug in cat_data.sources limit:3 %}
+                  {% if site.data.titles contains src_slug %}
+                    <li><a href="/source/{{ src_slug }}/">{{ site.data.titles[src_slug] }}</a></li>
+                  {% else %}
+                    <li><a href="/source/{{ src_slug }}/">{{ src_slug }}</a></li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- ══ FEATURED ══ -->
+    {% if site.data.featured.size > 0 %}
+    <section class="featured-section">
+      <div class="section-overline">Start Here</div>
+      <h2 class="section-heading">Featured Articles</h2>
+      <div class="featured-grid">
+        {% for item in site.data.featured %}
+          <div class="featured-card">
+            <div class="featured-card-title">{{ item.title }}</div>
+            <div class="featured-card-meta">
+              <span class="featured-tag">{{ item.category }}</span>
+              <span class="featured-tier">{{ item.tier }}</span>
+            </div>
+            <a href="{{ item.url }}" class="featured-card-link">Read article &#8594;</a>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    <!-- ══ TIERS ══ -->
+    <section class="tiers-section">
+      <div class="section-overline">Depth</div>
+      <h2 class="section-heading">Knowledge Tiers</h2>
+      <div class="tiers-row">
+        {% for tier in site.data.profile.taxonomy.tiers %}
+          <div class="tier-card">
+            <div class="tier-card-title">{{ tier.name | capitalize }}</div>
+            <p class="tier-card-desc">{{ tier.description }}</p>
+            <div class="tier-card-footer">
+              <a href="/browse/" class="tier-card-link">Browse &#8594;</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- ══ QUICK LINKS ══ -->
+    <section class="quick-links">
+      <div class="quick-links-row">
+        <a href="/browse/">Browse All</a>
+        <span class="quick-links-sep">&middot;</span>
+        <a href="/about/">About</a>
+        <span class="quick-links-sep">&middot;</span>
+        <a href="/attribution/">Attribution</a>
+        <span class="quick-links-sep">&middot;</span>
+        <a href="https://github.com/oxur/haleiki">GitHub</a>
+      </div>
+    </section>
+
+  </main>
+  {% include "footer.liquid" %}
+</body>
+</html>

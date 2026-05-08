@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="day">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Browse All Articles — Haleiki Demo</title>
+  <script>
+    (function(){
+      var t = localStorage.getItem('haleiki-theme');
+      if (!t) t = window.matchMedia('(prefers-color-scheme:dark)').matches ? 'night' : 'day';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="icon" href="/assets/icons/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/assets/icons/site.webmanifest">
+  <script src="/assets/js/theme.js" defer></script>
+</head>
+<body class="page-browse">
+  {% include "topnav.liquid" %}
+
+  <div class="page-layout">
+
+    <!-- ── LEFT NAV: Category Jump Navigation ── -->
+    <aside class="left-nav">
+      <div class="left-nav-title">Index</div>
+      <hr class="left-nav-divider">
+      <ul class="toc-list">
+        {% for cat_entry in site.data.profile.taxonomy.categories %}
+          {% assign slug = cat_entry.name %}
+          {% if site.data.categories contains slug %}
+            {% assign cat_data = site.data.categories[slug] %}
+            {% assign cat_count = cat_data.sources.size | plus: cat_data.concepts.size %}
+            <li><a href="#{{ slug }}"><span>{{ cat_data.name }}</span><span class="toc-count">({{ cat_count }})</span></a></li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </aside>
+
+    <!-- ── MAIN CONTENT ── -->
+    <main class="main-content">
+
+      {% include "breadcrumb.liquid" %}
+
+      <header class="page-header">
+        <div class="page-overline">Index</div>
+        <h1 class="page-title">Browse All Articles</h1>
+        <div class="page-stats">
+          {% assign total_articles = 0 %}
+          {% assign cat_count = 0 %}
+          {% for cat_pair in site.data.categories %}
+            {% assign c = cat_pair[1] %}
+            {% assign total_articles = total_articles | plus: c.sources.size | plus: c.concepts.size %}
+            {% assign cat_count = cat_count | plus: 1 %}
+          {% endfor %}
+          {{ total_articles }} articles &middot; {{ cat_count }} categories &middot; 3 tiers
+        </div>
+        <p class="page-description">The complete index of every article in Haleiki, organized by category.</p>
+      </header>
+
+      {% for cat_entry in site.data.profile.taxonomy.categories %}
+        {% assign slug = cat_entry.name %}
+        {% if site.data.categories contains slug %}
+          {% assign cat_data = site.data.categories[slug] %}
+          {% assign cat_article_count = cat_data.sources.size | plus: cat_data.concepts.size %}
+
+          <section class="browse-category-section" id="{{ slug }}">
+            <div class="category-header">
+              <h2 class="category-name"><a href="/category/{{ slug }}/" style="color:inherit;text-decoration:none;">{{ cat_data.name }}</a></h2>
+              <p class="category-description">{{ cat_data.description }}</p>
+              <div class="category-count">{{ cat_article_count }} articles</div>
+            </div>
+
+            {% for subcat_pair in cat_data.subcategories %}
+              {% assign subcat_name = subcat_pair[0] %}
+              {% assign subcat = subcat_pair[1] %}
+              {% assign subcat_total = subcat.sources.size | plus: subcat.concepts.size %}
+              {% if subcat_total > 0 %}
+              <div class="subcategory-group">
+                <div class="subcategory-label">{{ subcat_name }}</div>
+                <ul class="article-list">
+                  {% for src_slug in subcat.sources %}
+                    <li class="article-item">
+                      {% if site.data.titles contains src_slug %}
+                        <a href="/source/{{ src_slug }}/" class="article-title-link">{{ site.data.titles[src_slug] }}</a>
+                      {% else %}
+                        <a href="/source/{{ src_slug }}/" class="article-title-link">{{ src_slug }}</a>
+                      {% endif %}
+                      <span class="article-meta-inline"><span class="source-indicator">source</span></span>
+                    </li>
+                  {% endfor %}
+                  {% for con_slug in subcat.concepts %}
+                    <li class="article-item">
+                      {% if site.data.titles contains con_slug %}
+                        <a href="/{{ con_slug }}/" class="article-title-link">{{ site.data.titles[con_slug] }}</a>
+                      {% else %}
+                        <a href="/{{ con_slug }}/" class="article-title-link">{{ con_slug }}</a>
+                      {% endif %}
+                      <span class="article-meta-inline"><span class="tier-badge">concept</span></span>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+              {% endif %}
+            {% endfor %}
+
+            <!-- Top-level entries not in any subcategory -->
+            {% assign has_toplevel = false %}
+            {% for src_slug in cat_data.sources %}
+              {% assign in_subcat = false %}
+              {% for subcat_pair in cat_data.subcategories %}
+                {% assign subcat = subcat_pair[1] %}
+                {% if subcat.sources contains src_slug %}
+                  {% assign in_subcat = true %}
+                {% endif %}
+              {% endfor %}
+              {% unless in_subcat %}
+                {% assign has_toplevel = true %}
+              {% endunless %}
+            {% endfor %}
+            {% for con_slug in cat_data.concepts %}
+              {% assign in_subcat = false %}
+              {% for subcat_pair in cat_data.subcategories %}
+                {% assign subcat = subcat_pair[1] %}
+                {% if subcat.concepts contains con_slug %}
+                  {% assign in_subcat = true %}
+                {% endif %}
+              {% endfor %}
+              {% unless in_subcat %}
+                {% assign has_toplevel = true %}
+              {% endunless %}
+            {% endfor %}
+
+            {% if has_toplevel %}
+            <div class="subcategory-group">
+              <ul class="article-list">
+                {% for src_slug in cat_data.sources %}
+                  {% assign in_subcat = false %}
+                  {% for subcat_pair in cat_data.subcategories %}
+                    {% assign subcat = subcat_pair[1] %}
+                    {% if subcat.sources contains src_slug %}
+                      {% assign in_subcat = true %}
+                    {% endif %}
+                  {% endfor %}
+                  {% unless in_subcat %}
+                    <li class="article-item">
+                      {% if site.data.titles contains src_slug %}
+                        <a href="/source/{{ src_slug }}/" class="article-title-link">{{ site.data.titles[src_slug] }}</a>
+                      {% else %}
+                        <a href="/source/{{ src_slug }}/" class="article-title-link">{{ src_slug }}</a>
+                      {% endif %}
+                      <span class="article-meta-inline"><span class="source-indicator">source</span></span>
+                    </li>
+                  {% endunless %}
+                {% endfor %}
+                {% for con_slug in cat_data.concepts %}
+                  {% assign in_subcat = false %}
+                  {% for subcat_pair in cat_data.subcategories %}
+                    {% assign subcat = subcat_pair[1] %}
+                    {% if subcat.concepts contains con_slug %}
+                      {% assign in_subcat = true %}
+                    {% endif %}
+                  {% endfor %}
+                  {% unless in_subcat %}
+                    <li class="article-item">
+                      {% if site.data.titles contains con_slug %}
+                        <a href="/{{ con_slug }}/" class="article-title-link">{{ site.data.titles[con_slug] }}</a>
+                      {% else %}
+                        <a href="/{{ con_slug }}/" class="article-title-link">{{ con_slug }}</a>
+                      {% endif %}
+                      <span class="article-meta-inline"><span class="tier-badge">concept</span></span>
+                    </li>
+                  {% endunless %}
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+
+          </section>
+        {% endif %}
+      {% endfor %}
+
+    </main>
+  </div>
+
+  {% include "footer.liquid" %}
+
+  <script>
+    // IntersectionObserver: highlight active category in left nav
+    (function () {
+      var sections = document.querySelectorAll('.browse-category-section');
+      var navLinks = document.querySelectorAll('.toc-list a');
+      if (!sections.length || !navLinks.length) return;
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            var id = entry.target.getAttribute('id');
+            navLinks.forEach(function(link) {
+              if (link.getAttribute('href') === '#' + id) {
+                link.classList.add('active');
+              } else {
+                link.classList.remove('active');
+              }
+            });
+          }
+        });
+      }, {
+        rootMargin: '-80px 0px -65% 0px',
+        threshold: 0
+      });
+      sections.forEach(function(section) { observer.observe(section); });
+    })();
+  </script>
+</body>
+</html>

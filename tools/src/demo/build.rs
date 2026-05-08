@@ -30,12 +30,14 @@ pub fn run() -> Result<()> {
     setup_media()?;
     setup_data()?;
 
-    let source_count = process_sources()?;
-    let concept_count = process_concepts()?;
+    process_sources()?;
+    process_concepts()?;
 
     run_haleiki_build()?;
 
-    generate_index(source_count, concept_count)?;
+    generate_home_page()?;
+    generate_category_pages()?;
+    generate_browse_page()?;
     run_cobalt_build()?;
 
     eprintln!("Done. Site built to demo/_site/");
@@ -223,26 +225,62 @@ fn process_concepts() -> Result<usize> {
     Ok(count)
 }
 
-fn generate_index(source_count: usize, concept_count: usize) -> Result<()> {
-    let content = format!(
-        "---\nlayout: default.liquid\ntitle: Home\npermalink: /\n---\n\n\
-         # Haleiki Demo\n\n\
-         A demonstration knowledge base with {source_count} source pages and {concept_count} concept cards.\n\n\
-         ## Sample Source Pages\n\n\
-         - [Dzogchen](/source/dzogchen/) — Tibetan Buddhism\n\
-         - [Quantum Mechanics](/source/quantum-mechanics/) — Theoretical Physics\n\
-         - [Rust (programming language)](/source/rust-language/) — Programming Languages\n\
-         - [Padmasambhava](/source/padmasambhava/) — Tibetan Buddhism\n\
-         - [Johann Sebastian Bach](/source/johann-sebastian-bach/) — Music\n\n\
-         ## Sample Concept Cards\n\n\
-         - [Ownership (Rust)](/ownership-rust/) — Programming Languages\n\
-         - [Uncertainty Principle](/uncertainty-principle/) — Physics\n\
-         - [Nyingma](/nyingma/) — Tibetan Buddhism\n\
-         - [Counterpoint](/counterpoint/) — Music\n\
-         - [Plate Tectonics](/plate-tectonics/) — Geology\n"
-    );
-
+fn generate_home_page() -> Result<()> {
+    let content = "---\nlayout: home.liquid\ntitle: Home\npermalink: /\n---\n";
     fs::write(format!("{BUILD_DIR}/index.md"), content)?;
+    eprintln!("  Generated home page");
+    Ok(())
+}
+
+fn generate_category_pages() -> Result<()> {
+    let taxonomy_path = Path::new("demo/taxonomy.yaml");
+    let taxonomy_content =
+        fs::read_to_string(taxonomy_path).context("failed to read demo/taxonomy.yaml")?;
+
+    let taxonomy: serde_yaml::Value =
+        serde_yaml::from_str(&taxonomy_content).context("failed to parse taxonomy.yaml")?;
+
+    let categories = taxonomy["categories"]
+        .as_sequence()
+        .context("taxonomy.yaml missing categories array")?;
+
+    let dest_dir = format!("{BUILD_DIR}/categories");
+    fs::create_dir_all(&dest_dir)?;
+
+    let mut count = 0;
+    for cat in categories {
+        let slug = cat["name"]
+            .as_str()
+            .context("category missing name field")?;
+
+        // Produce a display title from the slug: "tibetan-buddhism" -> "Tibetan Buddhism"
+        let title: String = slug
+            .split('-')
+            .map(|word| {
+                let mut chars = word.chars();
+                match chars.next() {
+                    None => String::new(),
+                    Some(c) => c.to_uppercase().collect::<String>() + chars.as_str(),
+                }
+            })
+            .collect::<Vec<_>>()
+            .join(" ");
+
+        let content = format!(
+            "---\nlayout: category.liquid\ntitle: \"{title}\"\npermalink: \"/category/{slug}/\"\ndata:\n  category_slug: \"{slug}\"\n---\n"
+        );
+        fs::write(format!("{dest_dir}/{slug}.md"), content)?;
+        count += 1;
+    }
+
+    eprintln!("  Generated {count} category pages");
+    Ok(())
+}
+
+fn generate_browse_page() -> Result<()> {
+    let content = "---\nlayout: browse.liquid\ntitle: \"Browse All Articles\"\npermalink: \"/browse/\"\ndata:\n  page_type: \"browse\"\n---\n";
+    fs::write(format!("{BUILD_DIR}/browse.md"), content)?;
+    eprintln!("  Generated browse page");
     Ok(())
 }
 
@@ -263,7 +301,7 @@ fn run_haleiki_build() -> Result<()> {
     crate::generator::generate(&corpus, &graph, output_dir)?;
     let stats = graph.stats(&corpus);
     eprintln!(
-        "  Generated data: {} nodes, {} edges, 6 JSON files",
+        "  Generated data: {} nodes, {} edges, 8 JSON files",
         stats.total_nodes, stats.total_edges
     );
     Ok(())

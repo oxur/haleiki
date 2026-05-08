@@ -12,4 +12,15 @@
   {% endfor %}
 </nav>
 {% endif %}
+{% elsif page.data.category_slug %}
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <a href="/">Home</a><span class="sep">&#8250;</span>
+  <a href="/browse/">Browse</a><span class="sep">&#8250;</span>
+  <span>{{ page.title }}</span>
+</nav>
+{% elsif page.data.page_type == "browse" %}
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <a href="/">Home</a><span class="sep">&#8250;</span>
+  <span>Browse</span>
+</nav>
 {% endif %}

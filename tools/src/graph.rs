@@ -373,10 +373,26 @@ impl HaleikiGraph {
             all_concepts.sort();
             all_concepts.dedup();
 
+            // Build display name from slug: "tibetan-buddhism" -> "Tibetan Buddhism"
+            let display_name: String = cat_name
+                .split('-')
+                .map(|word| {
+                    let mut chars = word.chars();
+                    match chars.next() {
+                        None => String::new(),
+                        Some(c) => {
+                            let upper: String = c.to_uppercase().collect();
+                            upper + chars.as_str()
+                        }
+                    }
+                })
+                .collect::<Vec<_>>()
+                .join(" ");
+
             index.insert(
                 cat_name.clone(),
                 CategoryIndexEntry {
-                    name: cat_name.clone(),
+                    name: display_name,
                     description,
                     sources: all_sources,
                     concepts: all_concepts,
@@ -706,7 +722,7 @@ mod tests {
         let cat_idx = graph.category_index(&corpus);
         assert!(cat_idx.contains_key("math"));
         let math = &cat_idx["math"];
-        assert_eq!(math.name, "math");
+        assert_eq!(math.name, "Math");
         assert_eq!(math.description, "Mathematics");
         // Top-level sources: src-1
         assert_eq!(math.sources.len(), 1);

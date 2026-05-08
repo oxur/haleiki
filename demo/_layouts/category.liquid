@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="day">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page.title }} — Haleiki Demo</title>
+  <script>
+    (function(){
+      var t = localStorage.getItem('haleiki-theme');
+      if (!t) t = window.matchMedia('(prefers-color-scheme:dark)').matches ? 'night' : 'day';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="icon" href="/assets/icons/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/assets/icons/site.webmanifest">
+  <script src="/assets/js/theme.js" defer></script>
+</head>
+<body class="page-category">
+  {% include "topnav.liquid" %}
+
+  <div class="page-layout">
+    <main class="main-content">
+
+      <!-- Breadcrumb -->
+      {% include "breadcrumb.liquid" %}
+
+      {% if site.data.categories contains page.data.category_slug %}
+        {% assign cat = site.data.categories[page.data.category_slug] %}
+        {% assign article_count = cat.sources.size | plus: cat.concepts.size %}
+        {% assign subcat_count = cat.subcategories | size %}
+
+        <!-- Category Header -->
+        <header class="category-header-block">
+          <div class="category-overline">Category</div>
+          <h1 class="category-title">{{ page.title }}</h1>
+          <p class="category-description-text">{{ cat.description }}</p>
+          <div class="category-stats">{{ article_count }} articles &middot; {{ subcat_count }} subcategories &middot; 3 tiers</div>
+        </header>
+
+        <!-- ══ FOUNDATIONAL TIER ══ -->
+        {% assign found_items = "" %}
+        {% for src_slug in cat.sources %}
+          {% if site.data.titles contains src_slug %}
+            {% assign src_title = site.data.titles[src_slug] %}
+          {% else %}
+            {% assign src_title = src_slug %}
+          {% endif %}
+          {% comment %}Check tier via breadcrumbs data — look up concept tier from the slug{% endcomment %}
+        {% endfor %}
+
+        {% comment %}
+          Since categories.json has slugs grouped by subcategory but not by tier,
+          and tier info lives per-concept/source, we iterate subcategories and
+          render all entries grouped by subcategory. The tier badge shows per-entry.
+        {% endcomment %}
+
+        <!-- Uncategorized entries (sources/concepts not in any subcategory) -->
+        {% assign top_sources = "" %}
+        {% assign top_concepts = "" %}
+        {% for subcat_pair in cat.subcategories %}
+          {% assign subcat = subcat_pair[1] %}
+          {% for s in subcat.sources %}
+            {% assign top_sources = top_sources | append: s | append: "," %}
+          {% endfor %}
+          {% for c in subcat.concepts %}
+            {% assign top_concepts = top_concepts | append: c | append: "," %}
+          {% endfor %}
+        {% endfor %}
+
+        {% for subcat_pair in cat.subcategories %}
+          {% assign subcat_name = subcat_pair[0] %}
+          {% assign subcat = subcat_pair[1] %}
+          {% assign subcat_total = subcat.sources.size | plus: subcat.concepts.size %}
+          {% if subcat_total > 0 %}
+          <section class="tier-section">
+            <div class="tier-header">
+              <h2 class="tier-name">{{ subcat_name | capitalize }}</h2>
+              <span class="tier-count">({{ subcat_total }} articles)</span>
+            </div>
+
+            <div class="subcategory-group">
+              <ul class="article-list">
+                {% for src_slug in subcat.sources %}
+                  <li class="article-card">
+                    <div class="article-card-top">
+                      {% if site.data.titles contains src_slug %}
+                        <a href="/source/{{ src_slug }}/" class="article-card-title">{{ site.data.titles[src_slug] }}</a>
+                      {% else %}
+                        <a href="/source/{{ src_slug }}/" class="article-card-title">{{ src_slug }}</a>
+                      {% endif %}
+                      <div class="article-card-badges">
+                        <span class="source-label">source</span>
+                      </div>
+                    </div>
+                  </li>
+                {% endfor %}
+                {% for con_slug in subcat.concepts %}
+                  <li class="article-card">
+                    <div class="article-card-top">
+                      {% if site.data.titles contains con_slug %}
+                        <a href="/{{ con_slug }}/" class="article-card-title">{{ site.data.titles[con_slug] }}</a>
+                      {% else %}
+                        <a href="/{{ con_slug }}/" class="article-card-title">{{ con_slug }}</a>
+                      {% endif %}
+                      <div class="article-card-badges">
+                        <span class="tier-badge">concept</span>
+                      </div>
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </section>
+          {% endif %}
+        {% endfor %}
+
+        <!-- Top-level entries (not in any subcategory) -->
+        {% assign top_level_sources_count = 0 %}
+        {% assign top_level_concepts_count = 0 %}
+        {% for src_slug in cat.sources %}
+          {% assign in_subcat = false %}
+          {% for subcat_pair in cat.subcategories %}
+            {% assign subcat = subcat_pair[1] %}
+            {% if subcat.sources contains src_slug %}
+              {% assign in_subcat = true %}
+            {% endif %}
+          {% endfor %}
+          {% unless in_subcat %}
+            {% assign top_level_sources_count = top_level_sources_count | plus: 1 %}
+          {% endunless %}
+        {% endfor %}
+        {% for con_slug in cat.concepts %}
+          {% assign in_subcat = false %}
+          {% for subcat_pair in cat.subcategories %}
+            {% assign subcat = subcat_pair[1] %}
+            {% if subcat.concepts contains con_slug %}
+              {% assign in_subcat = true %}
+            {% endif %}
+          {% endfor %}
+          {% unless in_subcat %}
+            {% assign top_level_concepts_count = top_level_concepts_count | plus: 1 %}
+          {% endunless %}
+        {% endfor %}
+
+        {% assign top_total = top_level_sources_count | plus: top_level_concepts_count %}
+        {% if top_total > 0 %}
+        <section class="tier-section">
+          <div class="tier-header">
+            <h2 class="tier-name">General</h2>
+            <span class="tier-count">({{ top_total }} articles)</span>
+          </div>
+          <div class="subcategory-group">
+            <ul class="article-list">
+              {% for src_slug in cat.sources %}
+                {% assign in_subcat = false %}
+                {% for subcat_pair in cat.subcategories %}
+                  {% assign subcat = subcat_pair[1] %}
+                  {% if subcat.sources contains src_slug %}
+                    {% assign in_subcat = true %}
+                  {% endif %}
+                {% endfor %}
+                {% unless in_subcat %}
+                  <li class="article-card">
+                    <div class="article-card-top">
+                      {% if site.data.titles contains src_slug %}
+                        <a href="/source/{{ src_slug }}/" class="article-card-title">{{ site.data.titles[src_slug] }}</a>
+                      {% else %}
+                        <a href="/source/{{ src_slug }}/" class="article-card-title">{{ src_slug }}</a>
+                      {% endif %}
+                      <div class="article-card-badges">
+                        <span class="source-label">source</span>
+                      </div>
+                    </div>
+                  </li>
+                {% endunless %}
+              {% endfor %}
+              {% for con_slug in cat.concepts %}
+                {% assign in_subcat = false %}
+                {% for subcat_pair in cat.subcategories %}
+                  {% assign subcat = subcat_pair[1] %}
+                  {% if subcat.concepts contains con_slug %}
+                    {% assign in_subcat = true %}
+                  {% endif %}
+                {% endfor %}
+                {% unless in_subcat %}
+                  <li class="article-card">
+                    <div class="article-card-top">
+                      {% if site.data.titles contains con_slug %}
+                        <a href="/{{ con_slug }}/" class="article-card-title">{{ site.data.titles[con_slug] }}</a>
+                      {% else %}
+                        <a href="/{{ con_slug }}/" class="article-card-title">{{ con_slug }}</a>
+                      {% endif %}
+                      <div class="article-card-badges">
+                        <span class="tier-badge">concept</span>
+                      </div>
+                    </div>
+                  </li>
+                {% endunless %}
+              {% endfor %}
+            </ul>
+          </div>
+        </section>
+        {% endif %}
+
+      {% else %}
+        <p>Category not found.</p>
+      {% endif %}
+
+    </main>
+
+    <!-- Right Sidebar: Category Info Card -->
+    <aside class="sidebar">
+      {% if site.data.categories contains page.data.category_slug %}
+        {% assign cat = site.data.categories[page.data.category_slug] %}
+        {% assign article_count = cat.sources.size | plus: cat.concepts.size %}
+        <div class="info-card">
+          <div class="info-card-header">{{ page.title }}</div>
+          <div class="info-card-body">
+            <div class="info-row">
+              <span class="info-label">Articles</span>
+              <span class="info-value">{{ article_count }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Sources</span>
+              <span class="info-value">{{ cat.sources.size }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Concepts</span>
+              <span class="info-value">{{ cat.concepts.size }}</span>
+            </div>
+            {% if cat.subcategories.size > 0 %}
+            <div class="info-card-section">
+              <div class="info-card-section-title">Subcategories</div>
+              <div class="tag-list">
+                {% for subcat_pair in cat.subcategories %}
+                  <span class="tag">{{ subcat_pair[0] }}</span>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    </aside>
+
+  </div>
+  {% include "footer.liquid" %}
+</body>
+</html>

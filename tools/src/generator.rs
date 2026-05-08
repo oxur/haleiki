@@ -109,10 +109,21 @@ struct ProvenanceLink {
     url: String,
 }
 
+/// A featured page entry for the home page.
+#[derive(Debug, Clone, Serialize)]
+struct FeaturedEntry {
+    slug: String,
+    title: String,
+    category: String,
+    tier: String,
+    url: String,
+}
+
 /// Generate all output JSON files to the given directory.
 ///
 /// Writes: `graph.json`, `categories.json`, `breadcrumbs.json`,
-/// `see_also.json`, `provenance.json`, `profile.json`.
+/// `see_also.json`, `provenance.json`, `profile.json`, `featured.json`,
+/// `titles.json`.
 ///
 /// # Errors
 ///
@@ -127,6 +138,8 @@ pub fn generate(corpus: &Corpus, graph: &HaleikiGraph, output_dir: &Path) -> Res
     write_see_also_json(corpus, graph, output_dir)?;
     write_provenance_json(corpus, output_dir)?;
     write_profile_json(corpus, output_dir)?;
+    write_featured_json(corpus, graph, output_dir)?;
+    write_titles_json(corpus, output_dir)?;
 
     Ok(())
 }
@@ -402,6 +415,76 @@ fn build_trust_levels() -> BTreeMap<String, TrustLevelDescription> {
     levels
 }
 
+/// Compute top-6 concept cards by in-degree (typed relationships only, excluding
+/// provenance edges) and write `featured.json`.
+fn write_featured_json(corpus: &Corpus, graph: &HaleikiGraph, output_dir: &Path) -> Result<()> {
+    use std::collections::HashMap;
+
+    // Count in-degree for concept nodes from typed relationship edges only
+    let mut in_degree: HashMap<String, usize> = HashMap::new();
+    for edge_ref in graph.graph.edge_references() {
+        // Skip provenance edges
+        match edge_ref.weight() {
+            crate::graph::EdgeKind::DerivedFrom | crate::graph::EdgeKind::ConceptsGenerated => {
+                continue;
+            }
+            _ => {}
+        }
+        let target_data = &graph.graph[edge_ref.target()];
+        if matches!(target_data, NodeData::Concept { .. }) {
+            *in_degree.entry(target_data.slug().to_string()).or_insert(0) += 1;
+        }
+    }
+
+    // Sort by in-degree descending, then slug for determinism
+    let mut ranked: Vec<(String, usize)> = in_degree.into_iter().collect();
+    ranked.sort_by(|a, b| b.1.cmp(&a.1).then_with(|| a.0.cmp(&b.0)));
+
+    let featured: Vec<FeaturedEntry> = ranked
+        .into_iter()
+        .take(6)
+        .filter_map(|(slug, _)| {
+            let card = corpus.concepts.get(&slug)?;
+            let title = if card.disambiguator.is_empty() {
+                card.concept.clone()
+            } else {
+                format!("{} ({})", card.concept, card.disambiguator)
+            };
+            Some(FeaturedEntry {
+                url: format!("/{slug}/"),
+                slug,
+                title,
+                category: card.category.clone(),
+                tier: card.tier.clone(),
+            })
+        })
+        .collect();
+
+    write_json(output_dir, "featured.json", &featured)
+}
+
+/// Write a slug-to-title lookup for all content pages (`titles.json`).
+///
+/// This allows Liquid templates to look up display titles by slug without
+/// needing to traverse the graph nodes array.
+fn write_titles_json(corpus: &Corpus, output_dir: &Path) -> Result<()> {
+    let mut titles: BTreeMap<String, String> = BTreeMap::new();
+
+    for (slug, page) in &corpus.sources {
+        titles.insert(slug.clone(), page.title.clone());
+    }
+    for (slug, card) in &corpus.concepts {
+        let title = if card.disambiguator.is_empty() {
+            card.concept.clone()
+        } else {
+            format!("{} ({})", card.concept, card.disambiguator)
+        };
+        titles.insert(slug.clone(), title);
+    }
+
+    write_json(output_dir, "titles.json", &titles)
+}
+
 /// Write a serializable value as pretty-printed JSON.
 fn write_json<T: Serialize>(output_dir: &Path, filename: &str, value: &T) -> Result<()> {
     let path = output_dir.join(filename);
@@ -521,6 +604,8 @@ mod tests {
         assert!(tmp.join("see_also.json").exists());
         assert!(tmp.join("provenance.json").exists());
         assert!(tmp.join("profile.json").exists());
+        assert!(tmp.join("featured.json").exists());
+        assert!(tmp.join("titles.json").exists());
 
         // Clean up
         let _ = fs::remove_dir_all(&tmp);
