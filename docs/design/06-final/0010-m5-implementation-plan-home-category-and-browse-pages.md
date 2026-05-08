@@ -1,12 +1,12 @@
 ---
 number: 10
-title: "M5 Implementation Plan: Home, Category, and Browse Pages"
+title: "Home, Category, and Browse Pages"
 author: "number of"
 component: All
 tags: [change-me]
 created: 2026-05-07
-updated: 2026-05-07
-state: Active
+updated: 2026-05-08
+state: Final
 supersedes: null
 superseded-by: null
 version: 1.0
