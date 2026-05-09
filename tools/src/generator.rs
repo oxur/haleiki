@@ -109,6 +109,26 @@ struct ProvenanceLink {
     url: String,
 }
 
+/// A single source attribution entry in the attribution JSON output.
+#[derive(Debug, Clone, Serialize)]
+struct AttributionSourceEntry {
+    slug: String,
+    title: String,
+    url: String,
+    license: String,
+    fetched_at: String,
+    revision_id: String,
+}
+
+/// The full attribution JSON output.
+#[derive(Debug, Clone, Serialize)]
+struct AttributionOutput {
+    general_notice: String,
+    sources_by_project: BTreeMap<String, Vec<AttributionSourceEntry>>,
+    source_count: usize,
+    license_versions: Vec<String>,
+}
+
 /// A featured page entry for the home page.
 #[derive(Debug, Clone, Serialize)]
 struct FeaturedEntry {
@@ -123,7 +143,7 @@ struct FeaturedEntry {
 ///
 /// Writes: `graph.json`, `categories.json`, `breadcrumbs.json`,
 /// `see_also.json`, `provenance.json`, `profile.json`, `featured.json`,
-/// `titles.json`.
+/// `titles.json`, `attribution.json`.
 ///
 /// # Errors
 ///
@@ -140,6 +160,7 @@ pub fn generate(corpus: &Corpus, graph: &HaleikiGraph, output_dir: &Path) -> Res
     write_profile_json(corpus, output_dir)?;
     write_featured_json(corpus, graph, output_dir)?;
     write_titles_json(corpus, output_dir)?;
+    write_attribution_json(corpus, output_dir)?;
 
     Ok(())
 }
@@ -485,6 +506,56 @@ fn write_titles_json(corpus: &Corpus, output_dir: &Path) -> Result<()> {
     write_json(output_dir, "titles.json", &titles)
 }
 
+/// Aggregate source-page attribution data and write `attribution.json`.
+///
+/// Groups sources by `original_source.project`, sorted alphabetically within
+/// each group. Collects unique license versions across all sources.
+fn write_attribution_json(corpus: &Corpus, output_dir: &Path) -> Result<()> {
+    let mut sources_by_project: BTreeMap<String, Vec<AttributionSourceEntry>> = BTreeMap::new();
+    let mut license_set: std::collections::BTreeSet<String> = std::collections::BTreeSet::new();
+
+    for page in corpus.sources.values() {
+        if let Some(ref os) = page.original_source {
+            let project = if os.project.is_empty() {
+                "unknown".to_string()
+            } else {
+                os.project.clone()
+            };
+            let entry = AttributionSourceEntry {
+                slug: page.slug.clone(),
+                title: page.title.clone(),
+                url: os.url.clone(),
+                license: os.license.clone(),
+                fetched_at: os.fetched_at.clone(),
+                revision_id: os.revision_id.clone(),
+            };
+            if !os.license.is_empty() {
+                license_set.insert(os.license.clone());
+            }
+            sources_by_project.entry(project).or_default().push(entry);
+        }
+    }
+
+    // Sort each project group alphabetically by title
+    for entries in sources_by_project.values_mut() {
+        entries.sort_by(|a, b| a.title.to_lowercase().cmp(&b.title.to_lowercase()));
+    }
+
+    let source_count = sources_by_project.values().map(Vec::len).sum();
+    let license_versions: Vec<String> = license_set.into_iter().collect();
+
+    let output = AttributionOutput {
+        general_notice: "This knowledge base contains content derived from Wikimedia projects \
+            and Rigpa Wiki, licensed under Creative Commons Attribution-ShareAlike."
+            .to_string(),
+        sources_by_project,
+        source_count,
+        license_versions,
+    };
+
+    write_json(output_dir, "attribution.json", &output)
+}
+
 /// Write a serializable value as pretty-printed JSON.
 fn write_json<T: Serialize>(output_dir: &Path, filename: &str, value: &T) -> Result<()> {
     let path = output_dir.join(filename);
@@ -498,8 +569,8 @@ fn write_json<T: Serialize>(output_dir: &Path, filename: &str, value: &T) -> Res
 mod tests {
     use super::*;
     use crate::parser::{
-        CanonConfig, ConceptCard, Corpus, DerivedFromEntry, Profile, ProfileInfo, SourcePage,
-        Taxonomy, TaxonomyEntry, TierEntry, TrustConfig,
+        CanonConfig, ConceptCard, Corpus, DerivedFromEntry, OriginalSource, Profile, ProfileInfo,
+        SourcePage, Taxonomy, TaxonomyEntry, TierEntry, TrustConfig,
     };
     use std::collections::HashMap;
 
@@ -518,7 +589,14 @@ mod tests {
                 tags: vec![],
                 author: String::new(),
                 date: String::new(),
-                original_source: None,
+                original_source: Some(OriginalSource {
+                    title: "Source One".to_string(),
+                    project: "en.wikipedia.org".to_string(),
+                    url: "https://en.wikipedia.org/wiki/Source_One".to_string(),
+                    license: "CC BY-SA 4.0".to_string(),
+                    fetched_at: "2026-05-03T22:20:10Z".to_string(),
+                    revision_id: "12345".to_string(),
+                }),
                 extraction_status: "complete".to_string(),
                 concepts_generated: vec!["concept-a".to_string()],
                 last_extracted: String::new(),
@@ -606,6 +684,7 @@ mod tests {
         assert!(tmp.join("profile.json").exists());
         assert!(tmp.join("featured.json").exists());
         assert!(tmp.join("titles.json").exists());
+        assert!(tmp.join("attribution.json").exists());
 
         // Clean up
         let _ = fs::remove_dir_all(&tmp);
@@ -674,5 +753,46 @@ mod tests {
         assert!(levels.contains_key("credible"));
         assert!(levels.contains_key("provisional"));
         assert!(levels.contains_key("speculative"));
+    }
+
+    #[test]
+    fn test_attribution_json_grouped_by_project() {
+        let corpus = make_test_corpus();
+        let graph = HaleikiGraph::build(&corpus);
+        let tmp = std::env::temp_dir().join("haleiki-gen-test-attr");
+        let _ = fs::remove_dir_all(&tmp);
+
+        generate(&corpus, &graph, &tmp).unwrap();
+
+        let content = fs::read_to_string(tmp.join("attribution.json")).unwrap();
+        let value: serde_json::Value = serde_json::from_str(&content).unwrap();
+
+        // general_notice is present
+        assert!(value["general_notice"].is_string());
+        assert!(
+            value["general_notice"]
+                .as_str()
+                .unwrap()
+                .contains("Creative Commons")
+        );
+
+        // sources_by_project has the expected project key
+        assert!(value["sources_by_project"]["en.wikipedia.org"].is_array());
+        let wp_sources = value["sources_by_project"]["en.wikipedia.org"]
+            .as_array()
+            .unwrap();
+        assert_eq!(wp_sources.len(), 1);
+        assert_eq!(wp_sources[0]["slug"], "src-1");
+        assert_eq!(wp_sources[0]["title"], "Source One");
+        assert_eq!(wp_sources[0]["license"], "CC BY-SA 4.0");
+
+        // source_count
+        assert_eq!(value["source_count"], 1);
+
+        // license_versions
+        let versions = value["license_versions"].as_array().unwrap();
+        assert!(versions.contains(&serde_json::json!("CC BY-SA 4.0")));
+
+        let _ = fs::remove_dir_all(&tmp);
     }
 }

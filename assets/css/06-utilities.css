@@ -34,4 +34,13 @@
         justify-content: center;
         text-align: center;
     }
+
+    .attr-table {
+        font-size: var(--step--2);
+    }
+
+    .attr-table th,
+    .attr-table td {
+        padding: var(--space-3xs) var(--space-2xs);
+    }
 }

@@ -345,3 +345,161 @@
     color: var(--accent-text);
     border-color: var(--accent-primary);
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   ATTRIBUTION PAGE — Single-column layout
+   ═══════════════════════════════════════════════════════════════ */
+.attribution-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--space-s-l);
+    flex: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ABOUT PAGE — Single-column layout
+   ═══════════════════════════════════════════════════════════════ */
+.about-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--space-s-l);
+    flex: 1;
+}
+
+/* ── SECTION STRUCTURE (attribution + about) ── */
+.section {
+    margin-bottom: var(--space-2xl);
+}
+
+.section-label {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-3xs);
+}
+
+.section h2 {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+    margin-bottom: var(--space-3xs);
+}
+
+.section h3 {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-top: var(--space-l);
+    margin-bottom: var(--space-2xs);
+    line-height: 1.25;
+}
+
+.desc {
+    font-size: var(--step-0);
+    font-variation-settings: 'opsz' 14;
+    color: var(--text-secondary);
+    max-width: 60ch;
+    line-height: 1.65;
+    margin-bottom: var(--space-m);
+}
+
+.section p {
+    max-width: 60ch;
+    line-height: 1.65;
+    margin-bottom: var(--space-xs);
+    color: var(--text-primary);
+}
+
+.section p:last-child {
+    margin-bottom: 0;
+}
+
+.section strong {
+    font-weight: 650;
+    color: var(--text-primary);
+}
+
+.section a {
+    color: var(--accent-text);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-subtle);
+    text-underline-offset: 2px;
+    transition: text-decoration-color 0.15s ease;
+}
+
+.section a:hover {
+    text-decoration-color: var(--accent-primary);
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid var(--border-subtle);
+    margin: var(--space-xl) 0;
+}
+
+/* ── ABOUT SECTION ── */
+.about-section {
+    margin-bottom: var(--space-2xl);
+}
+
+.about-section-label {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-3xs);
+}
+
+.about-section-heading {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+    margin-bottom: var(--space-m);
+}
+
+.about-prose {
+    font-family: var(--font-body);
+    font-size: var(--step-0);
+    font-variation-settings: 'opsz' 14;
+    color: var(--text-primary);
+    max-width: 60ch;
+    line-height: 1.65;
+    margin-bottom: var(--space-s);
+}
+
+.about-prose:last-child {
+    margin-bottom: 0;
+}
+
+.about-prose strong {
+    font-weight: 650;
+}
+
+.about-prose a {
+    color: var(--accent-text);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-subtle);
+    text-underline-offset: 2px;
+    transition: text-decoration-color 0.15s ease;
+}
+
+.about-prose a:hover {
+    text-decoration-color: var(--accent-primary);
+}
+
+.about-note {
+    font-style: italic;
+    color: var(--text-secondary);
+}

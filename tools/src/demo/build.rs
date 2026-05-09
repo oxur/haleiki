@@ -38,6 +38,8 @@ pub fn run() -> Result<()> {
     generate_home_page()?;
     generate_category_pages()?;
     generate_browse_page()?;
+    generate_about_page()?;
+    generate_attribution_page()?;
     run_cobalt_build()?;
 
     eprintln!("Done. Site built to demo/_site/");
@@ -284,6 +286,21 @@ fn generate_browse_page() -> Result<()> {
     Ok(())
 }
 
+fn generate_about_page() -> Result<()> {
+    let content = "---\nlayout: about.liquid\ntitle: About Haleiki\npermalink: /about/\n---\n";
+    fs::write(format!("{BUILD_DIR}/about.md"), content)?;
+    eprintln!("  Generated about page");
+    Ok(())
+}
+
+fn generate_attribution_page() -> Result<()> {
+    let content =
+        "---\nlayout: attribution.liquid\ntitle: Attribution\npermalink: /attribution/\n---\n";
+    fs::write(format!("{BUILD_DIR}/attribution.md"), content)?;
+    eprintln!("  Generated attribution page");
+    Ok(())
+}
+
 fn run_haleiki_build() -> Result<()> {
     eprintln!("  Running haleiki build (graph + data)...");
     let content_dir = Path::new("demo");
@@ -301,7 +318,7 @@ fn run_haleiki_build() -> Result<()> {
     crate::generator::generate(&corpus, &graph, output_dir)?;
     let stats = graph.stats(&corpus);
     eprintln!(
-        "  Generated data: {} nodes, {} edges, 8 JSON files",
+        "  Generated data: {} nodes, {} edges, 9 JSON files",
         stats.total_nodes, stats.total_edges
     );
     Ok(())

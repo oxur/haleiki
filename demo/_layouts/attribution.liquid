@@ -1,0 +1,144 @@
+{% assign trust_level = site.data.profile.trust.default %}
+{% assign trust_info = site.data.profile.trust.levels[trust_level] %}
+<!DOCTYPE html>
+<html lang="en" data-theme="day"{% if site.data.profile.trust.enabled %} data-trust="{{ trust_level }}"{% endif %}>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page.title }} — Haleiki Demo</title>
+  <script>
+    (function(){
+      var t = localStorage.getItem('haleiki-theme');
+      if (!t) t = window.matchMedia('(prefers-color-scheme:dark)').matches ? 'night' : 'day';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="icon" href="/assets/icons/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/assets/icons/site.webmanifest">
+  <script src="/assets/js/theme.js" defer></script>
+</head>
+<body class="page-attribution">
+  {% include "topnav.liquid" %}
+
+  <main class="attribution-page">
+
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a><span class="sep">&#8250;</span>
+      <span>Attribution</span>
+    </nav>
+
+    <!-- ── PAGE HEADER ── -->
+    <header class="page-header">
+      <div class="page-overline">Legal</div>
+      <h1 class="page-title">Attribution &amp; Licensing</h1>
+      <p class="page-description">This knowledge base includes content adapted from Wikipedia, Wikibooks, and Rigpa Wiki under Creative Commons licenses. This page provides complete attribution for all source content.</p>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- LICENSE SUMMARY                                                 -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="license-callout">
+      <div class="license-callout-title">License Summary</div>
+      <p>{{ site.data.attribution.general_notice }} The Haleiki framework itself is dual-licensed under Apache 2.0 / MIT.</p>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SOURCE ARTICLES                                                  -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="section" id="source-articles">
+      <div class="section-label">Content Sources</div>
+      <h2>Source Articles <span style="font-weight: 400; font-size: var(--step-0); color: var(--text-tertiary);">({{ site.data.attribution.source_count }} articles)</span></h2>
+      <p class="desc">Every article in this wiki is adapted from a publicly available source. The tables below list each article grouped by its upstream project, with a link to the original.</p>
+
+      {% for project_pair in site.data.attribution.sources_by_project %}
+        {% assign project_name = project_pair[0] %}
+        {% assign project_sources = project_pair[1] %}
+
+        <h3 class="source-heading">{{ project_name }}</h3>
+        <div class="source-meta">{{ project_sources.size }} articles</div>
+
+        <table class="attr-table">
+          <thead>
+            <tr>
+              <th>Article</th>
+              <th>License</th>
+              <th>Original</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for src in project_sources %}
+            <tr>
+              <td><a href="/source/{{ src.slug }}/">{{ src.title }}</a></td>
+              <td>{{ src.license }}</td>
+              <td><a href="{{ src.url }}">{{ project_name }} <span class="ext">&#8599;</span></a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endfor %}
+    </div>
+
+    <hr class="divider">
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- MEDIA & IMAGES                                                   -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="section" id="media">
+      <div class="section-label">Media Sources</div>
+      <h2>Media &amp; Images</h2>
+      <div class="manifest-note">
+        Per-image attribution data is not yet available. The media manifest file will be restored in a future update, at which point individual image credits will appear here.
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- LICENSE TEXTS                                                     -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="section" id="licenses">
+      <div class="section-label">License Details</div>
+      <h2>License Texts</h2>
+      <p class="desc">The following licenses govern the content and software in this project.</p>
+
+      <div class="license-card">
+        <div class="license-card-title">Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)</div>
+        <ul>
+          <li>You are free to share (copy, redistribute) and adapt (remix, transform, build upon) the material for any purpose, including commercially.</li>
+          <li>You must give appropriate credit, provide a link to the license, and indicate if changes were made.</li>
+          <li>If you remix, transform, or build upon the material, you must distribute your contributions under the same license.</li>
+        </ul>
+        <a class="license-link" href="https://creativecommons.org/licenses/by-sa/4.0/">Full license text at creativecommons.org <span class="ext">&#8599;</span></a>
+      </div>
+
+      <div class="license-card">
+        <div class="license-card-title">Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)</div>
+        <ul>
+          <li>You are free to share and adapt the material for any purpose, including commercially.</li>
+          <li>You must give appropriate credit, provide a link to the license, and indicate if changes were made.</li>
+          <li>If you remix, transform, or build upon the material, you must distribute your contributions under the same license.</li>
+        </ul>
+        <a class="license-link" href="https://creativecommons.org/licenses/by-sa/3.0/">Full license text at creativecommons.org <span class="ext">&#8599;</span></a>
+      </div>
+
+      <div class="license-card">
+        <div class="license-card-title">Apache License 2.0 / MIT License (Framework)</div>
+        <ul>
+          <li>The Haleiki software framework is dual-licensed under Apache 2.0 and MIT at your option.</li>
+          <li>Both licenses are permissive, allowing free use, modification, and distribution.</li>
+          <li>Apache 2.0 includes an express patent grant; MIT is more minimal.</li>
+        </ul>
+        <a class="license-link" href="https://www.apache.org/licenses/LICENSE-2.0" style="margin-right: var(--space-m);">Apache 2.0 <span class="ext">&#8599;</span></a>
+        <a class="license-link" href="https://opensource.org/licenses/MIT">MIT License <span class="ext">&#8599;</span></a>
+      </div>
+    </div>
+
+  </main>
+
+  {% include "footer.liquid" %}
+</body>
+</html>

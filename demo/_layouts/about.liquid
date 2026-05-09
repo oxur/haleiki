@@ -1,0 +1,103 @@
+{% assign trust_level = site.data.profile.trust.default %}
+{% assign trust_info = site.data.profile.trust.levels[trust_level] %}
+<!DOCTYPE html>
+<html lang="en" data-theme="day"{% if site.data.profile.trust.enabled %} data-trust="{{ trust_level }}"{% endif %}>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page.title }} — Haleiki Demo</title>
+  <script>
+    (function(){
+      var t = localStorage.getItem('haleiki-theme');
+      if (!t) t = window.matchMedia('(prefers-color-scheme:dark)').matches ? 'night' : 'day';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="icon" href="/assets/icons/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/assets/icons/site.webmanifest">
+  <script src="/assets/js/theme.js" defer></script>
+</head>
+<body class="page-about">
+  {% include "topnav.liquid" %}
+
+  <main class="about-page">
+
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a><span class="sep">&#8250;</span>
+      <span>About</span>
+    </nav>
+
+    <header class="page-header">
+      <div class="page-overline">About</div>
+      <h1 class="page-title">About Haleiki</h1>
+      <p class="page-description">Haleiki is a read-only wiki for structured knowledge. The name means "house of knowledge" in Hawaiian. This page explains how we approach sourcing, evidence, and trust in the content you find here.</p>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- TRUST LEVELS                                                    -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    {% if site.data.profile.trust.enabled %}
+    <section class="about-section" id="trust-levels">
+      <div class="about-section-label">Sourcing & Evidence</div>
+      <h2 class="about-section-heading">Trust Levels</h2>
+
+      <p class="about-prose">Every article in this knowledge base carries a trust level. Trust levels describe <strong>the sourcing and evidence basis of the content</strong> — they are not a value judgment on the subject matter itself. For example, an article on a philosophical tradition marked "Credible" means the article's content is well-sourced and represents a reasonable interpretation of available references. It does not mean the editors endorse or reject the tradition's claims.</p>
+
+      <div class="trust-level-list">
+        {% for level in site.data.profile.trust.level_order %}
+          {% assign level_info = site.data.profile.trust.levels[level] %}
+          {% assign trust_level = level %}
+          <div class="trust-level-card">
+            <div class="trust-level-card-header">
+              {% include "trust-glyph.liquid" %}
+              <span class="trust-level-card-label">{{ level_info.label }}</span>
+            </div>
+            <p class="trust-level-card-desc">{{ level_info.description }}.</p>
+            {% if level == "credible" %}
+            <p class="trust-level-card-note">In this corpus, all entries are currently at the "Credible" level, reflecting well-sourced content drawn from established reference works.</p>
+            {% elsif level == "corroborated" %}
+            <p class="trust-level-card-note">No entries in this corpus are currently marked "Corroborated." This level would apply to content independently verified across multiple authoritative sources.</p>
+            {% elsif level == "provisional" %}
+            <p class="trust-level-card-note">No entries in this corpus are currently marked "Provisional." This level would apply to content based on partial or emerging evidence, subject to revision as new sources become available.</p>
+            {% elsif level == "speculative" %}
+            <p class="trust-level-card-note">No entries in this corpus are currently marked "Speculative." This level would apply to content with limited or fragmentary sourcing, included for completeness but requiring further verification.</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <p class="about-prose about-note">Trust levels may change as content is updated and additional sources are incorporated.</p>
+    </section>
+    {% endif %}
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- CANON STATUS (conditional — disabled for encyclopedia)          -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    {% if site.data.profile.canon.enabled %}
+    <section class="about-section" id="canon-status">
+      <div class="about-section-label">Canon</div>
+      <h2 class="about-section-heading">Canon Status</h2>
+      <p class="about-prose">Canon status indicates whether content is considered part of the accepted body of knowledge for this deployment.</p>
+    </section>
+    {% endif %}
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- ABOUT THE PROJECT                                               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <section class="about-section" id="about-project">
+      <div class="about-section-label">The Project</div>
+      <h2 class="about-section-heading">About the Haleiki Framework</h2>
+      <p class="about-prose">Haleiki is a static-site knowledge base framework with a four-layer pipeline: authoring in Markdown, pre-build processing in Rust, site generation with Cobalt, and runtime as static HTML, CSS, and JavaScript. It supports structured content with typed relationships, concept extraction, and deployment profiles that adapt the same framework to different knowledge domains.</p>
+      <p class="about-prose">This demo site showcases an encyclopedic deployment profile, drawing content from Wikipedia, Wikibooks, and Rigpa Wiki under Creative Commons licenses. For full source attribution, see the <a href="/attribution/">Attribution</a> page.</p>
+      <p class="about-prose">The Haleiki framework is open source, dual-licensed under Apache 2.0 and MIT. Source code and documentation are available on <a href="https://github.com/oxur/haleiki">GitHub</a>.</p>
+    </section>
+
+  </main>
+
+  {% include "footer.liquid" %}
+</body>
+</html>

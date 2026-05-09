@@ -1648,3 +1648,227 @@ a.category-card-title:hover {
 .trust-bar-link { color: var(--trust-accent, var(--accent-text)); text-decoration: underline; text-underline-offset: 2px; white-space: nowrap; }
 .trust-glyph { display: inline-flex; align-items: center; line-height: 1; }
 .trust-overline { color: var(--trust-text, var(--text-secondary)); }
+
+/* ═══════════════════════════════════════════════════════════════
+   LICENSE CALLOUT — Prominent notice box
+   ═══════════════════════════════════════════════════════════════ */
+.license-callout {
+    background: var(--info-surface);
+    border: 1px solid var(--info-border);
+    border-left: 3px solid var(--accent-primary);
+    border-radius: var(--radius-m);
+    padding: var(--space-s) var(--space-m);
+    margin-bottom: var(--space-l);
+}
+
+.license-callout-title {
+    font-family: var(--font-display);
+    font-size: var(--step--1);
+    font-weight: 600;
+    color: var(--accent-text);
+    margin-bottom: var(--space-3xs);
+}
+
+.license-callout p {
+    font-size: var(--step--1);
+    font-variation-settings: 'opsz' 10;
+    color: var(--info-text);
+    max-width: 60ch;
+    line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ATTRIBUTION TABLE
+   ═══════════════════════════════════════════════════════════════ */
+.attr-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--space-s) 0;
+    font-size: var(--step--1);
+}
+
+.attr-table th {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-tertiary);
+    text-align: left;
+    padding: var(--space-2xs) var(--space-xs);
+    border-bottom: 2px solid var(--border-default);
+    font-weight: 500;
+}
+
+.attr-table td {
+    padding: var(--space-2xs) var(--space-xs);
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    vertical-align: top;
+}
+
+.attr-table td:first-child {
+    font-family: var(--font-display);
+    font-size: var(--step--1);
+    font-weight: 500;
+}
+
+.attr-table td a {
+    color: var(--accent-text);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.attr-table td a:hover {
+    text-decoration: underline;
+}
+
+.attr-table .ext {
+    font-size: 0.75em;
+    opacity: 0.5;
+    transition: opacity 0.15s ease;
+}
+
+.attr-table a:hover .ext {
+    opacity: 0.8;
+}
+
+/* ── SOURCE HEADING ── */
+.source-heading {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-top: var(--space-l);
+    margin-bottom: var(--space-3xs);
+    line-height: 1.25;
+}
+
+.source-meta {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-s);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LICENSE CARDS
+   ═══════════════════════════════════════════════════════════════ */
+.license-card {
+    background: var(--surface-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-m);
+    padding: var(--space-s) var(--space-m);
+    margin-bottom: var(--space-s);
+}
+
+.license-card-title {
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-3xs);
+}
+
+.license-card ul {
+    list-style: none;
+    margin-bottom: var(--space-2xs);
+}
+
+.license-card li {
+    font-size: var(--step--1);
+    color: var(--text-secondary);
+    padding: var(--space-3xs) 0;
+    padding-left: var(--space-s);
+    position: relative;
+    line-height: 1.5;
+}
+
+.license-card li::before {
+    content: "\2022";
+    color: var(--accent-primary);
+    position: absolute;
+    left: 0;
+}
+
+.license-card .license-link {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--accent-text);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    transition: color 0.15s ease;
+}
+
+.license-card .license-link:hover {
+    text-decoration: underline;
+}
+
+.license-card .license-link .ext {
+    font-size: 0.75em;
+    opacity: 0.5;
+}
+
+/* ── MANIFEST NOTE ── */
+.manifest-note {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--text-tertiary);
+    background: var(--surface-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-m);
+    padding: var(--space-xs) var(--space-s);
+    margin-top: var(--space-s);
+    text-align: center;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TRUST LEVEL CARDS — About page trust level definitions
+   ═══════════════════════════════════════════════════════════════ */
+.trust-level-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    margin-top: var(--space-m);
+    margin-bottom: var(--space-m);
+}
+
+.trust-level-card {
+    background: var(--surface-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-m);
+    padding: var(--space-s) var(--space-m);
+}
+
+.trust-level-card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    margin-bottom: var(--space-2xs);
+}
+
+.trust-level-card-label {
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.trust-level-card-desc {
+    font-family: var(--font-body);
+    font-size: var(--step-0);
+    font-variation-settings: 'opsz' 14;
+    color: var(--text-primary);
+    line-height: 1.55;
+    margin-bottom: var(--space-2xs);
+}
+
+.trust-level-card-note {
+    font-family: var(--font-body);
+    font-size: var(--step--1);
+    font-variation-settings: 'opsz' 10;
+    color: var(--text-secondary);
+    font-style: italic;
+    line-height: 1.5;
+}
