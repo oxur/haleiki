@@ -1,0 +1,19 @@
+name: Demo Site
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Build haleiki
+        run: cargo build --release --features demo --manifest-path tools/Cargo.toml
+      - name: Build demo site
+        run: ./target/release/haleiki demo build
+      - name: Validate
+        run: ./target/release/haleiki validate --content-dir demo

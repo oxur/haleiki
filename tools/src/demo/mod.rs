@@ -16,6 +16,7 @@ pub mod status;
 
 use std::path::Path;
 
+use anyhow::Context;
 use clap::Subcommand;
 
 /// Pipeline stages for the demo content pipeline.
@@ -171,7 +172,19 @@ pub fn run(cmd: &DemoCommand) -> anyhow::Result<()> {
             ))?;
         }
         DemoCommand::Build => build::run()?,
-        DemoCommand::Serve => println!("demo serve: not yet implemented"),
+        DemoCommand::Serve => {
+            // Build first
+            build::run()?;
+            // Then start cobalt serve
+            let status = std::process::Command::new("cobalt")
+                .arg("serve")
+                .current_dir("demo/_build")
+                .status()
+                .context("failed to run cobalt serve — is cobalt-bin installed? (cargo install cobalt-bin --locked)")?;
+            if !status.success() {
+                anyhow::bail!("cobalt serve exited with error");
+            }
+        }
         DemoCommand::Status => {
             status::run()?;
         }

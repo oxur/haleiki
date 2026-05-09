@@ -15,6 +15,21 @@
     border: 0;
 }
 
+/* ── VISUALLY HIDDEN: Focus state for skip-to-content link ── */
+.visually-hidden:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    clip-path: none;
+    white-space: normal;
+    background: var(--surface-primary);
+    color: var(--text-primary);
+    padding: var(--space-2xs) var(--space-xs);
+    z-index: 1000;
+}
+
 /* ── RESPONSIVE: Left nav hides on narrow viewports ── */
 @media (max-width: 60rem) {
     .left-nav {

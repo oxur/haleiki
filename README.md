@@ -33,13 +33,40 @@ Two first-class page types, both full wiki citizens:
 
 ## Quick Start
 
+### Prerequisites
+
+- [Rust](https://www.rust-lang.org/tools/install) (1.85+)
+- [Cobalt](https://cobalt-org.github.io/) (`cargo install cobalt-bin --locked`)
+
+### Building
+
+```bash
+# Build the CLI tool (with demo site support)
+cargo build --release --features demo --manifest-path tools/Cargo.toml
+
+# Or use Make
+make build
+```
+
+### Demo Site
+
+```bash
+# Build and serve the demo knowledge base
+make run-demo
+
+# Or run directly
+./target/release/haleiki demo serve
+```
+
+### Custom Content
+
 ```bash
 # Scaffold new content
 haleiki new source "Understanding Ownership in Rust"
 haleiki new concept "Ownership"
 
 # Build
-haleiki build && cobalt build && npx pagefind --site _site
+haleiki build && cobalt build
 
 # Dev (serve + watch)
 haleiki dev

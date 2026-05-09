@@ -49,7 +49,22 @@ fn run(cmd: &Command) -> anyhow::Result<()> {
             println!("search: not yet implemented");
         }
         Command::Dev => {
-            println!("dev: not yet implemented");
+            let content_dir = Path::new("content");
+            if content_dir.exists()
+                && content_dir.is_dir()
+                && std::fs::read_dir(content_dir)
+                    .map(|mut d| d.next().is_some())
+                    .unwrap_or(false)
+            {
+                println!("Content directory found at content/.");
+                println!("Full dev server for custom deployments is not yet implemented.");
+                println!(
+                    "Use `haleiki build` to process the content, then `cobalt serve` to preview."
+                );
+            } else {
+                println!("No content/ directory found (or it is empty).");
+                println!("To preview the demo site, use: haleiki demo serve");
+            }
         }
         Command::New(sub) => match sub {
             NewCommand::Source { title } => {

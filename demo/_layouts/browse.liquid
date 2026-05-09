@@ -23,9 +23,14 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
   <link rel="manifest" href="/assets/icons/site.webmanifest">
+  <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
+  <script defer src="/assets/vendor/katex/katex.min.js"></script>
+  <script defer src="/assets/vendor/katex/auto-render.min.js"></script>
+  <script defer src="/assets/js/math.js"></script>
   <script src="/assets/js/theme.js" defer></script>
 </head>
 <body class="page-browse">
+  <a href="#main-content" class="visually-hidden">Skip to main content</a>
   {% include "topnav.liquid" %}
 
   <div class="page-layout">
@@ -47,7 +52,7 @@
     </aside>
 
     <!-- ── MAIN CONTENT ── -->
-    <main class="main-content">
+    <main id="main-content" class="main-content">
 
       {% include "breadcrumb.liquid" %}
 

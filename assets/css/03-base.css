@@ -59,6 +59,21 @@
     color: var(--code-text);
 }
 
+.prose pre {
+    margin-bottom: var(--space-s);
+    border-radius: var(--radius-m);
+    overflow-x: auto;
+}
+
+.prose pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    border-radius: 0;
+    color: inherit;
+    font-size: 0.85em;
+}
+
 .prose ul,
 .prose ol {
     margin-bottom: var(--space-s);
