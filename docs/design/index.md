@@ -6,7 +6,8 @@ This index is automatically generated. Do not edit manually.
 
 | Number | Title | State | Updated |
 |--------|-------|-------|----------|
-| 0011 | Profile System — Trust Bar and Info Card Tinting | Active | 2026-05-08 |
+| 0012 | Attribution and Definitions Pages | Active | 2026-05-08 |
+| 0011 | Profile System — Trust Bar and Info Card Tinting | Final | 2026-05-08 |
 | 0010 | Home, Category, and Browse Pages | Final | 2026-05-08 |
 | 0009 | Source and Concept Page Templates with Full Chrome | Final | 2026-05-07 |
 | 0008 | Design System CSS Extraction | Final | 2026-05-07 |
@@ -22,6 +23,7 @@ This index is automatically generated. Do not edit manually.
 
 ### Final
 
+- [0011 - Profile System — Trust Bar and Info Card Tinting](06-final/0011-m6-implementation-plan-profile-system-trust-bar-and-info-card-tinting.md)
 - [0010 - Home, Category, and Browse Pages](06-final/0010-m5-implementation-plan-home-category-and-browse-pages.md)
 - [0009 - Source and Concept Page Templates with Full Chrome](06-final/0009-m4-implementation-plan-source-and-concept-page-templates-with-full-chrome.md)
 - [0008 - Design System CSS Extraction](06-final/0008-m3-implementation-plan-design-system-css-extraction.md)
@@ -32,7 +34,7 @@ This index is automatically generated. Do not edit manually.
 
 ### Active
 
-- [0011 - M6 Implementation Plan: Profile System — Trust Bar and Info Card Tinting](05-active/0011-m6-implementation-plan-profile-system-trust-bar-and-info-card-tinting.md)
+- [0012 - M7 Implementation Plan: Attribution and Definitions Pages](05-active/0012-m7-implementation-plan-attribution-and-definitions-pages.md)
 - [0003 - Haleiki Demo Site — Project Plan](05-active/0003-haleiki-demo-site-project-plan.md)
 - [0002 - Haleiki Demo Site — Design Document](05-active/0002-haleiki-demo-site-design-document.md)
 
