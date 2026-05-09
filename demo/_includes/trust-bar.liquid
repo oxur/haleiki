@@ -1,0 +1,10 @@
+{% if site.data.profile.trust.enabled %}
+<div class="trust-bar trust-bar--{{ trust_level }}">
+  <div class="trust-bar-label">
+    {% include "trust-glyph.liquid" %}
+    <span>{{ trust_info.label }}</span>
+  </div>
+  <div class="trust-bar-desc">{{ trust_info.description }}</div>
+  <a href="/about/#trust-levels" class="trust-bar-link">What does this mean?</a>
+</div>
+{% endif %}

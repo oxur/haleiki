@@ -1,5 +1,11 @@
+{% if page.data contains "trust_level" %}
+  {% assign trust_level = page.data.trust_level %}
+{% else %}
+  {% assign trust_level = site.data.profile.trust.default %}
+{% endif %}
+{% assign trust_info = site.data.profile.trust.levels[trust_level] %}
 <!DOCTYPE html>
-<html lang="en" data-theme="day">
+<html lang="en" data-theme="day"{% if site.data.profile.trust.enabled %} data-trust="{{ trust_level }}"{% endif %}>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">

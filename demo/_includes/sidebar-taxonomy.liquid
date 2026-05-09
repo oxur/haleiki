@@ -1,6 +1,6 @@
 <aside class="sidebar">
   <div class="info-card">
-    <div class="info-card-header">{{ page.data.concept }}</div>
+    <div class="info-card-header"{% if site.data.profile.trust.enabled %} style="background: var(--trust-accent); color: var(--trust-on-accent);"{% endif %}>{{ page.data.concept }}</div>
     <div class="info-card-body">
       <div class="info-row">
         <span class="info-label">Category</span>

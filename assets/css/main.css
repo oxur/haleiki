@@ -1,5 +1,6 @@
 @layer tokens, reset, base, layout, components, utilities;
 @import "01-tokens.css" layer(tokens);
+@import "07-trust-tokens.css" layer(tokens);
 @import "02-reset.css" layer(reset);
 @import "03-base.css" layer(base);
 @import "04-layout.css" layer(layout);
