@@ -71,7 +71,9 @@ the recomposition arc that closes the branch as a clean Cobalt replacement.
 - **Arc 02 — Routes & static export:** **CLOSED** 2026-07-28 (see
   [`arc02-routes-static-export/closing-report.md`](./arc02-routes-static-export/closing-report.md)).
   All four slices CDC-closed; a real 293-file `_site/` export reproduces B-5…B-8.
-- **Arc 03 — tiny_http server:** next to plan deep.
+- **Arc 03 — tiny_http server:** planned in detail (see
+  [`arc03-tiny-http-server/arc-plan.md`](./arc03-tiny-http-server/arc-plan.md));
+  slice 01 open set written; not yet implemented.
 - **Arcs 04–06:** roadmap-level only, by design. Each is planned deep when it
   becomes the active work; findings from earlier arcs bubble up and may reshape
   the later entries before they are planned.
