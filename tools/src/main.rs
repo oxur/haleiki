@@ -4,6 +4,8 @@
 //! references, computes derived data, and writes JSON for the static-site
 //! build layer.
 
+#[allow(dead_code)]
+mod article;
 mod cli;
 #[cfg(feature = "demo")]
 mod demo;

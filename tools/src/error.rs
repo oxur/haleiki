@@ -22,6 +22,10 @@ pub enum Error {
     #[error("JSON error: {0}")]
     Json(#[from] serde_json::Error),
 
+    /// A minijinja template failed to load or render.
+    #[error("template error: {0}")]
+    Render(#[from] minijinja::Error),
+
     /// A content-validation rule was violated.
     #[error("Validation error: {message}")]
     Validation {

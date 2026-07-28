@@ -78,6 +78,35 @@ _(Class-(c) bubble-up rows are added as slices surface findings.)_
 
 ## 5. Version history
 
+### v1.5 — 2026-07-28 (bubble-up from slice 03)
+Slice 03 (wiki-article context) closed (proposed-done; see
+`slice03-wiki-article-context/closing-report.md`) — Arc 01's third and final
+slice. It delivered the article render pipeline (`article::render_concept` /
+`render_source`) and, in doing so, produced the evidence this arc's
+composition rows (A-4…A-7) will reproduce at arc scale: a real demo concept
+and source each render end-to-end with full chrome, escaping holds at page
+scale, and the path uses no Liquid. Per `LEDGER-DISCIPLINE.md` Section B,
+A-4…A-7 still require **independent reproduction at arc scale** by whoever
+closes the arc — slice 03's tests are evidence for that, not a substitute.
+
+Two further items surfaced:
+
+- **A new pre-existing-debt category**: running `cargo clippy --all-targets`
+  (per the slice-02 lesson, and per slice 03's own cc-prompt instruction)
+  found 28 findings invisible to every prior lint pass, all of it — including
+  the v1.4 remediation — having run clippy *without* `--all-targets`.
+  Entirely in `demo/{convert,media,clean,frontmatter,rewrite}.rs` and
+  `tools/tests/demo_fetch.rs`, plus two `assert!(x == y)` in `generator.rs`'s
+  own pre-existing test. **Disposition:** route to the same cleanup pass as
+  the v1.2/v1.4 debt; whatever CI gate eventually gets wired in should include
+  `--all-targets`, not just `--all-features`.
+- **`demo/profile.yaml` migration (carried from v1.2/v1.3) is done.** Slice 03
+  rewrote it to the render `Profile` shape, with `taxonomy` corrected to the
+  real `demo/taxonomy.yaml` (10 categories, 3 tiers) and the `about_body`
+  source-project list corrected to what the corpus actually cites (Wikipedia +
+  Rigpa Wiki only — no Wikibooks content exists here, despite
+  `templates/profile.sample.yaml`'s copy).
+
 ### v1.4 — 2026-07-28 (operator-directed remediation)
 The v1.2 "pre-existing lint debt blocks `make lint`/CI" finding is **resolved**.
 At the operator's direct instruction (outside the slice-02 ledger's scope), all

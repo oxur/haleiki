@@ -97,16 +97,16 @@ struct GraphOutput {
 
 /// A provenance entry linking source to concepts and vice versa.
 #[derive(Debug, Clone, Serialize)]
-struct ProvenanceEntry {
+pub(crate) struct ProvenanceEntry {
     /// For a source: concepts derived from it. For a concept: sources it derives from.
-    links: Vec<ProvenanceLink>,
+    pub(crate) links: Vec<ProvenanceLink>,
 }
 
 #[derive(Debug, Clone, Serialize)]
-struct ProvenanceLink {
-    slug: String,
-    title: String,
-    url: String,
+pub(crate) struct ProvenanceLink {
+    pub(crate) slug: String,
+    pub(crate) title: String,
+    pub(crate) url: String,
 }
 
 /// A single source attribution entry in the attribution JSON output.
@@ -278,6 +278,15 @@ fn write_see_also_json(corpus: &Corpus, graph: &HaleikiGraph, output_dir: &Path)
 }
 
 fn write_provenance_json(corpus: &Corpus, output_dir: &Path) -> Result<()> {
+    let provenance = build_provenance_map(corpus);
+    write_json(output_dir, "provenance.json", &provenance)
+}
+
+/// Build the provenance map: for each source, the concepts derived from it;
+/// for each concept, the sources it derives from. Shared by the JSON writer
+/// ([`write_provenance_json`]) and the minijinja render path
+/// (`render::assemble_site_context`) — one derivation, two consumers.
+pub(crate) fn build_provenance_map(corpus: &Corpus) -> BTreeMap<String, ProvenanceEntry> {
     let mut provenance: BTreeMap<String, ProvenanceEntry> = BTreeMap::new();
 
     // For each source: which concepts derive from it
@@ -323,7 +332,7 @@ fn write_provenance_json(corpus: &Corpus, output_dir: &Path) -> Result<()> {
         }
     }
 
-    write_json(output_dir, "provenance.json", &provenance)
+    provenance
 }
 
 fn write_profile_json(corpus: &Corpus, output_dir: &Path) -> Result<()> {
@@ -601,6 +610,7 @@ mod tests {
                 concepts_generated: vec!["concept-a".to_string()],
                 last_extracted: String::new(),
                 status: "published".to_string(),
+                body: String::new(),
             },
         );
 
@@ -634,6 +644,7 @@ mod tests {
                 status: "published".to_string(),
                 stable_since: String::new(),
                 last_reviewed: String::new(),
+                body: String::new(),
             },
         );
 

@@ -562,6 +562,7 @@ mod tests {
                 concepts_generated: vec!["concept-a".to_string(), "concept-b".to_string()],
                 last_extracted: String::new(),
                 status: "published".to_string(),
+                body: String::new(),
             },
         );
 
@@ -595,6 +596,7 @@ mod tests {
                 status: "published".to_string(),
                 stable_since: String::new(),
                 last_reviewed: String::new(),
+                body: String::new(),
             },
         );
         concepts.insert(
@@ -626,6 +628,7 @@ mod tests {
                 status: "published".to_string(),
                 stable_since: String::new(),
                 last_reviewed: String::new(),
+                body: String::new(),
             },
         );
 

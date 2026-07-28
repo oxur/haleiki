@@ -55,6 +55,10 @@ pub struct SourcePage {
     pub last_extracted: String,
     #[serde(default)]
     pub status: String,
+    /// The Markdown body, populated by [`parse_sources`] after frontmatter
+    /// extraction. Not part of the frontmatter itself.
+    #[serde(skip)]
+    pub body: String,
 }
 
 /// Nested original-source information in source page frontmatter.
@@ -121,6 +125,10 @@ pub struct ConceptCard {
     pub stable_since: String,
     #[serde(default)]
     pub last_reviewed: String,
+    /// The Markdown body, populated by [`parse_concepts`] after frontmatter
+    /// extraction. Not part of the frontmatter itself.
+    #[serde(skip)]
+    pub body: String,
 }
 
 /// An entry in the `derived_from` list of a concept card.
@@ -249,8 +257,9 @@ fn parse_sources(content_dir: &Path) -> Result<HashMap<String, SourcePage>> {
         let content = fs::read_to_string(&path)
             .with_context(|| format!("failed to read {}", path.display()))?;
 
-        let (page, _body): (SourcePage, String) = parse_frontmatter(&content)
+        let (mut page, body): (SourcePage, String) = parse_frontmatter(&content)
             .with_context(|| format!("failed to parse frontmatter in {}", path.display()))?;
+        page.body = body;
 
         map.insert(page.slug.clone(), page);
     }
@@ -286,8 +295,9 @@ fn parse_concepts(content_dir: &Path) -> Result<HashMap<String, ConceptCard>> {
         let content = fs::read_to_string(&path)
             .with_context(|| format!("failed to read {}", path.display()))?;
 
-        let (card, _body): (ConceptCard, String) = parse_frontmatter(&content)
+        let (mut card, body): (ConceptCard, String) = parse_frontmatter(&content)
             .with_context(|| format!("failed to parse frontmatter in {}", path.display()))?;
+        card.body = body;
 
         map.insert(card.slug.clone(), card);
     }
@@ -476,6 +486,33 @@ relationships:
         assert_eq!(profile.trust.default, "credible");
         assert!(!profile.canon.enabled);
         assert_eq!(profile.page_types, vec!["source", "concept"]);
+    }
+
+    /// The repo-root `demo/` directory, resolved relative to this crate's
+    /// manifest (`tools/Cargo.toml`) — `cargo test` runs with the crate root
+    /// as its working directory, not the repo root.
+    fn demo_dir() -> std::path::PathBuf {
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("../demo")
+    }
+
+    // F-1: the parser retains the Markdown body for a real demo source and concept.
+    #[test]
+    fn test_parse_corpus_retains_body_for_real_demo_source_and_concept() {
+        let corpus = parse_corpus(&demo_dir()).expect("demo corpus parses");
+
+        let source = corpus
+            .sources
+            .get("vimalamitra")
+            .expect("demo/sources/vimalamitra.md is in the corpus");
+        assert!(!source.body.is_empty());
+        assert!(source.body.contains("Attributed works"));
+
+        let concept = corpus
+            .concepts
+            .get("abelian-group")
+            .expect("demo/concepts/abelian-group.md is in the corpus");
+        assert!(!concept.body.is_empty());
+        assert!(concept.body.contains("Quick Definition"));
     }
 
     #[test]

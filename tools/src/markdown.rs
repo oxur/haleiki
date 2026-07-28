@@ -89,7 +89,10 @@ pub fn render_markdown(body: &str) -> RenderedContent {
 ///
 /// `"Quick Definition"` → `"quick-definition"`; `"Context & Application"` →
 /// `"context-application"` (the `&` and surrounding spaces collapse to one `-`).
-fn slugify(text: &str) -> String {
+///
+/// `pub(crate)`: also reused by `article::category_slug` (Arc 01 Slice 03) —
+/// one slugify convention, not two.
+pub(crate) fn slugify(text: &str) -> String {
     let mut slug = String::with_capacity(text.len());
     let mut pending_dash = false;
     for ch in text.chars() {
