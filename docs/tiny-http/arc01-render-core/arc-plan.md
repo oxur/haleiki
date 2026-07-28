@@ -67,7 +67,7 @@ findings dispositioned. Rows accrue as slices close.
 | ID | Criterion | Verify | Significance | Origin | Status | Evidence |
 |----|-----------|--------|--------------|--------|--------|----------|
 | A-1 | Slice 01 (minijinja shell) closed | ptr: `slice01-minijinja-shell/cdc-verification.md` | correctness | arc-plan | done | reproduced — slice 01 CDC-closed 2026-07-28, 8/8 rows reproduced |
-| A-2 | Slice 02 (markdown + TOC) closed | ptr: slice02 cdc-verification | correctness | arc-plan | open | |
+| A-2 | Slice 02 (markdown + TOC) closed | ptr: `slice02-markdown-toc/cdc-verification.md` | correctness | arc-plan | done | reproduced — slice 02 CDC-closed 2026-07-28, 9/9 rows (F-9 returned+fixed) |
 | A-3 | Slice 03 (wiki-article context) closed | ptr: slice03 cdc-verification | correctness | arc-plan | open | |
 | A-4 | A real demo **concept** page renders end-to-end with full chrome (trust bar, taxonomy sidebar, see-also, provenance, breadcrumb, TOC) via the render path | reproduce at arc scale: render a named demo concept, inspect HTML against the mockup | serious | arc-plan | open | |
 | A-5 | A real demo **source** page renders end-to-end with full chrome | reproduce at arc scale: render a named demo source, inspect | serious | arc-plan | open | |
@@ -77,6 +77,42 @@ findings dispositioned. Rows accrue as slices close.
 _(Class-(c) bubble-up rows are added as slices surface findings.)_
 
 ## 5. Version history
+
+### v1.4 — 2026-07-28 (operator-directed remediation)
+The v1.2 "pre-existing lint debt blocks `make lint`/CI" finding is **resolved**.
+At the operator's direct instruction (outside the slice-02 ledger's scope), all
+six pre-existing `cargo clippy --all-features --workspace -- -D warnings` errors
+were fixed rather than left for a dedicated cleanup slice: `generator.rs:541`
+(`sort_by` → `sort_by_key`), `main.rs:57` (`map(...).unwrap_or(false)` →
+`is_ok_and(...)`), and four in `demo/{convert,frontmatter,media,rewrite}.rs`
+(three unnecessary-trailing-comma removals, one `loop` → `while let`). The
+project's (gitignored) `Cargo.lock` was also refreshed via `cargo update` — no
+`Cargo.toml` version-requirement changes were needed; `make check-deps` was
+already reporting "up to date" (nothing exceeded its SemVer requirement) both
+before and after. Verified: `make check` (build + lint + test, `--all-features
+--workspace`) passes clean end-to-end — 327 lib tests + 14 + 3 integration
+tests, 0 clippy/fmt findings. `make check`/`make lint` is now a green merge
+gate on this branch, superseding the "not a green gate until fixed" note in
+v1.2.
+
+### v1.3 — 2026-07-28 (bubble-up from slice 02 CDC close)
+Slice 02 (markdown render + TOC) closed via independent verification
+(`slice02-markdown-toc/cdc-verification.md`): 9/9 rows reproduced. F-9 was
+returned once — independent `clippy --all-targets -D warnings` found a pedantic
+`uninlined_format_args` in the new test asserts that CC's non-`--all-targets`
+run had missed — then fixed and re-confirmed clean. Two findings this slice
+surfaced were **resolved immediately** (operator-directed), not deferred:
+
+- **`source.jinja` did not load KaTeX** → source-page math would render raw.
+  Fixed: added a `head_extra` block loading `katex.min.css` + `katex.min.js` +
+  `math.js`. Loads unconditionally; a conditional `page.data.has_math` load is a
+  possible slice-03 optimization.
+- **`concept.jinja` loaded the now-dead `auto-render.min.js`.** Fixed: removed
+  (`math.js` renders comrak's `data-math-style` spans via `katex.render`).
+
+Both template edits parse-verified via `build_environment().get_template(...)`.
+Carried into slice 03 (from v1.2, still open): retain the markdown body in the
+parser, and migrate `demo/profile.yaml` to the new profile shape.
 
 ### v1.2 — 2026-07-28 (bubble-up from slice 01 CDC close)
 Slice 01's independent verification (`slice01-minijinja-shell/cdc-verification.md`)

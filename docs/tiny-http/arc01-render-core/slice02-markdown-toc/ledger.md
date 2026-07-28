@@ -18,7 +18,7 @@
 | F-6 | GFM pipe tables render to `<table>…</table>` | unit test on a pipe-table fixture | polish | slice-doc | done | attested — `cd tools && cargo test markdown::tests::test_render_markdown_gfm_table` → `... ok`. | `options.extension.table = true`; asserts `<table>`, `<th>Name</th>`, `<td>a</td>`, `</table>` all present. |
 | F-7 | A real demo concept body (`demo/concepts/abelian-group.md`, math-heavy) renders without error; its 8 `##` sections appear in `toc` and each `toc[].id` has a matching `id="…"` anchor in the HTML | unit test reading the file, splitting frontmatter, rendering the body | serious | slice-doc | done, **with a disclosed factual correction to the criterion** | attested — `cd tools && cargo test markdown::tests::test_render_markdown_real_demo_concept_body markdown::tests::test_render_markdown_real_demo_source_body` → both `... ok`. | **The criterion's "8" is wrong; the file has 9** `## ` sections (`grep -c '^## ' demo/concepts/abelian-group.md` → `9`: Quick Definition, Core Definition, Prerequisites, Key Properties, Context & Application, Examples, Relationships, Source Reference, Verification Notes). The test asserts the *actual* count (computed from the file, not hardcoded) rather than silently matching a stale "8" — flagged here per ledger discipline rather than quietly adjusting the number without comment. Substance of the row (every `toc[].id` has a matching HTML anchor; math and cross-reference links survive) holds regardless of the count. Also renders a second, non-math real body (`demo/sources/vimalamitra.md`: image, bold, link-with-title, one `h2`) as additional real-world coverage beyond the ledger's literal ask. |
 | F-8 | The rendered `RenderedContent.html`, passed as `page.content` into a minimal template rendered via `render::build_environment` as `{{ page.content \| safe }}`, appears unescaped and structurally intact (headings, anchors, math, links preserved) | render test reusing `build_environment` | correctness | slice-doc | done | attested — `cd tools && cargo test markdown::tests::test_render_markdown_html_passes_through_safe_context_intact` → `... ok`. | Reuses `render::build_environment` per arc v1.1 (not a second ad hoc `Environment`); renders a body containing a heading, inline math, and a raw `<sub>` tag; asserts the template output equals the raw HTML byte-for-byte wrapped in the test template's `<div>`, and that the heading anchor, the math span, and the raw tag all survive unescaped — confirms `render.r#unsafe = true` (raw HTML passthrough) and the `\|safe` discipline compose correctly. |
-| F-9 | New code is `cargo clippy` clean (deny `all`, warn `pedantic`) and `cargo fmt`-clean | `cargo clippy -p haleiki` on the new module + `cargo fmt --check` (scoped to new code; the pre-existing debt from arc v1.2 is out of scope) | correctness | slice-doc | done | attested — `cargo fmt --all -- --check` → exit 0 (workspace-wide clean). `cargo clippy --all-features --workspace -- -D warnings 2>&1 \| grep -c markdown.rs` → `0`. | One real pedantic finding during development (`clippy::doc_markdown` wanting `` `CommonMark` `` backticked in a doc comment) — fixed, not suppressed. Remaining workspace clippy errors are the same 6 pre-existing ones from arc v1.2 (`generator.rs:541`, `main.rs:57`, 4 in `demo/*.rs` under `--all-features`) — none in `markdown.rs`, none newly introduced. |
+| F-9 | New code is `cargo clippy` clean (deny `all`, warn `pedantic`) and `cargo fmt`-clean | `cargo clippy -p haleiki` on the new module + `cargo fmt --check` (scoped to new code; the pre-existing debt from arc v1.2 is out of scope) | correctness | slice-doc | done | attested — `cargo fmt --all -- --check` → exit 0 (workspace-wide clean). `cargo clippy --all-features --workspace -- -D warnings 2>&1 \| grep -c markdown.rs` → `0`. | One real pedantic finding during development (`clippy::doc_markdown` wanting `` `CommonMark` `` backticked in a doc comment) — fixed, not suppressed. Remaining workspace clippy errors are the same 6 pre-existing ones from arc v1.2 (`generator.rs:541`, `main.rs:57`, 4 in `demo/*.rs` under `--all-features`) — none in `markdown.rs`, none newly introduced. **CDC:** an independent `clippy -p haleiki --all-targets -- -D warnings` surfaced one pedantic `uninlined_format_args` in the F-3/F-7 test asserts (invisible to a run without `--all-targets`); inlined and re-confirmed clippy-clean + rustfmt-clean + 9 tests green. |
 
 ## What Worked
 
@@ -46,10 +46,15 @@
 
 ## Closure
 
-Not yet closed — pending operator decision on whether/how to commit. All 9 rows
-reached `done` with `attested` evidence (see per-row Evidence column); F-7 also
-carries a disclosed factual correction to its own criterion text ("8" → actual
-"9" H2 sections), not a deviation in behavior. No rows deferred or no-op.
-CDC-equivalent independent verification has not yet occurred — evidence
-strength is `attested`, not `reproduced`.
-Rows: 9. Done: 9. Deferred: 0. No-op: 0.
+**Independently verified (CDC): CLOSED** 2026-07-28. All 9 rows reproduced in a
+clean cloud build (`comrak 0.54` resolved fresh, real demo fixtures) — 9 markdown
+tests pass, `rustfmt` clean. F-9 was **returned once**: independent clippy with
+`--all-targets -D warnings` found a pedantic `uninlined_format_args` in the new
+test asserts (a run without `--all-targets` does not lint the test module, which
+is why it was missed); the two asserts were inlined (operator-directed quick-fix,
+applied by the verifier — independence caveat disclosed in `cdc-verification.md`)
+and re-confirmed clippy-clean + fmt-clean + tests-green. F-7's "8"→"9" section
+count is a stale-criterion correction, not a behavior deviation. Per-row verdicts
+and the two resolved bubble-up findings are in
+[`cdc-verification.md`](./cdc-verification.md). Verified by: independent Claude
+(Cowork) context. Rows: 9. Done: 9 (reproduced). Deferred: 0. No-op: 0.
