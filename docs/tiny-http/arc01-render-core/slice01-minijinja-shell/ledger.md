@@ -38,9 +38,9 @@
 
 ## Closure
 
-Not yet closed — pending operator decision on whether/how to commit. All 8 rows
-reached `done` with `attested` evidence (see per-row Evidence column); no rows
-deferred or no-op. CDC-equivalent independent verification (re-running each Verify
-command against the artifacts) has not yet occurred — evidence strength is
-`attested`, not `reproduced`.
+Committed at commit `d6f882e` on 2026-07-28. All 8 rows reached `done` with
+`attested` evidence (see per-row Evidence column); no rows deferred or no-op.
+CDC-equivalent independent verification (re-running each Verify command against
+the artifacts) has not yet occurred — evidence strength is `attested`, not
+`reproduced`. Verified by: _pending — not yet independently reviewed_.
 Rows: 8. Done: 8. Deferred: 0. No-op: 0.

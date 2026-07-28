@@ -3,7 +3,8 @@
 > Per-row walk against [`ledger.md`](./ledger.md), per the collaboration-
 > framework's `LEDGER-DISCIPLINE.md` Section A (CC protocol, step 4). Status:
 > **proposed-done** — all 8 rows `done` at `attested` strength; independent
-> (CDC-equivalent) verification has not yet run. Not yet committed. 2026-07-28.
+> (CDC-equivalent) verification has not yet run. Committed at `d6f882e`.
+> 2026-07-28.
 
 ## Row-by-row walk
 
