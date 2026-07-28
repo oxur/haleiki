@@ -66,7 +66,7 @@ findings dispositioned. Rows accrue as slices close.
 
 | ID | Criterion | Verify | Significance | Origin | Status | Evidence |
 |----|-----------|--------|--------------|--------|--------|----------|
-| A-1 | Slice 01 (minijinja shell) closed | ptr: `slice01-minijinja-shell/cdc-verification.md` | correctness | arc-plan | open | |
+| A-1 | Slice 01 (minijinja shell) closed | ptr: `slice01-minijinja-shell/cdc-verification.md` | correctness | arc-plan | done | reproduced — slice 01 CDC-closed 2026-07-28, 8/8 rows reproduced |
 | A-2 | Slice 02 (markdown + TOC) closed | ptr: slice02 cdc-verification | correctness | arc-plan | open | |
 | A-3 | Slice 03 (wiki-article context) closed | ptr: slice03 cdc-verification | correctness | arc-plan | open | |
 | A-4 | A real demo **concept** page renders end-to-end with full chrome (trust bar, taxonomy sidebar, see-also, provenance, breadcrumb, TOC) via the render path | reproduce at arc scale: render a named demo concept, inspect HTML against the mockup | serious | arc-plan | open | |
@@ -77,6 +77,26 @@ findings dispositioned. Rows accrue as slices close.
 _(Class-(c) bubble-up rows are added as slices surface findings.)_
 
 ## 5. Version history
+
+### v1.2 — 2026-07-28 (bubble-up from slice 01 CDC close)
+Slice 01's independent verification (`slice01-minijinja-shell/cdc-verification.md`)
+closed the slice — all 8 rows reproduced — and surfaced two tracked findings that
+belong to this arc but sit outside slice 01's boundary:
+
+- **Pre-existing lint debt blocks `make lint` / CI.** `cargo clippy -D warnings`
+  fails on debt that predates this arc: `generator.rs:541` (`unnecessary_sort_by`),
+  `main.rs:57` (`map_unwrap_or`, in the pre-existing `Dev` command), and four in
+  `demo/{convert,frontmatter,media,rewrite}.rs` (under `--all-features`). None are
+  in slice-01 code (`render.rs` is clippy-clean). **Disposition:** route to a
+  dedicated small cleanup slice — fold into Arc 06 ("remove Cobalt/Liquid remnants
+  + lint") or a standalone near-term slice. Until then, `make check`/`make lint`
+  is not a green merge gate on this branch.
+- **`demo/profile.yaml` not yet migrated to the new `site.data.profile` shape.**
+  The typed `Profile`'s required fields mean the Cobalt-era `demo/profile.yaml`
+  will not deserialize; slice 01 correctly tested against
+  `templates/profile.sample.yaml`. **Disposition:** name the migration explicitly
+  in the scope of the first slice that renders real demo content (slice 03, or
+  Arc 02), so it isn't assumed done.
 
 ### v1.1 — 2026-07-28 (bubble-up from slice 01)
 Slice 01 (minijinja shell) closed (proposed-done; see

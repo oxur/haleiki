@@ -38,9 +38,12 @@
 
 ## Closure
 
-Committed at commit `d6f882e` on 2026-07-28. All 8 rows reached `done` with
-`attested` evidence (see per-row Evidence column); no rows deferred or no-op.
-CDC-equivalent independent verification (re-running each Verify command against
-the artifacts) has not yet occurred — evidence strength is `attested`, not
-`reproduced`. Verified by: _pending — not yet independently reviewed_.
-Rows: 8. Done: 8. Deferred: 0. No-op: 0.
+Committed at commit `d6f882e` on 2026-07-28. All 8 rows reached `done`; no rows
+deferred or no-op. **Independently verified (CDC): all 8 rows reproduced** in a
+clean cloud build (fresh checkout of the slice sources + `templates/`, deps from
+crates.io, `cargo 1.95.0`) — the 5 render tests re-run green, and the
+F-5 / F-6 / F-8 grep-and-lint rows re-checked against the committed tree at
+`d6f882e`. Evidence strength raised `attested → reproduced`; per-row verdicts and
+the bubble-up check are in [`cdc-verification.md`](./cdc-verification.md).
+Verified by: independent Claude (Cowork) context, 2026-07-28.
+Rows: 8. Done: 8 (reproduced). Deferred: 0. No-op: 0.
