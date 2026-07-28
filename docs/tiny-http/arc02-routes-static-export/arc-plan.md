@@ -66,7 +66,7 @@ arc scale** (run the export, inspect the `_site/` tree and key pages); class (c)
 
 | ID | Criterion | Verify | Significance | Origin | Status | Evidence |
 |----|-----------|--------|--------------|--------|--------|----------|
-| B-1 | Slice 01 (site-index + home) closed | ptr: slice01 cdc-verification | correctness | arc-plan | open | |
+| B-1 | Slice 01 (site-index + home) closed | ptr: `slice01-site-index-home/cdc-verification.md` | correctness | arc-plan | done | reproduced — slice 01 CDC-closed 2026-07-28, 7/7 rows |
 | B-2 | Slice 02 (browse + category) closed | ptr: slice02 cdc-verification | correctness | arc-plan | open | |
 | B-3 | Slice 03 (about + attribution + search shell + 404) closed | ptr: slice03 cdc-verification | correctness | arc-plan | open | |
 | B-4 | Slice 04 (static export writer) closed | ptr: slice04 cdc-verification | correctness | arc-plan | open | |

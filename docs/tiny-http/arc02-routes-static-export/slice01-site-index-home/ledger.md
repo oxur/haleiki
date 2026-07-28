@@ -45,10 +45,11 @@
 
 ## Closure
 
-Not yet closed — pending operator decision on whether/how to commit. All 7
-rows reached `done` with `attested` evidence (see per-row Evidence column). No
-rows deferred or no-op. CDC-equivalent independent verification has not yet
-occurred — evidence strength is `attested`, not `reproduced`. This is Arc 02's
-first slice; slice 02 (browse + category) is next, load-bearing on the
-`category_index` reshaping this slice introduced.
-Rows: 7. Done: 7. Deferred: 0. No-op: 0.
+**Independently verified (CDC): CLOSED** 2026-07-28. All 7 rows reproduced in a
+clean cloud build against the full demo corpus — `cargo test` = 59 passed / 0
+failed (6 new slice-01 tests), each row mapped to a passing test (see
+[`cdc-verification.md`](./cdc-verification.md)). `clippy --all-targets -D warnings`
+shows 0 findings in slice-01 code; `fmt` clean; zero new lint debt. `build_featured`
+extraction is byte-identical (guarded, plus a new real ranking test). Evidence
+strengthened `attested → reproduced`. Verified by: independent Claude (Cowork)
+context. Rows: 7. Done: 7 (reproduced). Deferred: 0. No-op: 0.
