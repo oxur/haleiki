@@ -11,6 +11,8 @@ mod error;
 mod generator;
 #[allow(dead_code)]
 mod graph;
+#[allow(dead_code)]
+mod markdown;
 mod merger;
 #[allow(dead_code)]
 mod parser;
