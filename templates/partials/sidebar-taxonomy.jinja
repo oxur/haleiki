@@ -1,0 +1,34 @@
+{#
+  Right-hand taxonomy / info card for a concept page.
+  Reads page.data (category, subcategory, tier, subject_headings, aliases, …).
+#}
+<aside class="sidebar">
+  <div class="info-card">
+    <div class="info-card-header">{{ page.data.concept | default(page.title) }}</div>
+    <div class="info-card-body">
+      {% if page.data.type %}<div class="info-row"><span class="info-label">Type</span><span class="info-value">{{ page.data.type }}</span></div>{% endif %}
+      <div class="info-row"><span class="info-label">Category</span><span class="info-value"><a href="/category/{{ page.data.category_slug | default(page.data.category) }}/">{{ page.data.category }}</a></span></div>
+      {% if page.data.subcategory %}<div class="info-row"><span class="info-label">Subcategory</span><span class="info-value">{{ page.data.subcategory }}</span></div>{% endif %}
+      <div class="info-row"><span class="info-label">Tier</span><span class="info-value"><span class="tag">{{ page.data.tier }}</span></span></div>
+      {% for row in page.data.facts | default([]) %}
+      <div class="info-row"><span class="info-label">{{ row.label }}</span><span class="info-value">{{ row.value | safe }}</span></div>
+      {% endfor %}
+
+      {% include "partials/provenance.jinja" %}
+
+      {% if page.data.subject_headings | default([]) | length > 0 %}
+      <div class="info-card-section">
+        <div class="info-card-section-title">Subject Headings</div>
+        <div class="tag-list">{% for h in page.data.subject_headings %}<span class="tag">{{ h }}</span>{% endfor %}</div>
+      </div>
+      {% endif %}
+
+      {% if page.data.aliases | default([]) | length > 0 %}
+      <div class="info-card-section">
+        <div class="info-card-section-title">Aliases</div>
+        <ul class="alias-list">{% for a in page.data.aliases %}<li>{{ a }}</li>{% endfor %}</ul>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</aside>

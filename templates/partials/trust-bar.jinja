@@ -1,0 +1,13 @@
+{#
+  Epistemic trust bar. Rendered on concept + source pages (and news posts only
+  if you decide trust applies to news — see the design review, offender E).
+  Expects trust_level + trust_info in scope (base.jinja computes them).
+#}
+{% from "macros.jinja" import trust_glyph %}
+{% if site.data.profile.trust.enabled and trust_info %}
+<div class="trust-bar trust-bar--{{ trust_level }}">
+  <div class="trust-bar-label">{{ trust_glyph(trust_level) }}<span>{{ trust_info.label }}</span></div>
+  <div class="trust-bar-desc">{{ trust_info.description }}</div>
+  <a href="/about/#trust-levels" class="trust-bar-link">What does this mean?</a>
+</div>
+{% endif %}

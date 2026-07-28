@@ -1,0 +1,50 @@
+{#
+  base.jinja — the shared shell every page extends.
+  Context contract (provided by the Rust side, minijinja Environment):
+    site.data.profile   — see templates/README.md
+    page.title / page.slug / page.content / page.data.*
+  Blocks a child page may override:
+    title · head_extra · body_class · active_nav · chrome · content · scripts
+#}
+{%- set trust = site.data.profile.trust -%}
+{%- set trust_level = page.data.trust_level if page.data.trust_level is defined else trust.default -%}
+{%- set trust_info = trust.levels[trust_level] if trust.enabled else none -%}
+{#- Capture the child's active-nav id into a scalar the included topnav can read.
+    (A plain {% set %} in a child template does not reach an {% include %} in the
+     parent, so we capture an overridable block instead.) -#}
+{%- set active_nav %}{% block active_nav %}{% endblock %}{% endset -%}
+<!DOCTYPE html>
+<html lang="en" data-theme="day"{% if trust.enabled %} data-trust="{{ trust_level }}"{% endif %}>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ page.title }} — {{ site.data.profile.name }}{% endblock %}</title>
+  {# No-flash theme bootstrap: set data-theme before first paint #}
+  <script>
+    (function(){
+      var t = localStorage.getItem('haleiki-theme');
+      if (!t) t = window.matchMedia('(prefers-color-scheme:dark)').matches ? 'night' : 'day';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <link rel="stylesheet" href="/assets/css/haleiki.css">
+  <link rel="icon" href="/assets/icons/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+  {% block head_extra %}{% endblock %}
+  <script src="/assets/js/theme.js" defer></script>
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  <a href="#main-content" class="visually-hidden">Skip to main content</a>
+  {% include "partials/topnav.jinja" %}
+  {% block chrome %}{% endblock %}
+  {% block main %}
+  <main id="main-content">
+    {% block content %}{% endblock %}
+  </main>
+  {% endblock %}
+  {% include "partials/footer.jinja" %}
+  {% block scripts %}{% endblock %}
+</body>
+</html>

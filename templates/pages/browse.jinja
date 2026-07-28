@@ -1,0 +1,50 @@
+{% extends "base.jinja" %}
+{% block active_nav %}browse{% endblock %}
+{% block body_class %}page-browse{% endblock %}
+{% block main %}
+<div class="page-layout">
+  <aside class="left-nav">
+    <div class="left-nav-title">Index</div>
+    <hr class="left-nav-divider">
+    <ul class="toc-list">
+      {% for cat in site.data.browse_categories %}
+      <li><a href="#{{ cat.slug }}"><span>{{ cat.name }}</span><span class="toc-count">({{ cat.count }})</span></a></li>
+      {% endfor %}
+    </ul>
+  </aside>
+
+  <main id="main-content" class="main-content">
+    {% include "partials/breadcrumb.jinja" %}
+    <header class="page-header">
+      <div class="page-overline">Index</div>
+      <h1 class="page-title">Browse All Articles</h1>
+      <div class="page-stats">{{ site.data.stats.sources + site.data.stats.concepts }} articles &middot; {{ site.data.stats.categories }} categories &middot; {{ site.data.profile.taxonomy.tiers | length }} tiers</div>
+      <p class="page-description">The complete index of every article in {{ site.data.profile.name_short | default("Haleiki") }}, organized by category.</p>
+    </header>
+
+    {% for cat in site.data.browse_categories %}
+    <section class="browse-category-section" id="{{ cat.slug }}">
+      <div class="category-header">
+        <h2 class="category-name"><a href="/category/{{ cat.slug }}/">{{ cat.name }}</a></h2>
+        {% if cat.description %}<p class="category-description">{{ cat.description }}</p>{% endif %}
+        <div class="category-count">{{ cat.count }} articles</div>
+      </div>
+      {% for group in cat.groups %}
+      <div class="subcategory-group">
+        {% if group.name %}<div class="subcategory-label">{{ group.name }}</div>{% endif %}
+        <ul class="article-list">
+          {% for a in group.articles %}
+          <li class="article-item">
+            <a href="{{ a.url }}" class="article-title-link">{{ a.title }}</a>
+            <span class="article-meta-inline">{% if a.type == "concept" %}<span class="tier-badge">concept</span>{% else %}<span class="source-indicator">source</span>{% endif %}</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+    </section>
+    {% endfor %}
+  </main>
+</div>
+{% endblock %}
+{% block scripts %}<script src="/assets/js/browse-scrollspy.js" defer></script>{% endblock %}

@@ -48,6 +48,28 @@ Key docs:
 
 Working documents (not committed): `workbench/`
 
+### tiny_http pivot planning (branch `framework-base/tiny-http`)
+
+Planning artefacts for the tiny_http/minijinja pivot live under `docs/tiny-http/`
+using the collaboration-framework **arc/slice tree**, without a version-numbered
+directory (operator override of the canonical `docs/design-vX.Y.Z/` default, per
+`PROJECT-MANAGEMENT.md` Part VI):
+
+```
+docs/tiny-http/
+  design-delta.md            architecture of the pivot
+  project-plan.md            roadmap (6 arcs) + project ledger
+  arcNN-<slug>/
+    arc-plan.md
+    sliceNN-<slug>/{slice-doc,ledger,cc-prompt,closing-report,cdc-verification}.md
+```
+
+Confirmed decisions (2026-07-28): deployment = **both** (static export default +
+hardened tiny_http self-host); **news** content type in scope; **custom JSON
+search index** (no Pagefind); **minijinja replaces Cobalt/Liquid** using Claude
+Design's refactor templates in `workbench/Hale'iki Wiki Design Refactor/` (these
+are authoritative; the `main` design integration is abandoned).
+
 ## AI Rust Skill
 
 For Rust code quality, load the skill and guides:

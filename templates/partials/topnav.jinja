@@ -1,0 +1,44 @@
+{#
+  Unified top navigation — one working search field, one link set,
+  one active convention (class="active" + aria-current). Pages set
+  the {% block active_nav %} value, exposed here as `active_nav`.
+#}
+{% from "macros.jinja" import search_icon %}
+{% set active_nav = active_nav | default("") | trim %}
+<nav class="topnav">
+  <a href="/" class="topnav-brand">
+    <span class="brand-mark">H</span>
+    {{ site.data.profile.name_short | default("Haleiki") }}
+  </a>
+
+  <form class="search-container" role="search" action="/search/" method="get">
+    {{ search_icon("search-icon") }}
+    <input type="search" name="q" class="search-input" placeholder="Search {{ site.data.profile.name_short | default('Haleiki') }}…" aria-label="Search">
+    <span class="search-shortcut">&#8984;K</span>
+  </form>
+
+  <div class="topnav-links">
+    <a href="/browse/"{% if active_nav == "browse" %} class="active" aria-current="page"{% endif %}>Browse</a>
+    <a href="/category/"{% if active_nav == "categories" %} class="active" aria-current="page"{% endif %}>Categories</a>
+    <a href="/news/"{% if active_nav == "news" %} class="active" aria-current="page"{% endif %}>News</a>
+    <a href="/about/"{% if active_nav == "about" %} class="active" aria-current="page"{% endif %}>About</a>
+  </div>
+
+  <div class="theme-toggle" role="radiogroup" aria-label="Theme">
+    <button class="theme-toggle-option" data-theme-choice="day" aria-label="Day theme" onclick="haleikiToggleTheme()">&#9728;</button>
+    <button class="theme-toggle-option" data-theme-choice="night" aria-label="Night theme" onclick="haleikiToggleTheme()">&#9790;</button>
+  </div>
+</nav>
+<script>
+(function(){
+  function sync(){
+    var t = document.documentElement.getAttribute('data-theme') || 'day';
+    document.querySelectorAll('.theme-toggle-option').forEach(function(b){
+      b.classList.toggle('active', b.getAttribute('data-theme-choice') === t);
+    });
+  }
+  sync();
+  var orig = window.haleikiToggleTheme;
+  window.haleikiToggleTheme = function(){ if (orig) orig(); sync(); };
+})();
+</script>

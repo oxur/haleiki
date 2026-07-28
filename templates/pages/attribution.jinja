@@ -1,0 +1,57 @@
+{% extends "base.jinja" %}
+{% block body_class %}page-attribution{% endblock %}
+{% block main %}
+{% from "macros.jinja" import ext %}
+<main id="main-content" class="attribution-page">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&#8250;</span><span>Attribution</span></nav>
+
+  <header class="page-header">
+    <div class="page-overline">Legal</div>
+    <h1 class="page-title">Attribution &amp; Licensing</h1>
+    <p class="page-description">{{ site.data.attribution.intro }}</p>
+  </header>
+
+  <div class="license-callout">
+    <div class="license-callout-title">License Summary</div>
+    <p>{{ site.data.attribution.general_notice }}</p>
+  </div>
+
+  <div class="section" id="source-articles">
+    <div class="section-label">Content Sources</div>
+    <h2>Source Articles <span style="font-weight:400; font-size:var(--step-0); color:var(--text-tertiary);">({{ site.data.attribution.source_count }} articles)</span></h2>
+    <p class="desc">Every article in this wiki is adapted from a publicly available source, grouped below by its upstream project.</p>
+
+    {% for project in site.data.attribution.sources_by_project %}
+    <h3 class="source-heading">{{ project.name }}</h3>
+    <div class="source-meta">{{ project.sources | length }} articles</div>
+    <table class="attr-table">
+      <thead><tr><th>Article</th><th>License</th><th>Original</th></tr></thead>
+      <tbody>
+        {% for src in project.sources %}
+        <tr>
+          <td><a href="/source/{{ src.slug }}/">{{ src.title }}</a></td>
+          <td>{{ src.license }}</td>
+          <td><a href="{{ src.url }}" rel="noopener">{{ project.name }} {{ ext() }}</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endfor %}
+  </div>
+
+  <hr class="divider">
+
+  <div class="section" id="licenses">
+    <div class="section-label">License Details</div>
+    <h2>License Texts</h2>
+    <p class="desc">The following licenses govern the content and software in this project.</p>
+    {% for lic in site.data.attribution.licenses %}
+    <div class="license-card">
+      <div class="license-card-title">{{ lic.title }}</div>
+      <ul>{% for point in lic.points %}<li>{{ point }}</li>{% endfor %}</ul>
+      {% for link in lic.links %}<a class="license-link" href="{{ link.url }}" rel="noopener">{{ link.label }} {{ ext() }}</a>{% if not loop.last %} {% endif %}{% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+</main>
+{% endblock %}

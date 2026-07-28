@@ -1,0 +1,42 @@
+{% extends "base.jinja" %}
+{% block active_nav %}about{% endblock %}
+{% block body_class %}page-about{% endblock %}
+{% block main %}
+{% from "macros.jinja" import trust_glyph %}
+<main id="main-content" class="about-page">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&#8250;</span><span>About</span></nav>
+
+  <header class="page-header">
+    <div class="page-overline">About</div>
+    <h1 class="page-title">About {{ site.data.profile.name_short | default("Haleiki") }}</h1>
+    <p class="page-description">{{ site.data.profile.about_intro }}</p>
+  </header>
+
+  {% if site.data.profile.trust.enabled %}
+  <section class="about-section" id="trust-levels">
+    <div class="about-section-label">Sourcing &amp; Evidence</div>
+    <h2 class="about-section-heading">Trust Levels</h2>
+    <p class="about-prose">Every article in this knowledge base carries a trust level. Trust levels describe <strong>the sourcing and evidence basis of the content</strong> — they are not a value judgment on the subject matter itself.</p>
+    <div class="trust-level-list">
+      {% for level in site.data.profile.trust.level_order %}
+      {% set info = site.data.profile.trust.levels[level] %}
+      <div class="trust-level-card">
+        <div class="trust-level-card-header">{{ trust_glyph(level) }}<span class="trust-level-card-label">{{ info.label }}</span></div>
+        <p class="trust-level-card-desc">{{ info.description }}.</p>
+        {% if info.note %}<p class="trust-level-card-note">{{ info.note }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    <p class="about-prose about-note">Trust levels may change as content is updated and additional sources are incorporated.</p>
+  </section>
+  {% endif %}
+
+  <section class="about-section" id="about-project">
+    <div class="about-section-label">The Project</div>
+    <h2 class="about-section-heading">About the Framework</h2>
+    {% for para in site.data.profile.about_body %}
+    <p class="about-prose">{{ para | safe }}</p>
+    {% endfor %}
+  </section>
+</main>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.jinja" %}
+{% block title %}Page not found — {{ site.data.profile.name_short | default("Haleiki") }}{% endblock %}
+{% block body_class %}page-error{% endblock %}
+{% block main %}
+<main id="main-content" class="error-page">
+  <div class="error-code">404</div>
+  <h1>This room is empty</h1>
+  <p>The page you were looking for isn't in the house. It may have moved, or never existed.</p>
+  <div class="error-actions">
+    <a href="/">Return home</a>
+    <a href="/browse/">Browse all articles</a>
+    <a href="/search/">Search</a>
+  </div>
+</main>
+{% endblock %}

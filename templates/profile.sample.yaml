@@ -1,0 +1,91 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# profile.sample.yaml
+# A worked example of the `site.data.profile` context the templates consume.
+# Load this into your minijinja context as site.data.profile (see templates/README.md).
+# The values here reproduce the demo wiki used in the mockups.
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: "Haleiki Demo Wiki"
+name_short: "Haleiki"
+
+# Home hero + footer copy
+tagline: "A house of knowledge — a read-only wiki for structured, sourced content."
+hero_subtitle: "A knowledge base for encyclopedic exploration"
+
+# About page
+about_intro: >-
+  Haleiki is a read-only wiki for structured knowledge. The name means
+  "house of knowledge" in Hawaiian. This page explains how we approach
+  sourcing, evidence, and trust in the content you find here.
+about_body:
+  - "Haleiki is a static-site knowledge base framework with a four-layer pipeline: authoring in Markdown, pre-build processing in Rust, template rendering with minijinja, and runtime as static HTML, CSS, and JavaScript. It supports structured content with typed relationships, concept extraction, and deployment profiles that adapt the same framework to different knowledge domains."
+  - "This demo site showcases an encyclopedic deployment profile, drawing content from Wikipedia, Wikibooks, and Rigpa Wiki under Creative Commons licenses. For full source attribution, see the <a href=\"/attribution/\">Attribution</a> page."
+  - "The Haleiki framework is open source, dual-licensed under Apache 2.0 and MIT. Source code and documentation are available on <a href=\"https://github.com/oxur/haleiki\">GitHub</a>."
+
+# ── SINGLE SOURCE OF TRUTH FOR THE CONTENT LICENCE ──
+# Printed verbatim in the footer on every page. Set it once, here.
+content_notice: "Wiki content licensed under CC BY-SA 4.0, unless otherwise stated."
+
+# ── Epistemic trust (wiki concept + source pages only) ──
+trust:
+  enabled: true
+  default: "credible"
+  level_order: [corroborated, credible, provisional, speculative]
+  levels:
+    corroborated:
+      label: "Corroborated"
+      description: "Independently verified across multiple authoritative sources"
+      note: "No entries in this corpus are currently marked Corroborated."
+    credible:
+      label: "Credible"
+      description: "Well-sourced and represents a reasonable reading of available references"
+      note: "In this corpus, all entries are currently at the Credible level, reflecting well-sourced content drawn from established reference works."
+    provisional:
+      label: "Provisional"
+      description: "Based on partial or emerging evidence, subject to revision"
+      note: "No entries in this corpus are currently marked Provisional."
+    speculative:
+      label: "Speculative"
+      description: "Limited or fragmentary sourcing, included for completeness"
+      note: "No entries in this corpus are currently marked Speculative."
+
+canon:
+  enabled: false
+
+# ── Taxonomy (drives home category grid order + knowledge tiers) ──
+taxonomy:
+  categories:
+    - { name: "tibetan-buddhism" }
+    - { name: "theoretical-physics" }
+    - { name: "mathematics" }
+    - { name: "memory-management" }
+    - { name: "programming-languages" }
+    - { name: "philosophy-of-mind" }
+  tiers:
+    - { name: "foundational", description: "Entry points and first principles — start here." }
+    - { name: "intermediate", description: "Working knowledge that builds on the foundations." }
+    - { name: "advanced",     description: "Deep treatments for readers who want the full picture." }
+
+# ── Unified footer ──
+footer:
+  columns:
+    - title: "Knowledge Base"
+      links:
+        - { label: "Front Page", url: "/" }
+        - { label: "Browse",     url: "/browse/" }
+        - { label: "Categories", url: "/category/" }
+        - { label: "News",       url: "/news/" }
+    - title: "About"
+      links:
+        - { label: "About This Wiki", url: "/about/" }
+        - { label: "Attribution",     url: "/attribution/" }
+        - { label: "Trust Levels",    url: "/about/#trust-levels" }
+    - title: "Development"
+      links:
+        - { label: "GitHub",      url: "https://github.com/oxur/haleiki", external: true }
+        - { label: "Discussions", url: "https://github.com/oxur/haleiki/discussions", external: true }
+        - { label: "Changelog",   url: "https://github.com/oxur/haleiki/blob/main/CHANGELOG.md", external: true }
+  copyright: "© 2026 Oxur Contributors · Apache-2.0 / MIT"
+  meta:
+    - { label: "Built with Haleiki", url: "/about/" }
+    - { label: "Privacy",            url: "/privacy/" }

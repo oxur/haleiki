@@ -1,0 +1,17 @@
+{#
+  Breadcrumb. Prefers a precomputed trail (site.data.breadcrumbs[page.slug]);
+  falls back to a two-level trail from page.data.
+#}
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  {% if page.slug in site.data.breadcrumbs %}
+    {% set crumbs = site.data.breadcrumbs[page.slug] %}
+    {% for crumb in crumbs %}
+      {% if loop.last %}<span>{{ crumb.label }}</span>
+      {% else %}<a href="{{ crumb.url }}">{{ crumb.label }}</a><span class="sep">&#8250;</span>{% endif %}
+    {% endfor %}
+  {% else %}
+    <a href="/">Home</a><span class="sep">&#8250;</span>
+    {% if breadcrumb_parent is defined %}<a href="{{ breadcrumb_parent.url }}">{{ breadcrumb_parent.label }}</a><span class="sep">&#8250;</span>{% endif %}
+    <span>{{ page.title }}</span>
+  {% endif %}
+</nav>

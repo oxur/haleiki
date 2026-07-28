@@ -14,6 +14,8 @@ mod graph;
 mod merger;
 #[allow(dead_code)]
 mod parser;
+#[allow(dead_code)]
+mod render;
 mod search;
 mod validator;
 

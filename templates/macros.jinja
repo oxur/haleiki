@@ -1,0 +1,33 @@
+{# ── Reusable component macros ── #}
+
+{# Epistemic-trust glyph — four filled/outlined/dashed rings #}
+{% macro trust_glyph(level) -%}
+<span class="trust-glyph">
+{%- if level == "corroborated" -%}
+  <svg width="1em" height="1em" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="currentColor"/></svg>
+{%- elif level == "credible" -%}
+  <svg width="1em" height="1em" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2a6 6 0 0 1 0 12V2z" fill="currentColor"/><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+{%- elif level == "provisional" -%}
+  <svg width="1em" height="1em" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+{%- elif level == "speculative" -%}
+  <svg width="1em" height="1em" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/></svg>
+{%- endif -%}
+</span>
+{%- endmacro %}
+
+{# Magnifying-glass icon for search fields #}
+{% macro search_icon(cls) -%}
+<svg class="{{ cls }}" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.5"/><line x1="10.5" y1="10.5" x2="15" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+{%- endmacro %}
+
+{# Compact date · title · category row (archive / tags / categories) #}
+{% macro post_row(post, show_category=true) -%}
+<div class="post-row">
+  <span class="post-date">{{ post.date_short }}</span>
+  <span class="post-title"><a href="{{ post.url }}">{{ post.title }}</a></span>
+  {% if show_category and post.category %}<span class="post-category">{{ post.category }}</span>{% endif %}
+</div>
+{%- endmacro %}
+
+{# External-link arrow #}
+{% macro ext() -%}<span class="ext">&#8599;</span>{%- endmacro %}

@@ -1,0 +1,51 @@
+{% extends "base.jinja" %}
+{% block active_nav %}news{% endblock %}
+{% block title %}{{ post.title }} — News — {{ site.data.profile.name_short | default("Haleiki") }}{% endblock %}
+{% block body_class %}page-news-post{% endblock %}
+{#
+  NOTE (review offender E): the trust bar is intentionally NOT rendered here.
+  Epistemic trust describes sourced knowledge (concepts/sources), not editorial
+  announcements. To wire it in per your questionnaire answer, uncomment:
+    {% block chrome %}{% include "partials/trust-bar.jinja" %}{% endblock %}
+#}
+{% block main %}
+<main id="main-content" class="post-layout">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/">{{ site.data.profile.name_short | default("Haleiki") }}</a><span class="sep">&#8250;</span>
+    <a href="/news/">News</a><span class="sep">&#8250;</span>
+    <span>{{ post.title }}</span>
+  </nav>
+
+  <header class="post-header">
+    <div class="post-date">{{ post.date_display }}</div>
+    <h1 class="post-title">{{ post.title }}</h1>
+    <div class="post-meta">
+      <a href="/news/category/{{ post.category_slug }}/" class="tag tag-category">{{ post.category }}</a>
+      {% for tag in post.tags %}<a href="/news/tag/{{ tag.slug }}/" class="tag tag-default">{{ tag.name }}</a>{% endfor %}
+    </div>
+    {% if post.author %}<div class="post-author">{{ post.author }}</div>{% endif %}
+  </header>
+
+  <div class="prose">
+    {{ post.body | safe }}
+  </div>
+
+  {% if post.prev or post.next %}
+  <nav class="post-nav" aria-label="Post navigation">
+    {% if post.prev %}<a href="{{ post.prev.url }}" class="post-nav-link post-nav-link--prev"><span class="post-nav-dir">&#8592; Previous</span><span class="post-nav-title">{{ post.prev.title }}</span></a>{% endif %}
+    {% if post.next %}<a href="{{ post.next.url }}" class="post-nav-link post-nav-link--next"><span class="post-nav-dir">Next &#8594;</span><span class="post-nav-title">{{ post.next.title }}</span></a>{% endif %}
+  </nav>
+  {% endif %}
+
+  {% if post.related | default([]) | length > 0 %}
+  <section class="related-posts">
+    <div class="related-posts-title">More from {{ site.data.profile.name_short | default("Haleiki") }} News</div>
+    <ul class="related-posts-list">
+      {% for r in post.related %}
+      <li><a href="{{ r.url }}" class="related-post-item"><span class="related-post-date">{{ r.date_short }}</span><span class="related-post-name">{{ r.title }}</span></a></li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+</main>
+{% endblock %}

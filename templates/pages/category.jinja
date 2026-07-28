@@ -1,0 +1,60 @@
+{% extends "base.jinja" %}
+{% block active_nav %}categories{% endblock %}
+{% block body_class %}page-category{% endblock %}
+{% block main %}
+{% set cat = page.data.category %}
+<div class="page-layout">
+  <main id="main-content" class="main-content">
+    {% include "partials/breadcrumb.jinja" %}
+    <header class="category-header-block">
+      <div class="category-overline">Category</div>
+      <h1 class="category-title">{{ cat.name }}</h1>
+      <p class="category-description-text">{{ cat.description }}</p>
+      <div class="category-stats">{{ cat.count }} articles &middot; {{ cat.groups | length }} groups</div>
+    </header>
+
+    {# Rust pre-build supplies cat.groups already resolved (name, count, articles[]),
+       so the template stays declarative — no in-template de-duplication. #}
+    {% for group in cat.groups %}
+    <section class="tier-section">
+      <div class="tier-header{% if group.modifier %} tier-header--{{ group.modifier }}{% endif %}">
+        <h2 class="tier-name">{{ group.name }}</h2>
+        <span class="tier-count">({{ group.articles | length }} articles)</span>
+      </div>
+      <div class="subcategory-group">
+        <ul class="article-list">
+          {% for a in group.articles %}
+          <li class="article-card">
+            <div class="article-card-top">
+              <a href="{{ a.url }}" class="article-card-title">{{ a.title }}</a>
+              <div class="article-card-badges">
+                {% if a.type == "concept" %}<span class="tier-badge">concept</span>{% else %}<span class="source-label">source</span>{% endif %}
+              </div>
+            </div>
+            {% if a.description %}<div class="article-card-desc">{{ a.description }}</div>{% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </section>
+    {% endfor %}
+  </main>
+
+  <aside class="sidebar">
+    <div class="info-card">
+      <div class="info-card-header">{{ cat.name }}</div>
+      <div class="info-card-body">
+        <div class="info-row"><span class="info-label">Articles</span><span class="info-value">{{ cat.count }}</span></div>
+        <div class="info-row"><span class="info-label">Sources</span><span class="info-value">{{ cat.source_count }}</span></div>
+        <div class="info-row"><span class="info-label">Concepts</span><span class="info-value">{{ cat.concept_count }}</span></div>
+        {% if cat.subcategories | default([]) | length > 0 %}
+        <div class="info-card-section">
+          <div class="info-card-section-title">Subcategories</div>
+          <div class="tag-list">{% for s in cat.subcategories %}<span class="tag">{{ s }}</span>{% endfor %}</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </aside>
+</div>
+{% endblock %}

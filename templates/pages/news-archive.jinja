@@ -1,0 +1,34 @@
+{% extends "base.jinja" %}
+{% block active_nav %}news{% endblock %}
+{% block title %}News Archive — {{ site.data.profile.name_short | default("Haleiki") }}{% endblock %}
+{% block body_class %}page-news-archive{% endblock %}
+{% block main %}
+{% from "macros.jinja" import post_row %}
+{% macro pager(p) -%}
+<div class="pagination">
+  <a href="{{ p.newer_url }}"{% if not p.newer_url %} class="disabled"{% endif %}>&#8592; Newer</a>
+  <span class="page-info">Page <span class="current">{{ p.current }}</span> of {{ p.total }}</span>
+  <a href="{{ p.older_url }}"{% if not p.older_url %} class="disabled"{% endif %}>Older &#8594;</a>
+</div>
+{%- endmacro %}
+<div class="page-container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">{{ site.data.profile.name_short | default("Haleiki") }}</a><span class="sep">&#8250;</span><a href="/news/">News</a><span class="sep">&#8250;</span><span>Archive</span></nav>
+
+  <header class="page-header">
+    <div class="page-overline">Archive</div>
+    <h1 class="page-title">All Posts</h1>
+    <div class="page-count">{{ news.total_posts }} posts</div>
+  </header>
+
+  {% if news.pagination %}{{ pager(news.pagination) }}{% endif %}
+
+  {% for month in news.months %}
+  <div class="month-group">
+    <div class="month-header">{{ month.label }}</div>
+    {% for post in month.posts %}{{ post_row(post) }}{% endfor %}
+  </div>
+  {% endfor %}
+
+  {% if news.pagination %}{{ pager(news.pagination) }}{% endif %}
+</div>
+{% endblock %}

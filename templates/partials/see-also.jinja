@@ -1,0 +1,22 @@
+{#
+  "See Also" grid, grouped by relationship type.
+  Expects site.data.see_also[page.slug] = [{ title, url, relationship }].
+#}
+<section class="see-also" id="see-also">
+  <div class="see-also-title">See Also</div>
+  {% set groups = site.data.see_also[page.slug] if page.slug in site.data.see_also else [] %}
+  {% for rel in ["prerequisite", "extends", "related", "contrasts_with"] %}
+    {% set items = groups | selectattr("relationship", "equalto", rel) | list %}
+    {% if items | length > 0 %}
+    <h3>{{ rel | replace("_", " ") | capitalize }}</h3>
+    <div class="see-also-grid">
+      {% for item in items %}
+      <a href="{{ item.url }}" class="see-also-card">
+        <div class="see-also-card-title">{{ item.title }}</div>
+        {% if item.description %}<div class="see-also-card-desc">{{ item.description }}</div>{% endif %}
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% endfor %}
+</section>

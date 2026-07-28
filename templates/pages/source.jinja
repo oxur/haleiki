@@ -1,0 +1,25 @@
+{% extends "base.jinja" %}
+{% block body_class %}page-source{% endblock %}
+{% block chrome %}{% include "partials/trust-bar.jinja" %}{% endblock %}
+{% block main %}
+{% from "macros.jinja" import trust_glyph %}
+<main id="main-content" class="page-container">
+  {% include "partials/breadcrumb.jinja" %}
+  <article class="source-page">
+    <header class="article-header">
+      <div class="article-overline">
+        {% if site.data.profile.trust.enabled %}{{ trust_glyph(trust_level) }} <span class="trust-overline">{{ trust_info.label }}</span> · {% endif %}Source Page
+      </div>
+      <h1 class="article-title">{{ page.title }}</h1>
+      <div class="article-meta">
+        <a href="/category/{{ page.data.category_slug | default(page.data.category) }}/" class="tag">{{ page.data.category }}</a>
+        <span class="tag">{{ page.data.tier }}</span>
+      </div>
+    </header>
+    <div class="prose">
+      {{ page.content | safe }}
+    </div>
+    {% include "partials/see-also.jinja" %}
+  </article>
+</main>
+{% endblock %}

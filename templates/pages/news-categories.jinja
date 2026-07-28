@@ -1,0 +1,42 @@
+{% extends "base.jinja" %}
+{% block active_nav %}news{% endblock %}
+{% block title %}Posts by Category — {{ site.data.profile.name_short | default("Haleiki") }}{% endblock %}
+{% block body_class %}page-news-categories{% endblock %}
+{% block main %}
+{% from "macros.jinja" import post_row %}
+<div class="page-container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">{{ site.data.profile.name_short | default("Haleiki") }}</a><span class="sep">&#8250;</span><a href="/news/">News</a><span class="sep">&#8250;</span><span>Categories</span></nav>
+
+  <header class="page-header">
+    <div class="page-overline">Categories</div>
+    <h1 class="page-title">Posts by Category</h1>
+  </header>
+
+  {# Namespaced .news-cat-* — distinct from the home page .category-card #}
+  <div class="news-cat-grid">
+    {% for cat in news.categories %}
+    <div class="news-cat-card">
+      <div class="news-cat-card-top">
+        <div class="news-cat-card-name"><a href="#cat-{{ cat.slug }}">{{ cat.name }}</a></div>
+        <span class="news-cat-card-badge">{{ cat.count }} posts</span>
+      </div>
+      <p class="news-cat-card-desc">{{ cat.description }}</p>
+      <div class="news-cat-card-recent">
+        <div class="news-cat-card-recent-title">Recent</div>
+        {% for r in cat.recent %}<a href="{{ r.url }}">{{ r.title }}</a>{% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% for cat in news.category_sections %}
+  <div class="category-section" id="cat-{{ cat.slug }}">
+    <div class="category-section-header">
+      <span class="category-section-name">{{ cat.name }}</span>
+      <span class="category-section-count">({{ cat.posts | length }} posts)</span>
+    </div>
+    {% for post in cat.posts %}{{ post_row(post, show_category=false) }}{% endfor %}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

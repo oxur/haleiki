@@ -1,0 +1,12 @@
+{#
+  Left-hand table of contents for concept / source pages.
+  Expects page.data.toc = [{ id, label }] (built by the Rust pre-build from headings).
+#}
+<aside class="left-nav">
+  <div class="left-nav-title">Contents</div>
+  <ul class="toc-list">
+    {% for item in page.data.toc %}
+    <li><a href="#{{ item.id }}"{% if loop.first %} class="active"{% endif %}>{{ item.label }}</a></li>
+    {% endfor %}
+  </ul>
+</aside>

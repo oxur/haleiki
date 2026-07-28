@@ -1,0 +1,15 @@
+{#
+  Provenance links — "Derived From" (concept) / "Concepts in This Source" (source).
+  Rendered inside the right-sidebar info card.
+#}
+{% if page.slug in site.data.provenance %}
+{% set prov = site.data.provenance[page.slug] %}
+{% if prov.links | length > 0 %}
+<div class="info-card-section">
+  <div class="info-card-section-title">{% if page.data.page_type == "concept" %}Derived From{% else %}Concepts in This Source{% endif %}</div>
+  {% for link in prov.links %}
+  <p><a href="{{ link.url }}">{{ link.title }}</a></p>
+  {% endfor %}
+</div>
+{% endif %}
+{% endif %}

@@ -1,0 +1,32 @@
+{% extends "base.jinja" %}
+{% block active_nav %}news{% endblock %}
+{% block title %}Posts by Tag — {{ site.data.profile.name_short | default("Haleiki") }}{% endblock %}
+{% block body_class %}page-news-tags{% endblock %}
+{% block main %}
+{% from "macros.jinja" import post_row %}
+<div class="page-container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">{{ site.data.profile.name_short | default("Haleiki") }}</a><span class="sep">&#8250;</span><a href="/news/">News</a><span class="sep">&#8250;</span><span>Tags</span></nav>
+
+  <header class="page-header">
+    <div class="page-overline">Tags</div>
+    <h1 class="page-title">Posts by Tag</h1>
+    <div class="page-stats">{{ news.tags | length }} tags across {{ news.total_posts }} posts</div>
+  </header>
+
+  <div class="tag-cloud tag-cloud--index">
+    {% for tag in news.tags %}
+    <a href="#tag-{{ tag.slug }}" class="tag-pill size-{{ tag.size }}">{{ tag.name }} <span class="tag-count">{{ tag.count }}</span></a>
+    {% endfor %}
+  </div>
+
+  {% for tag in news.tag_sections %}
+  <div class="tag-section" id="tag-{{ tag.slug }}">
+    <div class="tag-section-header">
+      <span class="tag-section-name"><span class="hash">#</span>{{ tag.name }}</span>
+      <span class="tag-section-count">({{ tag.posts | length }} posts)</span>
+    </div>
+    {% for post in tag.posts %}{{ post_row(post) }}{% endfor %}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

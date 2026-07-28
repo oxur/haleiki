@@ -1,0 +1,40 @@
+{% extends "base.jinja" %}
+{% block body_class %}page-concept{% endblock %}
+{% block head_extra %}
+  <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
+  <script defer src="/assets/vendor/katex/katex.min.js"></script>
+  <script defer src="/assets/vendor/katex/auto-render.min.js"></script>
+  <script defer src="/assets/js/math.js"></script>
+{% endblock %}
+{% block chrome %}{% include "partials/trust-bar.jinja" %}{% endblock %}
+{% block main %}
+{% from "macros.jinja" import trust_glyph %}
+<main id="main-content" class="page-layout">
+  {% include "partials/left-nav-toc.jinja" %}
+  <div class="content-area">
+    <article class="article">
+      {% include "partials/breadcrumb.jinja" %}
+      <header class="article-header">
+        <div class="article-overline">
+          {% if site.data.profile.trust.enabled %}{{ trust_glyph(trust_level) }} <span class="trust-overline">{{ trust_info.label }}</span> · {% endif %}Concept
+        </div>
+        <h1 class="article-title">{{ page.data.concept | default(page.title) }}{% if page.data.disambiguator %} <span class="disambiguator">({{ page.data.disambiguator }})</span>{% endif %}</h1>
+        <div class="article-meta">
+          <a href="/category/{{ page.data.category_slug | default(page.data.category) }}/" class="tag">{{ page.data.category }}</a>
+          <span class="tag">{{ page.data.tier }}</span>
+        </div>
+      </header>
+
+      {# page.content is server-rendered Markdown → HTML. It carries the section
+         anchors (#quick-definition, #core-definition, …) the TOC links to. #}
+      <div class="prose">
+        {{ page.content | safe }}
+      </div>
+
+      {% include "partials/see-also.jinja" %}
+    </article>
+    {% include "partials/sidebar-taxonomy.jinja" %}
+  </div>
+</main>
+{% endblock %}
+{% block scripts %}<script src="/assets/js/toc-scrollspy.js" defer></script>{% endblock %}

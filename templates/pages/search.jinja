@@ -1,0 +1,54 @@
+{% extends "base.jinja" %}
+{% block body_class %}page-search{% endblock %}
+{% block main %}
+{% from "macros.jinja" import search_icon %}
+<div class="search-layout">
+  <aside class="filter-sidebar">
+    <div class="filter-title">Filter Results</div>
+    {% for group in search.facets %}
+    <div class="filter-group">
+      <div class="filter-group-title">{{ group.title }}</div>
+      {% for opt in group.options %}
+      <label class="filter-option"><span class="filter-checkbox"></span>{{ opt.label }}<span class="filter-count">{{ opt.count }}</span></label>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </aside>
+
+  <main id="main-content" class="search-main">
+    <div class="search-hero">
+      <form class="search-hero-input-wrap" role="search" action="/search/" method="get">
+        {{ search_icon("search-hero-icon") }}
+        <input type="search" name="q" class="search-hero-input" placeholder="Search {{ site.data.profile.name_short | default('Haleiki') }}…" value="{{ search.query }}" aria-label="Search">
+        <span class="search-hero-shortcut">&#8984;K</span>
+      </form>
+      {% if search.query %}<div class="search-results-count">{{ search.results | length }} results for <span class="query-term">&ldquo;{{ search.query }}&rdquo;</span></div>{% endif %}
+    </div>
+
+    {% if search.results | length > 0 %}
+    <ol class="search-results-list">
+      {% for r in search.results %}
+      <li class="search-result">
+        <div class="result-badges">
+          {% if r.type == "concept" %}<span class="result-badge result-badge--type-concept">Concept</span>{% else %}<span class="result-badge result-badge--type">Source</span>{% endif %}
+          <span class="result-badge result-badge--category">{{ r.category }}</span>
+          <span class="result-badge result-badge--tier">{{ r.tier }}</span>
+        </div>
+        <div class="result-title"><a href="{{ r.url }}">{{ r.title }}</a></div>
+        <div class="result-excerpt">{{ r.excerpt | safe }}</div>
+        <div class="result-url">{{ r.url }}</div>
+      </li>
+      {% endfor %}
+    </ol>
+    <div class="search-status">Showing all {{ search.results | length }} results</div>
+    {% else %}
+    <div class="search-empty">
+      <div class="search-empty-title">No results found</div>
+      <p>No articles matched &ldquo;{{ search.query }}&rdquo;. Try a different search term or browse by category.</p>
+      <div class="search-empty-suggestions"><a href="/browse/">Browse all articles</a><a href="/category/">View categories</a></div>
+    </div>
+    {% endif %}
+  </main>
+</div>
+{% endblock %}
+{% block scripts %}<script src="/assets/js/search.js" defer></script>{% endblock %}

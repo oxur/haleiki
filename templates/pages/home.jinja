@@ -1,0 +1,85 @@
+{% extends "base.jinja" %}
+{% block title %}{{ site.data.profile.name }}{% endblock %}
+{% block body_class %}page-home{% endblock %}
+{% block main %}
+<main id="main-content" class="home-content">
+
+  <section class="hero">
+    <div class="hero-brand-mark">H</div>
+    <h1 class="hero-title">{{ site.data.profile.name }}</h1>
+    <p class="hero-subtitle">{{ site.data.profile.hero_subtitle | default("A house of knowledge for encyclopedic exploration") }}</p>
+    {# Fix (review offender D): a real, focused search control — never disabled. #}
+    <form class="hero-search" role="search" action="/search/" method="get">
+      <span class="hero-search-icon">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.5"/><line x1="10.5" y1="10.5" x2="15" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </span>
+      <input type="search" name="q" class="hero-search-input" placeholder="Search {{ site.data.stats.concepts + site.data.stats.sources }} articles…" aria-label="Search articles">
+      <span class="hero-search-shortcut">&#8984;K</span>
+    </form>
+    <div class="hero-stats">{{ site.data.stats.sources }} source pages &middot; {{ site.data.stats.concepts }} concept cards &middot; {{ site.data.stats.categories }} categories</div>
+  </section>
+
+  <section class="category-section">
+    <div class="section-overline">Explore</div>
+    <h2 class="section-heading">Categories</h2>
+    <div class="category-grid">
+      {% for cat in site.data.home_categories %}
+      <div class="category-card">
+        <div class="category-card-header">
+          <a href="/category/{{ cat.slug }}/" class="category-card-title">{{ cat.name }}</a>
+          <span class="category-card-count">{{ cat.count }}</span>
+        </div>
+        <p class="category-card-desc">{{ cat.description }}</p>
+        <ul class="category-card-articles">
+          {% for a in cat.articles[:3] %}<li><a href="{{ a.url }}">{{ a.title }}</a></li>{% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  {% if site.data.featured | default([]) | length > 0 %}
+  <section class="featured-section">
+    <div class="section-overline">Start Here</div>
+    <h2 class="section-heading">Featured Articles</h2>
+    <div class="featured-grid">
+      {% for item in site.data.featured %}
+      <div class="featured-card">
+        <div class="featured-card-title">{{ item.title }}</div>
+        <div class="featured-card-meta">
+          <span class="featured-tag">{{ item.category }}</span>
+          <span class="featured-tier">{{ item.tier }}</span>
+        </div>
+        {% if item.teaser %}<p class="featured-card-teaser">{{ item.teaser }}</p>{% endif %}
+        <a href="{{ item.url }}" class="featured-card-link">Read article &#8594;</a>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <section class="tiers-section">
+    <div class="section-overline">Depth</div>
+    <h2 class="section-heading">Knowledge Tiers</h2>
+    <div class="tiers-row">
+      {% for tier in site.data.profile.taxonomy.tiers %}
+      <div class="tier-card">
+        <div class="tier-card-title">{{ tier.name | capitalize }}</div>
+        <p class="tier-card-desc">{{ tier.description }}</p>
+        <div class="tier-card-footer"><a href="/browse/" class="tier-card-link">Browse &#8594;</a></div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="quick-links">
+    <div class="quick-links-row">
+      <a href="/browse/">Browse All</a><span class="quick-links-sep">&middot;</span>
+      <a href="/about/">About</a><span class="quick-links-sep">&middot;</span>
+      <a href="/attribution/">Attribution</a><span class="quick-links-sep">&middot;</span>
+      <a href="/news/">News</a>
+    </div>
+  </section>
+
+</main>
+{% endblock %}

@@ -1,0 +1,44 @@
+{#
+  Unified site footer. All variable copy comes from site.data.profile so the
+  content-license notice can never contradict itself again.
+    profile.tagline
+    profile.content_notice           e.g. "Wiki content licensed under CC BY-SA 4.0, unless otherwise stated."
+    profile.footer.columns[]         [{ title, links:[{ label, url, external }] }]
+    profile.footer.copyright
+    profile.footer.meta[]            [{ label, url }]
+#}
+{% from "macros.jinja" import ext %}
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand-col">
+        <a href="/" class="footer-brand-link">
+          <span class="brand-mark">H</span>
+          <span class="brand-name">{{ site.data.profile.name_short | default("Haleiki") }}</span>
+        </a>
+        <p class="footer-tagline">{{ site.data.profile.tagline }}</p>
+      </div>
+      <div class="footer-columns">
+        {% for col in site.data.profile.footer.columns %}
+        <div class="footer-col">
+          <div class="footer-col-title">{{ col.title }}</div>
+          <ul class="footer-col-list">
+            {% for link in col.links %}
+            <li><a href="{{ link.url }}"{% if link.external %} rel="noopener"{% endif %}>{{ link.label }}{% if link.external %} {{ ext() }}{% endif %}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="footer-content-notice">{{ site.data.profile.content_notice }}</div>
+    <div class="footer-bottom">
+      <span class="footer-copyright">{{ site.data.profile.footer.copyright }}</span>
+      <ul class="footer-meta-links">
+        {% for m in site.data.profile.footer.meta %}
+        <li><a href="{{ m.url }}">{{ m.label }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</footer>
