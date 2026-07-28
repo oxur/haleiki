@@ -68,7 +68,9 @@ the recomposition arc that closes the branch as a clean Cobalt replacement.
 - **Arc 01 — Render core:** **CLOSED** 2026-07-28 (see
   [`arc01-render-core/closing-report.md`](./arc01-render-core/closing-report.md)).
   All three slices CDC-closed; composition rows A-4…A-7 reproduced at arc scale.
-- **Arc 02 — Routes & static export:** next to plan deep.
+- **Arc 02 — Routes & static export:** planned in detail (see
+  [`arc02-routes-static-export/arc-plan.md`](./arc02-routes-static-export/arc-plan.md));
+  slice 01 open set written; not yet implemented.
 - **Arcs 03–06:** roadmap-level only, by design. Each is planned deep when it
   becomes the active work; findings from earlier arcs bubble up and may reshape
   the later entries before they are planned.
