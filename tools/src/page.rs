@@ -99,6 +99,90 @@ pub fn render_category(
     Ok(html)
 }
 
+/// Renders the about page end-to-end via `pages/about.jinja`. Entirely
+/// `site.data.profile`-driven — no page-specific data.
+///
+/// # Errors
+///
+/// Returns the minijinja render error if the template fails to render.
+pub fn render_about(env: &Environment<'_>, site: &SiteContext) -> Result<String> {
+    let tmpl = env.get_template("pages/about.jinja")?;
+    let html = tmpl.render(context! {
+        site => context! { data => site },
+        page => context! {
+            title => "About",
+            slug => "about",
+            data => context! {},
+        },
+    })?;
+    Ok(html)
+}
+
+/// Renders the 404 page via `pages/404.jinja`.
+///
+/// # Errors
+///
+/// Returns the minijinja render error if the template fails to render.
+pub fn render_404(env: &Environment<'_>, site: &SiteContext) -> Result<String> {
+    let tmpl = env.get_template("pages/404.jinja")?;
+    let html = tmpl.render(context! {
+        site => context! { data => site },
+        page => context! {
+            title => "Not Found",
+            slug => "404",
+            data => context! {},
+        },
+    })?;
+    Ok(html)
+}
+
+/// Renders the search page as an **empty pre-hydration shell**:
+/// `query = ""`, `results = []`, `facets = []`. The page's structure (search
+/// input, filter sidebar frame, empty state) renders; `search.js` hydrates
+/// live search client-side. Real facets/results/the JSON index are Arc 04
+/// (arc-02 slice-03 decision #3 — do not special-case an empty query here).
+///
+/// # Errors
+///
+/// Returns the minijinja render error if the template fails to render.
+pub fn render_search(env: &Environment<'_>, site: &SiteContext) -> Result<String> {
+    let tmpl = env.get_template("pages/search.jinja")?;
+    let html = tmpl.render(context! {
+        site => context! { data => site },
+        page => context! {
+            title => "Search",
+            slug => "search",
+            data => context! {},
+        },
+        search => context! {
+            query => "",
+            results => Vec::<()>::new(),
+            facets => Vec::<()>::new(),
+        },
+    })?;
+    Ok(html)
+}
+
+/// Renders the attribution page end-to-end via `pages/attribution.jinja`.
+/// `site.data.attribution` (assembled in `render::assemble_site_context`)
+/// carries everything the template reads.
+///
+/// # Errors
+///
+/// Returns the minijinja render error if the template fails to render.
+pub fn render_attribution(env: &Environment<'_>, site: &SiteContext) -> Result<String> {
+    let tmpl = env.get_template("pages/attribution.jinja")?;
+    let html = tmpl.render(context! {
+        site => context! { data => site },
+        page => context! {
+            title => "Attribution",
+            slug => "attribution",
+            data => context! {},
+        },
+    })?;
+    Ok(html)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -346,6 +430,150 @@ mod tests {
         assert!(
             !render_src.contains(&liquid_extension),
             "render.rs must not reference any Liquid template"
+        );
+    }
+
+    // Arc 02 Slice 03, F-1: render_about renders pages/about.jinja end-to-end:
+    // header, trust-level section (iterating trust.level_order), about-body
+    // paragraphs.
+    #[test]
+    fn test_render_about_full_chrome() {
+        let (_corpus, site) = demo_site();
+        let env = crate::render::build_environment(templates_dir());
+
+        let html = render_about(&env, &site).expect("about renders");
+
+        assert!(html.contains("class=\"page-title\""));
+        assert!(html.contains("About Haleiki"));
+        assert!(html.contains("class=\"page-description\""));
+        // Trust levels, in trust.level_order, each with label/description;
+        // "credible" carries a note in the real demo profile.
+        assert!(html.contains("id=\"trust-levels\""));
+        assert!(html.contains("class=\"trust-level-card\""));
+        assert!(html.contains("Corroborated"));
+        assert!(html.contains("Credible"));
+        assert!(html.contains("Provisional"));
+        assert!(html.contains("Speculative"));
+        assert!(html.contains("class=\"trust-level-card-note\""));
+        // About-body paragraphs (| safe — real HTML, e.g. an <a> link).
+        assert!(html.contains("id=\"about-project\""));
+        assert!(html.contains("class=\"about-prose\""));
+        assert!(html.contains("<a href=\"/attribution/\">Attribution</a>"));
+    }
+
+    // Arc 02 Slice 03, F-2: render_404 renders pages/404.jinja: error code,
+    // name_short, action links.
+    #[test]
+    fn test_render_404_chrome() {
+        let (_corpus, site) = demo_site();
+        let env = crate::render::build_environment(templates_dir());
+
+        let html = render_404(&env, &site).expect("404 renders");
+
+        assert!(html.contains("class=\"error-code\""));
+        assert!(html.contains("404"));
+        assert!(html.contains("Haleiki"));
+        assert!(html.contains("class=\"error-actions\""));
+        assert!(html.contains("href=\"/\""));
+        assert!(html.contains("href=\"/browse/\""));
+        assert!(html.contains("href=\"/search/\""));
+    }
+
+    // Arc 02 Slice 03, F-3: render_search renders the empty pre-hydration
+    // shell without error.
+    #[test]
+    fn test_render_search_empty_shell() {
+        let (_corpus, site) = demo_site();
+        let env = crate::render::build_environment(templates_dir());
+
+        let html = render_search(&env, &site).expect("search renders");
+
+        assert!(html.contains("class=\"search-hero-input\""));
+        assert!(html.contains("value=\"\""));
+        assert!(html.contains("class=\"filter-sidebar\""));
+        assert!(html.contains("class=\"filter-title\""));
+        // Empty results -> the empty-state block, not the results list.
+        assert!(html.contains("class=\"search-empty\""));
+        assert!(html.contains("No results found"));
+        assert!(!html.contains("class=\"search-results-list\""));
+        assert!(html.contains("src=\"/assets/js/search.js\""));
+    }
+
+    // Arc 02 Slice 03, F-5: render_attribution renders pages/attribution.jinja
+    // end-to-end: intro, license callout, per-project source tables, license
+    // cards.
+    #[test]
+    fn test_render_attribution_full_chrome() {
+        let (_corpus, site) = demo_site();
+        let env = crate::render::build_environment(templates_dir());
+
+        let html = render_attribution(&env, &site).expect("attribution renders");
+
+        assert!(html.contains("class=\"page-description\""));
+        assert!(html.contains(&site.attribution.intro));
+        assert!(html.contains("class=\"license-callout\""));
+        assert!(html.contains(&site.attribution.general_notice));
+        // Per-project source tables: a real project heading + at least one
+        // source row with an internal link, license, and external original.
+        assert!(html.contains("class=\"source-heading\""));
+        assert!(html.contains(">en.wikipedia.org<"));
+        assert!(html.contains("class=\"attr-table\""));
+        assert!(html.contains("href=\"/source/"));
+        assert!(html.contains("(91 articles)") || html.contains("91 articles)"));
+        // License cards from profile.attribution.licenses.
+        assert!(html.contains("class=\"license-card\""));
+        assert!(html.contains("Content License"));
+        assert!(html.contains("Framework License"));
+        // minijinja auto-escapes "/" in attribute values (as &#x2f;), so
+        // check for the un-slashed substring rather than the literal URL.
+        assert!(html.contains("creativecommons.org"));
+    }
+
+    // Arc 02 Slice 03, F-6: escaping holds at page scale — an HTML control
+    // string in an auto-escaped attribution field is escaped, while
+    // profile.about_body stays | safe on the about page.
+    #[test]
+    fn test_render_attribution_escaping_holds_at_page_scale() {
+        let (_corpus, mut site) = demo_site();
+        site.attribution.sources_by_project[0].sources[0].title = "<b>x</b>".to_string();
+
+        let env = crate::render::build_environment(templates_dir());
+        let html =
+            render_attribution(&env, &site).expect("attribution renders with injected title");
+
+        assert!(
+            !html.contains("<b>x</b>"),
+            "raw HTML must not appear: {html}"
+        );
+        assert!(
+            html.contains("&lt;b&gt;x&lt;"),
+            "injected source title must be escaped: {html}"
+        );
+    }
+
+    #[test]
+    fn test_render_about_safe_body_stays_unescaped() {
+        let (_corpus, mut site) = demo_site();
+        site.profile.about_body = vec!["<b>safe html</b>".to_string()];
+
+        let env = crate::render::build_environment(templates_dir());
+        let html = render_about(&env, &site).expect("about renders");
+
+        assert!(
+            html.contains("<b>safe html</b>"),
+            "about_body must stay | safe, unescaped: {html}"
+        );
+    }
+
+    // Arc 02 Slice 03, F-7: these render paths use no Liquid/Cobalt template.
+    #[test]
+    fn test_render_standalone_pages_path_references_no_liquid_templates() {
+        let liquid_extension = format!(".{}{}", "liqu", "id");
+        let page_src = include_str!("page.rs");
+
+        assert!(
+            !page_src.contains(&liquid_extension),
+            "page.rs must not reference any Liquid template"
         );
     }
 }

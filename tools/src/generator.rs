@@ -111,13 +111,13 @@ pub(crate) struct ProvenanceLink {
 
 /// A single source attribution entry in the attribution JSON output.
 #[derive(Debug, Clone, Serialize)]
-struct AttributionSourceEntry {
-    slug: String,
-    title: String,
-    url: String,
-    license: String,
-    fetched_at: String,
-    revision_id: String,
+pub(crate) struct AttributionSourceEntry {
+    pub(crate) slug: String,
+    pub(crate) title: String,
+    pub(crate) url: String,
+    pub(crate) license: String,
+    pub(crate) fetched_at: String,
+    pub(crate) revision_id: String,
 }
 
 /// The full attribution JSON output.
@@ -527,8 +527,37 @@ fn write_titles_json(corpus: &Corpus, output_dir: &Path) -> Result<()> {
 /// Groups sources by `original_source.project`, sorted alphabetically within
 /// each group. Collects unique license versions across all sources.
 fn write_attribution_json(corpus: &Corpus, output_dir: &Path) -> Result<()> {
-    let mut sources_by_project: BTreeMap<String, Vec<AttributionSourceEntry>> = BTreeMap::new();
+    let sources_by_project = build_sources_by_project(corpus);
+
     let mut license_set: std::collections::BTreeSet<String> = std::collections::BTreeSet::new();
+    for entry in sources_by_project.values().flatten() {
+        if !entry.license.is_empty() {
+            license_set.insert(entry.license.clone());
+        }
+    }
+
+    let source_count = sources_by_project.values().map(Vec::len).sum();
+    let license_versions: Vec<String> = license_set.into_iter().collect();
+
+    let output = AttributionOutput {
+        general_notice: general_notice().to_string(),
+        sources_by_project,
+        source_count,
+        license_versions,
+    };
+
+    write_json(output_dir, "attribution.json", &output)
+}
+
+/// Groups source pages by their upstream project (`original_source.project`,
+/// or `"unknown"` if absent), each group sorted alphabetically by title.
+/// Shared by the JSON writer ([`write_attribution_json`]) and the minijinja
+/// render path (`render::assemble_site_context`) — one derivation, two
+/// consumers, mirroring `build_provenance_map` / `build_featured`.
+pub(crate) fn build_sources_by_project(
+    corpus: &Corpus,
+) -> BTreeMap<String, Vec<AttributionSourceEntry>> {
+    let mut sources_by_project: BTreeMap<String, Vec<AttributionSourceEntry>> = BTreeMap::new();
 
     for page in corpus.sources.values() {
         if let Some(ref os) = page.original_source {
@@ -545,9 +574,6 @@ fn write_attribution_json(corpus: &Corpus, output_dir: &Path) -> Result<()> {
                 fetched_at: os.fetched_at.clone(),
                 revision_id: os.revision_id.clone(),
             };
-            if !os.license.is_empty() {
-                license_set.insert(os.license.clone());
-            }
             sources_by_project.entry(project).or_default().push(entry);
         }
     }
@@ -557,19 +583,17 @@ fn write_attribution_json(corpus: &Corpus, output_dir: &Path) -> Result<()> {
         entries.sort_by_key(|a| a.title.to_lowercase());
     }
 
-    let source_count = sources_by_project.values().map(Vec::len).sum();
-    let license_versions: Vec<String> = license_set.into_iter().collect();
+    sources_by_project
+}
 
-    let output = AttributionOutput {
-        general_notice: "This knowledge base contains content derived from Wikimedia projects \
-            and Rigpa Wiki, licensed under Creative Commons Attribution-ShareAlike."
-            .to_string(),
-        sources_by_project,
-        source_count,
-        license_versions,
-    };
-
-    write_json(output_dir, "attribution.json", &output)
+/// The site-wide content-licensing notice. Currently hardcoded here (shared
+/// by the JSON writer and the render path so there's exactly one copy, not
+/// two independently-maintained strings); a candidate for moving into
+/// `profile.attribution` alongside `intro`/`licenses[]` in a later cleanup —
+/// noted, not done this slice (arc-02 slice-03 decision #2).
+pub(crate) fn general_notice() -> &'static str {
+    "This knowledge base contains content derived from Wikimedia projects \
+     and Rigpa Wiki, licensed under Creative Commons Attribution-ShareAlike."
 }
 
 /// Write a serializable value as pretty-printed JSON.

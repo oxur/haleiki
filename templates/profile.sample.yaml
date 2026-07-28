@@ -89,3 +89,24 @@ footer:
   meta:
     - { label: "Built with Haleiki", url: "/about/" }
     - { label: "Privacy",            url: "/privacy/" }
+
+# ── Attribution page: curated content (the corpus-derived source list and
+#    counts are assembled separately, in Rust, from the parsed corpus) ──
+attribution:
+  intro: >-
+    Every article in this wiki is adapted from a publicly available source.
+    This page credits those sources and states the licenses that govern the
+    content and the Haleiki framework itself.
+  licenses:
+    - title: "Content License — CC BY-SA 4.0"
+      points:
+        - "Wiki content is adapted from third-party sources, licensed under Creative Commons Attribution-ShareAlike 4.0 International."
+        - "You may share and adapt this content for any purpose, provided you give appropriate credit and license any derivative works under the same terms."
+      links:
+        - { label: "Full license text", url: "https://creativecommons.org/licenses/by-sa/4.0/" }
+    - title: "Framework License — Apache-2.0 / MIT"
+      points:
+        - "The Haleiki framework's source code and documentation are dual-licensed under the Apache License, Version 2.0, and the MIT License, at your option."
+      links:
+        - { label: "Apache-2.0 text", url: "https://github.com/oxur/haleiki/blob/main/LICENSE-APACHE" }
+        - { label: "MIT text",        url: "https://github.com/oxur/haleiki/blob/main/LICENSE-MIT" }

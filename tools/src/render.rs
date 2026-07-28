@@ -59,6 +59,35 @@ pub struct Profile {
     pub canon: Canon,
     pub taxonomy: Taxonomy,
     pub footer: Footer,
+    /// Curated attribution-page content (`intro` + `licenses[]`) — content,
+    /// not code, so it belongs in the profile rather than hardcoded in Rust
+    /// (arc-02 slice-03 decision #1). The corpus-derived half of the
+    /// attribution page (`sources_by_project`, `source_count`,
+    /// `general_notice`) is assembled separately — see
+    /// [`crate::generator::build_sources_by_project`].
+    pub attribution: ProfileAttribution,
+}
+
+/// `site.data.profile.attribution` — curated attribution-page content.
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+pub struct ProfileAttribution {
+    pub intro: String,
+    pub licenses: Vec<LicenseEntry>,
+}
+
+/// One licence card on the attribution page.
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+pub struct LicenseEntry {
+    pub title: String,
+    pub points: Vec<String>,
+    pub links: Vec<LicenseLink>,
+}
+
+/// A `{label, url}` link within a [`LicenseEntry`].
+#[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
+pub struct LicenseLink {
+    pub label: String,
+    pub url: String,
 }
 
 /// Epistemic-trust configuration (`site.data.profile.trust`).
@@ -145,6 +174,26 @@ pub struct SiteContext {
     pub featured: Vec<crate::generator::FeaturedEntry>,
     pub home_categories: Vec<HomeCategory>,
     pub browse_categories: Vec<BrowseCategory>,
+    pub attribution: Attribution,
+}
+
+/// `site.data.attribution` — the attribution page's full context: the
+/// corpus-derived half (`sources_by_project`, `source_count`,
+/// `general_notice`) plus the profile-curated half (`intro`, `licenses`).
+#[derive(Debug, Clone, Serialize)]
+pub struct Attribution {
+    pub intro: String,
+    pub general_notice: String,
+    pub source_count: usize,
+    pub sources_by_project: Vec<AttributionProject>,
+    pub licenses: Vec<LicenseEntry>,
+}
+
+/// One `site.data.attribution.sources_by_project[]` entry.
+#[derive(Debug, Clone, Serialize)]
+pub struct AttributionProject {
+    pub name: String,
+    pub sources: Vec<crate::generator::AttributionSourceEntry>,
 }
 
 /// `site.data.stats` — corpus-wide counts for the home hero line.
@@ -317,6 +366,7 @@ pub fn assemble_site_context(
     let featured = crate::generator::build_featured(corpus, graph);
     let home_categories = build_home_categories(corpus, graph, &profile);
     let browse_categories = build_browse_categories(corpus, graph, &profile);
+    let attribution = build_attribution(corpus, &profile);
 
     SiteContext {
         profile,
@@ -327,6 +377,7 @@ pub fn assemble_site_context(
         featured,
         home_categories,
         browse_categories,
+        attribution,
     }
 }
 
@@ -335,6 +386,28 @@ fn build_stats(corpus: &crate::parser::Corpus) -> Stats {
         sources: corpus.sources.len(),
         concepts: corpus.concepts.len(),
         categories: corpus.taxonomy.categories.len(),
+    }
+}
+
+/// Builds `site.data.attribution`: the corpus-derived
+/// `sources_by_project`/`source_count`/`general_notice` from
+/// `generator::build_sources_by_project` (project-alphabetical — the
+/// `BTreeMap`'s own key order, no extra sort needed) plus the profile-curated
+/// `intro`/`licenses[]`.
+fn build_attribution(corpus: &crate::parser::Corpus, profile: &Profile) -> Attribution {
+    let by_project = crate::generator::build_sources_by_project(corpus);
+    let source_count = by_project.values().map(Vec::len).sum();
+    let sources_by_project = by_project
+        .into_iter()
+        .map(|(name, sources)| AttributionProject { name, sources })
+        .collect();
+
+    Attribution {
+        intro: profile.attribution.intro.clone(),
+        general_notice: crate::generator::general_notice().to_string(),
+        source_count,
+        sources_by_project,
+        licenses: profile.attribution.licenses.clone(),
     }
 }
 
@@ -977,5 +1050,61 @@ mod tests {
 
         let total: usize = data.groups.iter().map(|g| g.articles.len()).sum();
         assert_eq!(total, data.count);
+    }
+
+    // Arc 02 Slice 03, F-4: site.data.attribution assembled — sources_by_project
+    // reshaped (map -> list, project-alphabetical), source_count/general_notice
+    // from the corpus-derived half, intro/licenses from profile.attribution.
+    #[test]
+    fn test_assemble_site_context_attribution_shapes_and_counts() {
+        let corpus = crate::parser::parse_corpus(&demo_dir()).expect("demo corpus parses");
+        let graph = crate::graph::HaleikiGraph::build(&corpus);
+        let profile = resolve_profile(demo_dir().join("profile.yaml")).expect("profile resolves");
+        let expected_intro = profile.attribution.intro.clone();
+        let expected_licenses = profile.attribution.licenses.len();
+
+        let site = assemble_site_context(&corpus, &graph, profile);
+        let attribution = &site.attribution;
+
+        // Every real demo source has an original_source, so all 91 are
+        // attributed, across exactly 2 real projects (en.wikipedia.org: 85,
+        // www.rigpawiki.org: 6 — hand-counted via `grep -l` before writing
+        // this assertion).
+        assert_eq!(attribution.source_count, 91);
+        assert_eq!(
+            attribution
+                .sources_by_project
+                .iter()
+                .map(|p| p.sources.len())
+                .sum::<usize>(),
+            91
+        );
+        let project_names: Vec<&str> = attribution
+            .sources_by_project
+            .iter()
+            .map(|p| p.name.as_str())
+            .collect();
+        assert_eq!(project_names, vec!["en.wikipedia.org", "www.rigpawiki.org"]);
+        let wikipedia = &attribution.sources_by_project[0];
+        assert_eq!(wikipedia.sources.len(), 85);
+        for src in &wikipedia.sources {
+            assert!(!src.slug.is_empty());
+            assert!(!src.title.is_empty());
+            assert!(!src.license.is_empty());
+            assert!(!src.url.is_empty());
+        }
+        // Within a project, sources are sorted alphabetically by title.
+        let titles: Vec<&str> = wikipedia.sources.iter().map(|s| s.title.as_str()).collect();
+        let mut sorted_titles = titles.clone();
+        sorted_titles.sort_by_key(|t| t.to_lowercase());
+        assert_eq!(titles, sorted_titles);
+
+        assert!(!attribution.general_notice.is_empty());
+        assert_eq!(attribution.intro, expected_intro);
+        assert_eq!(attribution.licenses.len(), expected_licenses);
+        assert_eq!(attribution.licenses.len(), 2);
+        assert!(attribution.licenses[0].title.contains("CC BY-SA"));
+        assert!(!attribution.licenses[0].points.is_empty());
+        assert!(!attribution.licenses[0].links.is_empty());
     }
 }
