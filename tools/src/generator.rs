@@ -10,7 +10,7 @@ use std::path::Path;
 
 use anyhow::{Context, Result};
 use petgraph::visit::EdgeRef;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use crate::graph::{HaleikiGraph, NodeData};
 use crate::parser::Corpus;
@@ -130,13 +130,13 @@ struct AttributionOutput {
 }
 
 /// A featured page entry for the home page.
-#[derive(Debug, Clone, Serialize)]
-struct FeaturedEntry {
-    slug: String,
-    title: String,
-    category: String,
-    tier: String,
-    url: String,
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub(crate) struct FeaturedEntry {
+    pub(crate) slug: String,
+    pub(crate) title: String,
+    pub(crate) category: String,
+    pub(crate) tier: String,
+    pub(crate) url: String,
 }
 
 /// Generate all output JSON files to the given directory.
@@ -448,6 +448,15 @@ fn build_trust_levels() -> BTreeMap<String, TrustLevelDescription> {
 /// Compute top-6 concept cards by in-degree (typed relationships only, excluding
 /// provenance edges) and write `featured.json`.
 fn write_featured_json(corpus: &Corpus, graph: &HaleikiGraph, output_dir: &Path) -> Result<()> {
+    let featured = build_featured(corpus, graph);
+    write_json(output_dir, "featured.json", &featured)
+}
+
+/// Selects the top-6 concepts by typed (non-provenance) in-degree, for the
+/// home page's "Featured Articles" grid and `featured.json`. Shared by the
+/// JSON writer ([`write_featured_json`]) and the minijinja render path
+/// (`render::assemble_site_context`) — one derivation, two consumers.
+pub(crate) fn build_featured(corpus: &Corpus, graph: &HaleikiGraph) -> Vec<FeaturedEntry> {
     use std::collections::HashMap;
 
     // Count in-degree for concept nodes from typed relationship edges only
@@ -470,7 +479,7 @@ fn write_featured_json(corpus: &Corpus, graph: &HaleikiGraph, output_dir: &Path)
     let mut ranked: Vec<(String, usize)> = in_degree.into_iter().collect();
     ranked.sort_by(|a, b| b.1.cmp(&a.1).then_with(|| a.0.cmp(&b.0)));
 
-    let featured: Vec<FeaturedEntry> = ranked
+    ranked
         .into_iter()
         .take(6)
         .filter_map(|(slug, _)| {
@@ -488,9 +497,7 @@ fn write_featured_json(corpus: &Corpus, graph: &HaleikiGraph, output_dir: &Path)
                 tier: card.tier.clone(),
             })
         })
-        .collect();
-
-    write_json(output_dir, "featured.json", &featured)
+        .collect()
 }
 
 /// Write a slug-to-title lookup for all content pages (`titles.json`).
@@ -804,6 +811,77 @@ mod tests {
         let versions = value["license_versions"].as_array().unwrap();
         assert!(versions.contains(&serde_json::json!("CC BY-SA 4.0")));
 
+        let _ = fs::remove_dir_all(&tmp);
+    }
+
+    /// The repo-root `demo/` directory, resolved relative to this crate's
+    /// manifest so tests pass regardless of `cargo test`'s working directory.
+    fn demo_dir() -> std::path::PathBuf {
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../demo")
+    }
+
+    // Arc 02 slice 01, F-2: build_featured (extracted from write_featured_json)
+    // ranks real concepts by typed in-degree, independently re-derived here by
+    // counting each returned slug's actual incoming typed edges — not just
+    // re-running the same internal loop the function under test uses.
+    #[test]
+    fn test_build_featured_real_demo_corpus_ranked_by_typed_indegree() {
+        let corpus = crate::parser::parse_corpus(&demo_dir()).expect("demo corpus parses");
+        let graph = HaleikiGraph::build(&corpus);
+
+        let featured = build_featured(&corpus, &graph);
+
+        assert!(!featured.is_empty());
+        assert!(featured.len() <= 6);
+        for entry in &featured {
+            assert!(
+                corpus.concepts.contains_key(&entry.slug),
+                "featured slug {} must be a real concept",
+                entry.slug
+            );
+            assert_eq!(entry.url, format!("/{}/", entry.slug));
+        }
+
+        // Independently recompute each entry's typed (non-provenance) in-degree
+        // by walking the graph's edges directly, and confirm the returned order
+        // is non-increasing by that count — a real ranking check, not just a
+        // shape check.
+        let indegree_of = |slug: &str| -> usize {
+            let idx = graph.index[slug];
+            graph
+                .graph
+                .edges_directed(idx, petgraph::Direction::Incoming)
+                .filter(|e| {
+                    !matches!(
+                        e.weight(),
+                        crate::graph::EdgeKind::DerivedFrom
+                            | crate::graph::EdgeKind::ConceptsGenerated
+                    )
+                })
+                .count()
+        };
+        let counts: Vec<usize> = featured.iter().map(|e| indegree_of(&e.slug)).collect();
+        assert!(
+            counts.windows(2).all(|w| w[0] >= w[1]),
+            "featured entries must be non-increasing by typed in-degree: {counts:?}"
+        );
+
+        // Existing JSON writer must still agree with the shared fn (the
+        // extraction is a refactor, not a behavior change).
+        let tmp = std::env::temp_dir().join("haleiki-gen-test-featured-demo");
+        let _ = fs::remove_dir_all(&tmp);
+        fs::create_dir_all(&tmp).unwrap();
+        write_featured_json(&corpus, &graph, &tmp).unwrap();
+        let content = fs::read_to_string(tmp.join("featured.json")).unwrap();
+        let from_json: Vec<FeaturedEntry> = serde_json::from_str(&content).unwrap();
+        assert_eq!(from_json.len(), featured.len());
+        for (a, b) in from_json.iter().zip(featured.iter()) {
+            assert_eq!(a.slug, b.slug);
+            assert_eq!(a.title, b.title);
+            assert_eq!(a.category, b.category);
+            assert_eq!(a.tier, b.tier);
+            assert_eq!(a.url, b.url);
+        }
         let _ = fs::remove_dir_all(&tmp);
     }
 }

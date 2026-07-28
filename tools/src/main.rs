@@ -17,6 +17,8 @@ mod graph;
 mod markdown;
 mod merger;
 #[allow(dead_code)]
+mod page;
+#[allow(dead_code)]
 mod parser;
 #[allow(dead_code)]
 mod render;

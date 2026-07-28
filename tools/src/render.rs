@@ -132,21 +132,51 @@ pub struct FooterLink {
 /// The `site.data` context: everything the article templates read that
 /// isn't page-specific — built once per build/render session from the
 /// resolved [`Profile`] plus the graph-derived lookups (`see_also`,
-/// `provenance`, `breadcrumbs`), each keyed by slug.
+/// `provenance`, `breadcrumbs`), each keyed by slug, plus the site-index data
+/// the home page reads (`stats`, `featured`, `home_categories`).
 #[derive(Debug, Clone, Serialize)]
 pub struct SiteContext {
     pub profile: Profile,
     pub see_also: BTreeMap<String, Vec<crate::graph::SeeAlsoEntry>>,
     pub provenance: BTreeMap<String, crate::generator::ProvenanceEntry>,
     pub breadcrumbs: BTreeMap<String, Vec<crate::graph::Breadcrumb>>,
+    pub stats: Stats,
+    pub featured: Vec<crate::generator::FeaturedEntry>,
+    pub home_categories: Vec<HomeCategory>,
+}
+
+/// `site.data.stats` — corpus-wide counts for the home hero line.
+#[derive(Debug, Clone, Serialize)]
+pub struct Stats {
+    pub sources: usize,
+    pub concepts: usize,
+    pub categories: usize,
+}
+
+/// One `site.data.home_categories[]` entry (the home page's category grid).
+#[derive(Debug, Clone, Serialize)]
+pub struct HomeCategory {
+    pub slug: String,
+    pub name: String,
+    pub count: usize,
+    pub description: String,
+    pub articles: Vec<ArticleLink>,
+}
+
+/// A `{title, url}` article link, as used in `home_categories[].articles[]`.
+#[derive(Debug, Clone, Serialize)]
+pub struct ArticleLink {
+    pub title: String,
+    pub url: String,
 }
 
 /// Assembles [`SiteContext`] from a parsed [`crate::parser::Corpus`], its
 /// [`crate::graph::HaleikiGraph`], and the resolved [`Profile`].
 ///
-/// Reuses `graph.see_also` / `graph.breadcrumbs` and
-/// `generator::build_provenance_map` — the derivations are shared with the
-/// JSON-writing build path (`generator::generate`), not re-implemented here.
+/// Reuses `graph.see_also` / `graph.breadcrumbs` / `graph.category_index` and
+/// `generator::build_provenance_map` / `generator::build_featured` — the
+/// derivations are shared with the JSON-writing build path
+/// (`generator::generate`), not re-implemented here.
 #[must_use]
 pub fn assemble_site_context(
     corpus: &crate::parser::Corpus,
@@ -174,13 +204,95 @@ pub fn assemble_site_context(
     }
 
     let provenance = crate::generator::build_provenance_map(corpus);
+    let stats = build_stats(corpus);
+    let featured = crate::generator::build_featured(corpus, graph);
+    let home_categories = build_home_categories(corpus, graph, &profile);
 
     SiteContext {
         profile,
         see_also,
         provenance,
         breadcrumbs,
+        stats,
+        featured,
+        home_categories,
     }
+}
+
+fn build_stats(corpus: &crate::parser::Corpus) -> Stats {
+    Stats {
+        sources: corpus.sources.len(),
+        concepts: corpus.concepts.len(),
+        categories: corpus.taxonomy.categories.len(),
+    }
+}
+
+/// Builds `site.data.home_categories`: one entry per `profile.taxonomy
+/// .categories` entry, **in that order** (the deployment profile drives the
+/// home grid order), reshaped from `graph.category_index`. `articles[]` is
+/// concepts first then sources, alphabetical by title within each group,
+/// truncated to 3 (arc-02 slice-01 decision #1's proposed default).
+///
+/// A taxonomy category with no matching `category_index` entry (nothing in
+/// the corpus tagged with it) is skipped rather than rendered empty.
+fn build_home_categories(
+    corpus: &crate::parser::Corpus,
+    graph: &crate::graph::HaleikiGraph,
+    profile: &Profile,
+) -> Vec<HomeCategory> {
+    let index = graph.category_index(corpus);
+
+    profile
+        .taxonomy
+        .categories
+        .iter()
+        .filter_map(|cat| {
+            let entry = index.get(&cat.name)?;
+
+            let mut concept_articles: Vec<ArticleLink> = entry
+                .concepts
+                .iter()
+                .filter_map(|slug| {
+                    let card = corpus.concepts.get(slug)?;
+                    let title = if card.disambiguator.is_empty() {
+                        card.concept.clone()
+                    } else {
+                        format!("{} ({})", card.concept, card.disambiguator)
+                    };
+                    Some(ArticleLink {
+                        title,
+                        url: format!("/{slug}/"),
+                    })
+                })
+                .collect();
+            concept_articles.sort_by(|a, b| a.title.cmp(&b.title));
+
+            let mut source_articles: Vec<ArticleLink> = entry
+                .sources
+                .iter()
+                .filter_map(|slug| {
+                    let page = corpus.sources.get(slug)?;
+                    Some(ArticleLink {
+                        title: page.title.clone(),
+                        url: format!("/source/{slug}/"),
+                    })
+                })
+                .collect();
+            source_articles.sort_by(|a, b| a.title.cmp(&b.title));
+
+            let mut articles = concept_articles;
+            articles.extend(source_articles);
+            articles.truncate(3);
+
+            Some(HomeCategory {
+                slug: crate::markdown::slugify(&cat.name),
+                name: entry.name.clone(),
+                count: entry.sources.len() + entry.concepts.len(),
+                description: entry.description.clone(),
+                articles,
+            })
+        })
+        .collect()
 }
 
 #[cfg(test)]
@@ -449,5 +561,90 @@ mod tests {
             !html.contains(r#"<a href="/category/" class="active""#),
             "categories nav item should not be marked active: {html}"
         );
+    }
+
+    // Arc 02 Slice 01, F-1: site.data.stats has the correct demo-corpus counts.
+    #[test]
+    fn test_assemble_site_context_stats_match_demo_corpus_counts() {
+        let corpus = crate::parser::parse_corpus(&demo_dir()).expect("demo corpus parses");
+        let graph = crate::graph::HaleikiGraph::build(&corpus);
+        let profile = resolve_profile(demo_dir().join("profile.yaml")).expect("profile resolves");
+        let expected_sources = corpus.sources.len();
+        let expected_concepts = corpus.concepts.len();
+        let expected_categories = corpus.taxonomy.categories.len();
+
+        let site = assemble_site_context(&corpus, &graph, profile);
+
+        assert_eq!(site.stats.sources, expected_sources);
+        assert_eq!(site.stats.concepts, expected_concepts);
+        assert_eq!(site.stats.categories, expected_categories);
+        // Sanity: these are the real demo corpus, not an empty/trivial one.
+        assert!(site.stats.sources > 50);
+        assert!(site.stats.concepts > 100);
+        assert_eq!(site.stats.categories, 10);
+    }
+
+    // Arc 02 Slice 01, F-3: site.data.home_categories built from category_index
+    // in profile.taxonomy.categories order, with correct count and article
+    // title/url shapes for a known real category.
+    #[test]
+    fn test_assemble_site_context_home_categories_order_and_shape() {
+        let corpus = crate::parser::parse_corpus(&demo_dir()).expect("demo corpus parses");
+        let graph = crate::graph::HaleikiGraph::build(&corpus);
+        let profile = resolve_profile(demo_dir().join("profile.yaml")).expect("profile resolves");
+        let expected_order: Vec<String> = profile
+            .taxonomy
+            .categories
+            .iter()
+            .map(|c| c.name.clone())
+            .collect();
+
+        let site = assemble_site_context(&corpus, &graph, profile);
+
+        // Order matches profile.taxonomy.categories, not alphabetical or
+        // category_index's own (BTreeMap, alphabetical) iteration order.
+        let actual_order: Vec<String> = site
+            .home_categories
+            .iter()
+            .map(|c| c.slug.clone())
+            .collect();
+        let expected_slugs: Vec<String> = expected_order
+            .iter()
+            .map(|n| crate::markdown::slugify(n))
+            .collect();
+        assert_eq!(actual_order, expected_slugs);
+        assert_ne!(
+            actual_order,
+            {
+                let mut sorted = actual_order.clone();
+                sorted.sort();
+                sorted
+            },
+            "sanity check: taxonomy order must not coincidentally equal alphabetical order"
+        );
+
+        // "mathematics": 24 real demo concepts + 9 real demo sources = 33.
+        let math = site
+            .home_categories
+            .iter()
+            .find(|c| c.slug == "mathematics")
+            .expect("mathematics category present");
+        assert_eq!(math.name, "Mathematics");
+        assert_eq!(math.count, 33);
+        assert!(!math.description.is_empty());
+        assert!(math.articles.len() <= 3);
+        assert!(!math.articles.is_empty());
+        for a in &math.articles {
+            assert!(
+                a.url.starts_with('/') && a.url.ends_with('/'),
+                "article url should be an absolute path: {}",
+                a.url
+            );
+            assert!(!a.title.is_empty());
+        }
+        // Concepts sort before sources (decision #1's proposed default) — the
+        // math category has more than 3 concepts alone, so all 3 slots should
+        // be concept links (never /source/).
+        assert!(math.articles.iter().all(|a| !a.url.starts_with("/source/")));
     }
 }
