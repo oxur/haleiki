@@ -37,6 +37,29 @@ pub enum Command {
         content_dir: PathBuf,
     },
 
+    /// Render the full site to static HTML (the pivot's default deliverable).
+    ///
+    /// Additive alongside `build` (which still writes the legacy `_data`
+    /// JSON for the Cobalt/Liquid path) — the two commands reconcile in a
+    /// later cleanup arc.
+    Export {
+        /// Path to the content directory (expects `profile.yaml` alongside
+        /// `sources/`, `concepts/`, `taxonomy.yaml`).
+        #[arg(long, default_value = "content")]
+        content_dir: PathBuf,
+        /// Path to the minijinja templates directory.
+        #[arg(long, default_value = "templates")]
+        templates_dir: PathBuf,
+        /// Path to the site assets directory (only the allowlisted
+        /// subdirectories — css/fonts/icons/images/js/vendor — are copied).
+        #[arg(long, default_value = "assets")]
+        assets_dir: PathBuf,
+        /// Output directory for the rendered static site. Removed and
+        /// rewritten from scratch on every export.
+        #[arg(long, default_value = "_site")]
+        out_dir: PathBuf,
+    },
+
     /// Show statistics about the knowledge base.
     Stats {
         /// Path to the content directory.

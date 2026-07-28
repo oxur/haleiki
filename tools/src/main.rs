@@ -10,6 +10,7 @@ mod cli;
 #[cfg(feature = "demo")]
 mod demo;
 mod error;
+mod export;
 mod generator;
 #[allow(dead_code)]
 mod graph;
@@ -49,6 +50,14 @@ fn run(cmd: &Command) -> anyhow::Result<()> {
         }
         Command::Validate { content_dir } => {
             run_validate(content_dir)?;
+        }
+        Command::Export {
+            content_dir,
+            templates_dir,
+            assets_dir,
+            out_dir,
+        } => {
+            run_export(content_dir, templates_dir, assets_dir, out_dir)?;
         }
         Command::Stats { content_dir } => {
             run_stats(content_dir)?;
@@ -133,6 +142,24 @@ fn run_build(content_dir: &Path, output_dir: &Path) -> anyhow::Result<()> {
     generator::generate(&corpus, &hgraph, output_dir)?;
     eprintln!("  Done.");
 
+    Ok(())
+}
+
+/// Run the static export pipeline: parse → validate → graph → render every
+/// route → write `_site/` → copy the asset allowlist.
+fn run_export(
+    content_dir: &Path,
+    templates_dir: &Path,
+    assets_dir: &Path,
+    out_dir: &Path,
+) -> anyhow::Result<()> {
+    eprintln!(
+        "Exporting {} to {}...",
+        content_dir.display(),
+        out_dir.display()
+    );
+    export::export_site(content_dir, templates_dir, assets_dir, out_dir)?;
+    eprintln!("  Done.");
     Ok(())
 }
 
