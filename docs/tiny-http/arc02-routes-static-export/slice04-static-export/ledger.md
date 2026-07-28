@@ -46,10 +46,10 @@
 
 ## Closure
 
-Not yet closed — pending operator decision on whether/how to commit. All 8
-rows reached `done` with `attested` evidence (see per-row Evidence column).
-No rows deferred or no-op. CDC-equivalent independent verification has not
-yet occurred — evidence strength is `attested`, not `reproduced`. This is
-Arc 02's fourth and final slice — see the bubble-up section in
-`closing-report.md` for what this means for the arc's own composition rows.
-Rows: 8. Done: 8. Deferred: 0. No-op: 0.
+**Independently verified (CDC): CLOSED** 2026-07-28. All 8 rows reproduced in a
+clean build — `cargo test` = 81 passed / 0 failed plus the CLI integration test;
+and the **real export** was run to a temp `_site/` (293 HTML files, correct
+counts, asset allowlist, links resolve). `clippy --all-targets -D warnings` = 0
+findings in slice-04 code; `fmt` clean. See [`cdc-verification.md`](./cdc-verification.md).
+Evidence `attested → reproduced`. Verified by: independent Claude (Cowork) context.
+Rows: 8. Done: 8 (reproduced). Deferred: 0. No-op: 0.

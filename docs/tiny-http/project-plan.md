@@ -68,10 +68,11 @@ the recomposition arc that closes the branch as a clean Cobalt replacement.
 - **Arc 01 — Render core:** **CLOSED** 2026-07-28 (see
   [`arc01-render-core/closing-report.md`](./arc01-render-core/closing-report.md)).
   All three slices CDC-closed; composition rows A-4…A-7 reproduced at arc scale.
-- **Arc 02 — Routes & static export:** planned in detail (see
-  [`arc02-routes-static-export/arc-plan.md`](./arc02-routes-static-export/arc-plan.md));
-  slice 01 open set written; not yet implemented.
-- **Arcs 03–06:** roadmap-level only, by design. Each is planned deep when it
+- **Arc 02 — Routes & static export:** **CLOSED** 2026-07-28 (see
+  [`arc02-routes-static-export/closing-report.md`](./arc02-routes-static-export/closing-report.md)).
+  All four slices CDC-closed; a real 293-file `_site/` export reproduces B-5…B-8.
+- **Arc 03 — tiny_http server:** next to plan deep.
+- **Arcs 04–06:** roadmap-level only, by design. Each is planned deep when it
   becomes the active work; findings from earlier arcs bubble up and may reshape
   the later entries before they are planned.
 
@@ -86,7 +87,7 @@ scale** (an end-to-end demonstration), never inherited from arc attestations.
 | ID | Criterion | Verify | Significance | Origin | Status | Evidence |
 |----|-----------|--------|--------------|--------|--------|----------|
 | P-1 | Arc 01 (render core) closed + composed | ptr: `arc01-render-core/closing-report.md` | correctness | project-plan | done | reproduced at arc scale — Arc 01 closed 2026-07-28; A-4…A-7 green in clean build |
-| P-2 | Arc 02 (routes & static export) closed + composed | ptr: arc02 closing-report | correctness | project-plan | open | |
+| P-2 | Arc 02 (routes & static export) closed + composed | ptr: `arc02-routes-static-export/closing-report.md` | correctness | project-plan | done | reproduced at arc scale — Arc 02 closed 2026-07-28; real 293-file `_site/` export, B-5…B-8 green |
 | P-3 | Arc 03 (tiny_http server) closed + composed | ptr: arc03 closing-report | correctness | project-plan | open | |
 | P-4 | Arc 04 (custom search) closed + composed | ptr: arc04 closing-report | correctness | project-plan | open | |
 | P-5 | Arc 05 (news content type) closed + composed | ptr: arc05 closing-report | correctness | project-plan | open | |
@@ -99,6 +100,17 @@ scale** (an end-to-end demonstration), never inherited from arc attestations.
 | P-12 | Visual + functional parity with the design review accepted by the operator | operator acceptance judgment, recorded | serious | DoD | open | |
 
 ## 5. Version history
+
+### v1.2 — 2026-07-28 (bubble-up from Arc 02 close)
+Arc 02 (routes & static export) closed and composed
+(`arc02-routes-static-export/closing-report.md`): all four slices CDC-closed, and
+B-5…B-8 reproduced at arc scale by running the real `haleiki export` — a 293-file
+`_site/` (6 singletons + 10 categories + 91 sources + 186 concepts) with assets
+copied and links resolving. Project ledger **P-2** marked done. Roadmap unchanged.
+Forward findings for later arcs: (a) **Arc 06** should reconcile the CLI — the
+static export landed as an additive `export` subcommand while `build` still writes
+the legacy `_data` JSON; (b) a project-level note on the `&#x2f;` href-escaping
+gotcha was added to `CLAUDE.md`. Status advanced: Arc 03 (tiny_http server) is next.
 
 ### v1.1 — 2026-07-28 (bubble-up from Arc 01 close)
 Arc 01 (render core) closed and composed (`arc01-render-core/closing-report.md`):

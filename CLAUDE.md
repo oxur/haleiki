@@ -70,6 +70,15 @@ search index** (no Pagefind); **minijinja replaces Cobalt/Liquid** using Claude
 Design's refactor templates in `workbench/Hale'iki Wiki Design Refactor/` (these
 are authoritative; the `main` design integration is abandoned).
 
+**Known gotcha — `&#x2f;` in fully-interpolated hrefs.** minijinja's HTML
+auto-escaper escapes `/` to `&#x2f;` inside an attribute value that is a *single*
+interpolated variable (`href="{{ crumb.url }}"`), but not in a partially-literal
+one (`/category/{{ cat.slug }}/`). It is **functionally correct** — browsers
+decode the entities, so links work — but tests that grep for `href="/..."` must
+also accept the `&#x2f;` form (or assert on the partially-literal templates).
+Seen in Arc 01 footer links and Arc 02 slices 03–04. Do not "fix" it in the
+template; match both forms in tests.
+
 ## AI Rust Skill
 
 For Rust code quality, load the skill and guides:
