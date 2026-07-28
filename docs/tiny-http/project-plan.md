@@ -65,10 +65,11 @@ the recomposition arc that closes the branch as a clean Cobalt replacement.
 
 ## 3. Current status
 
-- **Arc 01 — Render core:** planned in detail (see
-  [`arc01-render-core/arc-plan.md`](./arc01-render-core/arc-plan.md)). Slice 01
-  open set written; not yet implemented.
-- **Arcs 02–06:** roadmap-level only, by design. Each is planned deep when it
+- **Arc 01 — Render core:** **CLOSED** 2026-07-28 (see
+  [`arc01-render-core/closing-report.md`](./arc01-render-core/closing-report.md)).
+  All three slices CDC-closed; composition rows A-4…A-7 reproduced at arc scale.
+- **Arc 02 — Routes & static export:** next to plan deep.
+- **Arcs 03–06:** roadmap-level only, by design. Each is planned deep when it
   becomes the active work; findings from earlier arcs bubble up and may reshape
   the later entries before they are planned.
 
@@ -82,7 +83,7 @@ scale** (an end-to-end demonstration), never inherited from arc attestations.
 
 | ID | Criterion | Verify | Significance | Origin | Status | Evidence |
 |----|-----------|--------|--------------|--------|--------|----------|
-| P-1 | Arc 01 (render core) closed + composed | ptr: `arc01-render-core/closing-report.md` | correctness | project-plan | open | |
+| P-1 | Arc 01 (render core) closed + composed | ptr: `arc01-render-core/closing-report.md` | correctness | project-plan | done | reproduced at arc scale — Arc 01 closed 2026-07-28; A-4…A-7 green in clean build |
 | P-2 | Arc 02 (routes & static export) closed + composed | ptr: arc02 closing-report | correctness | project-plan | open | |
 | P-3 | Arc 03 (tiny_http server) closed + composed | ptr: arc03 closing-report | correctness | project-plan | open | |
 | P-4 | Arc 04 (custom search) closed + composed | ptr: arc04 closing-report | correctness | project-plan | open | |
@@ -96,6 +97,17 @@ scale** (an end-to-end demonstration), never inherited from arc attestations.
 | P-12 | Visual + functional parity with the design review accepted by the operator | operator acceptance judgment, recorded | serious | DoD | open | |
 
 ## 5. Version history
+
+### v1.1 — 2026-07-28 (bubble-up from Arc 01 close)
+Arc 01 (render core) closed and composed (`arc01-render-core/closing-report.md`):
+all three slices CDC-closed, composition rows A-4…A-7 reproduced at arc scale in a
+clean independent build. Project ledger **P-1** marked done. The roadmap is
+unchanged — Arc 01 delivered its capability as defined, so no restructure is
+forced (a valid, recorded bubble-up outcome). Two forward-looking findings for
+later arcs: (a) the CI lint gate should run `clippy --all-targets --all-features
+-D warnings` (Arc 06), with the feature-gated `demo/*` debt as its backlog;
+(b) source-page provenance display is an Arc 02 template decision. Status
+advanced: Arc 02 is next to plan deep.
 
 ### v1.0 — 2026-07-28
 Initial roadmap for the tiny_http/minijinja pivot. Six arcs (render core →

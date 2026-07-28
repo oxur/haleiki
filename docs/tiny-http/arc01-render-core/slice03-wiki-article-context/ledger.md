@@ -56,15 +56,14 @@
 
 ## Closure
 
-Not yet closed — pending operator decision on whether/how to commit. All 9
-rows reached `done` with `attested` evidence (see per-row Evidence column);
-F-4 carries one disclosed enrichment (`subcategory` on `ConceptPageData`,
-beyond the README's literal per-page field list but within what
-`sidebar-taxonomy.jinja` already supports) and F-9 discloses a newly-found
-pre-existing-debt category left unfixed per this slice's boundary. No rows
-deferred or no-op. CDC-equivalent independent verification has not yet
-occurred — evidence strength is `attested`, not `reproduced`. This is Arc 01's
-third and final slice; once independently verified, Arc 01's composition rows
-(A-4…A-7) become reproducible against this render path, and the arc itself can
-close.
-Rows: 9. Done: 9. Deferred: 0. No-op: 0.
+**Independently verified (CDC): CLOSED** 2026-07-28. All 9 rows reproduced in a
+clean cloud build against the **full demo corpus** (91 sources + 186 concepts) —
+`cargo test` = 53 passed / 0 failed, and every slice-03 row maps to a passing
+test (see [`cdc-verification.md`](./cdc-verification.md)). `clippy --all-targets
+-D warnings` shows 0 findings in slice-03 code; `fmt` clean. The `subcategory`
+enrichment (F-4) and the feature-gated `demo/*` lint debt (F-9, bubbled to
+arc-plan v1.5) were reviewed and accepted as out-of-scope. Evidence strengthened
+`attested → reproduced`. This was Arc 01's final slice; A-4…A-7 reproduced at arc
+scale — the arc closes in [`../closing-report.md`](../closing-report.md).
+Verified by: independent Claude (Cowork) context.
+Rows: 9. Done: 9 (reproduced). Deferred: 0. No-op: 0.
