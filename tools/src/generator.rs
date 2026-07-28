@@ -538,7 +538,7 @@ fn write_attribution_json(corpus: &Corpus, output_dir: &Path) -> Result<()> {
 
     // Sort each project group alphabetically by title
     for entries in sources_by_project.values_mut() {
-        entries.sort_by(|a, b| a.title.to_lowercase().cmp(&b.title.to_lowercase()));
+        entries.sort_by_key(|a| a.title.to_lowercase());
     }
 
     let source_count = sources_by_project.values().map(Vec::len).sum();

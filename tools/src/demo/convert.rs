@@ -925,7 +925,7 @@ pub fn convert_all_articles(use_pandoc: bool) -> anyhow::Result<usize> {
             Ok(md) => {
                 std::fs::write(&md_path, &md)?;
                 converted += 1;
-                eprintln!("    OK ({} bytes, {} lines)", md.len(), md.lines().count(),);
+                eprintln!("    OK ({} bytes, {} lines)", md.len(), md.lines().count());
             }
             Err(e) => {
                 eprintln!("    FAILED: {e}");

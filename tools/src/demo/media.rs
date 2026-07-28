@@ -885,11 +885,7 @@ fn remove_empty_figures(html: &mut String) {
 /// local path, so we just need to remove the `<a>` wrapper and keep the
 /// inner content.
 fn unwrap_file_description_links(html: &mut String) {
-    loop {
-        let Some(class_pos) = html.find("mw-file-description") else {
-            break;
-        };
-
+    while let Some(class_pos) = html.find("mw-file-description") {
         // Walk backwards to find the opening <a
         let before = &html[..class_pos];
         let Some(open_start) = before.rfind("<a") else {

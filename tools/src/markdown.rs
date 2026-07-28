@@ -264,8 +264,7 @@ Even more text.
         for entry in &rendered.toc {
             assert!(
                 rendered.html.contains(&format!("id=\"{}\"", entry.id)),
-                "toc entry {:?} has no matching anchor in html: {}",
-                entry,
+                "toc entry {entry:?} has no matching anchor in html: {}",
                 rendered.html
             );
         }
@@ -377,8 +376,7 @@ Inline `*not emphasis*` here.
         for entry in &rendered.toc {
             assert!(
                 rendered.html.contains(&format!("id=\"{}\"", entry.id)),
-                "toc entry {:?} has no matching anchor in html",
-                entry
+                "toc entry {entry:?} has no matching anchor in html"
             );
         }
         // Math-heavy: at least one inline math span survives.

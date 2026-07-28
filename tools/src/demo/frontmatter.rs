@@ -264,7 +264,7 @@ pub fn inject_all(manifest: &Manifest) -> anyhow::Result<usize> {
     }
 
     eprintln!();
-    eprintln!("Frontmatter injection: {written} written, {skipped} skipped, {failed} failed",);
+    eprintln!("Frontmatter injection: {written} written, {skipped} skipped, {failed} failed");
 
     if failed > 0 {
         anyhow::bail!("{failed} article(s) failed frontmatter injection");

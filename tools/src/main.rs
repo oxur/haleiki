@@ -56,9 +56,7 @@ fn run(cmd: &Command) -> anyhow::Result<()> {
             let content_dir = Path::new("content");
             if content_dir.exists()
                 && content_dir.is_dir()
-                && std::fs::read_dir(content_dir)
-                    .map(|mut d| d.next().is_some())
-                    .unwrap_or(false)
+                && std::fs::read_dir(content_dir).is_ok_and(|mut d| d.next().is_some())
             {
                 println!("Content directory found at content/.");
                 println!("Full dev server for custom deployments is not yet implemented.");

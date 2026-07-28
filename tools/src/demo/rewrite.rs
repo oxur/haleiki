@@ -449,7 +449,7 @@ fn unwrap_link(html: &mut String, href: &str) {
                 let inner = html[open_end..close_start].to_string();
 
                 // Replace <a ...>inner</a> with inner
-                *html = format!("{}{}{}", &html[..open_start], inner, &html[close_end..],);
+                *html = format!("{}{}{}", &html[..open_start], inner, &html[close_end..]);
             }
         }
     }
