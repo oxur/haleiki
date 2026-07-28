@@ -47,13 +47,12 @@
 
 ## Closure
 
-Not yet closed — pending operator decision on whether/how to commit. All 8
-rows reached `done` with `attested` evidence (see per-row Evidence column). No
-rows deferred or no-op. CDC-equivalent independent verification has not yet
-occurred — evidence strength is `attested`, not `reproduced`. This is Arc 02's
-third slice: every page type the site has now exists as a renderer
-(`render_home`, `render_browse`, `render_category`, `render_concept`/
-`render_source` from Arc 01, and now `render_about`/`render_404`/
-`render_search`/`render_attribution`). Only slice 04 — the static-export
-walker that composes them all into `_site/` — remains before Arc 02 closes.
-Rows: 8. Done: 8. Deferred: 0. No-op: 0.
+**Independently verified (CDC): CLOSED** 2026-07-28. All 8 rows reproduced in a
+clean full-corpus build — `cargo test` = 74 passed / 0 failed; each row maps to a
+passing test (see [`cdc-verification.md`](./cdc-verification.md)). The attribution
+extraction is byte-identical (generator test green); `intro`/`licenses` resolve
+from the profile. The new **required** `Profile.attribution` ripple was handled —
+both `demo/profile.yaml` and `templates/profile.sample.yaml` updated, slice-01's
+sample-profile test still green. `clippy --all-targets -D warnings` = 0 findings
+in slice-03 code; `fmt` clean; no new debt. Evidence `attested → reproduced`.
+Verified by: independent Claude (Cowork) context. Rows: 8. Done: 8 (reproduced). Deferred: 0. No-op: 0.

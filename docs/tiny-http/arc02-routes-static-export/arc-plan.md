@@ -68,7 +68,7 @@ arc scale** (run the export, inspect the `_site/` tree and key pages); class (c)
 |----|-----------|--------|--------------|--------|--------|----------|
 | B-1 | Slice 01 (site-index + home) closed | ptr: `slice01-site-index-home/cdc-verification.md` | correctness | arc-plan | done | reproduced — slice 01 CDC-closed 2026-07-28, 7/7 rows |
 | B-2 | Slice 02 (browse + category) closed | ptr: `slice02-browse-category/cdc-verification.md` | correctness | arc-plan | done | reproduced — slice 02 CDC-closed 2026-07-28, 7/7 rows (incl. _uncategorized fix) |
-| B-3 | Slice 03 (about + attribution + search shell + 404) closed | ptr: slice03 cdc-verification | correctness | arc-plan | open | |
+| B-3 | Slice 03 (about + attribution + search shell + 404) closed | ptr: `slice03-standalone-pages/cdc-verification.md` | correctness | arc-plan | done | reproduced — slice 03 CDC-closed 2026-07-28, 8/8 rows |
 | B-4 | Slice 04 (static export writer) closed | ptr: slice04 cdc-verification | correctness | arc-plan | open | |
 | B-5 | Static export produces a complete `_site/` from the demo corpus: `index.html` for home, browse, every category, every concept, every source, about, attribution, search, and `404.html` — each at its contract path | reproduce at arc scale: run the export, assert the file tree + spot-render key pages | serious | arc-plan | open | |
 | B-6 | `assets/` (css, js, fonts, icons, vendor) copied into `_site/assets/` | reproduce: assert the asset tree under `_site/assets/` | serious | arc-plan | open | |
