@@ -60,6 +60,24 @@ pub enum Command {
         out_dir: PathBuf,
     },
 
+    /// Serve the site live over HTTP (renders once, serves from memory).
+    Serve {
+        /// Path to the content directory (expects `profile.yaml` alongside
+        /// `sources/`, `concepts/`, `taxonomy.yaml`).
+        #[arg(long, default_value = "content")]
+        content_dir: PathBuf,
+        /// Path to the minijinja templates directory.
+        #[arg(long, default_value = "templates")]
+        templates_dir: PathBuf,
+        /// Path to the site assets directory (only the allowlisted
+        /// subdirectories — css/fonts/icons/images/js/vendor — are served).
+        #[arg(long, default_value = "assets")]
+        assets_dir: PathBuf,
+        /// Address to bind the HTTP server to.
+        #[arg(long, default_value = "127.0.0.1:8080")]
+        bind: String,
+    },
+
     /// Show statistics about the knowledge base.
     Stats {
         /// Path to the content directory.

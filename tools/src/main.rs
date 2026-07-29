@@ -24,6 +24,7 @@ mod parser;
 #[allow(dead_code)]
 mod render;
 mod search;
+mod server;
 mod validator;
 
 use std::path::Path;
@@ -58,6 +59,14 @@ fn run(cmd: &Command) -> anyhow::Result<()> {
             out_dir,
         } => {
             run_export(content_dir, templates_dir, assets_dir, out_dir)?;
+        }
+        Command::Serve {
+            content_dir,
+            templates_dir,
+            assets_dir,
+            bind,
+        } => {
+            run_serve(content_dir, templates_dir, assets_dir, bind)?;
         }
         Command::Stats { content_dir } => {
             run_stats(content_dir)?;
@@ -161,6 +170,19 @@ fn run_export(
     export::export_site(content_dir, templates_dir, assets_dir, out_dir)?;
     eprintln!("  Done.");
     Ok(())
+}
+
+/// Run the live HTTP server: render every route once, then serve it from
+/// memory over a fixed thread pool until interrupted.
+fn run_serve(
+    content_dir: &Path,
+    templates_dir: &Path,
+    assets_dir: &Path,
+    bind: &str,
+) -> anyhow::Result<()> {
+    eprintln!("Rendering {}...", content_dir.display());
+    eprintln!("Serving on http://{bind} (Ctrl+C to stop)...");
+    server::serve(content_dir, templates_dir, assets_dir, bind)
 }
 
 /// Run validation only and report results.

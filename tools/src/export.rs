@@ -1,32 +1,23 @@
-//! Static export writer — Arc 02's capstone. Walks every route through the
-//! existing `page::render_*` / `article::render_*` renderers (it composes
-//! them, it does not re-render) and writes a complete `_site/` of static
-//! HTML, then copies the site asset tree. The pivot's default deliverable.
+//! Static export writer — Arc 02's capstone, refactored in Arc 03 slice 01
+//! onto the shared `server::render_routes` walk ("one renderer, two sinks").
+//! Writes the rendered route map to a complete `_site/` of static HTML, then
+//! copies the site asset tree. The pivot's default deliverable.
 
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
 
-use crate::article;
-use crate::graph::HaleikiGraph;
-use crate::page;
-use crate::parser;
-use crate::render;
-use crate::validator;
-
-/// Site-asset subdirectories copied into `_site/assets/`. Excludes
-/// `assets/ai` (the Rust AI-skill dev guides) and `assets/mockups` (design
-/// sources) — neither is a runtime site asset.
-const ASSET_ALLOWLIST: [&str; 6] = ["css", "fonts", "icons", "images", "js", "vendor"];
+use crate::server::{self, ASSET_ALLOWLIST};
 
 /// Parses, validates, and renders the full site from `content_dir` to
-/// `out_dir` as static HTML (via `templates_dir`), then copies the asset
-/// allowlist from `assets_dir` into `out_dir/assets/`.
+/// `out_dir` as static HTML (via `templates_dir`, through
+/// [`server::render_routes`]), then copies the asset allowlist from
+/// `assets_dir` into `out_dir/assets/`.
 ///
 /// Cleans `out_dir` first (`remove_dir_all`, if present) so a stale file
-/// from a prior export cannot linger. Route iteration order is sorted
-/// (slugs, category names) so repeated exports of the same corpus are
-/// byte-stable.
+/// from a prior export cannot linger. `render_routes`' route iteration order
+/// is sorted (slugs, category names) and its `pages` map is a `BTreeMap`, so
+/// repeated exports of the same corpus are byte-stable.
 ///
 /// # Errors
 ///
@@ -39,77 +30,32 @@ pub fn export_site(
     assets_dir: &Path,
     out_dir: &Path,
 ) -> Result<()> {
-    let corpus = parser::parse_corpus(content_dir)
-        .with_context(|| format!("failed to parse corpus from {}", content_dir.display()))?;
-
-    let report = validator::validate(&corpus, content_dir);
-    if report.has_errors() {
-        report.print();
-        anyhow::bail!("Validation failed with {} error(s).", report.errors.len());
-    }
-
-    let graph = HaleikiGraph::build(&corpus);
-    let profile_path = content_dir.join("profile.yaml");
-    let profile = render::resolve_profile(&profile_path).with_context(|| {
-        format!(
-            "failed to resolve site.data.profile from {}",
-            profile_path.display()
-        )
-    })?;
-    let site = render::assemble_site_context(&corpus, &graph, profile);
-    let env = render::build_environment(templates_dir);
+    let routes = server::render_routes(content_dir, templates_dir)?;
 
     if out_dir.exists() {
         std::fs::remove_dir_all(out_dir)
             .with_context(|| format!("failed to clean {}", out_dir.display()))?;
     }
 
-    write_page(out_dir, "", &page::render_home(&env, &site)?)?;
-    write_page(out_dir, "browse", &page::render_browse(&env, &site)?)?;
-    write_page(out_dir, "about", &page::render_about(&env, &site)?)?;
-    write_page(
-        out_dir,
-        "attribution",
-        &page::render_attribution(&env, &site)?,
-    )?;
-    write_page(out_dir, "search", &page::render_search(&env, &site)?)?;
-    write_404(out_dir, &page::render_404(&env, &site)?)?;
-
-    let category_index = graph.category_index(&corpus);
-    let mut category_names: Vec<&String> = category_index.keys().collect();
-    category_names.sort();
-    for name in category_names {
-        let html = page::render_category(&env, &site, &corpus, &graph, name)?;
-        write_page(out_dir, &format!("category/{name}"), &html)?;
+    for (url_path, html) in &routes.pages {
+        write_route(out_dir, url_path, html)?;
     }
-
-    let mut concept_slugs: Vec<&String> = corpus.concepts.keys().collect();
-    concept_slugs.sort();
-    for slug in concept_slugs {
-        let html = article::render_concept(&env, &site, &corpus, slug)?;
-        write_page(out_dir, slug, &html)?;
-    }
-
-    let mut source_slugs: Vec<&String> = corpus.sources.keys().collect();
-    source_slugs.sort();
-    for slug in source_slugs {
-        let html = article::render_source(&env, &site, &corpus, slug)?;
-        write_page(out_dir, &format!("source/{slug}"), &html)?;
-    }
+    write_404(out_dir, &routes.not_found)?;
 
     copy_assets(assets_dir, &out_dir.join("assets"))?;
 
     Ok(())
 }
 
-/// Writes `html` to `out_dir/{route}/index.html`, creating parent
-/// directories as needed. `route = ""` writes to `out_dir/index.html`
-/// (the home route).
-fn write_page(out_dir: &Path, route: &str, html: &str) -> Result<()> {
-    let dir: PathBuf = if route.is_empty() {
+/// Writes `html` to the file a URL path maps to: `out_dir/index.html` for
+/// `"/"`, `out_dir/{trimmed}/index.html` otherwise (e.g. `"/browse/"` →
+/// `out_dir/browse/index.html`). Creates parent directories as needed.
+fn write_route(out_dir: &Path, url_path: &str, html: &str) -> Result<()> {
+    let trimmed = url_path.trim_matches('/');
+    let dir: PathBuf = if trimmed.is_empty() {
         out_dir.to_path_buf()
     } else {
-        out_dir.join(route)
+        out_dir.join(trimmed)
     };
     std::fs::create_dir_all(&dir).with_context(|| format!("failed to create {}", dir.display()))?;
     let path = dir.join("index.html");
@@ -237,7 +183,7 @@ mod tests {
         assert!(out.join("404.html").exists());
         assert!(!out.join("404").join("index.html").exists());
 
-        let graph = HaleikiGraph::build(&corpus);
+        let graph = crate::graph::HaleikiGraph::build(&corpus);
         let category_index = graph.category_index(&corpus);
         let category_dirs: Vec<_> = std::fs::read_dir(out.join("category"))
             .expect("category dir exists")
