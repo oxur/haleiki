@@ -38,12 +38,13 @@ boundary breach.
 
 ## Confirm the six decisions first (slice-doc §"Decisions to confirm")
 
-Decision #1 (verification tooling) is load-bearing — the repo has **no** JS/browser
-test tooling today. Confirm the driver (proposed: **Deno + Playwright**, matching
-the operator's stack, driving a real headless Chromium against both sinks; a Rust
-`headless_chrome` test is the in-language alternative) and that wiring it into
-`make check`/CI is **deferred to Arc 06**. Do not add a Node/`package.json`
-toolchain.
+Decision #1 (verification tooling) is **CONFIRMED (operator): Deno + Playwright** —
+a Deno harness (native test runner + lint/fmt for the unit layer) driving
+Playwright over a real headless Chromium against **both** sinks. **Do not add a
+Node/`package.json` toolchain** (Playwright is pulled Deno-side, test-only, never
+shipped). **CI wiring (`make check`) is deferred to Arc 06** — commit the harness
+and reproduce it this slice; don't gate `make check` on Chromium yet. The other
+five decisions still need confirming.
 
 ## What to build
 

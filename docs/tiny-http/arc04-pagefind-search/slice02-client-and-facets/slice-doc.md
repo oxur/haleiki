@@ -72,21 +72,22 @@ touch** — little or no Rust change is expected.
 
 ## Decisions to confirm at slice start
 
-1. **Verification tooling (load-bearing — the repo has none today).** There is no
-   JS/browser test tooling in the repo (no `package.json`/`deno.json`/Playwright;
-   the JS assets are currently untested). Proposed: verify against a **real
-   headless Chromium** (available in the build environment) driving **both** a
-   live `haleiki serve` and a served static `_site/` — the harness does *both*
-   e2e DOM assertions *and* direct calls to the exposed pure helpers
-   (`window.__haleikiSearch.*`) for unit-level logic, so no Node/Deno toolchain is
-   added to ship. Ship the harness as a **committed, runnable script**
-   (recommend **Deno + Playwright** — matches the operator's stack — or a Rust
-   `headless_chrome` test), reproduced at CDC. **Defer** whether it wires into
-   `make check`/CI to Arc 06 (it needs Chromium in CI). Alternatives: fold a Rust
-   `headless_chrome`/`chromiumoxide` test into `cargo test` now (in-language, but
-   a heavy, flake-prone dev-dep + Chromium in CI immediately); or CDC-only manual
-   reproduction with no committed harness. **Confirm the driver (Deno vs Rust) and
-   the defer-CI call.**
+1. **Verification tooling — CONFIRMED (operator, 2026-07-29): Deno + Playwright.**
+   The repo has no JS/browser test tooling today (no `package.json`/`deno.json`/
+   Playwright; the JS assets are untested). The decision: verify against a **real
+   headless Chromium** driving **both** a live `haleiki serve` and a served static
+   `_site/`, with the harness written in **Deno** (native test runner + lint/fmt
+   for the unit layer) driving **Playwright** for the e2e layer — matches the
+   operator's stack, keeps **Node out**, and ships a committed, re-runnable
+   artifact. The harness does *both* e2e DOM assertions *and* direct calls to the
+   exposed pure helpers (`window.__haleikiSearch.*`) for unit-level logic. **CI
+   wiring is deferred to Arc 06** — the harness is committed and reproduced at CDC
+   this slice, but whether it joins `make check` (which needs Chromium in CI) is
+   Arc 06's call. Rejected alternatives: a Rust `headless_chrome`/`chromiumoxide`
+   test in `cargo test` (in-language but awkward DOM assertions + flake-prone, and
+   harder for the unit layer); Node + Playwright (drags a full Node toolchain into
+   a Rust+Deno repo); CDC-only manual reproduction (no committed, re-runnable
+   artifact).
 2. **`search.js` stays a classic IIFE** (house style; the template keeps
    `<script … defer>`, no `type="module"`). Proposed yes — dynamic `import()`
    covers Pagefind; the guarded-global seam covers testability without a module
@@ -166,10 +167,11 @@ implementation, staying open for project-scale reproduction in Arc 06).
 
 ## Notes
 
-- Load the **rust-guidelines** only if a Rust harness is chosen; otherwise the
-  **javascript-deno-guidelines** skill governs the JS (house style: classic,
-  no-build, no-Node). Keep `search.js` free of framework deps and browser-storage
-  beyond what `theme.js` already uses.
+- The **javascript-deno-guidelines** skill governs both the shipped `search.js`
+  (house style: classic, no-build, no-Node) and the Deno + Playwright harness.
+  Keep `search.js` free of framework deps and browser-storage beyond what
+  `theme.js` already uses; the harness's Playwright dep stays test-only (never
+  shipped to the browser).
 - Pagefind must be **fetched over HTTP** — both sinks satisfy this. The bundle
   path is `/pagefind/` (Pagefind default), so `import('/pagefind/pagefind.js')`
   resolves in both sinks.
