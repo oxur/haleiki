@@ -4,12 +4,13 @@
 //! writes its output to disk, [`serve`] here serves it from memory over HTTP.
 
 use std::collections::BTreeMap;
+use std::panic::{self, UnwindSafe};
 use std::path::Path;
 use std::sync::Arc;
 use std::thread;
 
 use anyhow::{Context, Result};
-use tiny_http::{Header, Response, Server};
+use tiny_http::{Header, Method, Response, Server};
 
 use crate::article;
 use crate::graph::HaleikiGraph;
@@ -109,12 +110,18 @@ pub fn render_routes(content_dir: &Path, templates_dir: &Path) -> Result<SiteRou
     Ok(SiteRoutes { pages, not_found })
 }
 
-/// The result of resolving a request path: what to send back.
+/// The result of resolving a request: what to send back.
+///
+/// `content_length` is carried separately from `body.len()` so a `HEAD`
+/// response can declare the same `Content-Length` a `GET` on the same route
+/// would, while `body` itself is empty (see [`handle`]).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ServedResponse {
     pub status: u16,
     pub content_type: &'static str,
     pub body: Vec<u8>,
+    pub content_length: usize,
+    pub allow: Option<&'static str>,
 }
 
 /// Resolves a request path against the route map and the on-disk asset
@@ -139,17 +146,23 @@ pub fn resolve(request_path: &str, routes: &SiteRoutes, assets_dir: &Path) -> Se
 
     let normalized = normalize_page_path(path);
     if let Some(html) = routes.pages.get(&normalized) {
+        let body = html.clone().into_bytes();
         return ServedResponse {
             status: 200,
             content_type: "text/html",
-            body: html.clone().into_bytes(),
+            content_length: body.len(),
+            body,
+            allow: None,
         };
     }
 
+    let body = routes.not_found.clone().into_bytes();
     ServedResponse {
         status: 404,
         content_type: "text/html",
-        body: routes.not_found.clone().into_bytes(),
+        content_length: body.len(),
+        body,
+        allow: None,
     }
 }
 
@@ -170,6 +183,8 @@ fn resolve_asset(rel_path: &str, assets_dir: &Path) -> ServedResponse {
         status: 404,
         content_type: "text/html",
         body: Vec::new(),
+        content_length: 0,
+        allow: None,
     };
 
     let rel = Path::new(rel_path);
@@ -193,7 +208,9 @@ fn resolve_asset(rel_path: &str, assets_dir: &Path) -> ServedResponse {
         Ok(body) => ServedResponse {
             status: 200,
             content_type: content_type_for(rel_path),
+            content_length: body.len(),
             body,
+            allow: None,
         },
         Err(_) => not_found,
     }
@@ -221,14 +238,78 @@ fn content_type_for(path: &str) -> &'static str {
     }
 }
 
+/// Method-aware wrapper around [`resolve`]: `GET` serves the body; `HEAD`
+/// serves the same status, `Content-Type`, and `Content-Length` a `GET`
+/// would, with an **empty** body; anything else is `405 Method Not Allowed`
+/// with `Allow: GET, HEAD`. Pure — unit-testable without a socket.
+#[must_use]
+pub fn handle(
+    method: &Method,
+    path: &str,
+    routes: &SiteRoutes,
+    assets_dir: &Path,
+) -> ServedResponse {
+    match method {
+        Method::Get => resolve(path, routes, assets_dir),
+        Method::Head => {
+            let full = resolve(path, routes, assets_dir);
+            ServedResponse {
+                body: Vec::new(),
+                ..full
+            }
+        }
+        _ => {
+            let body = b"405 Method Not Allowed".to_vec();
+            ServedResponse {
+                status: 405,
+                content_type: "text/plain",
+                content_length: body.len(),
+                body,
+                allow: Some("GET, HEAD"),
+            }
+        }
+    }
+}
+
+/// Formats one access-log line: `"{method} {path} {status} {content_length}"`
+/// (e.g. `"GET /abelian-group/ 200 18446"`). Pure, so it's directly
+/// unit-testable; the serve loop prints it to stderr per request.
+#[must_use]
+pub fn access_log_line(method: &str, path: &str, status: u16, content_length: usize) -> String {
+    format!("{method} {path} {status} {content_length}")
+}
+
+/// Runs `f` behind [`std::panic::catch_unwind`]: on a panic, returns `500`
+/// instead of letting the panic unwind into the caller. Used to isolate a
+/// single request's failure from the worker thread handling it — a panic
+/// serving one request must never shrink the worker pool.
+fn guarded<F>(f: F) -> ServedResponse
+where
+    F: FnOnce() -> ServedResponse + UnwindSafe,
+{
+    if let Ok(response) = panic::catch_unwind(f) {
+        response
+    } else {
+        let body = b"Internal Server Error".to_vec();
+        ServedResponse {
+            status: 500,
+            content_type: "text/plain",
+            content_length: body.len(),
+            body,
+            allow: None,
+        }
+    }
+}
+
 /// Renders the site once, then serves it from memory over `bind` until the
 /// process is killed. Holds the route map in an immutable `Arc<SiteRoutes>`
 /// shared (lock-free) across a small fixed thread pool, following
 /// `tiny_http`'s own documented multi-threading pattern: several worker
 /// threads calling `server.recv()` on a shared `Arc<Server>`.
 ///
-/// No graceful shutdown, request logging, or panic isolation yet (arc-03
-/// slice 02 hardens this).
+/// Each request is handled behind [`guarded`] (panic isolation), logged via
+/// [`access_log_line`], and answered with an `X-Content-Type-Options:
+/// nosniff` header alongside its `Content-Type`/`Content-Length`/`Allow`.
 ///
 /// # Errors
 ///
@@ -262,18 +343,55 @@ pub fn serve(
     Ok(())
 }
 
-/// One worker's request loop: `recv()` → `resolve` → `respond`, until the
-/// server's listener is closed (`recv()` returns an error).
+/// Builds the `tiny_http` response for a [`ServedResponse`]: `Content-Type`,
+/// an explicit `Content-Length` (so a `HEAD`'s empty body still declares the
+/// length the matching `GET` would have sent), `X-Content-Type-Options:
+/// nosniff` on every response, and `Allow` when set (405s).
+fn build_response(resolved: ServedResponse) -> Response<std::io::Cursor<Vec<u8>>> {
+    let content_type = Header::from_bytes("Content-Type", resolved.content_type)
+        .expect("content-type values are always valid ASCII header values");
+    let content_length = Header::from_bytes("Content-Length", resolved.content_length.to_string())
+        .expect("a formatted usize is always a valid ASCII header value");
+    let nosniff = Header::from_bytes("X-Content-Type-Options", "nosniff")
+        .expect("nosniff is a valid ASCII header value");
+
+    let mut response = Response::from_data(resolved.body)
+        .with_status_code(resolved.status)
+        .with_header(content_type)
+        .with_header(content_length)
+        .with_header(nosniff);
+
+    if let Some(allow) = resolved.allow {
+        let allow_header =
+            Header::from_bytes("Allow", allow).expect("allow is a valid ASCII header value");
+        response = response.with_header(allow_header);
+    }
+
+    response
+}
+
+/// One worker's request loop: `recv()` → [`handle`] (behind [`guarded`]) →
+/// `respond`, until the server's listener is closed (`recv()` returns an
+/// error). Logs each request via [`access_log_line`].
 fn serve_loop(server: &Server, routes: &SiteRoutes, assets_dir: &Path) {
     loop {
         let Ok(request) = server.recv() else { return };
 
-        let resolved = resolve(request.url(), routes, assets_dir);
-        let header = Header::from_bytes("Content-Type", resolved.content_type)
-            .expect("content-type values are always valid ASCII header values");
-        let response = Response::from_data(resolved.body)
-            .with_status_code(resolved.status)
-            .with_header(header);
+        let method = request.method().clone();
+        let path = request.url().to_string();
+        let resolved = guarded(|| handle(&method, &path, routes, assets_dir));
+
+        eprintln!(
+            "{}",
+            access_log_line(
+                method.as_str(),
+                &path,
+                resolved.status,
+                resolved.content_length
+            )
+        );
+
+        let response = build_response(resolved);
         let _ = request.respond(response);
     }
 }
@@ -560,5 +678,303 @@ mod tests {
             .and_then(|code| code.parse().ok())
             .expect("a valid HTTP status line");
         (status, buf)
+    }
+
+    /// Like [`http_get`] but for an arbitrary method, returning
+    /// `(status, headers, body)` split at the header/body blank line.
+    fn http_request(port: u16, method: &str, path: &str) -> (u16, String, String) {
+        use std::io::{Read, Write};
+
+        let mut stream = std::net::TcpStream::connect(("127.0.0.1", port))
+            .expect("connect to the live test server");
+        write!(
+            stream,
+            "{method} {path} HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n"
+        )
+        .unwrap();
+        let mut buf = String::new();
+        stream.read_to_string(&mut buf).unwrap();
+
+        let status = buf
+            .lines()
+            .next()
+            .and_then(|line| line.split_whitespace().nth(1))
+            .and_then(|code| code.parse().ok())
+            .expect("a valid HTTP status line");
+
+        let (headers, body) = buf.split_once("\r\n\r\n").unwrap_or((buf.as_str(), ""));
+        (status, headers.to_string(), body.to_string())
+    }
+
+    // Arc 03 Slice 02, F-1: HEAD serves the same status/headers as GET, with
+    // an empty body.
+    #[test]
+    fn test_handle_head_matches_get_status_and_content_length_with_empty_body() {
+        let routes = demo_routes();
+        let assets = assets_dir();
+
+        for path in ["/", "/browse/", "/abelian-group/"] {
+            let get = handle(&Method::Get, path, &routes, &assets);
+            let head = handle(&Method::Head, path, &routes, &assets);
+
+            assert_eq!(head.status, get.status);
+            assert_eq!(head.content_type, get.content_type);
+            assert_eq!(head.content_length, get.content_length);
+            assert_eq!(head.content_length, get.body.len());
+            assert!(head.body.is_empty(), "HEAD body should be empty for {path}");
+        }
+    }
+
+    // F-2: unsupported methods 405 with an Allow header.
+    #[test]
+    fn test_handle_rejects_unsupported_methods_with_405_and_allow_header() {
+        let routes = demo_routes();
+        let assets = assets_dir();
+
+        for method in [Method::Post, Method::Put, Method::Delete] {
+            let response = handle(&method, "/", &routes, &assets);
+            assert_eq!(response.status, 405, "{method:?} should be 405");
+            assert_eq!(response.allow, Some("GET, HEAD"));
+            assert_eq!(response.content_length, response.body.len());
+            assert!(!response.body.is_empty());
+        }
+
+        // GET and HEAD are not rejected.
+        assert_eq!(handle(&Method::Get, "/", &routes, &assets).status, 200);
+        assert_eq!(handle(&Method::Head, "/", &routes, &assets).status, 200);
+    }
+
+    // F-4: access_log_line is a pure formatter.
+    #[test]
+    fn test_access_log_line_formats_method_path_status_length() {
+        assert_eq!(
+            access_log_line("GET", "/abelian-group/", 200, 18446),
+            "GET /abelian-group/ 200 18446"
+        );
+        assert_eq!(access_log_line("POST", "/", 405, 23), "POST / 405 23");
+    }
+
+    // F-3: the catch_unwind wrapper returns 500 on a panicking closure and
+    // does not propagate the panic to the caller.
+    #[test]
+    fn test_guarded_returns_500_on_panic_and_does_not_propagate() {
+        let resolved = guarded(|| panic!("deliberately triggered by this test"));
+
+        assert_eq!(resolved.status, 500);
+        assert_eq!(resolved.content_length, resolved.body.len());
+        assert!(!resolved.body.is_empty());
+    }
+
+    // guarded() must be transparent for the non-panicking path.
+    #[test]
+    fn test_guarded_passes_through_a_normal_response_unchanged() {
+        let routes = demo_routes();
+        let assets = assets_dir();
+
+        let direct = handle(&Method::Get, "/", &routes, &assets);
+        let via_guard = guarded(|| handle(&Method::Get, "/", &routes, &assets));
+        assert_eq!(direct, via_guard);
+    }
+
+    // F-5 (nosniff half): build_response attaches Content-Type,
+    // Content-Length, and X-Content-Type-Options: nosniff.
+    #[test]
+    fn test_build_response_sets_content_type_length_and_nosniff_headers() {
+        let resolved = ServedResponse {
+            status: 200,
+            content_type: "text/css",
+            body: b"body".to_vec(),
+            content_length: 4,
+            allow: None,
+        };
+        let response = build_response(resolved);
+        let headers = response.headers();
+        let value_of = |name: &'static str| {
+            headers
+                .iter()
+                .find(|h| h.field.equiv(name))
+                .map(|h| h.value.as_str().to_string())
+        };
+
+        assert_eq!(response.status_code().0, 200);
+        assert_eq!(value_of("Content-Type").as_deref(), Some("text/css"));
+        // `tiny_http` tracks an explicitly-set `Content-Length` as
+        // `data_length` internally rather than a plain header entry (it
+        // only becomes a header at `raw_print` time).
+        assert_eq!(response.data_length(), Some(4));
+        assert_eq!(
+            value_of("X-Content-Type-Options").as_deref(),
+            Some("nosniff")
+        );
+        assert!(value_of("Allow").is_none());
+    }
+
+    #[test]
+    fn test_build_response_sets_allow_header_for_405() {
+        let resolved = ServedResponse {
+            status: 405,
+            content_type: "text/plain",
+            body: Vec::new(),
+            content_length: 0,
+            allow: Some("GET, HEAD"),
+        };
+        let response = build_response(resolved);
+        let value_of = |name: &'static str| {
+            response
+                .headers()
+                .iter()
+                .find(|h| h.field.equiv(name))
+                .map(|h| h.value.as_str().to_string())
+        };
+
+        assert_eq!(value_of("Allow").as_deref(), Some("GET, HEAD"));
+    }
+
+    // F-5 (bad-bind half): an invalid --bind is a clear Err, not a panic.
+    #[test]
+    fn test_serve_returns_a_clear_error_on_an_invalid_bind_address() {
+        let result = serve(
+            &demo_dir(),
+            &templates_dir(),
+            &assets_dir(),
+            "not-a-valid-address",
+        );
+        let err = result.expect_err("an invalid bind address should be a clear Err, not a panic");
+        assert!(
+            err.to_string().contains("failed to bind"),
+            "error message should name the failure: {err}"
+        );
+    }
+
+    // Arc 03 Slice 02, F-6 (= arc-plan C-3/C-5 at arc scale): a live,
+    // hardened server (the real serve_loop) serves every route type, an
+    // asset, 404, 405 + Allow, and HEAD with an empty body + nosniff header.
+    #[test]
+    fn test_live_hardened_server_serves_every_route_asset_404_405_and_head() {
+        let routes = Arc::new(demo_routes());
+        let assets = assets_dir();
+
+        let server = Server::http("127.0.0.1:0").expect("bind an ephemeral port");
+        let port = server
+            .server_addr()
+            .to_ip()
+            .expect("an IP listen address")
+            .port();
+        let server = Arc::new(server);
+
+        {
+            let server = Arc::clone(&server);
+            let routes = Arc::clone(&routes);
+            let assets = assets.clone();
+            thread::spawn(move || serve_loop(&server, &routes, &assets));
+        }
+
+        for path in [
+            "/",
+            "/browse/",
+            "/about/",
+            "/attribution/",
+            "/search/",
+            "/category/mathematics/",
+            "/abelian-group/",
+            "/source/vimalamitra/",
+        ] {
+            let (status, headers, _) = http_request(port, "GET", path);
+            assert_eq!(status, 200, "GET {path}");
+            let lower = headers.to_ascii_lowercase();
+            assert!(
+                lower.contains("content-type: text/html"),
+                "GET {path} headers: {headers}"
+            );
+            assert!(lower.contains("x-content-type-options: nosniff"));
+        }
+
+        let (status, headers, _) = http_request(port, "GET", "/assets/css/haleiki.css");
+        assert_eq!(status, 200);
+        assert!(
+            headers
+                .to_ascii_lowercase()
+                .contains("content-type: text/css")
+        );
+
+        let (status, _, body) = http_request(port, "GET", "/this-page-does-not-exist/");
+        assert_eq!(status, 404);
+        assert!(!body.is_empty());
+
+        let (status, headers, body) = http_request(port, "HEAD", "/");
+        assert_eq!(status, 200);
+        assert!(body.is_empty(), "HEAD body should be empty over the wire");
+        assert!(headers.to_ascii_lowercase().contains("content-length:"));
+
+        let (status, headers, _) = http_request(port, "POST", "/");
+        assert_eq!(status, 405);
+        assert!(headers.to_ascii_lowercase().contains("allow: get, head"));
+    }
+
+    // F-7: server↔export parity still holds after hardening (reconfirms the
+    // slice-01 guarantee against the hardened `handle` path, not just
+    // `resolve`), and the no-Liquid property still holds.
+    #[test]
+    fn test_handle_body_matches_exported_file_for_same_route() {
+        let routes = demo_routes();
+        let assets = assets_dir();
+
+        let out = std::env::temp_dir().join("haleiki-server-hardening-parity-test");
+        let _ = std::fs::remove_dir_all(&out);
+        crate::export::export_site(&demo_dir(), &templates_dir(), &assets, &out)
+            .expect("export succeeds");
+
+        let served = handle(&Method::Get, "/abelian-group/", &routes, &assets);
+        let exported = std::fs::read(out.join("abelian-group/index.html")).unwrap();
+        assert_eq!(served.body, exported);
+
+        let _ = std::fs::remove_dir_all(&out);
+    }
+
+    // Arc 03 Slice 02, F-3 (live half): a request that panics is answered
+    // 500 and the same worker keeps serving the next, normal request. Uses
+    // the real `guarded`/`handle`/`build_response` production functions; the
+    // panic trigger itself is test-local (a magic path this test's own
+    // closure recognizes), not a backdoor in production code.
+    #[test]
+    fn test_live_server_survives_a_panicking_request_and_serves_the_next() {
+        let routes = Arc::new(demo_routes());
+        let assets = assets_dir();
+
+        let server = Server::http("127.0.0.1:0").expect("bind an ephemeral port");
+        let port = server
+            .server_addr()
+            .to_ip()
+            .expect("an IP listen address")
+            .port();
+        let server = Arc::new(server);
+
+        {
+            let server = Arc::clone(&server);
+            let routes = Arc::clone(&routes);
+            let assets = assets.clone();
+            thread::spawn(move || {
+                for _ in 0..2 {
+                    let Ok(request) = server.recv() else { break };
+                    let path = request.url().to_string();
+                    let resolved = guarded(|| {
+                        assert!(
+                            path != "/__test_induced_panic__",
+                            "deliberately triggered by this test"
+                        );
+                        handle(&Method::Get, &path, &routes, &assets)
+                    });
+                    let response = build_response(resolved);
+                    let _ = request.respond(response);
+                }
+            });
+        }
+
+        let (status, _, _) = http_request(port, "GET", "/__test_induced_panic__");
+        assert_eq!(status, 500);
+
+        let (status, _, body) = http_request(port, "GET", "/");
+        assert_eq!(status, 200);
+        assert!(body.contains("hero-title"));
     }
 }
