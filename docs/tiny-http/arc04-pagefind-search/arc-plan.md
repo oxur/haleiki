@@ -86,7 +86,7 @@ findings dispositioned.
 
 | ID | Criterion | Verify | Significance | Origin | Status | Evidence |
 |----|-----------|--------|--------------|--------|--------|----------|
-| D-1 | Slice 01 (index build + bundle in both sinks) closed | ptr: `slice01-index-and-bundle/cdc-verification.md` | correctness | arc-plan | open | |
+| D-1 | Slice 01 (index build + bundle in both sinks) closed | ptr: `slice01-index-and-bundle/cdc-verification.md` | correctness | arc-plan | done | reproduced — slice 01 CDC-closed 2026-07-29, 8/8 rows; bundle built in-process (277 pages), served live with correct content-types + traversal guard |
 | D-2 | Slice 02 (client wiring + facets + composition) closed | ptr: slice02 cdc-verification | correctness | arc-plan | open | |
 | D-3 | Both sinks host the bundle: a built `_site/` contains `_site/pagefind/` and a live `haleiki serve` serves `/pagefind/pagefind.js`, the `.wasm`, and the index/fragment files `200` with correct content-types | reproduce at arc scale: build the export + start the server; fetch each bundle file kind | serious | arc-plan | open | |
 | D-4 | End-to-end query: in a real browser against a live server, a known term (e.g. "garbage") returns the expected result set with correct title/url/type/category/tier and a highlighted excerpt | reproduce: headless browser drives `/search/?q=garbage`, assert rendered `.search-result` items | serious | arc-plan | open | |

@@ -4,7 +4,7 @@
 > framework's `LEDGER-DISCIPLINE.md` Section A. Every row reaches a final status
 > (`done` / `deferred` / `no-op`) before the slice advances; `done` requires
 > reproduced evidence. CC fills Evidence at the commit each row is met; CDC
-> verifies each against the artifacts. Status: **open** · 2026-07-29.
+> verifies each against the artifacts. Status: **closed** · 2026-07-29.
 
 ## Ledger
 
@@ -28,7 +28,22 @@
 
 ## Closure
 
-Status: **proposed-done** — all 8 rows `done` at `attested` strength; independent
-(CDC-equivalent) verification has not yet run (CC does not write
-`cdc-verification.md`, per the cc-prompt). Not yet committed. 2026-07-29.
-Rows: 8. Done: 8. Deferred: 0. No-op: 0.
+**Independently verified (CDC): CLOSED** 2026-07-29. All 8 rows reproduced in a
+clean build (`cargo 1.95.0`, `pagefind 1.5.2`, commit `ef3be48`) — `cargo test -p
+haleiki --bin haleiki` = 113 passed / 0 failed / 1 ignored; `fmt` clean — plus a
+**live `haleiki export` + `haleiki serve`** audit: the bundle built in-process
+(`pagefind-entry.json` `page_count: 277` = 186 concepts + 91 sources, no
+subprocess spawn), `export` writes `_site/pagefind/` (`pagefind.js`,
+`pagefind-entry.json`, `wasm.{en,unknown}.pagefind`, 324 binary files), and the
+server serves `/pagefind/*` with correct content-types
+(js→`text/javascript`, json→`application/json`, wasm→`application/wasm`,
+fragment→`application/octet-stream`, all `nosniff`); traversal / absolute-path /
+missing all `404` (stricter all-`Normal` guard). Determinism independently
+reproduced: Haleiki's own output byte-identical across two exports; only
+pagefind's upstream-nondeterministic filter/meta files vary (correctly excluded).
+G-8 caveat recorded: CC's `--all-targets --all-features` "green" claim does not
+reproduce (pre-existing `demo/*` test-code debt, no Arc 04 code) — new code is
+clippy-`--all-targets`-clean; carried forward to Arc 06. See
+[`cdc-verification.md`](./cdc-verification.md). Evidence `attested → reproduced`.
+Verified by: independent Claude (Cowork) context.
+Rows: 8. Done: 8 (reproduced). Deferred: 0. No-op: 0.
