@@ -85,8 +85,19 @@ pub enum Command {
         content_dir: PathBuf,
     },
 
-    /// Generate the search index (wraps Pagefind).
-    Search,
+    /// Build the Pagefind search index in-process (no `npx`/Node).
+    ///
+    /// Writes the `/pagefind/` bundle to `<out_dir>/pagefind/` — the same
+    /// layout `export` writes into `_site/pagefind/`, so pointing this at the
+    /// same `out_dir` as a prior `export` composes with it.
+    Search {
+        /// Path to the content directory.
+        #[arg(long, default_value = "content")]
+        content_dir: PathBuf,
+        /// Output directory; the bundle is written to `<out_dir>/pagefind/`.
+        #[arg(long, default_value = "_site")]
+        out_dir: PathBuf,
+    },
 
     /// Developer utilities (debug, inspect internals).
     Dev,

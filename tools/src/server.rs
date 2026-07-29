@@ -5,7 +5,7 @@
 
 use std::collections::BTreeMap;
 use std::panic::{self, UnwindSafe};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::thread;
 
@@ -238,6 +238,114 @@ fn content_type_for(path: &str) -> &'static str {
     }
 }
 
+/// Resolves `/pagefind/{rel_path}` against `pagefind_dir` — the Pagefind
+/// bundle `export::export_site` and [`serve`] both build via
+/// [`crate::search::build_index`] (Arc 04 slice 01).
+///
+/// The traversal guard is **stricter** than [`resolve_asset`]'s: `/pagefind/`
+/// is a single dedicated directory with no allowlist to fall back on, so
+/// every path component must be [`std::path::Component::Normal`] — rejecting
+/// not just `..` but also a leading `/` (`Path::join` with an absolute
+/// operand *replaces* the base entirely, ignoring `pagefind_dir`, so an
+/// unguarded `/pagefind//etc/passwd` would otherwise escape the bundle
+/// directory the same way an unguarded `/assets/` request would if
+/// `ASSET_ALLOWLIST` didn't happen to reject `RootDir`).
+fn resolve_pagefind(rel_path: &str, pagefind_dir: &Path) -> ServedResponse {
+    let not_found = ServedResponse {
+        status: 404,
+        content_type: "text/html",
+        body: Vec::new(),
+        content_length: 0,
+        allow: None,
+    };
+
+    let rel = Path::new(rel_path);
+    if rel
+        .components()
+        .any(|c| !matches!(c, std::path::Component::Normal(_)))
+    {
+        return not_found;
+    }
+
+    match std::fs::read(pagefind_dir.join(rel)) {
+        Ok(body) => ServedResponse {
+            status: 200,
+            content_type: pagefind_content_type_for(rel_path),
+            content_length: body.len(),
+            body,
+            allow: None,
+        },
+        Err(_) => not_found,
+    }
+}
+
+/// Content-type by file extension for the Pagefind bundle's file kinds
+/// (`pagefind.js`, `pagefind-entry.json`; the binary index/fragment/filter
+/// files fall back to `application/octet-stream`, matching what they are).
+///
+/// **Spike finding (this slice):** the crate's actual WASM binary is named
+/// `wasm.{lang}.pagefind` (confirmed against a real build and against the
+/// crate's own `service::api` test) — extension `pagefind`, not the
+/// `.wasm` the slice-doc assumed before this was spiked. Mapping `pagefind`
+/// → `application/wasm` is correct for the real bundle; `wasm` is also
+/// mapped for forward-compatibility, in case a future Pagefind version
+/// changes the on-disk name back to a literal `.wasm`.
+fn pagefind_content_type_for(path: &str) -> &'static str {
+    let ext = Path::new(path)
+        .extension()
+        .and_then(|e| e.to_str())
+        .unwrap_or_default()
+        .to_ascii_lowercase();
+    match ext.as_str() {
+        "js" => "text/javascript",
+        "wasm" | "pagefind" => "application/wasm",
+        "json" => "application/json",
+        _ => "application/octet-stream",
+    }
+}
+
+/// Routes a request across pages/assets ([`handle`]) and the Pagefind bundle
+/// served from `pagefind_dir` under `/pagefind/*`. Composed *alongside*
+/// [`handle`] rather than folded into it or into [`resolve`] — neither's
+/// existing signature or behavior changes for this slice, per the slice-doc's
+/// boundary. Pure (bar the bundle-file read), method-aware the same way
+/// [`handle`] is: `GET` serves the body, `HEAD` serves the same headers with
+/// an empty body, anything else is `405` + `Allow: GET, HEAD`.
+#[must_use]
+pub fn handle_request(
+    method: &Method,
+    path: &str,
+    routes: &SiteRoutes,
+    assets_dir: &Path,
+    pagefind_dir: &Path,
+) -> ServedResponse {
+    let request_path = path.split('?').next().unwrap_or(path);
+    let Some(rel_path) = request_path.strip_prefix("/pagefind/") else {
+        return handle(method, path, routes, assets_dir);
+    };
+
+    match method {
+        Method::Get => resolve_pagefind(rel_path, pagefind_dir),
+        Method::Head => {
+            let full = resolve_pagefind(rel_path, pagefind_dir);
+            ServedResponse {
+                body: Vec::new(),
+                ..full
+            }
+        }
+        _ => {
+            let body = b"405 Method Not Allowed".to_vec();
+            ServedResponse {
+                status: 405,
+                content_type: "text/plain",
+                content_length: body.len(),
+                body,
+                allow: Some("GET, HEAD"),
+            }
+        }
+    }
+}
+
 /// Method-aware wrapper around [`resolve`]: `GET` serves the body; `HEAD`
 /// serves the same status, `Content-Type`, and `Content-Length` a `GET`
 /// would, with an **empty** body; anything else is `405 Method Not Allowed`
@@ -301,11 +409,26 @@ where
     }
 }
 
+/// A directory under the OS temp root, unique to this call (pid + a
+/// nanosecond timestamp — no two `serve()` invocations, even started in the
+/// same process, collide).
+fn unique_temp_dir(prefix: &str) -> PathBuf {
+    let nanos = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|d| d.as_nanos())
+        .unwrap_or_default();
+    std::env::temp_dir().join(format!("{prefix}-{}-{nanos}", std::process::id()))
+}
+
 /// Renders the site once, then serves it from memory over `bind` until the
 /// process is killed. Holds the route map in an immutable `Arc<SiteRoutes>`
 /// shared (lock-free) across a small fixed thread pool, following
 /// `tiny_http`'s own documented multi-threading pattern: several worker
 /// threads calling `server.recv()` on a shared `Arc<Server>`.
+///
+/// Also builds the Pagefind search index once at startup into a fresh temp
+/// directory (Arc 04 slice 01, decision #2: disk, not in-memory — mirrors
+/// Arc 03's "assets from disk") and serves `/pagefind/*` from it.
 ///
 /// Each request is handled behind [`guarded`] (panic isolation), logged via
 /// [`access_log_line`], and answered with an `X-Content-Type-Options:
@@ -313,8 +436,8 @@ where
 ///
 /// # Errors
 ///
-/// Returns an error if the site fails to render or the server cannot bind
-/// `bind`.
+/// Returns an error if the site or the search index fails to build, or the
+/// server cannot bind `bind`.
 pub fn serve(
     content_dir: &Path,
     templates_dir: &Path,
@@ -324,6 +447,10 @@ pub fn serve(
     let routes = Arc::new(render_routes(content_dir, templates_dir)?);
     let assets_dir = assets_dir.to_path_buf();
 
+    let pagefind_dir = unique_temp_dir("haleiki-pagefind");
+    crate::search::build_index(content_dir, &pagefind_dir)
+        .context("failed to build the pagefind search index")?;
+
     let server = Server::http(bind).map_err(|e| anyhow::anyhow!("failed to bind {bind}: {e}"))?;
     let server = Arc::new(server);
 
@@ -332,7 +459,8 @@ pub fn serve(
             let server = Arc::clone(&server);
             let routes = Arc::clone(&routes);
             let assets_dir = assets_dir.clone();
-            thread::spawn(move || serve_loop(&server, &routes, &assets_dir))
+            let pagefind_dir = pagefind_dir.clone();
+            thread::spawn(move || serve_loop(&server, &routes, &assets_dir, &pagefind_dir))
         })
         .collect();
 
@@ -370,16 +498,16 @@ fn build_response(resolved: ServedResponse) -> Response<std::io::Cursor<Vec<u8>>
     response
 }
 
-/// One worker's request loop: `recv()` → [`handle`] (behind [`guarded`]) →
-/// `respond`, until the server's listener is closed (`recv()` returns an
-/// error). Logs each request via [`access_log_line`].
-fn serve_loop(server: &Server, routes: &SiteRoutes, assets_dir: &Path) {
+/// One worker's request loop: `recv()` → [`handle_request`] (behind
+/// [`guarded`]) → `respond`, until the server's listener is closed (`recv()`
+/// returns an error). Logs each request via [`access_log_line`].
+fn serve_loop(server: &Server, routes: &SiteRoutes, assets_dir: &Path, pagefind_dir: &Path) {
     loop {
         let Ok(request) = server.recv() else { return };
 
         let method = request.method().clone();
         let path = request.url().to_string();
-        let resolved = guarded(|| handle(&method, &path, routes, assets_dir));
+        let resolved = guarded(|| handle_request(&method, &path, routes, assets_dir, pagefind_dir));
 
         eprintln!(
             "{}",
@@ -401,6 +529,7 @@ mod tests {
     use super::*;
     use std::collections::HashSet;
     use std::path::PathBuf;
+    use std::sync::OnceLock;
 
     fn demo_dir() -> PathBuf {
         Path::new(env!("CARGO_MANIFEST_DIR")).join("../demo")
@@ -412,6 +541,21 @@ mod tests {
 
     fn assets_dir() -> PathBuf {
         Path::new(env!("CARGO_MANIFEST_DIR")).join("../assets")
+    }
+
+    /// The demo corpus's Pagefind bundle, built once and shared across every
+    /// test in this module that needs to serve `/pagefind/*` — a real build
+    /// takes several seconds, so tests share one rather than each building
+    /// their own.
+    fn demo_pagefind_dir() -> &'static Path {
+        static DIR: OnceLock<PathBuf> = OnceLock::new();
+        DIR.get_or_init(|| {
+            let dir = std::env::temp_dir().join("haleiki-server-test-pagefind-bundle");
+            let _ = std::fs::remove_dir_all(&dir);
+            crate::search::build_index(&demo_dir(), &dir)
+                .expect("pagefind bundle builds for the demo corpus");
+            dir
+        })
     }
 
     fn demo_routes() -> SiteRoutes {
@@ -866,7 +1010,8 @@ mod tests {
             let server = Arc::clone(&server);
             let routes = Arc::clone(&routes);
             let assets = assets.clone();
-            thread::spawn(move || serve_loop(&server, &routes, &assets));
+            let pagefind = demo_pagefind_dir().to_path_buf();
+            thread::spawn(move || serve_loop(&server, &routes, &assets, &pagefind));
         }
 
         for path in [
@@ -976,5 +1121,165 @@ mod tests {
         let (status, _, body) = http_request(port, "GET", "/");
         assert_eq!(status, 200);
         assert!(body.contains("hero-title"));
+    }
+
+    // Arc 04 Slice 01, G-6: resolve_pagefind (via handle_request) serves the
+    // real bundle's file kinds with the correct content-types.
+    #[test]
+    fn test_handle_request_serves_pagefind_bundle_file_kinds() {
+        let routes = Arc::new(demo_routes());
+        let assets = assets_dir();
+        let pagefind = demo_pagefind_dir();
+
+        let js = handle_request(
+            &Method::Get,
+            "/pagefind/pagefind.js",
+            &routes,
+            &assets,
+            pagefind,
+        );
+        assert_eq!(js.status, 200);
+        assert_eq!(js.content_type, "text/javascript");
+        assert!(!js.body.is_empty());
+
+        let entry = handle_request(
+            &Method::Get,
+            "/pagefind/pagefind-entry.json",
+            &routes,
+            &assets,
+            pagefind,
+        );
+        assert_eq!(entry.status, 200);
+        assert_eq!(entry.content_type, "application/json");
+
+        // The real wasm binary's on-disk name is `wasm.{lang}.pagefind`
+        // (see `pagefind_content_type_for`'s doc comment) — find it rather
+        // than hardcoding the language-tagged filename.
+        let wasm_name = std::fs::read_dir(pagefind)
+            .unwrap()
+            .filter_map(std::result::Result::ok)
+            .map(|e| e.file_name().to_string_lossy().into_owned())
+            .find(|name| name.ends_with(".pagefind"))
+            .expect("a wasm.*.pagefind file exists in the bundle");
+        let wasm = handle_request(
+            &Method::Get,
+            &format!("/pagefind/{wasm_name}"),
+            &routes,
+            &assets,
+            pagefind,
+        );
+        assert_eq!(wasm.status, 200);
+        assert_eq!(wasm.content_type, "application/wasm");
+        assert!(!wasm.body.is_empty());
+
+        let fragment_name = std::fs::read_dir(pagefind.join("fragment"))
+            .unwrap()
+            .filter_map(std::result::Result::ok)
+            .map(|e| e.file_name().to_string_lossy().into_owned())
+            .next()
+            .expect("at least one fragment file exists");
+        let fragment = handle_request(
+            &Method::Get,
+            &format!("/pagefind/fragment/{fragment_name}"),
+            &routes,
+            &assets,
+            pagefind,
+        );
+        assert_eq!(fragment.status, 200);
+        assert_eq!(fragment.content_type, "application/octet-stream");
+        assert!(!fragment.body.is_empty());
+    }
+
+    // G-7: a /pagefind/… traversal and a missing bundle file both 404;
+    // HEAD/POST compose correctly with pagefind routing too.
+    #[test]
+    fn test_handle_request_pagefind_traversal_and_missing_file_404() {
+        let routes = Arc::new(demo_routes());
+        let assets = assets_dir();
+        let pagefind = demo_pagefind_dir();
+
+        let traversal = handle_request(
+            &Method::Get,
+            "/pagefind/../../../../etc/passwd",
+            &routes,
+            &assets,
+            pagefind,
+        );
+        assert_eq!(traversal.status, 404);
+
+        // An absolute-path operand would make `Path::join` discard
+        // `pagefind_dir` entirely if unguarded (see the doc comment on
+        // `resolve_pagefind`) — assert it doesn't escape the bundle root.
+        let absolute = handle_request(
+            &Method::Get,
+            "/pagefind//etc/passwd",
+            &routes,
+            &assets,
+            pagefind,
+        );
+        assert_eq!(absolute.status, 404);
+
+        let missing = handle_request(
+            &Method::Get,
+            "/pagefind/does-not-exist.js",
+            &routes,
+            &assets,
+            pagefind,
+        );
+        assert_eq!(missing.status, 404);
+
+        let head = handle_request(
+            &Method::Head,
+            "/pagefind/pagefind.js",
+            &routes,
+            &assets,
+            pagefind,
+        );
+        assert_eq!(head.status, 200);
+        assert!(head.body.is_empty());
+        assert!(head.content_length > 0);
+
+        let post = handle_request(
+            &Method::Post,
+            "/pagefind/pagefind.js",
+            &routes,
+            &assets,
+            pagefind,
+        );
+        assert_eq!(post.status, 405);
+        assert_eq!(post.allow, Some("GET, HEAD"));
+    }
+
+    // G-6 (live half): a real server serves /pagefind/* over a socket.
+    #[test]
+    fn test_live_server_serves_pagefind_js_and_404s_a_traversal() {
+        let routes = Arc::new(demo_routes());
+        let assets = assets_dir();
+        let pagefind = demo_pagefind_dir().to_path_buf();
+
+        let server = Server::http("127.0.0.1:0").expect("bind an ephemeral port");
+        let port = server
+            .server_addr()
+            .to_ip()
+            .expect("an IP listen address")
+            .port();
+        let server = Arc::new(server);
+
+        {
+            let server = Arc::clone(&server);
+            let routes = Arc::clone(&routes);
+            thread::spawn(move || serve_loop(&server, &routes, &assets, &pagefind));
+        }
+
+        let (status, headers, _) = http_request(port, "GET", "/pagefind/pagefind.js");
+        assert_eq!(status, 200);
+        assert!(
+            headers
+                .to_ascii_lowercase()
+                .contains("content-type: text/javascript")
+        );
+
+        let (status, _, _) = http_request(port, "GET", "/pagefind/../../../../../../etc/passwd");
+        assert_eq!(status, 404);
     }
 }

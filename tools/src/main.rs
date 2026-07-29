@@ -71,8 +71,11 @@ fn run(cmd: &Command) -> anyhow::Result<()> {
         Command::Stats { content_dir } => {
             run_stats(content_dir)?;
         }
-        Command::Search => {
-            println!("search: not yet implemented");
+        Command::Search {
+            content_dir,
+            out_dir,
+        } => {
+            run_search(content_dir, out_dir)?;
         }
         Command::Dev => {
             let content_dir = Path::new("content");
@@ -168,6 +171,20 @@ fn run_export(
         out_dir.display()
     );
     export::export_site(content_dir, templates_dir, assets_dir, out_dir)?;
+    eprintln!("  Done.");
+    Ok(())
+}
+
+/// Build the Pagefind search index in-process, writing the `/pagefind/`
+/// bundle to `<out_dir>/pagefind/`.
+fn run_search(content_dir: &Path, out_dir: &Path) -> anyhow::Result<()> {
+    let pagefind_dir = out_dir.join("pagefind");
+    eprintln!(
+        "Building search index from {} to {}...",
+        content_dir.display(),
+        pagefind_dir.display()
+    );
+    search::build_index(content_dir, &pagefind_dir)?;
     eprintln!("  Done.");
     Ok(())
 }
