@@ -28,6 +28,12 @@
 
 ## Closure
 
-Status: **proposed-done** — all 8 rows `done` at `attested` strength; independent
-(CDC-equivalent) verification has not yet run. Not yet committed. 2026-07-28.
-Rows: 8. Done: 8. Deferred: 0. No-op: 0.
+**Independently verified (CDC): CLOSED** 2026-07-28. All 8 rows reproduced in a
+clean build — `cargo test` = 90 passed / 0 failed (9 server tests) — plus a **live
+`haleiki serve`** run probed with real HTTP, including path-traversal attacks
+(`../`, encoded `%2e%2e`, absolute, non-allowlisted) — **all 404**, legitimate
+pages/assets 200. Export stays byte-identical (export suite green). Lock-free
+`Arc<SiteRoutes>` confirmed. `clippy --all-targets -D warnings` = 0 findings in
+slice-01 code; `fmt` clean. See [`cdc-verification.md`](./cdc-verification.md).
+Evidence `attested → reproduced`. Verified by: independent Claude (Cowork) context.
+Rows: 8. Done: 8 (reproduced). Deferred: 0. No-op: 0.

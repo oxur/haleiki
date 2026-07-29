@@ -57,7 +57,7 @@ server and exercise it); class (c) = bubble-up findings dispositioned.
 
 | ID | Criterion | Verify | Significance | Origin | Status | Evidence |
 |----|-----------|--------|--------------|--------|--------|----------|
-| C-1 | Slice 01 (route map + core server) closed | ptr: slice01 cdc-verification | correctness | arc-plan | open | |
+| C-1 | Slice 01 (route map + core server) closed | ptr: `slice01-route-map-server/cdc-verification.md` | correctness | arc-plan | done | reproduced — slice 01 CDC-closed 2026-07-28, 8/8 rows; traversal guard audited live |
 | C-2 | Slice 02 (hardening + composition) closed | ptr: slice02 cdc-verification | correctness | arc-plan | open | |
 | C-3 | A live `haleiki serve` against the demo serves every route type (home, browse, category, concept, source, about, attribution, search) with `200` + `text/html`, assets with `200` + correct content-type, and unknown paths with `404` + the 404 body | reproduce at arc scale: start the server, HTTP-GET a sample of each | serious | arc-plan | open | |
 | C-4 | Server ↔ export parity: a served route's body is identical to the file the export writes for that route (one pipeline, two sinks) | reproduce: diff a served body against the exported file | serious | arc-plan | open | |
