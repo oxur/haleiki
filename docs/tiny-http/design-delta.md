@@ -203,3 +203,33 @@ operator decisions (both-deployment, news in scope, custom search, arc/slice
 layout), the reuse/change/new breakdown against the current codebase, the
 target architecture (one renderer, two sinks), and the pointer to the refactor
 README as the binding context contract.
+
+## Addendum A — 2026-07-29: search decision reversed (custom index → Pagefind)
+
+**Supersedes decision #3** ("custom lightweight JSON index; replaces Pagefind")
+recorded above in §2/§3.3 and the v0.1 version history. Those sections are left
+intact as the historical record; this addendum is the current direction.
+
+While planning Arc 04, it became clear the design team's `search.js` ships as a
+documented 17-line **stub** — an integration point, consistent with §3.3 listing
+custom search under *New* (i.e. always the framework's work, not a design-team
+deliverable). On learning this, the operator chose to **use Pagefind** rather than
+hand-build a custom JSON index and client engine.
+
+Consequences (accepted with the choice):
+
+- **Client-only search.** Pagefind's query engine is a browser WASM client; there
+  is no server-side query path. Search behaves identically in both sinks; the
+  earlier "server-side `?q=` in tiny_http" option is dropped. The server sink's
+  only added duty is to serve the Pagefind bundle.
+- **The index is Pagefind's `/pagefind/` bundle**, built in-process over the
+  rendered site via the `pagefind` Rust crate (no `npx`/Node) — a build step that
+  `haleiki export` writes into `_site/pagefind/` and `haleiki serve` serves from
+  disk. It is *not* folded into `render_routes` as a page.
+- **The "no Pagefind" boundary is withdrawn.** Arc 06's remnant-removal (P-11)
+  now targets **Cobalt/Liquid only**; Pagefind is intended.
+
+The bespoke `search.jinja` shell is retained and wired to Pagefind's **JavaScript
+API** (not the default Pagefind UI), preserving the design team's filter-sidebar +
+result layout. Facets: category / tier / page-type / trust. Full plan:
+`arc04-pagefind-search/`. Project-plan record: v1.4.

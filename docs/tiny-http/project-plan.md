@@ -20,7 +20,8 @@ through a Rust-native minijinja + tiny_http stack, with:
   site to `_site/` (static HTML/CSS/JS) deployable to any static host.
 - **A servable process**: `haleiki serve` runs a hardened `tiny_http` server
   rendering the same site, usable as an optional self-hosted deployment.
-- **Client-side search** over a Rust-built JSON index (no Pagefind).
+- **Client-side search** via **Pagefind** (index built in-process over the
+  rendered site), faceted by category / tier / page-type / trust.
 - **The news/blog surface** rendering from real posts, alongside the wiki.
 - **Visual and functional parity** with Claude Design's design review, using the
   refactor's `templates/` set, the unified `haleiki.css`, and the Red Hat
@@ -50,7 +51,7 @@ roadmap-level until they become the active work (per *plan late, plan deep*).
 | **01 — Render core** | Render a fully-chromed wiki article (concept **and** source) to correct HTML from the real demo corpus, via minijinja over the refactor templates + unified CSS. Replaces the Liquid renderer for the article path. | existing `parser`/`graph`/`validator` |
 | **02 — Site routes & static export** | The full wiki route set (home, browse, category, about, attribution, 404, search shell), with grouping resolved in Rust, plus the static-export writer (`_site/` + asset copy). | Arc 01 |
 | **03 — tiny_http server** | `haleiki serve`: routing, static-asset serving, configurable bind/port, structured errors + logging, hardened for optional self-host. Same render output as export. | Arc 01 (composes with Arc 02 routes) |
-| **04 — Custom search** | Rust-built JSON search index + `search.jinja` wired to `search.js`, faceted by category / tier / page-type / trust. Pagefind removed. | Arc 02, Arc 01 |
+| **04 — Search (Pagefind)** | Pagefind index built in-process over the rendered site + `search.jinja` wired to `search.js` via Pagefind's JS API, faceted by category / tier / page-type / trust. Both sinks host the `/pagefind/` bundle. | Arc 02, Arc 01 |
 | **05 — News / blog content type** | A new content kind: news frontmatter, parser, routing, and context for `news-index`/`news-post`/`news-archive`/`news-tags`/`news-categories`, incl. prev/next/related and date-grouped archives. Renders in both sinks. | Arc 01, Arc 02, Arc 03 |
 | **06 — Polish, parity & deployment readiness** | Trust bar/glyph, theme-toggle and a11y parity with the review; remove all Cobalt/Liquid/Pagefind remnants; update `CLAUDE.md`/`README`/`Makefile`; deploy guides (static host + self-hosted server); CI. | all prior |
 
@@ -76,8 +77,10 @@ the recomposition arc that closes the branch as a clean Cobalt replacement.
   Both slices CDC-closed; composition rows C-1…C-5 reproduced at arc scale against
   a live hardened `haleiki serve` (route sweep, HEAD/405/nosniff, panic isolation,
   access log, export parity).
-- **Arc 04 — Custom search:** **next to plan deep** — roadmap-level until this
-  planning turn. Depends on Arcs 01–02 (routes + export), now both closed.
+- **Arc 04 — Search (Pagefind):** **planned in detail** 2026-07-29 (see
+  [`arc04-pagefind-search/arc-plan.md`](./arc04-pagefind-search/arc-plan.md));
+  slice 01 open set written; not yet implemented. **Note:** the operator reversed
+  pivot decision #3 (custom JSON index → Pagefind) on 2026-07-29 — see v1.4 below.
 - **Arcs 05–06:** roadmap-level only, by design. Each is planned deep when it
   becomes the active work; findings from earlier arcs bubble up and may reshape
   the later entries before they are planned.
@@ -95,17 +98,35 @@ scale** (an end-to-end demonstration), never inherited from arc attestations.
 | P-1 | Arc 01 (render core) closed + composed | ptr: `arc01-render-core/closing-report.md` | correctness | project-plan | done | reproduced at arc scale — Arc 01 closed 2026-07-28; A-4…A-7 green in clean build |
 | P-2 | Arc 02 (routes & static export) closed + composed | ptr: `arc02-routes-static-export/closing-report.md` | correctness | project-plan | done | reproduced at arc scale — Arc 02 closed 2026-07-28; real 293-file `_site/` export, B-5…B-8 green |
 | P-3 | Arc 03 (tiny_http server) closed + composed | ptr: `arc03-tiny-http-server/closing-report.md` | correctness | project-plan | done | reproduced at arc scale — Arc 03 closed 2026-07-29; C-1…C-5 green against a live hardened `haleiki serve` (route sweep, HEAD/405/nosniff, panic isolation, export parity) |
-| P-4 | Arc 04 (custom search) closed + composed | ptr: arc04 closing-report | correctness | project-plan | open | |
+| P-4 | Arc 04 (search / Pagefind) closed + composed | ptr: `arc04-pagefind-search/closing-report.md` | correctness | project-plan | open | |
 | P-5 | Arc 05 (news content type) closed + composed | ptr: arc05 closing-report | correctness | project-plan | open | |
 | P-6 | Arc 06 (polish/parity/deploy) closed + composed | ptr: arc06 closing-report | correctness | project-plan | open | |
 | P-7 | `haleiki build` emits a static `_site/` that renders the demo **wiki** with parity to the design review | reproduce: build, open in browser, diff vs review mockups | serious | DoD | open | |
 | P-8 | `haleiki serve` serves the same site over tiny_http with configurable bind/port, structured errors + logging | reproduce: serve, curl routes + assets, kill/restart | serious | DoD | open | implemented in Arc 03 (`haleiki serve`: bind/port, HEAD/405, nosniff, access log, panic isolation — audited live); stays open pending project-scale reproduction in Arc 06 |
-| P-9 | Client-side search returns faceted results over the Rust-built JSON index | reproduce: query in browser, exercise each facet | serious | DoD | open | |
+| P-9 | Client-side search returns faceted results via Pagefind | reproduce: query in browser, exercise each facet | serious | DoD | open | |
 | P-10 | The **news** section renders end-to-end in both static export and server | reproduce: build + serve, walk index/post/archive/tags/categories | serious | DoD | open | |
-| P-11 | No Cobalt / Liquid / Pagefind references remain on the branch | `grep -ri -e cobalt -e liquid -e pagefind` returns only historical/doc mentions | correctness | DoD | open | |
+| P-11 | No Cobalt / Liquid references remain on the branch (Pagefind is now intended — decision #3 reversed, v1.4) | `grep -ri -e cobalt -e liquid` returns only historical/doc mentions | correctness | DoD | open | |
 | P-12 | Visual + functional parity with the design review accepted by the operator | operator acceptance judgment, recorded | serious | DoD | open | |
 
 ## 5. Version history
+
+### v1.4 — 2026-07-29 (operator decision reversal: custom index → Pagefind)
+Planning Arc 04 surfaced that the design team's `search.js` ships as a documented
+17-line **stub** (an integration point, exactly as the design-delta's "custom
+search is *new* work" framing implied — not a shortfall). On learning this, the
+operator **reversed pivot decision #3**: the branch will use **Pagefind** after
+all, rather than a hand-built custom JSON index. Recorded consequences, accepted
+by the operator: (a) search is **client-only** (Pagefind's query engine is a
+browser WASM client — no server-side `?q=`), so it behaves identically in both
+sinks and the server's only added duty is to serve the bundle; (b) the index is
+Pagefind's **own `/pagefind/` bundle** (a build step over the rendered site + a
+served directory), not a route-map JSON. Doc changes: DoD search bullet →
+Pagefind; roadmap Arc 04 → "Search (Pagefind)"; **P-9** reworded (via Pagefind);
+**P-11** now targets **Cobalt/Liquid only** (Pagefind is intended, not a remnant
+to remove). Design record: `design-delta.md` Addendum A. Arc 04 planned deep as
+`arc04-pagefind-search/` (index+bundle → client+facets+composition); slice 01
+open set written. This is a valid, recorded reversal, not a silent drift — the
+founding decision is superseded with its rationale on the record.
 
 ### v1.3 — 2026-07-29 (bubble-up from Arc 03 close)
 Arc 03 (tiny_http server) closed and composed
