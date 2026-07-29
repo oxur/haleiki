@@ -6,7 +6,7 @@
 > [`design-delta.md`](./design-delta.md); this file is the plan and the ledger.
 >
 > Layout: framework arc/slice tree, no version directory (operator override,
-> per `docs/PROJECT-MANAGEMENT.md` Part VI). Status: **active** · 2026-07-28.
+> per `docs/PROJECT-MANAGEMENT.md` Part VI). Status: **active** · 2026-07-29.
 
 ---
 
@@ -71,10 +71,14 @@ the recomposition arc that closes the branch as a clean Cobalt replacement.
 - **Arc 02 — Routes & static export:** **CLOSED** 2026-07-28 (see
   [`arc02-routes-static-export/closing-report.md`](./arc02-routes-static-export/closing-report.md)).
   All four slices CDC-closed; a real 293-file `_site/` export reproduces B-5…B-8.
-- **Arc 03 — tiny_http server:** planned in detail (see
-  [`arc03-tiny-http-server/arc-plan.md`](./arc03-tiny-http-server/arc-plan.md));
-  slice 01 open set written; not yet implemented.
-- **Arcs 04–06:** roadmap-level only, by design. Each is planned deep when it
+- **Arc 03 — tiny_http server:** **CLOSED** 2026-07-29 (see
+  [`arc03-tiny-http-server/closing-report.md`](./arc03-tiny-http-server/closing-report.md)).
+  Both slices CDC-closed; composition rows C-1…C-5 reproduced at arc scale against
+  a live hardened `haleiki serve` (route sweep, HEAD/405/nosniff, panic isolation,
+  access log, export parity).
+- **Arc 04 — Custom search:** **next to plan deep** — roadmap-level until this
+  planning turn. Depends on Arcs 01–02 (routes + export), now both closed.
+- **Arcs 05–06:** roadmap-level only, by design. Each is planned deep when it
   becomes the active work; findings from earlier arcs bubble up and may reshape
   the later entries before they are planned.
 
@@ -90,18 +94,35 @@ scale** (an end-to-end demonstration), never inherited from arc attestations.
 |----|-----------|--------|--------------|--------|--------|----------|
 | P-1 | Arc 01 (render core) closed + composed | ptr: `arc01-render-core/closing-report.md` | correctness | project-plan | done | reproduced at arc scale — Arc 01 closed 2026-07-28; A-4…A-7 green in clean build |
 | P-2 | Arc 02 (routes & static export) closed + composed | ptr: `arc02-routes-static-export/closing-report.md` | correctness | project-plan | done | reproduced at arc scale — Arc 02 closed 2026-07-28; real 293-file `_site/` export, B-5…B-8 green |
-| P-3 | Arc 03 (tiny_http server) closed + composed | ptr: arc03 closing-report | correctness | project-plan | open | |
+| P-3 | Arc 03 (tiny_http server) closed + composed | ptr: `arc03-tiny-http-server/closing-report.md` | correctness | project-plan | done | reproduced at arc scale — Arc 03 closed 2026-07-29; C-1…C-5 green against a live hardened `haleiki serve` (route sweep, HEAD/405/nosniff, panic isolation, export parity) |
 | P-4 | Arc 04 (custom search) closed + composed | ptr: arc04 closing-report | correctness | project-plan | open | |
 | P-5 | Arc 05 (news content type) closed + composed | ptr: arc05 closing-report | correctness | project-plan | open | |
 | P-6 | Arc 06 (polish/parity/deploy) closed + composed | ptr: arc06 closing-report | correctness | project-plan | open | |
 | P-7 | `haleiki build` emits a static `_site/` that renders the demo **wiki** with parity to the design review | reproduce: build, open in browser, diff vs review mockups | serious | DoD | open | |
-| P-8 | `haleiki serve` serves the same site over tiny_http with configurable bind/port, structured errors + logging | reproduce: serve, curl routes + assets, kill/restart | serious | DoD | open | |
+| P-8 | `haleiki serve` serves the same site over tiny_http with configurable bind/port, structured errors + logging | reproduce: serve, curl routes + assets, kill/restart | serious | DoD | open | implemented in Arc 03 (`haleiki serve`: bind/port, HEAD/405, nosniff, access log, panic isolation — audited live); stays open pending project-scale reproduction in Arc 06 |
 | P-9 | Client-side search returns faceted results over the Rust-built JSON index | reproduce: query in browser, exercise each facet | serious | DoD | open | |
 | P-10 | The **news** section renders end-to-end in both static export and server | reproduce: build + serve, walk index/post/archive/tags/categories | serious | DoD | open | |
 | P-11 | No Cobalt / Liquid / Pagefind references remain on the branch | `grep -ri -e cobalt -e liquid -e pagefind` returns only historical/doc mentions | correctness | DoD | open | |
 | P-12 | Visual + functional parity with the design review accepted by the operator | operator acceptance judgment, recorded | serious | DoD | open | |
 
 ## 5. Version history
+
+### v1.3 — 2026-07-29 (bubble-up from Arc 03 close)
+Arc 03 (tiny_http server) closed and composed
+(`arc03-tiny-http-server/closing-report.md`): both slices CDC-closed (slice 01
+route map + core server 2026-07-28; slice 02 hardening 2026-07-29), and C-1…C-5
+reproduced at arc scale against a live hardened `haleiki serve` over the demo —
+every route type + asset `200`, unknown `404`, `HEAD` `200`-empty with a true
+`Content-Length`, `POST` `405`+`Allow`, `nosniff`, per-request panic isolation,
+stderr access logging, and server↔export byte parity. Project ledger **P-3**
+marked done; **P-8** ("a servable process") now has its implementation and is
+annotated, staying open until reproduced at project scale in Arc 06. Roadmap
+unchanged. Forward findings for later arcs: (a) **graceful shutdown / signal
+handling** was deferred by decision this arc — the first hardening gap for Arc
+06's deploy-readiness review; (b) the CLI reconciliation note stands — `serve`
+landed additively alongside `build`/`export`, and `build` still writes legacy
+`_data` JSON (Arc 06). Status advanced: Arc 04 (custom search) is next to plan
+deep.
 
 ### v1.2 — 2026-07-28 (bubble-up from Arc 02 close)
 Arc 02 (routes & static export) closed and composed
