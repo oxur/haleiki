@@ -4,7 +4,8 @@
 > `LEDGER-DISCIPLINE.md` Section B. Slice rows are closed by pointer; composition
 > rows D-3...D-6 were reproduced at arc scale against a fresh export, a live
 > `haleiki serve`, and a real headless Chromium browser. Status: **CLOSED** ·
-> 2026-08-21.
+> 2026-08-21. Independent verification:
+> [`cdc-verification.md`](./cdc-verification.md).
 
 ---
 
