@@ -2,7 +2,8 @@
 
 > Per-row walk against [`ledger.md`](./ledger.md), per ledger discipline.
 > Status: **proposed-done** — all 7 rows `done` at reproduced strength;
-> independent CDC verification has not yet run. Commit: `4adf788`.
+> independent CDC verification has not yet run. Implementation commit:
+> `384c046`.
 
 ## Policy Decision
 
