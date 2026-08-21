@@ -4,7 +4,7 @@
 > via **Pagefind**. Part of the tiny_http pivot
 > ([`../project-plan.md`](../project-plan.md)); architecture + the reversed
 > search decision in [`../design-delta.md`](../design-delta.md) (§ Addendum A,
-> 2026-07-29). Status: **active** · 2026-08-21.
+> 2026-07-29). Status: **CLOSED** · 2026-08-21.
 
 ---
 
@@ -90,16 +90,27 @@ findings dispositioned.
 |----|-----------|--------|--------------|--------|--------|----------|
 | D-1 | Slice 01 (index build + bundle in both sinks) closed | ptr: `slice01-index-and-bundle/cdc-verification.md` | correctness | arc-plan | done | reproduced — slice 01 CDC-closed 2026-07-29, 8/8 rows; bundle built in-process (277 pages), served live with correct content-types + traversal guard |
 | D-2 | Slice 02 (client wiring + facets + composition) closed | ptr: `slice02-client-and-facets/cdc-verification.md` | correctness | arc-plan | done | reproduced — slice 02 CDC-closed 2026-08-21, 8/8 rows; functional browser search/facets/sink parity reproduced, browser-JS tooling policy routed to slice 03 |
-| D-3 | Both sinks host the bundle: a built `_site/` contains `_site/pagefind/` and a live `haleiki serve` serves `/pagefind/pagefind.js`, the `.wasm`, and the index/fragment files `200` with correct content-types | reproduce at arc scale: build the export + start the server; fetch each bundle file kind | serious | arc-plan | open | |
-| D-4 | End-to-end query: in a real browser against a live server, a known term (e.g. "garbage") returns the expected result set with correct title/url/type/category/tier and a highlighted excerpt | reproduce: headless browser drives `/search/?q=garbage`, assert rendered `.search-result` items | serious | arc-plan | open | |
-| D-5 | Facets work with live counts: selecting a category/tier/page-type/trust facet narrows the results and the counts reflect `pagefind.filters()`; combining a query with a facet composes (AND) | reproduce: headless browser toggles a facet, asserts narrowed results + updated counts | serious | arc-plan | open | |
-| D-6 | Sink parity: the same query returns the same result set against the static export and the tiny_http server (same bundle, client-side engine) | reproduce: run the identical browser query against both sinks, diff the result URLs | correctness | arc-plan | open | |
+| D-3 | Both sinks host the bundle: a built `_site/` contains `_site/pagefind/` and a live `haleiki serve` serves `/pagefind/pagefind.js`, the `.wasm`, and the index/fragment files `200` with correct content-types | reproduce at arc scale: build the export + start the server; fetch each bundle file kind | serious | arc-plan | done | reproduced at arc close — fresh export produced `_site/pagefind/` with 336 files; static and live sinks returned `200` for `pagefind.js` (`text/javascript`), `wasm.en.pagefind` (`application/wasm`), `pagefind-entry.json` (`application/json`), `index/en_13a9ba1.pf_index` and `fragment/en_1174e95.pf_fragment` (`application/octet-stream`). |
+| D-4 | End-to-end query: in a real browser against a live server, a known term (e.g. "garbage") returns the expected result set with correct title/url/type/category/tier and a highlighted excerpt | reproduce: headless browser drives `/search/?q=garbage`, assert rendered `.search-result` items | serious | arc-plan | done | reproduced at arc close — Chromium against live `/search/?q=garbage` rendered 14 results; first result `Garbage Collection` at `/garbage-collection/`, type `Concept`, category `programming-languages`, tier `foundational`, with Pagefind `<mark>` highlights. |
+| D-5 | Facets work with live counts: selecting a category/tier/page-type/trust facet narrows the results and the counts reflect `pagefind.filters()`; combining a query with a facet composes (AND) | reproduce: headless browser toggles a facet, asserts narrowed results + updated counts | serious | arc-plan | done | reproduced at arc close — live facet groups `Category`, `Tier`, `Type`, `Trust` populated with query-specific counts for `garbage`; selecting `Mathematics` narrowed to 0 and showed `.search-empty`, selecting `Programming Languages` restored 14 programming-language results. |
+| D-6 | Sink parity: the same query returns the same result set against the static export and the tiny_http server (same bundle, client-side engine) | reproduce: run the identical browser query against both sinks, diff the result URLs | correctness | arc-plan | done | reproduced at arc close — identical browser query `garbage` against static and live sinks returned the same sorted 14-result URL set (see `closing-report.md`). |
 | D-7 | Slice 03 (browser JS tooling policy) closed | ptr: `slice03-browser-js-tooling-policy/cdc-verification.md` | correctness | CDC review | done | reproduced — slice 03 CDC-closed 2026-08-21, 7/7 rows; browser-JS policy settled as `make check-browser-js`, Deno lint/fmt scoped to `tests/e2e/`, no Node/npm workflow introduced |
 
 _(Class-(c) bubble-up rows are added as slices surface findings — e.g. the
 in-process-crate vs. binary indexing decision, or any content-type gaps.)_
 
 ## 5. Version history
+
+### v1.3 — 2026-08-21 (Arc 04 close)
+Arc 04 closed and composed. Rows D-3...D-6 were reproduced at arc scale against a
+fresh export, a live `haleiki serve`, and a real Chromium browser: `_site/pagefind/`
+contained 336 files; both static and live sinks served JS/WASM/JSON/index/fragment
+bundle file kinds with correct content types; live `/search/?q=garbage` rendered
+14 metadata-bearing highlighted results; facets produced live query counts and
+query+category composition; static and live sinks returned identical result URLs.
+`make check-browser-js`, `make lint-e2e`, `make test-e2e`, and `make check` were
+run; localhost-bound gates pass with localhost permissions and fail only at the
+sandbox bind/readiness boundary without them. Status advanced to **CLOSED**.
 
 ### v1.2 — 2026-08-21 (Slice 03 CDC close)
 Slice 03 (browser JS tooling policy) CDC-closed against commits `367799e`,

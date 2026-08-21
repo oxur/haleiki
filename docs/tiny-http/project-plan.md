@@ -6,7 +6,7 @@
 > [`design-delta.md`](./design-delta.md); this file is the plan and the ledger.
 >
 > Layout: framework arc/slice tree, no version directory (operator override,
-> per `docs/PROJECT-MANAGEMENT.md` Part VI). Status: **active** · 2026-07-29.
+> per `docs/PROJECT-MANAGEMENT.md` Part VI). Status: **active** · 2026-08-21.
 
 ---
 
@@ -77,10 +77,10 @@ the recomposition arc that closes the branch as a clean Cobalt replacement.
   Both slices CDC-closed; composition rows C-1…C-5 reproduced at arc scale against
   a live hardened `haleiki serve` (route sweep, HEAD/405/nosniff, panic isolation,
   access log, export parity).
-- **Arc 04 — Search (Pagefind):** **active** (see
-  [`arc04-pagefind-search/arc-plan.md`](./arc04-pagefind-search/arc-plan.md)).
-  Slices 01, 02, and 03 are CDC-closed; the arc remains active pending
-  arc-scale reproduction of D-3...D-6 and `arc04-pagefind-search/closing-report.md`.
+- **Arc 04 — Search (Pagefind):** **CLOSED** 2026-08-21 (see
+  [`arc04-pagefind-search/closing-report.md`](./arc04-pagefind-search/closing-report.md)).
+  All three slices CDC-closed; composition rows D-3...D-6 reproduced at arc
+  scale against a fresh export, a live `haleiki serve`, and a real browser.
   **Note:** the operator reversed pivot decision #3
   (custom JSON index → Pagefind) on 2026-07-29 — see v1.4 below.
 - **Arcs 05–06:** roadmap-level only, by design. Each is planned deep when it
@@ -100,17 +100,31 @@ scale** (an end-to-end demonstration), never inherited from arc attestations.
 | P-1 | Arc 01 (render core) closed + composed | ptr: `arc01-render-core/closing-report.md` | correctness | project-plan | done | reproduced at arc scale — Arc 01 closed 2026-07-28; A-4…A-7 green in clean build |
 | P-2 | Arc 02 (routes & static export) closed + composed | ptr: `arc02-routes-static-export/closing-report.md` | correctness | project-plan | done | reproduced at arc scale — Arc 02 closed 2026-07-28; real 293-file `_site/` export, B-5…B-8 green |
 | P-3 | Arc 03 (tiny_http server) closed + composed | ptr: `arc03-tiny-http-server/closing-report.md` | correctness | project-plan | done | reproduced at arc scale — Arc 03 closed 2026-07-29; C-1…C-5 green against a live hardened `haleiki serve` (route sweep, HEAD/405/nosniff, panic isolation, export parity) |
-| P-4 | Arc 04 (search / Pagefind) closed + composed | ptr: `arc04-pagefind-search/closing-report.md` | correctness | project-plan | open | |
+| P-4 | Arc 04 (search / Pagefind) closed + composed | ptr: `arc04-pagefind-search/closing-report.md` | correctness | project-plan | done | reproduced at arc scale — Arc 04 closed 2026-08-21; D-3...D-6 green against a fresh export, live `haleiki serve`, and Chromium (`garbage` query, live facets, static/live parity) |
 | P-5 | Arc 05 (news content type) closed + composed | ptr: arc05 closing-report | correctness | project-plan | open | |
 | P-6 | Arc 06 (polish/parity/deploy) closed + composed | ptr: arc06 closing-report | correctness | project-plan | open | |
 | P-7 | `haleiki build` emits a static `_site/` that renders the demo **wiki** with parity to the design review | reproduce: build, open in browser, diff vs review mockups | serious | DoD | open | |
 | P-8 | `haleiki serve` serves the same site over tiny_http with configurable bind/port, structured errors + logging | reproduce: serve, curl routes + assets, kill/restart | serious | DoD | open | implemented in Arc 03 (`haleiki serve`: bind/port, HEAD/405, nosniff, access log, panic isolation — audited live); stays open pending project-scale reproduction in Arc 06 |
-| P-9 | Client-side search returns faceted results via Pagefind | reproduce: query in browser, exercise each facet | serious | DoD | open | |
+| P-9 | Client-side search returns faceted results via Pagefind | reproduce: query in browser, exercise each facet | serious | DoD | open | implemented in Arc 04 and reproduced at arc scale (`garbage` query returned 14 highlighted metadata-bearing results; live Category/Tier/Type/Trust counts rendered; query+category composition narrowed/restored results; static/live URL parity held). Stays open pending project-scale recomposition in Arc 06/final close rather than inheriting arc evidence into a DoD row. |
 | P-10 | The **news** section renders end-to-end in both static export and server | reproduce: build + serve, walk index/post/archive/tags/categories | serious | DoD | open | |
 | P-11 | No Cobalt / Liquid references remain on the branch (Pagefind is now intended — decision #3 reversed, v1.4) | `grep -ri -e cobalt -e liquid` returns only historical/doc mentions | correctness | DoD | open | |
 | P-12 | Visual + functional parity with the design review accepted by the operator | operator acceptance judgment, recorded | serious | DoD | open | |
 
 ## 5. Version history
+
+### v1.7 — 2026-08-21 (bubble-up from Arc 04 close)
+Arc 04 (Search/Pagefind) closed and composed
+(`arc04-pagefind-search/closing-report.md`): all three slices CDC-closed, and
+D-3...D-6 reproduced at arc scale against a fresh export, a live `haleiki serve`,
+and Chromium. The close verified the `/pagefind/` bundle in both sinks
+(JS/WASM/JSON/index/fragment file kinds and content types), a live `garbage`
+query with 14 metadata-bearing highlighted results, live facet counts and
+query+category composition, and exact static/live result URL parity. Project
+ledger **P-4** marked done. **P-9** is annotated with this implementation
+evidence but remains open for project-scale recomposition in Arc 06/final close;
+the roadmap is otherwise unchanged. Browser/e2e CI/default-gate wiring remains an
+Arc 06 decision, with `make check-browser-js`, `make lint-e2e`, and
+`make test-e2e` now available as named gates.
 
 ### v1.6 — 2026-08-21 (Arc 04 Slice 03 CDC close)
 Arc 04 Slice 03 (`browser-js-tooling-policy`) CDC-closed: shipped browser JS is
