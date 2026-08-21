@@ -1,9 +1,9 @@
 # Slice 02 — client wiring + facets + arc composition
 
-> Plan-of-record for the second and final slice of Arc 04 (Search / Pagefind).
+> Plan-of-record for the second slice of Arc 04 (Search / Pagefind).
 > Open set: this doc + [`ledger.md`](./ledger.md) + [`cc-prompt.md`](./cc-prompt.md).
-> Closing this slice closes the arc. Status: **open** (planned, not implemented)
-> · 2026-07-29.
+> Originally planned as the final slice; on 2026-08-21 CDC review split the
+> browser-JS tooling policy into Slice 03. Status: **CDC-closed** · 2026-08-21.
 
 ---
 
@@ -14,6 +14,12 @@ Turn the empty `/search/` shell into **working faceted search** by wiring
 bundle Slice 01 ships. Then close Arc 04 by reproducing an end-to-end query +
 facets + sink-parity in a real (headless) browser against **both** a live
 `haleiki serve` and a built static export.
+
+CDC amendment, 2026-08-21: the functional search work closed here. The
+tooling-policy question for shipped browser JS (what linter/formatter, if any,
+is canonical for `assets/js/*.js`) is split into
+`../slice03-browser-js-tooling-policy/`, so this slice no longer closes Arc 04 by
+itself.
 
 Slice 01 made the bundle exist and both sinks host it, with **no client UI**.
 This slice is almost entirely **client-side JavaScript + a minimal template
@@ -151,19 +157,20 @@ Ledger rows H-1…H-8 reach a final status. In short: `/search/` performs live
 faceted Pagefind search against the shipped bundle — `?q=` seeding, results
 render into the bespoke markup, the four facets filter with live counts, empty
 state — reproduced end-to-end in a headless browser against **both** sinks; the
-arc composition rows are reproducible; `search.js` is lint/fmt-clean and
-build-step-free.
+arc composition rows are reproducible; `search.js` is build-step-free and
+browser-loadable. Browser-JS lint/fmt policy is now explicitly out of this
+slice and in Slice 03.
 
 ## Relationship to the arc close
 
-This is Arc 04's last slice. Its browser tests are the demonstration the arc
-composition rows reproduce: **D-3** (both sinks host the bundle — Slice 01,
-reconfirmed live here), **D-4** (end-to-end query), **D-5** (facets + live
-counts), **D-6** (sink parity). After this slice CDC-closes, the arc closes:
-reproduce D-3…D-6 at arc scale against a live server **and** a built export,
-write `arc04-pagefind-search/closing-report.md`, and bubble up to
-`project-plan.md` (**P-4**; and P-9 — client-side faceted search — gets its
-implementation, staying open for project-scale reproduction in Arc 06).
+This slice's browser tests are the demonstration the arc composition rows
+reproduce: **D-3** (both sinks host the bundle — Slice 01, reconfirmed live
+here), **D-4** (end-to-end query), **D-5** (facets + live counts), **D-6** (sink
+parity). After Slice 03 closes, the arc closes: reproduce D-3…D-6 at arc scale
+against a live server **and** a built export, write
+`arc04-pagefind-search/closing-report.md`, and bubble up to `project-plan.md`
+(**P-4**; and P-9 — client-side faceted search — gets its implementation,
+staying open for project-scale reproduction in Arc 06).
 
 ## Notes
 

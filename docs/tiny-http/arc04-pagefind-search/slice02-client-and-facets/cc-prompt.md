@@ -1,5 +1,12 @@
 # CC Prompt — Arc 04 / Slice 02: client wiring + facets + arc composition
 
+> Historical implementation prompt. It was written when Slice 02 was expected
+> to be Arc 04's final slice. CDC review on 2026-08-21 closed Slice 02
+> functionally and opened Slice 03 (`../slice03-browser-js-tooling-policy/`) for
+> the browser-JS tooling policy, so Arc 04 now closes after Slice 03. The
+> original prompt wording below is retained for audit history; do not use its
+> "final slice" / "closes the arc" language as current plan state.
+
 You are implementing the second and final slice of Arc 04 of the Haleiki
 tiny_http/minijinja pivot, on branch `framework-base/tiny-http`. Closing this
 slice closes the arc. Work to the collaboration-framework's ledger discipline:

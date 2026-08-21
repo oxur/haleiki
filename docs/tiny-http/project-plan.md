@@ -77,10 +77,12 @@ the recomposition arc that closes the branch as a clean Cobalt replacement.
   Both slices CDC-closed; composition rows C-1…C-5 reproduced at arc scale against
   a live hardened `haleiki serve` (route sweep, HEAD/405/nosniff, panic isolation,
   access log, export parity).
-- **Arc 04 — Search (Pagefind):** **planned in detail** 2026-07-29 (see
-  [`arc04-pagefind-search/arc-plan.md`](./arc04-pagefind-search/arc-plan.md));
-  slice 01 open set written; not yet implemented. **Note:** the operator reversed
-  pivot decision #3 (custom JSON index → Pagefind) on 2026-07-29 — see v1.4 below.
+- **Arc 04 — Search (Pagefind):** **active** (see
+  [`arc04-pagefind-search/arc-plan.md`](./arc04-pagefind-search/arc-plan.md)).
+  Slice 01 and Slice 02 are CDC-closed; Slice 03
+  (`browser-js-tooling-policy`) is open to settle the shipped browser-JS quality
+  gate before arc close. **Note:** the operator reversed pivot decision #3
+  (custom JSON index → Pagefind) on 2026-07-29 — see v1.4 below.
 - **Arcs 05–06:** roadmap-level only, by design. Each is planned deep when it
   becomes the active work; findings from earlier arcs bubble up and may reshape
   the later entries before they are planned.
@@ -109,6 +111,16 @@ scale** (an end-to-end demonstration), never inherited from arc attestations.
 | P-12 | Visual + functional parity with the design review accepted by the operator | operator acceptance judgment, recorded | serious | DoD | open | |
 
 ## 5. Version history
+
+### v1.5 — 2026-08-21 (Arc 04 functional search closed; tooling slice opened)
+Arc 04 Slice 02 CDC-closed: client-side Pagefind search now reproduces in a
+real browser against both sinks via `tests/e2e/` (`make test-e2e`), and
+`make check` remains green. CDC review found a tooling-contract mismatch rather
+than a product defect: Deno's default lint/fmt rules do not currently reproduce
+cleanly on the shipped classic browser asset `assets/js/search.js`. Operator
+decision: keep Slice 02 closed on functional evidence and open Arc 04 Slice 03
+(`browser-js-tooling-policy`) to define the canonical browser-JS quality gate.
+Project ledger P-4/P-9 remain open until Arc 04 is composed and closed.
 
 ### v1.4 — 2026-07-29 (operator decision reversal: custom index → Pagefind)
 Planning Arc 04 surfaced that the design team's `search.js` ships as a documented

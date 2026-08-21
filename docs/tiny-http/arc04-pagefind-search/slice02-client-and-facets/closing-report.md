@@ -2,11 +2,11 @@
 
 > Per-row walk against [`ledger.md`](./ledger.md), per the collaboration-
 > framework's `LEDGER-DISCIPLINE.md` Section A (CC protocol, step 4). Status:
-> **proposed-done** — all 8 rows `done` at `attested` strength; independent
-> (CDC-equivalent) verification has not yet run (CC does not write
-> `cdc-verification.md` or the arc `closing-report.md` — those are the
-> independent reviewer's, per the cc-prompt). Not yet committed. This is Arc
-> 04's second and final slice — closing it closes the arc. 2026-07-29.
+> **CDC-closed** — all 8 rows `done`; independent verification is in
+> [`cdc-verification.md`](./cdc-verification.md). This was originally planned as
+> Arc 04's second and final slice, but CDC review found that the browser-JS
+> tooling contract needed its own follow-up. Arc 04 now closes after Slice 03
+> (`../slice03-browser-js-tooling-policy/`). 2026-08-21.
 > Iterations used: 1 of 5 (two in-slice corrections — the filter-semantics
 > spike and the missing-DOM-element bug — were caught and fixed within the
 > single iteration via the headless-browser harness itself, not separate
@@ -32,7 +32,7 @@
 | H-5 | done | Facet toggling narrows results correctly; the within-group-OR/across-group-AND mechanism required an in-slice correction (see below), verified against the real bundle. |
 | H-6 | done | `q` is shareable/reloadable via `history.replaceState`; facet-in-URL persistence deliberately deferred per decision #5. |
 | H-7 | done | Sink parity: identical `?q=garbage` result-URL sets from a live `haleiki serve` and a statically-hosted `haleiki export` output. |
-| H-8 | done | The harness is Deno lint/fmt-clean; `search.js`'s validity is proven by real execution, not `deno lint` (named tension — see below); `make check` unchanged. |
+| H-8 | done | The harness is Deno lint/fmt-clean; `search.js`'s browser validity is proven by real execution, not Deno's default lint/fmt rules; `make check` unchanged. The broader browser-JS tooling policy is routed to Slice 03 by operator decision. |
 
 No silent drops. Every row reached `done` with attested evidence; the two deliberately-deferred items (facet-URL persistence, a no-JS explanatory note) are named, not hidden.
 
@@ -53,20 +53,29 @@ Two things were corrected **within** this slice, before commit, via the headless
 ## Named uncertainty
 
 - **Pagefind's fuzzy matching is more permissive than the slice-doc anticipated.** Every plausible-looking ASCII "nonsense" query tried during test-writing (`zzzzznonexistentqueryzzzzz`, `xqzjklvwpq`, 100+ repeated letters, a 20-digit number) returned real, non-zero matches against this corpus — Pagefind's ranking appears to give partial credit for *any* character/substring overlap rather than requiring a token match. A CJK string with zero character overlap with the corpus (`日本語テスト`) reliably returns zero and is what the no-match test uses. This is worth knowing for anyone extending the search UI later: "the user typed gibberish" is not a reliable way to reach the empty state in manual testing.
-- **`deno lint`'s default ruleset and this slice's confirmed house-style decision are in direct, structural tension** (not a subtle one — 52 findings, all `no-var`/`no-window`, on a file deliberately written in the established classic style). Resolved by scoping `deno lint`/`deno fmt` verification to the actual Deno codebase (`tests/e2e/`) and verifying `search.js` by what H-8 actually cares about (valid, buildless, framework-free, browser-loadable JS) via real execution instead. Full reasoning in the ledger's H-8 row — flagged here too since it's the kind of thing a reviewer should be able to find without digging.
+- **`deno lint`/`deno fmt` and shipped browser assets need a policy decision.** CDC reproduced the feature but also reproduced that `deno lint assets/js/search.js` fails (52 findings: mainly `no-var`/`no-window`, plus `no-this-alias`/`no-inner-declarations`) and `deno fmt --check assets/js/search.js` would reformat the file. The operator decided this tooling mismatch should not block the functional search slice; it is the open problem for Slice 03 (`slice03-browser-js-tooling-policy`).
 - **The startup-latency note Slice 01's CDC verification carried forward** (`serve()` builds the Pagefind index before binding, so a fresh `haleiki serve` takes several seconds — observed ~9s for the demo corpus — before the port opens) is directly visible to anyone testing this slice by hand: a manual `curl` immediately after starting the server will see a connection refused, not a slow response. Not a regression from this slice, but worth knowing when reproducing these results by hand.
 - **The Deno harness's server ports (18080 live, 18081 static) are fixed, not dynamically allocated.** Fine for this slice's sequential, single-invocation use; would need revisiting if the harness is ever run in parallel with itself or wired into CI (Arc 06's call per the cc-prompt's explicit CI deferral).
 
 ## Bubble-up to arc-plan
 
-This is Arc 04's last slice. Bubble-up for `arc-plan.md`'s composition rows:
+This slice makes Arc 04's functional composition rows reproducible, but it is no
+longer the last slice. Bubble-up for `arc-plan.md`:
 
 - **D-3** (both sinks host the bundle): reconfirmed live by this slice's own harness setup (both a real `haleiki serve` and a real `haleiki export` + static host are stood up and exercised every run), on top of Slice 01's original verification.
 - **D-4** (end-to-end query): reproducible now — `e2e (live): ?q=garbage renders results...` demonstrates exactly this against a live server with a headless browser.
 - **D-5** (facets with live counts, query+facet composes): reproducible now — the facet-toggle e2e step demonstrates narrowing + count updates; H-5's ledger note documents the within-group-OR/across-group-AND mechanism precisely.
 - **D-6** (sink parity): reproducible now — `e2e: identical query returns identical result urls on both sinks` is exactly this reproduction, committed and re-runnable.
 
-Nothing here contradicts `arc-plan.md`'s scope for this slice. **C-2** (this slice's own closure) should be marked `done` once CDC verification lands; at that point the arc can close: reproduce D-3…D-6 at arc scale (re-running this slice's own harness is the natural reproduction, since it already exercises both sinks end-to-end), write `arc04-pagefind-search/closing-report.md`, and bubble up to `project-plan.md` (P-4; P-9 — client-side faceted search — gets its implementation recorded, per the slice-doc's own note, staying open for project-scale reproduction in Arc 06). Per the cc-prompt, that composition report and the arc close are the independent reviewer's to write, not CC's. Also worth flagging for Arc 06's CI-wiring decision: this harness needs a Chromium install (`deno run -A npm:playwright@1.62.0 install chromium`, ~270MB) and takes ~25s to run — both fine for a committed, on-demand-run artifact, but real inputs to whatever CI story Arc 06 designs.
+Nothing here contradicts `arc-plan.md`'s functional scope for this slice. **D-2**
+(this slice's own closure) should be marked `done` by the arc plan. Arc close is
+now held for Slice 03, which will decide the browser-JS tooling policy before
+the independent reviewer reproduces D-3…D-6 at arc scale and writes
+`arc04-pagefind-search/closing-report.md`. Also worth flagging for the tooling
+slice and Arc 06's CI-wiring decision: this harness needs a Chromium install
+(`deno run -A npm:playwright@1.62.0 install chromium`, ~270MB) and takes ~25s to
+run — both fine for a committed, on-demand-run artifact, but real inputs to
+whatever CI story Arc 06 designs.
 
 ## Verification commands run
 
@@ -77,5 +86,9 @@ cd tests/e2e && deno lint .           # clean (no-window excluded, documented)
 cd tests/e2e && deno fmt --check .    # clean
 make check                            # Rust suite unchanged, all green
 ```
+
+CDC follow-up, 2026-08-21: `make lint-e2e`, `make test-e2e`, and `make check`
+all reproduced. Non-elevated localhost-binding runs fail in the Codex sandbox;
+the same commands pass with localhost permissions.
 
 Additionally hand-verified against the real `haleiki serve` binary: `curl` against `/search/?q=garbage` after a full startup (~9s, dominated by the Pagefind index build) returned `200` with both `<template>` fragments present in the served HTML.

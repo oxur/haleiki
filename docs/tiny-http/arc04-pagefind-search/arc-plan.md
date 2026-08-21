@@ -4,7 +4,7 @@
 > via **Pagefind**. Part of the tiny_http pivot
 > ([`../project-plan.md`](../project-plan.md)); architecture + the reversed
 > search decision in [`../design-delta.md`](../design-delta.md) (§ Addendum A,
-> 2026-07-29). Status: **active** · 2026-07-29.
+> 2026-07-29). Status: **active** · 2026-08-21.
 
 ---
 
@@ -48,14 +48,16 @@ and search over the running server are the same search.
 
 ## 2. Slice breakdown
 
-Two slices. Slice 01 is the load-bearing core (the index exists and both sinks
-host it); slice 02 is the client experience + the arc-scale composition. Only
-slice 01 is planned deep here.
+Three slices. Slice 01 is the load-bearing core (the index exists and both sinks
+host it); slice 02 is the client experience + functional arc-scale composition;
+slice 03 closes the browser-JS tooling-policy gap surfaced by CDC review before
+the arc itself closes.
 
 | Slice | Scope | Load-bearing for |
 |-------|-------|------------------|
 | **01 — index build + bundle in both sinks** | Build the Pagefind index in-process from the corpus (records carry searchable content + the four filters + result meta: title/url/type/category/tier/trust/excerpt), emitting the `/pagefind/` bundle. `haleiki export` writes it under `_site/pagefind/`; `haleiki serve` serves `/pagefind/*` from disk with correct content-types (`.wasm`→`application/wasm`, `.js`, `.json`, binary index/fragment→`application/octet-stream`). Replace the Pagefind-wrapper `search` stub with a real in-process build. **No client UI yet.** | 02, arc close |
-| **02 — client wiring + facets + arc composition** | Wire `search.js` to the Pagefind JS API: live query → results rendered into `search.jinja`'s `.search-results-list`; the `?q=` URL param seeds the query on load; empty / no-results states. The `.filter-sidebar` facets (category/tier/page-type/trust) drive `pagefind.search(q,{filters})` using `pagefind.filters()` counts, updated live as the query narrows. Arc-scale composition: a **headless-browser** query end-to-end against both a live `haleiki serve` and a built static export. Closes the arc. | arc close |
+| **02 — client wiring + facets + arc composition** | Wire `search.js` to the Pagefind JS API: live query → results rendered into `search.jinja`'s `.search-results-list`; the `?q=` URL param seeds the query on load; empty / no-results states. The `.filter-sidebar` facets (category/tier/page-type/trust) drive `pagefind.search(q,{filters})` using `pagefind.filters()` counts, updated live as the query narrows. Functional composition: a **headless-browser** query end-to-end against both a live `haleiki serve` and a built static export. | arc close |
+| **03 — browser JS tooling policy** | Define and implement the canonical quality gate for shipped browser JS (`assets/js/*.js`), separating browser-asset policy from the Deno/Playwright harness policy. Keep Node out, keep browser/e2e default-CI wiring deferred to Arc 06, and confirm Slice 02's browser evidence still reproduces. | arc close |
 
 **Sequencing rationale.** The index + bundle-hosting is the substrate; nothing
 searches without it, and it is fully verifiable in Rust (build the bundle, assert
@@ -87,16 +89,31 @@ findings dispositioned.
 | ID | Criterion | Verify | Significance | Origin | Status | Evidence |
 |----|-----------|--------|--------------|--------|--------|----------|
 | D-1 | Slice 01 (index build + bundle in both sinks) closed | ptr: `slice01-index-and-bundle/cdc-verification.md` | correctness | arc-plan | done | reproduced — slice 01 CDC-closed 2026-07-29, 8/8 rows; bundle built in-process (277 pages), served live with correct content-types + traversal guard |
-| D-2 | Slice 02 (client wiring + facets + composition) closed | ptr: slice02 cdc-verification | correctness | arc-plan | open | |
+| D-2 | Slice 02 (client wiring + facets + composition) closed | ptr: `slice02-client-and-facets/cdc-verification.md` | correctness | arc-plan | done | reproduced — slice 02 CDC-closed 2026-08-21, 8/8 rows; functional browser search/facets/sink parity reproduced, browser-JS tooling policy routed to slice 03 |
 | D-3 | Both sinks host the bundle: a built `_site/` contains `_site/pagefind/` and a live `haleiki serve` serves `/pagefind/pagefind.js`, the `.wasm`, and the index/fragment files `200` with correct content-types | reproduce at arc scale: build the export + start the server; fetch each bundle file kind | serious | arc-plan | open | |
 | D-4 | End-to-end query: in a real browser against a live server, a known term (e.g. "garbage") returns the expected result set with correct title/url/type/category/tier and a highlighted excerpt | reproduce: headless browser drives `/search/?q=garbage`, assert rendered `.search-result` items | serious | arc-plan | open | |
 | D-5 | Facets work with live counts: selecting a category/tier/page-type/trust facet narrows the results and the counts reflect `pagefind.filters()`; combining a query with a facet composes (AND) | reproduce: headless browser toggles a facet, asserts narrowed results + updated counts | serious | arc-plan | open | |
 | D-6 | Sink parity: the same query returns the same result set against the static export and the tiny_http server (same bundle, client-side engine) | reproduce: run the identical browser query against both sinks, diff the result URLs | correctness | arc-plan | open | |
+| D-7 | Slice 03 (browser JS tooling policy) closed | ptr: `slice03-browser-js-tooling-policy/cdc-verification.md` | correctness | CDC review | open | |
 
 _(Class-(c) bubble-up rows are added as slices surface findings — e.g. the
 in-process-crate vs. binary indexing decision, or any content-type gaps.)_
 
 ## 5. Version history
+
+### v1.1 — 2026-08-21 (Slice 02 CDC close + Slice 03 opened)
+Slice 02 (client wiring + facets + composition) CDC-closed against commit
+`ae82a12`: the Deno/Playwright harness under `tests/e2e/` reproduced query
+seeding, result rendering, empty/clear states, facets with live counts, URL
+state, and live/static sink parity; `make lint-e2e`, `make test-e2e`, and
+`make check` all pass with localhost permissions where needed. The review found
+one real plan defect: the original H-8 wording treated Deno's default lint/fmt
+rules as the authority for shipped browser assets, but `assets/js/search.js` is a
+classic browser script and direct `deno lint`/`deno fmt --check` does not
+reproduce cleanly. Operator decision: close Slice 02 functionally and open
+Slice 03 (`slice03-browser-js-tooling-policy/`) to define the canonical
+browser-JS quality gate before Arc 04 closes. Arc ledger D-2 marked done; D-7
+added.
 
 ### v1.0 — 2026-07-29
 Initial arc plan, authored **after the operator reversed pivot decision #3**
