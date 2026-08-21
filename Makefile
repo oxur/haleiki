@@ -50,6 +50,7 @@ help:
 	@echo "  $(YELLOW)make test-e2e$(RESET)         - Run Deno/Playwright browser tests"
 	@echo "  $(YELLOW)make lint$(RESET)             - Run clippy and format check"
 	@echo "  $(YELLOW)make lint-e2e$(RESET)         - Lint/format Deno browser tests"
+	@echo "  $(YELLOW)make check-browser-js$(RESET) - Check shipped browser JS policy"
 	@echo "  $(YELLOW)make format$(RESET)           - Format all code with rustfmt"
 	@echo "  $(YELLOW)make coverage$(RESET)         - Generate test coverage report"
 	@echo "  $(YELLOW)make check$(RESET)            - Build + lint + test"
@@ -235,6 +236,17 @@ lint-e2e:
 	@cd tests/e2e && deno task lint
 	@cd tests/e2e && deno task fmt
 	@echo "$(GREEN)✓ Browser test checks passed$(RESET)"
+
+.PHONY: check-browser-js
+check-browser-js:
+	@echo "$(BLUE)Checking shipped browser JavaScript...$(RESET)"
+	@command -v deno >/dev/null 2>&1 || { \
+		echo "$(RED)✗ deno not found$(RESET)"; \
+		echo "$(YELLOW)→ Install Deno before checking assets/js$(RESET)"; \
+		exit 1; \
+	}
+	@deno run --allow-read=assets/js --allow-run=git tests/e2e/browser_js_gate.js
+	@echo "$(GREEN)✓ Browser JavaScript gate passed$(RESET)"
 
 .PHONY: format
 format:

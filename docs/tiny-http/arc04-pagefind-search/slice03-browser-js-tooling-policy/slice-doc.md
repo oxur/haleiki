@@ -2,7 +2,7 @@
 
 > Plan-of-record for the third slice of Arc 04 (Search / Pagefind).
 > Open set: this doc + [`ledger.md`](./ledger.md) + [`cc-prompt.md`](./cc-prompt.md).
-> Status: **open** · 2026-08-21.
+> Status: **proposed-done** · 2026-08-21.
 
 ---
 
@@ -57,6 +57,24 @@ Reasonable outcomes include:
 The chosen policy must be explicit. No future slice should have to infer whether
 Deno's default runtime lints apply to browser assets.
 
+## Decision
+
+Shipped browser JavaScript under `assets/js/*.js` is governed by a targeted
+browser-asset gate, not by Deno's default lint/fmt rules. The canonical command
+is `make check-browser-js`.
+
+The gate treats these files as classic browser scripts loaded by ordinary
+`<script>` tags. It parses each tracked `assets/js/*.js` file as classic
+JavaScript and rejects dependency/build-step patterns that would violate the
+current architecture: CommonJS, Node/Deno runtime globals, `node:`/`npm:`/`jsr:`
+specifier use, local `node_modules`, `package.json`, and `npm install`/`npm run`
+workflows. It intentionally does not reject house-style `var`, IIFEs, `window`,
+or `document`, because those are part of the existing shipped asset style.
+
+Deno remains the test-tooling runtime for `tests/e2e/`, where `make lint-e2e`
+continues to run `deno lint` and `deno fmt --check`. The two policies are
+separate by design.
+
 ## Scope
 
 ### In
@@ -108,4 +126,3 @@ does not add new user-facing search behavior, but it is required before Arc 04
 closes so the arc does not carry an unresolved verification contract. After this
 slice CDC-closes, the independent reviewer should reproduce D-3…D-6 at arc scale
 and write `arc04-pagefind-search/closing-report.md`.
-

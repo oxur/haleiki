@@ -103,3 +103,9 @@ For Rust code quality, load the skill and guides:
 - Check against anti-patterns AP-01 through AP-20
 - Reference design doc numbers in commits when making architectural changes
 - Dual license: Apache 2.0 / MIT
+- Shipped browser JavaScript under `assets/js/*.js` is classic browser-script
+  code: no browser build step, no ES-module conversion, no CommonJS/Node/npm
+  workflow. Do not apply Deno's default lint/fmt rules directly to these assets;
+  run `make check-browser-js` for the canonical browser-asset gate. The
+  Deno/Playwright harness under `tests/e2e/` remains governed separately by
+  `make lint-e2e` and `make test-e2e`.
