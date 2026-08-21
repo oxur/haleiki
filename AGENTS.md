@@ -70,11 +70,13 @@ docs/tiny-http/
     sliceNN-<slug>/{slice-doc,ledger,cc-prompt,closing-report,cdc-verification}.md
 ```
 
-Confirmed decisions (2026-07-28): deployment = **both** (static export default +
-hardened tiny_http self-host); **news** content type in scope; **custom JSON
-search index** (no Pagefind); **minijinja replaces Cobalt/Liquid** using Claude
-Design's refactor templates in `workbench/Hale'iki Wiki Design Refactor/` (these
-are authoritative; the `main` design integration is abandoned).
+Confirmed decisions: deployment = **both** (static export default + hardened
+tiny_http self-host); **news/blog** content type in scope; **Pagefind** search
+is intended after the 2026-07-29 operator reversal (do not reintroduce the
+superseded custom JSON search-index plan); **minijinja replaces Cobalt/Liquid**
+using Claude Design's refactor templates in `workbench/Hale'iki Wiki Design
+Refactor/` (these are authoritative; the `main` design integration is
+abandoned).
 
 **Known gotcha — `&#x2f;` in fully-interpolated hrefs.** minijinja's HTML
 auto-escaper escapes `/` to `&#x2f;` inside an attribute value that is a *single*
@@ -103,6 +105,8 @@ For Rust code quality, load the skill and guides:
 - Check against anti-patterns AP-01 through AP-20
 - Reference design doc numbers in commits when making architectural changes
 - Dual license: Apache 2.0 / MIT
+- In Haleiki, **News is blog**: dated wiki-maintainer updates and related news
+  items, not a CMS/editorial workflow.
 - Shipped browser JavaScript under `assets/js/*.js` is classic browser-script
   code: no browser build step, no ES-module conversion, no CommonJS/Node/npm
   workflow. Do not apply Deno's default lint/fmt rules directly to these assets;
