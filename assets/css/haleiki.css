@@ -1146,6 +1146,7 @@
   .filter-option:hover { color: var(--text-primary); }
   .filter-checkbox { width: 14px; height: 14px; border: 1.5px solid var(--border-default); border-radius: 3px; flex-shrink: 0; background: var(--surface-primary); transition: all 0.15s ease; }
   .filter-option:hover .filter-checkbox { border-color: var(--accent-primary); }
+  .filter-option.active .filter-checkbox { background: var(--accent-primary); border-color: var(--accent-primary); }
   .filter-count { margin-left: auto; font-family: var(--font-mono); font-size: var(--step--2); color: var(--text-tertiary); }
 
   .search-hero { margin-bottom: var(--space-m); }

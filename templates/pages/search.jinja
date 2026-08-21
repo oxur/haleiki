@@ -50,5 +50,32 @@
     {% endif %}
   </main>
 </div>
+
+{#
+  Arc 04 Slice 02: canonical markup search.js clones for JS-rendered results
+  and facet options, rather than duplicating this shape as JS strings
+  (slice-doc decision #3). <template> content never renders on its own, so
+  position doesn't matter for layout — kept here, next to the static markup
+  it mirrors.
+#}
+<template id="search-result-template">
+  <li class="search-result">
+    <div class="result-badges">
+      <span class="result-badge" data-field="type-badge"></span>
+      <span class="result-badge result-badge--category" data-field="category-badge"></span>
+      <span class="result-badge result-badge--tier" data-field="tier-badge"></span>
+    </div>
+    <div class="result-title"><a data-field="title-link" href="#"></a></div>
+    <div class="result-excerpt" data-field="excerpt"></div>
+    <div class="result-url" data-field="url"></div>
+  </li>
+</template>
+<template id="filter-option-template">
+  <label class="filter-option">
+    <span class="filter-checkbox" data-field="checkbox"></span>
+    <span data-field="label"></span>
+    <span class="filter-count" data-field="count"></span>
+  </label>
+</template>
 {% endblock %}
 {% block scripts %}<script src="/assets/js/search.js" defer></script>{% endblock %}

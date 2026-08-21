@@ -47,11 +47,14 @@ help:
 	@echo ""
 	@echo "$(GREEN)Testing & Quality:$(RESET)"
 	@echo "  $(YELLOW)make test$(RESET)             - Run all tests"
+	@echo "  $(YELLOW)make test-e2e$(RESET)         - Run Deno/Playwright browser tests"
 	@echo "  $(YELLOW)make lint$(RESET)             - Run clippy and format check"
+	@echo "  $(YELLOW)make lint-e2e$(RESET)         - Lint/format Deno browser tests"
 	@echo "  $(YELLOW)make format$(RESET)           - Format all code with rustfmt"
 	@echo "  $(YELLOW)make coverage$(RESET)         - Generate test coverage report"
 	@echo "  $(YELLOW)make check$(RESET)            - Build + lint + test"
 	@echo "  $(YELLOW)make check-all$(RESET)        - Build + lint + coverage"
+	@echo "  $(YELLOW)make check-e2e$(RESET)        - Lint + run browser tests"
 	@echo ""
 	@echo "$(GREEN)Cleaning:$(RESET)"
 	@echo "  $(YELLOW)make clean$(RESET)            - Clean bin directory"
@@ -200,6 +203,17 @@ test:
 	@cargo test --all-features --workspace
 	@echo "$(GREEN)✓ All tests passed$(RESET)"
 
+.PHONY: test-e2e
+test-e2e:
+	@echo "$(BLUE)Running browser tests...$(RESET)"
+	@command -v deno >/dev/null 2>&1 || { \
+		echo "$(RED)✗ deno not found$(RESET)"; \
+		echo "$(YELLOW)→ Install Deno before running tests/e2e$(RESET)"; \
+		exit 1; \
+	}
+	@cd tests/e2e && deno task test
+	@echo "$(GREEN)✓ Browser tests passed$(RESET)"
+
 .PHONY: lint
 lint:
 	@echo "$(BLUE)Running linter checks...$(RESET)"
@@ -209,6 +223,18 @@ lint:
 	@echo "$(CYAN)• Checking code formatting...$(RESET)"
 	@cargo fmt --all -- --check
 	@echo "$(GREEN)✓ Format check passed$(RESET)"
+
+.PHONY: lint-e2e
+lint-e2e:
+	@echo "$(BLUE)Checking browser test formatting and lint...$(RESET)"
+	@command -v deno >/dev/null 2>&1 || { \
+		echo "$(RED)✗ deno not found$(RESET)"; \
+		echo "$(YELLOW)→ Install Deno before checking tests/e2e$(RESET)"; \
+		exit 1; \
+	}
+	@cd tests/e2e && deno task lint
+	@cd tests/e2e && deno task fmt
+	@echo "$(GREEN)✓ Browser test checks passed$(RESET)"
 
 .PHONY: format
 format:
@@ -248,6 +274,12 @@ check: common-checks test
 check-all: common-checks coverage
 	@echo ""
 	@echo "$(GREEN)✓ Full validation complete (build + lint + coverage)$(RESET)"
+	@echo ""
+
+.PHONY: check-e2e
+check-e2e: lint-e2e test-e2e
+	@echo ""
+	@echo "$(GREEN)✓ Browser validation complete (lint + test)$(RESET)"
 	@echo ""
 
 # Ensure cargo-binstall is available for fast tool installation
