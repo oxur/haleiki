@@ -94,12 +94,21 @@ findings dispositioned.
 | D-4 | End-to-end query: in a real browser against a live server, a known term (e.g. "garbage") returns the expected result set with correct title/url/type/category/tier and a highlighted excerpt | reproduce: headless browser drives `/search/?q=garbage`, assert rendered `.search-result` items | serious | arc-plan | open | |
 | D-5 | Facets work with live counts: selecting a category/tier/page-type/trust facet narrows the results and the counts reflect `pagefind.filters()`; combining a query with a facet composes (AND) | reproduce: headless browser toggles a facet, asserts narrowed results + updated counts | serious | arc-plan | open | |
 | D-6 | Sink parity: the same query returns the same result set against the static export and the tiny_http server (same bundle, client-side engine) | reproduce: run the identical browser query against both sinks, diff the result URLs | correctness | arc-plan | open | |
-| D-7 | Slice 03 (browser JS tooling policy) closed | ptr: `slice03-browser-js-tooling-policy/cdc-verification.md` | correctness | CDC review | open | |
+| D-7 | Slice 03 (browser JS tooling policy) closed | ptr: `slice03-browser-js-tooling-policy/cdc-verification.md` | correctness | CDC review | done | reproduced — slice 03 CDC-closed 2026-08-21, 7/7 rows; browser-JS policy settled as `make check-browser-js`, Deno lint/fmt scoped to `tests/e2e/`, no Node/npm workflow introduced |
 
 _(Class-(c) bubble-up rows are added as slices surface findings — e.g. the
 in-process-crate vs. binary indexing decision, or any content-type gaps.)_
 
 ## 5. Version history
+
+### v1.2 — 2026-08-21 (Slice 03 CDC close)
+Slice 03 (browser JS tooling policy) CDC-closed against commits `367799e`,
+`384c046`, and `e194a0a`: `make check-browser-js` reproduced on all tracked
+`assets/js/*.js` files, `make lint-e2e` kept the Deno/Playwright harness clean,
+`make test-e2e` reproduced Slice 02's browser evidence with localhost
+permissions, and `make check` passed with localhost permissions. No Node/npm
+project infrastructure was introduced. Arc ledger D-7 marked done; D-3...D-6
+remain open for arc-scale close.
 
 ### v1.1 — 2026-08-21 (Slice 02 CDC close + Slice 03 opened)
 Slice 02 (client wiring + facets + composition) CDC-closed against commit

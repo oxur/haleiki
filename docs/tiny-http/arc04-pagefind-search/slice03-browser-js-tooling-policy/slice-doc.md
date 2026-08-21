@@ -2,7 +2,8 @@
 
 > Plan-of-record for the third slice of Arc 04 (Search / Pagefind).
 > Open set: this doc + [`ledger.md`](./ledger.md) + [`cc-prompt.md`](./cc-prompt.md).
-> Status: **proposed-done** · 2026-08-21.
+> Status: **CDC-closed** · 2026-08-21.
+> Independent verification: [`cdc-verification.md`](./cdc-verification.md).
 
 ---
 

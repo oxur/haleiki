@@ -3,7 +3,8 @@
 > Grep-verifiable acceptance criteria (the steps). Per the collaboration-
 > framework's `LEDGER-DISCIPLINE.md` Section A. Every row reaches a final status
 > (`done` / `deferred` / `no-op`) before the slice advances; `done` requires
-> reproduced evidence. Status: **proposed-done** · 2026-08-21.
+> reproduced evidence. Status: **CDC-closed** · 2026-08-21. Independent
+> verification: [`cdc-verification.md`](./cdc-verification.md).
 
 ## Ledger
 

@@ -79,9 +79,9 @@ the recomposition arc that closes the branch as a clean Cobalt replacement.
   access log, export parity).
 - **Arc 04 — Search (Pagefind):** **active** (see
   [`arc04-pagefind-search/arc-plan.md`](./arc04-pagefind-search/arc-plan.md)).
-  Slice 01 and Slice 02 are CDC-closed; Slice 03
-  (`browser-js-tooling-policy`) is open to settle the shipped browser-JS quality
-  gate before arc close. **Note:** the operator reversed pivot decision #3
+  Slices 01, 02, and 03 are CDC-closed; the arc remains active pending
+  arc-scale reproduction of D-3...D-6 and `arc04-pagefind-search/closing-report.md`.
+  **Note:** the operator reversed pivot decision #3
   (custom JSON index → Pagefind) on 2026-07-29 — see v1.4 below.
 - **Arcs 05–06:** roadmap-level only, by design. Each is planned deep when it
   becomes the active work; findings from earlier arcs bubble up and may reshape
@@ -111,6 +111,13 @@ scale** (an end-to-end demonstration), never inherited from arc attestations.
 | P-12 | Visual + functional parity with the design review accepted by the operator | operator acceptance judgment, recorded | serious | DoD | open | |
 
 ## 5. Version history
+
+### v1.6 — 2026-08-21 (Arc 04 Slice 03 CDC close)
+Arc 04 Slice 03 (`browser-js-tooling-policy`) CDC-closed: shipped browser JS is
+now governed by `make check-browser-js`; Deno lint/fmt remains scoped to the
+`tests/e2e/` harness; no Node/npm project infrastructure was introduced.
+Project ledger P-4/P-9 remain open until Arc 04 is composed and closed at arc
+scale.
 
 ### v1.5 — 2026-08-21 (Arc 04 functional search closed; tooling slice opened)
 Arc 04 Slice 02 CDC-closed: client-side Pagefind search now reproduces in a
