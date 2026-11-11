@@ -1,0 +1,128 @@
+# Source ancestry, oldest first; commit subjects are historical attestations.
+009068fef73c2f7d26d4647c50db2859a532b83c 2026-03-17T23:13:07-05:00 Initial files.
+1a38285ac0e364a9fadcb9ef1fef54a3ba0be55a 2026-03-17T23:16:27-05:00 Added new doc, updated arch state.
+37b040f72c491f5b7322504af6eef0250fdddb40 2026-03-17T23:50:29-05:00 Updated demo tool to be Rust-based.
+d42868880ab3d44782c9c2ef12b242fb3df7b8db 2026-03-18T00:35:52-05:00 Added design mockups exploring type stack variations; 07 is the keeper.
+5781d82c32dc5505a1ab677cd4bfdf3de5c585ab 2026-03-18T00:41:55-05:00 Updated design plan for demo site.
+335626fdd334e88782abbb6e914f9880c7a32cba 2026-03-18T00:54:15-05:00 Added docs.
+d04e689503b1b5ed5488a02a7a8ec44613feaa55 2026-03-18T15:35:42-05:00 Added Cargo.toml, licenses, and placeholder main.rs for crates.io name reservation.
+cd1ce548df87260d0748bfc90608e5c6c6ffa74c 2026-03-18T16:08:57-05:00 Added footer design mockup (08) with columnar layout, day/night themes, and CC0 content notice.
+07543638c990cf7ef628ec57eb102a587250de63 2026-03-18T19:49:21-05:00 Updated docs.
+754cdce9924ae3721f3926618ea500308950c1ca 2026-03-18T19:50:01-05:00 Completed milestone 1.1: demo directory structure, manifest, and taxonomy files.
+88b05f881f034b626a06d0fc1277bf25a6f10b72 2026-03-18T20:04:48-05:00 Completed milestone 1.2: feature-flagged demo module and CLI subcommand skeleton.
+94434e03f1c90d6a0e587f48fc79b5cb3eb62976 2026-03-18T20:12:22-05:00 Completed milestone 1.3: manifest parsing, validation, and demo status command.
+5fc0b915143f3c8d39bc1aa55b38c37f6c860700 2026-03-18T20:24:51-05:00 Completed milestone 2.1: Wikimedia REST API client and expanded demo manifest.
+2fa536ce86a7f906e2ea74880bade04cd148cd67 2026-03-18T20:31:04-05:00 Completed milestone 2.2: batch fetching with progress bars and concurrency.
+85f952cadcde1157010d4e45ee96978162816745 2026-03-18T20:50:09-05:00 Completed milestone 2.3: MediaWiki API support for non-Wikimedia sites.
+bcb597629afdd46ddeb90ddd87eec0820bbfaf70 2026-03-18T20:54:53-05:00 Update architecture doc and align Search CLI command.
+59cc9a0e992896384ac34785b09f7bc424972bb1 2026-03-18T21:07:19-05:00 Completed milestone 2.4: subcategory support in manifest, validation, and status.
+756497376931674ea7891d03a35550170f59d9ab 2026-03-18T21:30:20-05:00 Added project logo.
+78ac9f7b0ffbb1d553b3ba6e261116819ba86323 2026-03-18T21:30:27-05:00 Completed milestone 3.1: Wikipedia chrome stripping with scraper-based HTML cleaning.
+b0833ebb2163486acb01947444d8a33ee1e0bba8 2026-03-18T21:47:04-05:00 Completed milestone 3.2: link rewriting with title-to-slug matching.
+090201ed665f2033178312a7b51f2b17ad3333b9 2026-03-18T22:00:07-05:00 Completed milestone 4.1: image extraction and download from cleaned HTML.
+20babf46fe7440f14938a722f2f10840fb48daec 2026-03-18T22:21:47-05:00 Completed milestone 4.2: media metadata manifest and status statistics.
+8622c41a9c64529670f70d1a56aa70d1d2eff18c 2026-03-18T22:25:03-05:00 Added Haleiki brand guidelines mockup page.
+bb24829afcb4bb41d454fc8ffc9b7a338e966c18 2026-03-18T22:46:59-05:00 Completed milestone 4.3: image source rewriting in HTML.
+432dbd8f66153b8845789eb7c0def792cfdfc03f 2026-03-18T22:48:06-05:00 Updated docs.
+c5d339f46d4aa985e40475cdd503eefa1d75f3b7 2026-03-18T22:56:24-05:00 Completed milestone 5.1: HTML→Markdown conversion spike with htmd.
+a9392e6c458e79b95ecb174fc99b55c34973aa42 2026-03-18T23:02:57-05:00 Completed milestone 5.2: production-quality Markdown conversion.
+157a5363ee96c240fa5e71e7ffdb9b9821e27e7e 2026-03-18T23:11:12-05:00 Completed milestone 5.3: frontmatter injection — final pipeline step.
+9d33266ab6252678c92e2f6daa4a1fde19db89ef 2026-03-18T23:38:14-05:00 Added complete mockup suite: all 8 wiki page types + gallery index.
+20bcd2ee95a5b17b46b32123d723c27ca220db79 2026-03-19T00:02:25-05:00 Updated/added links.
+8475d8a061728cc060cc02eab9182bbb948c3d38 2026-03-19T00:08:16-05:00 Added apostrophe.
+3114372ada2c29aa53eb60b12a62726736037715 2026-03-19T10:15:56-05:00 Added dev plan for search front end.
+6b685cb49be54d5f6946308d7d26e5c6899a4f07 2026-03-19T10:16:25-05:00 Updated to build the demo site capability by default.
+fc6adea82cec851ec1ea6a25393f6cea69d68e69 2026-03-19T10:16:46-05:00 Linting.
+4d572a65857481e358eac7dadd8d477621ddef47 2026-03-19T10:17:10-05:00 Added news section mockups and updated gallery index.
+fce265718169002e3fdd3903e373c6fd1a940ca1 2026-03-19T22:46:28-05:00 Added design doc for deployment profiles.
+2b96d007892d62b371a51765ca193308efae3056 2026-04-29T22:19:29-05:00 Added epistemic trust bar prototype mockup and gallery card.
+3c232425f2290d6b3e4808e11bb76a045a711e5a 2026-04-30T20:20:52-05:00 Add demo pipeline fixes: sidebar/navbar cleanup, Rigpa Wiki link support, media unwrapping, and CLI wiring
+d8059856c48aa915988166cbffb1f6dbb6d83aaf 2026-04-30T20:37:01-05:00 Fix pipeline default: fetch chains full pipeline by default
+3242d910932e8ec534758a6e56f695cfbbcb9cef 2026-04-30T21:17:17-05:00 Fix image download fallback, figure alt text, and source-aware link URLs
+43b36ae87c6fc09b3d1a3023e75a6bd9f4fd60aa 2026-05-01T20:01:27-05:00 Add demo pipeline fixes: mw:Entity unwrap, syntaxhighlight preprocessing, percent-decoded alt text, tier/category filters
+3285cfbe14f77c8934484cb548fcff06d95da4f4 2026-05-01T20:52:26-05:00 Fix syntaxhighlight preprocessor for entity-encoded data-mw attributes
+42cf268995ee2fb2088767aeb10c44110fe32e14 2026-05-02T00:40:31-05:00 Updated AI skill paths, dzogchen tier, and added madhyamaka manifest entry.
+287feb854d4054f2064f99d8b9e91ef4c33d2837 2026-05-02T16:21:25-05:00 Add math preprocessor and honor Retry-After on 429 responses
+06f534c32433d9e4c708769e41e524c2028f5f1e 2026-05-03T01:40:13-05:00 Fix URL encoding, noprint stripping, red-link unwrap, and batch error handling
+2c99f24dbcc00a9c469da7348275d36fc1eccc02 2026-05-03T17:18:45-05:00 Add 30s buffer to Retry-After wait on 429 responses
+8b185905bb653d4579229fdbb6d1dbcc46a939b2 2026-05-03T17:59:05-05:00 Added demo content: 91 articles across 10 categories, 1952 images.
+c54855688d005f5f9c33ec4dbea9ead351fe97f4 2026-05-03T19:52:47-05:00 Added copies of concept card processing docs from Billo Systems' AI Engineering effort.
+f7772f74ed6ff2dc9a5bdc91bab1869fb353a701 2026-05-03T20:32:50-05:00 Added new dev doc and updated two existing ones.
+59b4de09b8e8db8b28d16c5ae9b3bfae63da1d6c 2026-05-03T21:03:17-05:00 Updates for v1.1 of the concept-card generation process.
+f4b8e1cffd0f10ec3d6f06ceaa1430196cd07b9e 2026-05-03T21:05:34-05:00 Added pilot concept extraction: 27 cards from 5 source pages.
+d5090ff74373ff1fee9f49d2b235d4bc4cfaaac9 2026-05-03T21:06:49-05:00 Added prompt for full corpus extraction.
+f0c00da7e196067ce7e52684e84f5c6fcaebf735 2026-05-03T21:47:40-05:00 Edits for ensuring cross-updates for source and concept cards.
+f25990bf8df45e0a52fa51e48510dceb0760267e 2026-05-03T21:48:46-05:00 Added full-corpus concept extraction: 159 new cards from 86 source pages.
+fb4bc60bb9ada6f5d628e02f27e1231251040848 2026-05-03T22:26:14-05:00 Back-filled source page extraction status and concept links.
+f2c02445524982dd07a6ad41d8f6050320a37a32 2026-05-03T22:28:48-05:00 Added project plan for demo build-out.
+902928d36478cea2d8c5989ae7d054469959a987 2026-05-04T20:51:18-05:00 Implemented M1: Cobalt configuration and minimal site rendering.
+7b60e16704d25543a11d23dca544badc86303125 2026-05-04T21:13:40-05:00 Fixed concept card title extraction in demo build.
+0180f5fa46576ceae42fbb56b7c425079e927012 2026-05-04T21:49:29-05:00 Updated docs.
+ff26c59abe3c424fb6dc822e404b5d4b040105a3 2026-05-04T22:31:29-05:00 Implemented M2: haleiki build core (parser, graph, validator, generator).
+b7c369fd2574c5c69060aeadff2f323afef276f8 2026-05-05T22:36:28-05:00 M2 fix-pass: slug namespaces, data shapes, validator, deterministic output.
+418840648d3e802eb05fcb5ac7c975dc71868830 2026-05-05T22:57:58-05:00 Updated docs.
+2c9ea1f05b8a55e10e5f22532c1791c2c9956bfc 2026-05-06T18:28:46-05:00 Added dev doc.
+0ba7ead9baba5f51aa946f996f204691f3d4ab57 2026-05-06T22:38:17-05:00 Implemented M3: design system CSS extraction, fonts, theme toggle, favicons.
+06284a764a98c312d7778a9f7679897b3207d6cf 2026-05-06T23:10:59-05:00 Fixed cobalt asset pipeline and dry-run test failures.
+3fb30bc3d09fed15bc67000b9b6e4217f5bec7a8 2026-05-07T00:24:06-05:00 M3 font cleanup: switched all fonts to woff2, added Light weight.
+f77f9bfb7e40eb314d32099d9c66d211f58f6ef2 2026-05-07T00:33:00-05:00 Added/updated design docs.
+7327e936e32b081e5a58a2e6a02e5399c78355b5 2026-05-07T20:53:39-05:00 Implemented M4: source and concept page templates with full chrome.
+217c70d788426d3a9c31aad33d5deac5a4038eb0 2026-05-07T21:27:24-05:00 Updated docs.
+195d405a8da891411a50705e78fb987061cef42a 2026-05-08T15:36:32-05:00 Implemented M5: home, category, and browse pages.
+201948fadc19eb698debbe14a0a783cec9821f6b 2026-05-08T16:57:37-05:00 Updated docs.
+30ad3c69e27423cd89c753670c0a4e08f310af3f 2026-05-08T19:40:56-05:00 Implemented M6: trust bar, trust glyphs, and info card tinting.
+a497c769c3e25eeb3dc931ef2a0a7c4b49fda240 2026-05-08T19:55:59-05:00 Updated docs.
+a1b354f05c7f9206e72d09245656940bc0194e62 2026-05-08T22:17:13-05:00 Implemented M7: attribution and about/definitions pages.
+000ff9fd9d12955fab666df8425cd4939ffa56c1 2026-05-08T22:50:50-05:00 Implemented M8: polish, dev experience, deployment readiness.
+d6f882e34ccc514f3d114d7280ab42cf8fa328b7 2026-07-27T21:16:54-05:00 Implemented Arc 01 Slice 01: minijinja rendering shell.
+49437ca2fda26184e8993323d8381f3d480a0695 2026-07-27T21:17:17-05:00 Record slice 01's commit SHA in the ledger and closing report.
+07934bb861b92c6b0cf6d95c5e40bea37a89ce73 2026-07-27T21:36:03-05:00 Close slice 01 via independent CDC verification.
+5d75f7bbefb3294da36913366e3b6f415af2aafa 2026-07-27T21:56:04-05:00 Add Arc 01 Slice 02 (markdown render + TOC) planning docs.
+8cd894612537a31c41d47d09b9e044c4e6ba186d 2026-07-27T22:38:36-05:00 Implemented Arc 01 Slice 02: markdown render + TOC.
+64d262fe4ecd0279fd8d406ccf6287630783b59b 2026-07-27T23:06:18-05:00 Close slice 02 via independent CDC verification; record the lint-debt fix.
+f1059347c73da2a4be1ace6d339996d4c790a772 2026-07-27T23:06:35-05:00 Fix all pre-existing clippy findings; make check is now a green gate.
+c19eed9d851ca2fcdea20c4fdbc4eef76b83de71 2026-07-27T23:14:29-05:00 Add Arc 01 Slice 03 (wiki-article context) planning docs.
+a86fbe0fdadf3605ea486aee0d67a190a571d603 2026-07-27T23:51:45-05:00 Implemented Arc 01 Slice 03: wiki-article context (arc's final slice).
+6e759edd4616ac421cc7f9e882cbcd628b2c6faa 2026-07-28T00:18:11-05:00 Close slice 03 and Arc 01 (Render Core) via independent CDC verification.
+a428c37f40eaa35576d927d4185c71acb6884488 2026-07-28T00:37:03-05:00 Add Arc 02 (routes & static export) plan and Slice 01 planning docs.
+1c8cd792ac33db6c193efcf4c359216cf7fd002f 2026-07-28T00:54:19-05:00 Implemented Arc 02 Slice 01: site-index + home.
+8fc2f2e37b218f6f0a013d818ab762e0b0c88ae9 2026-07-28T01:01:02-05:00 Close Arc 02 Slice 01 via independent CDC verification.
+d7b7a3b750f7864a900778086fc4762d0878eb23 2026-07-28T15:11:37-05:00 Add Arc 02 Slice 02 (browse + category) planning docs.
+e64bd75ea0f54f6c08772f55587d350521272f4b 2026-07-28T16:15:50-05:00 Close Arc 02 Slice 02 via independent CDC verification; add Slice 03 plan.
+744247955a3c316aaa7d466eb20d986902b00841 2026-07-28T16:36:29-05:00 Implemented Arc 02 Slice 03: about + attribution + search shell + 404.
+c63a825806721ece87534deb7574b9b93869109e 2026-07-28T17:07:49-05:00 Close Arc 02 Slice 03 via independent CDC verification; add Slice 04 plan.
+f00309a440d5247ea61fce50efb888644a7a1952 2026-07-28T17:25:09-05:00 Implemented Arc 02 Slice 04: static export writer (arc's final slice).
+ca8aa37731626804e0b93f4fdac98880183acb0f 2026-07-28T17:40:29-05:00 Close Slice 04 and Arc 02 (Routes & Static Export) via independent CDC verification.
+3fe0ee90dafba29152e981051efcf316998235b1 2026-07-28T18:54:44-05:00 Add Arc 03 (tiny_http server) plan and Slice 01 planning docs.
+4a52a3ea6d60b00af217605e9e511999c3733131 2026-07-28T22:05:53-05:00 Implemented Arc 03 Slice 01: route map + core tiny_http server.
+cef90d307095d006b805797d1a4e59cad058599f 2026-07-28T22:15:24-05:00 Close Arc 03 Slice 01 via independent CDC verification.
+e25c24db56194e49f81b5e5d85e3ffe5d42edd2e 2026-07-28T23:03:12-05:00 Add Arc 03 Slice 02 (hardening) planning docs.
+8348dc05280369a35326bede449445d5ff27970b 2026-07-28T23:21:55-05:00 Implemented Arc 03 Slice 02: hardening + arc composition.
+b13c4bf88e4fe19a6cd856f0a7b31e40ec79c6a8 2026-07-29T04:37:43+00:00 Close Arc 03 Slice 02 and Arc 03 (tiny_http server) via independent CDC verification.
+1c437b15dc236d21e44f2c2b92fd493364253b3d 2026-07-29T05:02:02+00:00 Plan Arc 04 (Search / Pagefind); record reversal of pivot decision #3.
+ef3be48d91ca87a0f05d0c372aad4159136c38c0 2026-07-29T00:40:03-05:00 Implemented Arc 04 Slice 01: Pagefind index build + bundle in both sinks.
+217033fe24f20cc80b116cf24a4ce911bb9f7e60 2026-07-29T06:00:00+00:00 Close Arc 04 Slice 01 (Pagefind index + bundle) via independent CDC verification.
+86bf92e49eb3d1442e711356ed6da1247056747e 2026-07-29T14:26:28+00:00 Add Arc 04 Slice 02 (client wiring + facets) planning docs.
+8b56960b24f9219055e2a449069c123622fcd0c4 2026-07-29T15:25:47+00:00 Record operator decision on Arc 04 Slice 02: verification via Deno + Playwright.
+ae82a12311a7b47fd7c2e5d57120e0eea43ad9ed 2026-08-21T09:57:26-05:00 Arc04 Slice02 wire client search facets
+367799e1e42081f99108fb7121a1fb2790cd742d 2026-08-21T11:44:06-05:00 Arc04 close slice02 and open slice03
+384c046ce491432059f18f4657b7ec8fbcbcff2f 2026-08-21T11:52:22-05:00 Arc04 Slice03 define browser JS gate
+e194a0a810c0b140a4b9284bc301c6a4fc18695f 2026-08-21T11:55:09-05:00 Arc04 Slice03 record implementation evidence
+7ce2a36a96eb62fd572278c86694d55dd096f751 2026-08-21T12:04:20-05:00 Arc04 Slice03 CDC close browser JS policy
+344b56eee8b9ed2a702bf7823c89620317c7465f 2026-08-21T12:29:47-05:00 Arc04 close Pagefind search
+aafe96f8353c713d2b422d73fe97572484ba0898 2026-08-21T15:01:03-05:00 Arc04 CDC verify Pagefind close
+ffe2dd78994e94cd003f039f8c706c73dfec9dd4 2026-08-21T15:17:56-05:00 Arc05 open news blog planning
+
+# Other refs/worktrees (not evidence of integration into this source branch)
+refs/heads/feature/demo-pipeline-fixes 8b185905bb653d4579229fdbb6d1dbcc46a939b2
+refs/heads/framework-base/cobalt 000ff9fd9d12955fab666df8425cd4939ffa56c1
+refs/heads/framework-base/tiny-http ffe2dd78994e94cd003f039f8c706c73dfec9dd4
+refs/heads/main 000ff9fd9d12955fab666df8425cd4939ffa56c1
+refs/heads/worktree-agent-a552fd1f57f500002 565d06aa02b208466bb07f221412c680e0f697bc
+refs/heads/worktree-agent-a5d4f4490fa5ff015 03b9c3d1e056f51fe684c0c3126f4060dc5d3ec7
+refs/heads/worktree-agent-a70dadf2cb9e69b7b 3b15240aa97b64bc507ea92acd98db567ac81ec5
+refs/heads/worktree-agent-ab4daf19362165dcf 3c47df355a55f6eb422e99e31d3898c13d34b53b
+refs/heads/worktree-agent-af93acff5b7bca21d 495a7e7fef6f5663921ffc82db4f4625276103ec
+refs/remotes/github/framework-base/tiny-http ffe2dd78994e94cd003f039f8c706c73dfec9dd4
+refs/remotes/github/main 8b185905bb653d4579229fdbb6d1dbcc46a939b2
+refs/remotes/macpro/main 8b185905bb653d4579229fdbb6d1dbcc46a939b2

@@ -1,0 +1,280 @@
+{
+  "version": 1,
+  "last_updated": "2026-05-09T03:20:58.600849Z",
+  "documents": {
+    "9": {
+      "metadata": {
+        "number": 9,
+        "title": "Source and Concept Page Templates with Full Chrome",
+        "author": "relationship type",
+        "component": "All",
+        "tags": [
+          "change-me"
+        ],
+        "created": "2026-05-07",
+        "updated": "2026-05-07",
+        "state": "Final",
+        "supersedes": null,
+        "superseded-by": null,
+        "version": "1.0"
+      },
+      "path": "06-final/0009-m4-implementation-plan-source-and-concept-page-templates-with-full-chrome.md",
+      "checksum": "e4d49f95170bf424311b0a037a4b4e4f7bb58be3f9c45e90af1773345a02a71a",
+      "file_size": 15239,
+      "modified": "2026-05-08T02:26:43.890960969Z"
+    },
+    "7": {
+      "metadata": {
+        "number": 7,
+        "title": "`haleiki build` Core",
+        "author": "splitting on",
+        "component": "All",
+        "tags": [
+          "change-me"
+        ],
+        "created": "2026-05-04",
+        "updated": "2026-05-05",
+        "state": "Final",
+        "supersedes": null,
+        "superseded-by": null,
+        "version": "1.0"
+      },
+      "path": "06-final/0007-m2-implementation-plan-haleiki-build-core.md",
+      "checksum": "e73cc3755b86768e7ce9c332da71ccd72f296e253325b5228b12f7f4ce6e5107",
+      "file_size": 10020,
+      "modified": "2026-05-06T03:57:46.717720842Z"
+    },
+    "2": {
+      "metadata": {
+        "number": 2,
+        "title": "Haleiki Demo Site — Design Document",
+        "author": "Duncan McGreggor",
+        "component": "All",
+        "tags": [
+          "change-me"
+        ],
+        "created": "2026-03-17",
+        "updated": "2026-05-04",
+        "state": "Active",
+        "supersedes": null,
+        "superseded-by": null,
+        "version": "1.2"
+      },
+      "path": "05-active/0002-haleiki-demo-site-design-document.md",
+      "checksum": "b00a5d2aa6f876a5872a7b8ed33fe8cd9488a7f7856c1362d2f52b1be28f729c",
+      "file_size": 31324,
+      "modified": "2026-05-05T02:49:18.260660954Z"
+    },
+    "10": {
+      "metadata": {
+        "number": 10,
+        "title": "Home, Category, and Browse Pages",
+        "author": "number of",
+        "component": "All",
+        "tags": [
+          "change-me"
+        ],
+        "created": "2026-05-07",
+        "updated": "2026-05-08",
+        "state": "Final",
+        "supersedes": null,
+        "superseded-by": null,
+        "version": "1.0"
+      },
+      "path": "06-final/0010-m5-implementation-plan-home-category-and-browse-pages.md",
+      "checksum": "8edc1cd2ae62ba325ba2eb3e730b55759252f4583a9288442c76c55f2732b145",
+      "file_size": 13336,
+      "modified": "2026-05-08T21:57:22.748892793Z"
+    },
+    "8": {
+      "metadata": {
+        "number": 8,
+        "title": "Design System CSS Extraction",
+        "author": "inline JS",
+        "component": "All",
+        "tags": [
+          "change-me"
+        ],
+        "created": "2026-05-05",
+        "updated": "2026-05-07",
+        "state": "Final",
+        "supersedes": null,
+        "superseded-by": null,
+        "version": "1.0"
+      },
+      "path": "06-final/0008-m3-implementation-plan-design-system-css-extraction.md",
+      "checksum": "a145b3432be796d951350fba77bf0460e702996bd4c289dfb1d49e6e05be8c4a",
+      "file_size": 11600,
+      "modified": "2026-05-07T05:32:32.583568958Z"
+    },
+    "12": {
+      "metadata": {
+        "number": 12,
+        "title": "Attribution and Definitions Pages",
+        "author": "the demo",
+        "component": "All",
+        "tags": [
+          "change-me"
+        ],
+        "created": "2026-05-08",
+        "updated": "2026-05-08",
+        "state": "Final",
+        "supersedes": null,
+        "superseded-by": null,
+        "version": "1.0"
+      },
+      "path": "06-final/0012-m7-implementation-plan-attribution-and-definitions-pages.md",
+      "checksum": "434f3a1468a67bcce1d754479de88d671a6c12e077772e1f663733792caba002",
+      "file_size": 16995,
+      "modified": "2026-05-09T03:20:54.124357237Z"
+    },
+    "6": {
+      "metadata": {
+        "number": 6,
+        "title": "Cobalt Templates and Static Rendering Project Plan",
+        "author": "category and",
+        "component": "All",
+        "tags": [
+          "change-me"
+        ],
+        "created": "2026-05-03",
+        "updated": "2026-05-04",
+        "state": "Final",
+        "supersedes": null,
+        "superseded-by": null,
+        "version": "1.0"
+      },
+      "path": "06-final/0006-haleiki-site-build-cobalt-templates-and-static-rendering-project-plan.md",
+      "checksum": "e3798738b7b5bf09249ffc8c532178547865ad2a069480c5148ae52b1c7b29d5",
+      "file_size": 24069,
+      "modified": "2026-05-05T02:48:28.903255723Z"
+    },
+    "11": {
+      "metadata": {
+        "number": 11,
+        "title": "Profile System — Trust Bar and Info Card Tinting",
+        "author": "trust bar",
+        "component": "All",
+        "tags": [
+          "change-me"
+        ],
+        "created": "2026-05-08",
+        "updated": "2026-05-08",
+        "state": "Final",
+        "supersedes": null,
+        "superseded-by": null,
+        "version": "1.0"
+      },
+      "path": "06-final/0011-m6-implementation-plan-profile-system-trust-bar-and-info-card-tinting.md",
+      "checksum": "80483f56c2af5bc18976e3cb6ea848c47a02823f649845ed7cc2978fde9c828b",
+      "file_size": 16902,
+      "modified": "2026-05-09T00:55:46.777054590Z"
+    },
+    "5": {
+      "metadata": {
+        "number": 5,
+        "title": "Deployment Profiles & Epistemic Architecture",
+        "author": "the pre",
+        "component": "All",
+        "tags": [
+          "change-me"
+        ],
+        "created": "2026-03-19",
+        "updated": "2026-03-19",
+        "state": "Final",
+        "supersedes": null,
+        "superseded-by": null,
+        "version": "1.0"
+      },
+      "path": "06-final/0005-deployment-profiles-epistemic-architecture.md",
+      "checksum": "3504c081b8b3ceec3c625aa2c80e8740c0013c2d5f1c6a0cedd3c4921d740a7d",
+      "file_size": 27631,
+      "modified": "2026-03-20T03:38:32.699761356Z"
+    },
+    "1": {
+      "metadata": {
+        "number": 1,
+        "title": "Haleiki — Architecture Document",
+        "author": "\"Jane Rustacean\"",
+        "component": "All",
+        "tags": [
+          "change-me"
+        ],
+        "created": "2026-03-17",
+        "updated": "2026-03-18",
+        "state": "Draft",
+        "supersedes": null,
+        "superseded-by": null,
+        "version": "1.0"
+      },
+      "path": "01-draft/0001-haleiki-architecture-document.md",
+      "checksum": "591f37fee92d627408974d717d5878f13a0231fb3b38dbb68fb04178034b62f6",
+      "file_size": 22171,
+      "modified": "2026-03-19T01:51:31.598516561Z"
+    },
+    "4": {
+      "metadata": {
+        "number": 4,
+        "title": "Haleiki Brand Guidelines",
+        "author": "multiplying the",
+        "component": "All",
+        "tags": [
+          "change-me"
+        ],
+        "created": "2026-03-18",
+        "updated": "2026-05-04",
+        "state": "Final",
+        "supersedes": null,
+        "superseded-by": null,
+        "version": "1.0"
+      },
+      "path": "06-final/0004-haleiki-brand-guidelines.md",
+      "checksum": "7cd7a1211bb4150bd303518e04480a0ef65bdcb2d42ccc92e9125e76cc06cc7b",
+      "file_size": 16676,
+      "modified": "2026-05-05T02:48:47.316543062Z"
+    },
+    "3": {
+      "metadata": {
+        "number": 3,
+        "title": "Haleiki Demo Site — Project Plan",
+        "author": "any article",
+        "component": "All",
+        "tags": [
+          "change-me"
+        ],
+        "created": "2026-03-18",
+        "updated": "2026-03-18",
+        "state": "Active",
+        "supersedes": null,
+        "superseded-by": null,
+        "version": "1.0"
+      },
+      "path": "05-active/0003-haleiki-demo-site-project-plan.md",
+      "checksum": "01b86a964a0d41f9956c87a1ab206c0f6d77a7879ce724ac3a05e079359ca320",
+      "file_size": 17609,
+      "modified": "2026-03-18T05:53:16.455874027Z"
+    },
+    "13": {
+      "metadata": {
+        "number": 13,
+        "title": "Polish, Dev Experience, Deployment Readiness",
+        "author": "Duncan McGreggor",
+        "component": "All",
+        "tags": [
+          "change-me"
+        ],
+        "created": "2026-05-08",
+        "updated": "2026-05-08",
+        "state": "Active",
+        "supersedes": null,
+        "superseded-by": null,
+        "version": "1.0"
+      },
+      "path": "05-active/0013-m8-implementation-plan-polish-dev-experience-deployment-readiness.md",
+      "checksum": "f937e52f1c8e4564bf847ae61d91685a12c70e4646159afb7c0befcef335a783",
+      "file_size": 17727,
+      "modified": "2026-05-09T03:20:23.395481439Z"
+    }
+  },
+  "next_number": 14
+}

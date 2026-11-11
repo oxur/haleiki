@@ -1,0 +1,10 @@
+Added Haleiki brand guidelines mockup page.
+
+Self-contained HTML page showcasing the complete design system:
+brand mark, OKLCH colour palettes (day/night), Red Hat Display +
+Newsreader + IBM Plex Mono type stack with live scale specimens,
+spacing system, layout architecture, and implementation notes.
+All swatch chips use live CSS custom properties and respond to
+the theme toggle.
+
+Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>

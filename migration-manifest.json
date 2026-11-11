@@ -1,0 +1,1637 @@
+{
+  "date": "2026-11-11",
+  "source_branch": "framework-base/tiny-http",
+  "source_commit": "ffe2dd78994e94cd003f039f8c706c73dfec9dd4",
+  "framework": "collaboration-framework 3.0.1",
+  "files": [
+    {
+      "source": "docs/design/.dustbin/overwritten/0002-haleiki-demo-site-design-document-ab1a138f.md",
+      "destination": "archive/docs/design/.dustbin/overwritten/0002-haleiki-demo-site-design-document-ab1a138f.md",
+      "sha256": "7b679a3d917829ec27f8c18a0cf7cb7df44208d5e3edf274e99e7be79b342305",
+      "bytes": 29898,
+      "mode": 420,
+      "mtime_ns": 1773812472380545697,
+      "tracked": true
+    },
+    {
+      "source": "docs/design/.dustbin/overwritten/0002-haleiki-demo-site-design-document-b6224417.md",
+      "destination": "archive/docs/design/.dustbin/overwritten/0002-haleiki-demo-site-design-document-b6224417.md",
+      "sha256": "ac9628cd9f3106d0910c075febc3504f0618c26c408cd6852301e0261bf6c044",
+      "bytes": 22526,
+      "mode": 420,
+      "mtime_ns": 1773809315291020394,
+      "tracked": true
+    },
+    {
+      "source": "docs/design/.odm/.gitignore",
+      "destination": "archive/docs/design/.odm/.gitignore",
+      "sha256": "cdbcae15105d6b781e620813c79c7e868740d4e9cc53ce6f5fcbbc12387adf4b",
+      "bytes": 2,
+      "mode": 420,
+      "mtime_ns": 1773801637629798320,
+      "tracked": false
+    },
+    {
+      "source": "docs/design/.odm/state.json",
+      "destination": "archive/docs/design/.odm/state.json",
+      "sha256": "0fd6447431adb7ee51c2e0384cf2822535edfff58d5864c1e0765cad32bbf9e8",
+      "bytes": 8728,
+      "mode": 420,
+      "mtime_ns": 1778296858602161434,
+      "tracked": false
+    },
+    {
+      "source": "docs/design/01-draft/0001-haleiki-architecture-document.md",
+      "destination": "archive/docs/design/01-draft/0001-haleiki-architecture-document.md",
+      "sha256": "591f37fee92d627408974d717d5878f13a0231fb3b38dbb68fb04178034b62f6",
+      "bytes": 22171,
+      "mode": 420,
+      "mtime_ns": 1773885091598516561,
+      "tracked": true
+    },
+    {
+      "source": "docs/design/05-active/0002-haleiki-demo-site-design-document.md",
+      "destination": "archive/docs/design/05-active/0002-haleiki-demo-site-design-document.md",
+      "sha256": "b00a5d2aa6f876a5872a7b8ed33fe8cd9488a7f7856c1362d2f52b1be28f729c",
+      "bytes": 31324,
+      "mode": 420,
+      "mtime_ns": 1777949358260660954,
+      "tracked": true
+    },
+    {
+      "source": "docs/design/05-active/0003-haleiki-demo-site-project-plan.md",
+      "destination": "archive/docs/design/05-active/0003-haleiki-demo-site-project-plan.md",
+      "sha256": "01b86a964a0d41f9956c87a1ab206c0f6d77a7879ce724ac3a05e079359ca320",
+      "bytes": 17609,
+      "mode": 420,
+      "mtime_ns": 1773813196455874027,
+      "tracked": true
+    },
+    {
+      "source": "docs/design/05-active/0013-m8-implementation-plan-polish-dev-experience-deployment-readiness.md",
+      "destination": "archive/docs/design/05-active/0013-m8-implementation-plan-polish-dev-experience-deployment-readiness.md",
+      "sha256": "f937e52f1c8e4564bf847ae61d91685a12c70e4646159afb7c0befcef335a783",
+      "bytes": 17727,
+      "mode": 420,
+      "mtime_ns": 1778296823395481439,
+      "tracked": true
+    },
+    {
+      "source": "docs/design/06-final/0004-haleiki-brand-guidelines.md",
+      "destination": "archive/docs/design/06-final/0004-haleiki-brand-guidelines.md",
+      "sha256": "7cd7a1211bb4150bd303518e04480a0ef65bdcb2d42ccc92e9125e76cc06cc7b",
+      "bytes": 16676,
+      "mode": 420,
+      "mtime_ns": 1777949327316543062,
+      "tracked": true
+    },
+    {
+      "source": "docs/design/06-final/0005-deployment-profiles-epistemic-architecture.md",
+      "destination": "archive/docs/design/06-final/0005-deployment-profiles-epistemic-architecture.md",
+      "sha256": "3504c081b8b3ceec3c625aa2c80e8740c0013c2d5f1c6a0cedd3c4921d740a7d",
+      "bytes": 27631,
+      "mode": 420,
+      "mtime_ns": 1773977912699761356,
+      "tracked": true
+    },
+    {
+      "source": "docs/design/06-final/0006-haleiki-site-build-cobalt-templates-and-static-rendering-project-plan.md",
+      "destination": "archive/docs/design/06-final/0006-haleiki-site-build-cobalt-templates-and-static-rendering-project-plan.md",
+      "sha256": "e3798738b7b5bf09249ffc8c532178547865ad2a069480c5148ae52b1c7b29d5",
+      "bytes": 24069,
+      "mode": 420,
+      "mtime_ns": 1777949308903255723,
+      "tracked": true
+    },
+    {
+      "source": "docs/design/06-final/0007-m2-implementation-plan-haleiki-build-core.md",
+      "destination": "archive/docs/design/06-final/0007-m2-implementation-plan-haleiki-build-core.md",
+      "sha256": "e73cc3755b86768e7ce9c332da71ccd72f296e253325b5228b12f7f4ce6e5107",
+      "bytes": 10020,
+      "mode": 420,
+      "mtime_ns": 1778039866717720842,
+      "tracked": true
+    },
+    {
+      "source": "docs/design/06-final/0008-m3-implementation-plan-design-system-css-extraction.md",
+      "destination": "archive/docs/design/06-final/0008-m3-implementation-plan-design-system-css-extraction.md",
+      "sha256": "a145b3432be796d951350fba77bf0460e702996bd4c289dfb1d49e6e05be8c4a",
+      "bytes": 11600,
+      "mode": 420,
+      "mtime_ns": 1778131952583568958,
+      "tracked": true
+    },
+    {
+      "source": "docs/design/06-final/0009-m4-implementation-plan-source-and-concept-page-templates-with-full-chrome.md",
+      "destination": "archive/docs/design/06-final/0009-m4-implementation-plan-source-and-concept-page-templates-with-full-chrome.md",
+      "sha256": "e4d49f95170bf424311b0a037a4b4e4f7bb58be3f9c45e90af1773345a02a71a",
+      "bytes": 15239,
+      "mode": 420,
+      "mtime_ns": 1778207203890960969,
+      "tracked": true
+    },
+    {
+      "source": "docs/design/06-final/0010-m5-implementation-plan-home-category-and-browse-pages.md",
+      "destination": "archive/docs/design/06-final/0010-m5-implementation-plan-home-category-and-browse-pages.md",
+      "sha256": "8edc1cd2ae62ba325ba2eb3e730b55759252f4583a9288442c76c55f2732b145",
+      "bytes": 13336,
+      "mode": 420,
+      "mtime_ns": 1778277442748892793,
+      "tracked": true
+    },
+    {
+      "source": "docs/design/06-final/0011-m6-implementation-plan-profile-system-trust-bar-and-info-card-tinting.md",
+      "destination": "archive/docs/design/06-final/0011-m6-implementation-plan-profile-system-trust-bar-and-info-card-tinting.md",
+      "sha256": "80483f56c2af5bc18976e3cb6ea848c47a02823f649845ed7cc2978fde9c828b",
+      "bytes": 16902,
+      "mode": 420,
+      "mtime_ns": 1778288146777054590,
+      "tracked": true
+    },
+    {
+      "source": "docs/design/06-final/0012-m7-implementation-plan-attribution-and-definitions-pages.md",
+      "destination": "archive/docs/design/06-final/0012-m7-implementation-plan-attribution-and-definitions-pages.md",
+      "sha256": "434f3a1468a67bcce1d754479de88d671a6c12e077772e1f663733792caba002",
+      "bytes": 16995,
+      "mode": 420,
+      "mtime_ns": 1778296854124357237,
+      "tracked": true
+    },
+    {
+      "source": "docs/design/index.md",
+      "destination": "archive/docs/design/index.md",
+      "sha256": "0b5fbd73eb182efecc6c0b999a63db782c771fdaf40f613f1360123e75a1e2c1",
+      "bytes": 2710,
+      "mode": 420,
+      "mtime_ns": 1778296854188765268,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/0001-haleiki-search-architecture-ab-plan.md",
+      "destination": "archive/docs/dev/0001-haleiki-search-architecture-ab-plan.md",
+      "sha256": "1f7222889944b740cfa3c16482ca4a9a9500073dad2d4e5a9c5f97e5eb8f5864",
+      "bytes": 7880,
+      "mode": 420,
+      "mtime_ns": 1773897128462114593,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/0002-m1-implementation-plan-cobalt-configuration-minimal-rendering.md",
+      "destination": "archive/docs/dev/0002-m1-implementation-plan-cobalt-configuration-minimal-rendering.md",
+      "sha256": "64938be9c499828daf9fd5d62d5145c4fd19688ae3ece0fe931146d9d4b17f59",
+      "bytes": 6870,
+      "mode": 420,
+      "mtime_ns": 1777942957246355944,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/0003-m3-implementation-plan-design-system-css-extraction.md",
+      "destination": "archive/docs/dev/0003-m3-implementation-plan-design-system-css-extraction.md",
+      "sha256": "a809e08e4a030df09521fcbfefc9d6ab2d9fbf1117d31f983455923ca4053673",
+      "bytes": 12805,
+      "mode": 420,
+      "mtime_ns": 1778128221812424222,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/0004-m5-implementation-plan-home-category-and-browse-pages.md",
+      "destination": "archive/docs/dev/0004-m5-implementation-plan-home-category-and-browse-pages.md",
+      "sha256": "8df98078d10bb60ac65e6984c7f8c392cd2a6fce59043011f7910ec870b584bc",
+      "bytes": 9290,
+      "mode": 420,
+      "mtime_ns": 1778207481354923203,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/0006-m6-implementation-plan-trust-bar-and-info-card-tinting.md",
+      "destination": "archive/docs/dev/0006-m6-implementation-plan-trust-bar-and-info-card-tinting.md",
+      "sha256": "0501030b07344c45e476f8623986c11c669b489cca0791e4d0c59c1e8ee6a416",
+      "bytes": 10539,
+      "mode": 420,
+      "mtime_ns": 1778285922659890598,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/0008-m8-implementation-plan-polish-and-deployment.md",
+      "destination": "archive/docs/dev/0008-m8-implementation-plan-polish-and-deployment.md",
+      "sha256": "d4d94251ef4ee1192dd0c5dde834edf1edfac7b643dbc159503e5b88ad55403e",
+      "bytes": 5289,
+      "mode": 420,
+      "mtime_ns": 1778296941463765791,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/concept-cards/0001-howto-wiki-concept-card-extraction.md",
+      "destination": "archive/docs/dev/concept-cards/0001-howto-wiki-concept-card-extraction.md",
+      "sha256": "3c6a6922f4d22771afc087c53d3b6bb88cb712803460c030728d648d996368b2",
+      "bytes": 51481,
+      "mode": 420,
+      "mtime_ns": 1778018041612805584,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/concept-cards/0002-a-guide-for-parallel-concept-card-extraction.md",
+      "destination": "archive/docs/dev/concept-cards/0002-a-guide-for-parallel-concept-card-extraction.md",
+      "sha256": "5a46aefb65a53ad37e2aa026b018dfd7c07689c8eb2a2d3b8a3a0c9053d973a4",
+      "bytes": 48317,
+      "mode": 420,
+      "mtime_ns": 1778018108999107806,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/concept-cards/0003-concept-card-generate-prompt-v1.md",
+      "destination": "archive/docs/dev/concept-cards/0003-concept-card-generate-prompt-v1.md",
+      "sha256": "2fb942214097dfeb1f788ce3a25a265dd43245e90d34b811134ce08d9bc6db6e",
+      "bytes": 7840,
+      "mode": 420,
+      "mtime_ns": 1777857531791285444,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/concept-cards/0004-concept-card-corpus-extraction-prompt-v1.md",
+      "destination": "archive/docs/dev/concept-cards/0004-concept-card-corpus-extraction-prompt-v1.md",
+      "sha256": "8f10cf1d7ba14aca8ae05702fe2c176b484353aa3659246482063f80808463f8",
+      "bytes": 10704,
+      "mode": 420,
+      "mtime_ns": 1777860210781552013,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/demo/0001-milestone-1.1-demo-directory-structure-and-manifest-file.md",
+      "destination": "archive/docs/dev/demo/0001-milestone-1.1-demo-directory-structure-and-manifest-file.md",
+      "sha256": "5d9720581153d178e03f1e58365a284e3024a863425e647db82747e0a5e5d7fd",
+      "bytes": 12669,
+      "mode": 420,
+      "mtime_ns": 1773814072173494101,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/demo/0002-milestone-1.2-feature-flagged-demo-module-and-cli-subcommand-skeleton.md",
+      "destination": "archive/docs/dev/demo/0002-milestone-1.2-feature-flagged-demo-module-and-cli-subcommand-skeleton.md",
+      "sha256": "270465fde02f30b0bfaee2abe24329b794b0a9ac77ba9d6981ff6bee169a8654",
+      "bytes": 17932,
+      "mode": 420,
+      "mtime_ns": 1773881316461460876,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/demo/0003-milestone-1.3-manifest-parsing-and-validation-manifest.rs.md",
+      "destination": "archive/docs/dev/demo/0003-milestone-1.3-manifest-parsing-and-validation-manifest.rs.md",
+      "sha256": "b9d4422fe12cc71e42c7a0ddaca2d13e98759845f29669f2b89c93c0af0eab97",
+      "bytes": 30011,
+      "mode": 420,
+      "mtime_ns": 1773814275789098649,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/demo/0004-milestone-2.1-wikimedia-rest-api-client-fetch.rs.md",
+      "destination": "archive/docs/dev/demo/0004-milestone-2.1-wikimedia-rest-api-client-fetch.rs.md",
+      "sha256": "b2f8eb718ba3cb955c2069893b521f6e8d7d7f7d3cb842725eeacd0c63278305",
+      "bytes": 29393,
+      "mode": 420,
+      "mtime_ns": 1773882324818957743,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/demo/0005-milestone-2.2-batch-fetching-with-progress.md",
+      "destination": "archive/docs/dev/demo/0005-milestone-2.2-batch-fetching-with-progress.md",
+      "sha256": "aa88a6dbe40bd0afe58f5ed9ea2f78c95ec829f06a406d759cc7f3f5b5210a23",
+      "bytes": 21256,
+      "mode": 420,
+      "mtime_ns": 1773882334141492202,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/demo/0006-milestone-2.3-mediawiki-api-support-for-non-wikimedia-sites.md",
+      "destination": "archive/docs/dev/demo/0006-milestone-2.3-mediawiki-api-support-for-non-wikimedia-sites.md",
+      "sha256": "d348849377726156ddf3423444928ba17f9ee5071299ec4120264161b0120221",
+      "bytes": 15993,
+      "mode": 420,
+      "mtime_ns": 1773883246047124181,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/demo/0007-milestone-3.1-wikipedia-chrome-stripping-clean.rs.md",
+      "destination": "archive/docs/dev/demo/0007-milestone-3.1-wikipedia-chrome-stripping-clean.rs.md",
+      "sha256": "3710b765612f74148ea319966279c842dd514407653dc9b891db5e229c6941c2",
+      "bytes": 34296,
+      "mode": 420,
+      "mtime_ns": 1773873125075032394,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/demo/0008-milestone-3.2-link-rewriting-rewrite.rs.md",
+      "destination": "archive/docs/dev/demo/0008-milestone-3.2-link-rewriting-rewrite.rs.md",
+      "sha256": "6b06b32464817d38f57eb5706572e11732f1caf88c5fe13d0027fc67bbc75852",
+      "bytes": 32553,
+      "mode": 420,
+      "mtime_ns": 1773873260205213146,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/demo/0009-milestone-2.4-subcategory-support.md",
+      "destination": "archive/docs/dev/demo/0009-milestone-2.4-subcategory-support.md",
+      "sha256": "6720ce01bd091b6e77f88fd6a34dac17bf1edbb21b44a72d2b459a3a0b0f42f0",
+      "bytes": 9329,
+      "mode": 420,
+      "mtime_ns": 1773885137425396390,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/demo/0010-milestone-4.1-image-extraction-and-download-media.rs.md",
+      "destination": "archive/docs/dev/demo/0010-milestone-4.1-image-extraction-and-download-media.rs.md",
+      "sha256": "668890215c9d755fa1e23f3c075cc0bbb6703f2c8cc42041984cca6101e41b4a",
+      "bytes": 33601,
+      "mode": 420,
+      "mtime_ns": 1773885743013707012,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/demo/0011-milestone-4.2-media-metadata-and-manifest-generation.md",
+      "destination": "archive/docs/dev/demo/0011-milestone-4.2-media-metadata-and-manifest-generation.md",
+      "sha256": "fc06846075327de83699e23f998eced90e7f137280fbe6f320aa8bbde85ecc78",
+      "bytes": 21762,
+      "mode": 420,
+      "mtime_ns": 1773886100117844520,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/demo/0012-milestone-4.3-image-source-rewriting-in-html.md",
+      "destination": "archive/docs/dev/demo/0012-milestone-4.3-image-source-rewriting-in-html.md",
+      "sha256": "9ce47af67ea983fbffe0716769772a0bf232cf1562e43aed16ff955f55bd70e8",
+      "bytes": 23190,
+      "mode": 420,
+      "mtime_ns": 1773886221189630584,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/demo/0013-milestone-5.1-html-markdown-conversion-spike.md",
+      "destination": "archive/docs/dev/demo/0013-milestone-5.1-html-markdown-conversion-spike.md",
+      "sha256": "bfeae5b8c722e4113246d110654d850ef12ef833809a256743a2f70bee3aaa7c",
+      "bytes": 25342,
+      "mode": 420,
+      "mtime_ns": 1773887154988114459,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/demo/0014-milestone-5.2-markdown-conversion-implementation-convert.rs.md",
+      "destination": "archive/docs/dev/demo/0014-milestone-5.2-markdown-conversion-implementation-convert.rs.md",
+      "sha256": "d9d8a27c402d0985e7e467ecc45bd98e907c3df1ea605d46a7086710bfbb78fa",
+      "bytes": 29240,
+      "mode": 420,
+      "mtime_ns": 1773887630093947419,
+      "tracked": true
+    },
+    {
+      "source": "docs/dev/demo/0015-milestone-5.3-frontmatter-injection-frontmatter.rs.md",
+      "destination": "archive/docs/dev/demo/0015-milestone-5.3-frontmatter-injection-frontmatter.rs.md",
+      "sha256": "85ddcbe80b3e2bf7de3e883f7e4c50c8f6f79e5b431fc39266956413f499b3f4",
+      "bytes": 30738,
+      "mode": 420,
+      "mtime_ns": 1773888021323928933,
+      "tracked": true
+    },
+    {
+      "source": "workbench/.DS_Store",
+      "destination": "archive/workbench/.DS_Store",
+      "sha256": "6ad7e16d0a097d2ca96a255f36c70df4165fb4033ccafed79107aa8672a025c8",
+      "bytes": 6148,
+      "mode": 420,
+      "mtime_ns": 1785200865526626601,
+      "tracked": false
+    },
+    {
+      "source": "workbench/0006-haleiki-site-build-project-plan.md",
+      "destination": "archive/workbench/0006-haleiki-site-build-project-plan.md",
+      "sha256": "e7900163270dfd4f95b27cae7020e22c81bf0d48e17388b577210bf08fb0c3f2",
+      "bytes": 23828,
+      "mode": 420,
+      "mtime_ns": 1777864255107672365,
+      "tracked": false
+    },
+    {
+      "source": "workbench/0009-howto-concept-card-extraction-with-claude-code-v3.2.md",
+      "destination": "archive/workbench/0009-howto-concept-card-extraction-with-claude-code-v3.2.md",
+      "sha256": "56eb092cfed206edf588748e041df9ed53448f941f1dee43684f96994a898cbd",
+      "bytes": 30870,
+      "mode": 420,
+      "mtime_ns": 1777854263915218392,
+      "tracked": false
+    },
+    {
+      "source": "workbench/0010-a-guide-for-parallel-concept-card-re-extraction-v3.2.md",
+      "destination": "archive/workbench/0010-a-guide-for-parallel-concept-card-re-extraction-v3.2.md",
+      "sha256": "b942d34237391d7a8d84ad463cd2c25aa72196adbc98797877dabc26a5ba337c",
+      "bytes": 31561,
+      "mode": 420,
+      "mtime_ns": 1777854263916222395,
+      "tracked": false
+    },
+    {
+      "source": "workbench/Hale'iki Wiki Design Refactor/.thumbnail",
+      "destination": "archive/workbench/Hale'iki Wiki Design Refactor/.thumbnail",
+      "sha256": "f539dcfb5b6b006f3a046878b0ad7652f682b6cde16e06f3238f3282d7d12f89",
+      "bytes": 11234,
+      "mode": 436,
+      "mtime_ns": 1785200139000000000,
+      "tracked": false
+    },
+    {
+      "source": "workbench/Hale'iki Wiki Design Refactor/Haleiki Design Review.dc.html",
+      "destination": "archive/workbench/Hale'iki Wiki Design Refactor/Haleiki Design Review.dc.html",
+      "sha256": "3a2e5a21b562e270372fd859c0bf5719e1b3439714e927cc019a523a412eae15",
+      "bytes": 28588,
+      "mode": 436,
+      "mtime_ns": 1785200139000000000,
+      "tracked": false
+    },
+    {
+      "source": "workbench/Hale'iki Wiki Design Refactor/assets/.DS_Store",
+      "destination": "archive/workbench/Hale'iki Wiki Design Refactor/assets/.DS_Store",
+      "sha256": "9d1b343319f4c83ef7b7be0a6e657dee8754e06dedb7361ad906ba280d6de1f5",
+      "bytes": 6148,
+      "mode": 420,
+      "mtime_ns": 1788234519325236022,
+      "tracked": false
+    },
+    {
+      "source": "workbench/Hale'iki Wiki Design Refactor/assets/css/haleiki.css",
+      "destination": "archive/workbench/Hale'iki Wiki Design Refactor/assets/css/haleiki.css",
+      "sha256": "51f30a8f772e91915fedd2756ebbde374dc4bcfe6da591aa536b29e5d37c234d",
+      "bytes": 88227,
+      "mode": 436,
+      "mtime_ns": 1785200139000000000,
+      "tracked": false
+    },
+    {
+      "source": "workbench/Hale'iki Wiki Design Refactor/assets/fonts/IBMPlexMono-Italic.woff2",
+      "destination": "archive/workbench/Hale'iki Wiki Design Refactor/assets/fonts/IBMPlexMono-Italic.woff2",
+      "sha256": "3f6ed16e0d83e468bd22de50e49f5d09516bbf502271a759f39e1f8c921fac54",
+      "bytes": 28768,
+      "mode": 436,
+      "mtime_ns": 1785200139000000000,
+      "tracked": false
+    },
+    {
+      "source": "workbench/Hale'iki Wiki Design Refactor/assets/fonts/IBMPlexMono-Light.woff2",
+      "destination": "archive/workbench/Hale'iki Wiki Design Refactor/assets/fonts/IBMPlexMono-Light.woff2",
+      "sha256": "2e476ad399c2848f4dbb2b07532b27540c414013e0051fb5efbfcd991fc86cd9",
+      "bytes": 25312,
+      "mode": 436,
+      "mtime_ns": 1785200139000000000,
+      "tracked": false
+    },
+    {
+      "source": "workbench/Hale'iki Wiki Design Refactor/assets/fonts/IBMPlexMono-Medium.woff2",
+      "destination": "archive/workbench/Hale'iki Wiki Design Refactor/assets/fonts/IBMPlexMono-Medium.woff2",
+      "sha256": "01d285447409c8a588692162439a038b8cbd7871309ee20267b0d2d91c6e8e22",
+      "bytes": 14888,
+      "mode": 436,
+      "mtime_ns": 1785200139000000000,
+      "tracked": false
+    },
+    {
+      "source": "workbench/Hale'iki Wiki Design Refactor/assets/fonts/IBMPlexMono-Regular.woff2",
+      "destination": "archive/workbench/Hale'iki Wiki Design Refactor/assets/fonts/IBMPlexMono-Regular.woff2",
+      "sha256": "08949f728dc52d528e69b1667d15c89a5686a4ee9a296ff90983985f99c380f7",
+      "bytes": 14708,
+      "mode": 436,
+      "mtime_ns": 1785200139000000000,
+      "tracked": false
+    },
+    {
+      "source": "workbench/Hale'iki Wiki Design Refactor/assets/fonts/Newsreader-Italic-Variable.woff2",
+      "destination": "archive/workbench/Hale'iki Wiki Design Refactor/assets/fonts/Newsreader-Italic-Variable.woff2",
+      "sha256": "ba50cae0c746ac0204676218c121bd784050e22a8ffd085c02547d5dac567f30",
+      "bytes": 231316,
+      "mode": 436,
+      "mtime_ns": 1785200139000000000,
+      "tracked": false
+    },
+    {
+      "source": "workbench/Hale'iki Wiki Design Refactor/assets/fonts/Newsreader-Variable.woff2",
+      "destination": "archive/workbench/Hale'iki Wiki Design Refactor/assets/fonts/Newsreader-Variable.woff2",
+      "sha256": "e8a23420db4339b41fa68f80a04f75d4f66c22c0bfdf65c1ada92f7fbfb4c879",
+      "bytes": 208136,
+      "mode": 436,
+      "mtime_ns": 1785200139000000000,
+      "tracked": false
+    },
+    {
+      "source": "workbench/Hale'iki Wiki Design Refactor/assets/fonts/RedHatDisplay-Italic-Variable.woff2",
+      "destination": "archive/workbench/Hale'iki Wiki Design Refactor/assets/fonts/RedHatDisplay-Italic-Variable.woff2",
+      "sha256": "d1b1522527dece51532333ad92de0bcb1773225183cd18ea1f9bfc68ee8e09af",
+      "bytes": 39840,
+      "mode": 436,
+      "mtime_ns": 1785200139000000000,
+      "tracked": false
+    },
+    {
+      "source": "workbench/Hale'iki Wiki Design Refactor/assets/fonts/RedHatDisplay-Variable.woff2",
+      "destination": "archive/workbench/Hale'iki Wiki Design Refactor/assets/fonts/RedHatDisplay-Variable.woff2",
+      "sha256": "383560dfc8c548643c64caf9f6e3a5de5c745cecdb7989017769ee96ce990c80",
+      "bytes": 38096,
+      "mode": 436,
+      "mtime_ns": 1785200139000000000,
+      "tracked": false
+    },
+    {
+      "source": "workbench/Hale'iki Wiki Design Refactor/assets/js/browse-scrollspy.js",
+      "destination": "archive/workbench/Hale'iki Wiki Design Refactor/assets/js/browse-scrollspy.js",
+      "sha256": "fe837a722f45d66c77f89f99d0bd1018c2707d14d7f23bc0806d50af4e1f6f8f",
+      "bytes": 733,
+      "mode": 436,
+      "mtime_ns": 1785200139000000000,
+      "tracked": false
+    },
+    {
+      "source": "workbench/Hale'iki Wiki Design Refactor/assets/js/search.js",
+      "destination": "archive/workbench/Hale'iki Wiki Design Refactor/assets/js/search.js",
+      "sha256": "71cf4017266163f5cebc7224f37004782ae8bccd79aac4e58a19b11eee4f06d6",
+      "bytes": 602,
+      "mode": 436,
+      "mtime_ns": 1785200139000000000,
+      "tracked": false
+    },
+    {
+      "source": "workbench/Hale'iki Wiki Design Refactor/assets/js/toc-scrollspy.js",
+      "destination": "archive/workbench/Hale'iki Wiki Design Refactor/assets/js/toc-scrollspy.js",
+      "sha256": "cbf3039cc1defe84a4995baa2f8fac539cf677a18e2bc572fb6476a8b6d957b8",
+      "bytes": 1034,
+      "mode": 436,
+      "mtime_ns": 1785200139000000000,
+      "tracked": false
+    },
+    {
+      "source": "workbench/Hale'iki Wiki Design Refactor/support.js",
+      "destination": "archive/workbench/Hale'iki Wiki Design Refactor/support.js",
+      "sha256": "8fe7df74405f3c55f49b7249c74ea1397e65d07dea2b1bd3b4a489bec2e28cbe",
+      "bytes": 69150,
+      "mode": 436,
+      "mtime_ns": 1785200139000000000,
+      "tracked": false
+    },
+    {
+      "source": "workbench/Hale'iki Wiki Design Refactor.zip",
+      "destination": "archive/workbench/Hale'iki Wiki Design Refactor.zip",
+      "sha256": "d2a147af53c286e36de4caecbb28f2111cefa27f303ab55f4b5be244da3a9790",
+      "bytes": 679214,
+      "mode": 420,
+      "mtime_ns": 1785200139838642036,
+      "tracked": false
+    },
+    {
+      "source": "workbench/TODO.md",
+      "destination": "archive/workbench/TODO.md",
+      "sha256": "b45f43f97b60403a19e2d3b9707525d5106f5b93b52df525f973e71dbe362dd5",
+      "bytes": 1529,
+      "mode": 420,
+      "mtime_ns": 1773896114510739509,
+      "tracked": false
+    },
+    {
+      "source": "workbench/backfill-source-pages.py",
+      "destination": "archive/workbench/backfill-source-pages.py",
+      "sha256": "1db70caadbdcf19b4f4bd5a871a83f974b8093ac25aae7186e40136bec8d0aa7",
+      "bytes": 5203,
+      "mode": 420,
+      "mtime_ns": 1777862990486886578,
+      "tracked": false
+    },
+    {
+      "source": "workbench/cc-prompt-corpus-concept-extraction.md",
+      "destination": "archive/workbench/cc-prompt-corpus-concept-extraction.md",
+      "sha256": "8f10cf1d7ba14aca8ae05702fe2c176b484353aa3659246482063f80808463f8",
+      "bytes": 10704,
+      "mode": 420,
+      "mtime_ns": 1777860210781552013,
+      "tracked": false
+    },
+    {
+      "source": "workbench/cc-prompt-m1-title-fix.md",
+      "destination": "archive/workbench/cc-prompt-m1-title-fix.md",
+      "sha256": "206140e0d3855d792961b28721ac8a051cfbc46db4b3ab4aac7579734cdd0bcb",
+      "bytes": 5663,
+      "mode": 420,
+      "mtime_ns": 1777946576775324597,
+      "tracked": false
+    },
+    {
+      "source": "workbench/cc-prompt-m2-build-core.md",
+      "destination": "archive/workbench/cc-prompt-m2-build-core.md",
+      "sha256": "f8f8e7150039852837bcfbd403f262a915a69ed8e3e4fbe3e30c234a7bf873bc",
+      "bytes": 21047,
+      "mode": 420,
+      "mtime_ns": 1777947718238430588,
+      "tracked": false
+    },
+    {
+      "source": "workbench/cc-prompt-m2-fix-pass.md",
+      "destination": "archive/workbench/cc-prompt-m2-fix-pass.md",
+      "sha256": "8ec729a085e621797f79f4eab326a393e35c17b692e1863d1077d57b492062f8",
+      "bytes": 13611,
+      "mode": 420,
+      "mtime_ns": 1777954245571778404,
+      "tracked": false
+    },
+    {
+      "source": "workbench/cc-prompt-m3-followup-font-cleanup.md",
+      "destination": "archive/workbench/cc-prompt-m3-followup-font-cleanup.md",
+      "sha256": "fb31ee1adc955d9be17cc66e742717e326dbacba99eb3ef88c4eed7740b6f5af",
+      "bytes": 5834,
+      "mode": 420,
+      "mtime_ns": 1778127793182754941,
+      "tracked": false
+    },
+    {
+      "source": "workbench/cc-prompt-m3-plan.md",
+      "destination": "archive/workbench/cc-prompt-m3-plan.md",
+      "sha256": "573398eb869615f731c18a606e2251f0294c3f7d804218a4ba41b2264d3e0d82",
+      "bytes": 11454,
+      "mode": 420,
+      "mtime_ns": 1778039469982208058,
+      "tracked": false
+    },
+    {
+      "source": "workbench/cc-prompt-m4-plan.md",
+      "destination": "archive/workbench/cc-prompt-m4-plan.md",
+      "sha256": "ca178bebffe688a87341bcc24f305319b74bc93d11eb127e40903c0e5413c8f0",
+      "bytes": 14995,
+      "mode": 420,
+      "mtime_ns": 1778131656989894094,
+      "tracked": false
+    },
+    {
+      "source": "workbench/cc-prompt-m5-plan.md",
+      "destination": "archive/workbench/cc-prompt-m5-plan.md",
+      "sha256": "3bbab3897b998109871004eafa9ad61a7ebfbae5e7c9d4ce8bb6a982d0d2bcee",
+      "bytes": 13118,
+      "mode": 420,
+      "mtime_ns": 1778205923732932783,
+      "tracked": false
+    },
+    {
+      "source": "workbench/cc-prompt-m6-plan.md",
+      "destination": "archive/workbench/cc-prompt-m6-plan.md",
+      "sha256": "e71155e4882688ec657e71a15d782a81b99a7e029f544b4a2699f7896b3ca4b0",
+      "bytes": 16666,
+      "mode": 420,
+      "mtime_ns": 1778272968143313681,
+      "tracked": false
+    },
+    {
+      "source": "workbench/cc-prompt-m7-plan.md",
+      "destination": "archive/workbench/cc-prompt-m7-plan.md",
+      "sha256": "8fdc6019b83a665b1693232e5786bbcf1cb50a90afb58d2fd17939b6c7b7eb22",
+      "bytes": 16777,
+      "mode": 420,
+      "mtime_ns": 1778277726764426441,
+      "tracked": false
+    },
+    {
+      "source": "workbench/cc-prompt-m8-plan.md",
+      "destination": "archive/workbench/cc-prompt-m8-plan.md",
+      "sha256": "323430bb2f3f6c1bae842fff3889c91976fbd908e41fea4592a112e8a088d570",
+      "bytes": 17489,
+      "mode": 420,
+      "mtime_ns": 1778288400228720163,
+      "tracked": false
+    },
+    {
+      "source": "workbench/cc-prompt-pilot-concept-extraction.md",
+      "destination": "archive/workbench/cc-prompt-pilot-concept-extraction.md",
+      "sha256": "2fb942214097dfeb1f788ce3a25a265dd43245e90d34b811134ce08d9bc6db6e",
+      "bytes": 7840,
+      "mode": 420,
+      "mtime_ns": 1777857531791285444,
+      "tracked": false
+    },
+    {
+      "source": "workbench/cc-prompt-source-page-backlink-backfill.md",
+      "destination": "archive/workbench/cc-prompt-source-page-backlink-backfill.md",
+      "sha256": "a2329ed5cc48ab8bee6da941f5015f597f8c410d4dad176a9a7307f60f437b4e",
+      "bytes": 6396,
+      "mode": 420,
+      "mtime_ns": 1777862608397484945,
+      "tracked": false
+    },
+    {
+      "source": "workbench/commit-msg-news-mockups.txt",
+      "destination": "archive/workbench/commit-msg-news-mockups.txt",
+      "sha256": "d22d287afb22d4826283209f4a2cd88d87e53f55ae058b5e1788b9d76be2c9f5",
+      "bytes": 842,
+      "mode": 420,
+      "mtime_ns": 1773933152857241479,
+      "tracked": false
+    },
+    {
+      "source": "workbench/commit-msg.txt",
+      "destination": "archive/workbench/commit-msg.txt",
+      "sha256": "734ba07d89c89a5998b0df80474eb0c82e9cc3bbfe7d00ef831f023b2ac7b091",
+      "bytes": 453,
+      "mode": 420,
+      "mtime_ns": 1773890681509770327,
+      "tracked": false
+    },
+    {
+      "source": "workbench/deleted-files.txt",
+      "destination": "archive/workbench/deleted-files.txt",
+      "sha256": "6d97b2ab33e2fe518a8fb6fd18bb0a613a5ab27c49ffd1bcd5b7f119ce560940",
+      "bytes": 38485,
+      "mode": 420,
+      "mtime_ns": 1778124993815388157,
+      "tracked": false
+    },
+    {
+      "source": "workbench/deployment-profiles-architecture.md",
+      "destination": "archive/workbench/deployment-profiles-architecture.md",
+      "sha256": "7ad0eccd007f45ef9dde81fb1fc136dbb4e66f9a98e9c3c295b7494fa997dd9c",
+      "bytes": 27404,
+      "mode": 420,
+      "mtime_ns": 1773977883194010921,
+      "tracked": false
+    },
+    {
+      "source": "workbench/foamy-napping-pike.md",
+      "destination": "archive/workbench/foamy-napping-pike.md",
+      "sha256": "1f7222889944b740cfa3c16482ca4a9a9500073dad2d4e5a9c5f97e5eb8f5864",
+      "bytes": 7880,
+      "mode": 420,
+      "mtime_ns": 1773897128462114593,
+      "tracked": false
+    },
+    {
+      "source": "workbench/haleiki-brand-guidelines.md",
+      "destination": "archive/workbench/haleiki-brand-guidelines.md",
+      "sha256": "7feaa39811508e6ed588aa5a59a430efb2fc2704c0c85953d6634d925c43a2e5",
+      "bytes": 19295,
+      "mode": 420,
+      "mtime_ns": 1773932613402734839,
+      "tracked": false
+    },
+    {
+      "source": "workbench/okay-nice-so-virtual-wirth.md",
+      "destination": "archive/workbench/okay-nice-so-virtual-wirth.md",
+      "sha256": "4c54f94dd8b7a20bdbaf51203d5d197872ce88e9e05d4267711acde5b9ccfd4e",
+      "bytes": 10973,
+      "mode": 420,
+      "mtime_ns": 1778040240226614646,
+      "tracked": false
+    },
+    {
+      "source": "workbench/old/demo-site-design.md",
+      "destination": "archive/workbench/old/demo-site-design.md",
+      "sha256": "978c871b9201d288bafaac338ffdde0fb28c238aad812d0347cb7cd21066889d",
+      "bytes": 31094,
+      "mode": 420,
+      "mtime_ns": 1773812401760279060,
+      "tracked": false
+    },
+    {
+      "source": "workbench/old/demo-site-project-plan.md",
+      "destination": "archive/workbench/old/demo-site-project-plan.md",
+      "sha256": "3bd8165659da465f47243dbe0b83f2f1be1525574da1adfcded261d4d53a531e",
+      "bytes": 17387,
+      "mode": 420,
+      "mtime_ns": 1773812775990062326,
+      "tracked": false
+    },
+    {
+      "source": "workbench/old/haleiki-architecture.md",
+      "destination": "archive/workbench/old/haleiki-architecture.md",
+      "sha256": "392061fb8b3756419e35378375286f95233784e8140886da2c2c30ee4734af0f",
+      "bytes": 19024,
+      "mode": 420,
+      "mtime_ns": 1773801451761601310,
+      "tracked": false
+    },
+    {
+      "source": "workbench/old/milestone-1.1.md",
+      "destination": "archive/workbench/old/milestone-1.1.md",
+      "sha256": "5d9720581153d178e03f1e58365a284e3024a863425e647db82747e0a5e5d7fd",
+      "bytes": 12669,
+      "mode": 420,
+      "mtime_ns": 1773814072173494101,
+      "tracked": false
+    },
+    {
+      "source": "workbench/old/milestone-1.2.md",
+      "destination": "archive/workbench/old/milestone-1.2.md",
+      "sha256": "1dd99460a08b5cdf0360dc01d0ecc779fe5d0d31daf514fa6738c61cec210de6",
+      "bytes": 17622,
+      "mode": 420,
+      "mtime_ns": 1773814163329413729,
+      "tracked": false
+    },
+    {
+      "source": "workbench/old/milestone-1.3.md",
+      "destination": "archive/workbench/old/milestone-1.3.md",
+      "sha256": "b9d4422fe12cc71e42c7a0ddaca2d13e98759845f29669f2b89c93c0af0eab97",
+      "bytes": 30011,
+      "mode": 420,
+      "mtime_ns": 1773814275789098649,
+      "tracked": false
+    },
+    {
+      "source": "workbench/old/milestone-2.1.md",
+      "destination": "archive/workbench/old/milestone-2.1.md",
+      "sha256": "b2f8eb718ba3cb955c2069893b521f6e8d7d7f7d3cb842725eeacd0c63278305",
+      "bytes": 29393,
+      "mode": 420,
+      "mtime_ns": 1773882324818957743,
+      "tracked": false
+    },
+    {
+      "source": "workbench/old/milestone-2.2.md",
+      "destination": "archive/workbench/old/milestone-2.2.md",
+      "sha256": "aa88a6dbe40bd0afe58f5ed9ea2f78c95ec829f06a406d759cc7f3f5b5210a23",
+      "bytes": 21256,
+      "mode": 420,
+      "mtime_ns": 1773882334141492202,
+      "tracked": false
+    },
+    {
+      "source": "workbench/old/milestone-2.3.md",
+      "destination": "archive/workbench/old/milestone-2.3.md",
+      "sha256": "d348849377726156ddf3423444928ba17f9ee5071299ec4120264161b0120221",
+      "bytes": 15993,
+      "mode": 420,
+      "mtime_ns": 1773883246047124181,
+      "tracked": false
+    },
+    {
+      "source": "workbench/old/milestone-2.4.md",
+      "destination": "archive/workbench/old/milestone-2.4.md",
+      "sha256": "6720ce01bd091b6e77f88fd6a34dac17bf1edbb21b44a72d2b459a3a0b0f42f0",
+      "bytes": 9329,
+      "mode": 420,
+      "mtime_ns": 1773885137425396390,
+      "tracked": false
+    },
+    {
+      "source": "workbench/old/milestone-3.1.md",
+      "destination": "archive/workbench/old/milestone-3.1.md",
+      "sha256": "3710b765612f74148ea319966279c842dd514407653dc9b891db5e229c6941c2",
+      "bytes": 34296,
+      "mode": 420,
+      "mtime_ns": 1773873125075032394,
+      "tracked": false
+    },
+    {
+      "source": "workbench/old/milestone-3.2.md",
+      "destination": "archive/workbench/old/milestone-3.2.md",
+      "sha256": "6b06b32464817d38f57eb5706572e11732f1caf88c5fe13d0027fc67bbc75852",
+      "bytes": 32553,
+      "mode": 420,
+      "mtime_ns": 1773873260205213146,
+      "tracked": false
+    },
+    {
+      "source": "workbench/old/milestone-4.1.md",
+      "destination": "archive/workbench/old/milestone-4.1.md",
+      "sha256": "668890215c9d755fa1e23f3c075cc0bbb6703f2c8cc42041984cca6101e41b4a",
+      "bytes": 33601,
+      "mode": 420,
+      "mtime_ns": 1773885743013707012,
+      "tracked": false
+    },
+    {
+      "source": "workbench/old/milestone-4.2.md",
+      "destination": "archive/workbench/old/milestone-4.2.md",
+      "sha256": "fc06846075327de83699e23f998eced90e7f137280fbe6f320aa8bbde85ecc78",
+      "bytes": 21762,
+      "mode": 420,
+      "mtime_ns": 1773886100117844520,
+      "tracked": false
+    },
+    {
+      "source": "workbench/old/milestone-4.3.md",
+      "destination": "archive/workbench/old/milestone-4.3.md",
+      "sha256": "9ce47af67ea983fbffe0716769772a0bf232cf1562e43aed16ff955f55bd70e8",
+      "bytes": 23190,
+      "mode": 420,
+      "mtime_ns": 1773886221189630584,
+      "tracked": false
+    },
+    {
+      "source": "workbench/old/milestone-5.1.md",
+      "destination": "archive/workbench/old/milestone-5.1.md",
+      "sha256": "bfeae5b8c722e4113246d110654d850ef12ef833809a256743a2f70bee3aaa7c",
+      "bytes": 25342,
+      "mode": 420,
+      "mtime_ns": 1773887154988114459,
+      "tracked": false
+    },
+    {
+      "source": "workbench/old/milestone-5.2.md",
+      "destination": "archive/workbench/old/milestone-5.2.md",
+      "sha256": "d9d8a27c402d0985e7e467ecc45bd98e907c3df1ea605d46a7086710bfbb78fa",
+      "bytes": 29240,
+      "mode": 420,
+      "mtime_ns": 1773887630093947419,
+      "tracked": false
+    },
+    {
+      "source": "workbench/old/milestone-5.3.md",
+      "destination": "archive/workbench/old/milestone-5.3.md",
+      "sha256": "85ddcbe80b3e2bf7de3e883f7e4c50c8f6f79e5b431fc39266956413f499b3f4",
+      "bytes": 30738,
+      "mode": 420,
+      "mtime_ns": 1773888021323928933,
+      "tracked": false
+    },
+    {
+      "source": "workbench/plans/template-conversion.md",
+      "destination": "archive/workbench/plans/template-conversion.md",
+      "sha256": "ba01940c817d4535b113a9b6106ea4488371a60eeb2470fecc082cbd6a47c9c0",
+      "bytes": 17648,
+      "mode": 420,
+      "mtime_ns": 1773903700349414326,
+      "tracked": false
+    },
+    {
+      "source": "docs/tiny-http/arc01-render-core/arc-plan.md",
+      "destination": "archive/docs/tiny-http/arc01-render-core/arc-plan.md",
+      "sha256": "b85a45b23ee21d78cce57e41b6258be93fa64bb498bd0a3fba65812af780c6a1",
+      "bytes": 12646,
+      "mode": 384,
+      "mtime_ns": 1785214934016389028,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc01-render-core/closing-report.md",
+      "destination": "project-04-tiny-http/arc01-render-core/closing-report.md",
+      "sha256": "2a692d6772d8fd34aafe42a2d9359fdd9aaabadf8d047b15cfb3315f1c5418bf",
+      "bytes": 5840,
+      "mode": 384,
+      "mtime_ns": 1785214948344838927,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc01-render-core/slice01-minijinja-shell/cc-prompt.md",
+      "destination": "project-04-tiny-http/arc01-render-core/slice01-minijinja-shell/cc-prompt.md",
+      "sha256": "0cccbfbcdb754089c099cb7d822285e6b66f10f331bc270eb8ffcec089506f68",
+      "bytes": 3789,
+      "mode": 384,
+      "mtime_ns": 1785203145354930236,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc01-render-core/slice01-minijinja-shell/cdc-verification.md",
+      "destination": "project-04-tiny-http/arc01-render-core/slice01-minijinja-shell/cdc-verification.md",
+      "sha256": "f9773899817aa9a37d7cd5bea08b903a4f175ca89793e2cc2e96e7e067085c1b",
+      "bytes": 8329,
+      "mode": 384,
+      "mtime_ns": 1785205661464682398,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc01-render-core/slice01-minijinja-shell/closing-report.md",
+      "destination": "project-04-tiny-http/arc01-render-core/slice01-minijinja-shell/closing-report.md",
+      "sha256": "11aa48eb2c91f9da8f5e104847692efa9d14213e286544250d2d545200ed0810",
+      "bytes": 8857,
+      "mode": 420,
+      "mtime_ns": 1785205029557957052,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc01-render-core/slice01-minijinja-shell/ledger.md",
+      "destination": "project-04-tiny-http/arc01-render-core/slice01-minijinja-shell/ledger.md",
+      "sha256": "224c8630fabd633da92a1244c520bddbd548241606d867ceacaa656eb468ab76",
+      "bytes": 10209,
+      "mode": 384,
+      "mtime_ns": 1785205649611137453,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc01-render-core/slice01-minijinja-shell/slice-doc.md",
+      "destination": "project-04-tiny-http/arc01-render-core/slice01-minijinja-shell/slice-doc.md",
+      "sha256": "0fbe31a45eff2f64ae2540041dfa861202c8a77f6fecd3ac47ec02f4171d8722",
+      "bytes": 4041,
+      "mode": 384,
+      "mtime_ns": 1785203144709085556,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc01-render-core/slice02-markdown-toc/cc-prompt.md",
+      "destination": "project-04-tiny-http/arc01-render-core/slice02-markdown-toc/cc-prompt.md",
+      "sha256": "176efd3ec7853191e8217e0bca07772976811b933002646a5527b5622a4848b3",
+      "bytes": 4084,
+      "mode": 384,
+      "mtime_ns": 1785206501270463452,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc01-render-core/slice02-markdown-toc/cdc-verification.md",
+      "destination": "project-04-tiny-http/arc01-render-core/slice02-markdown-toc/cdc-verification.md",
+      "sha256": "2de798e7b6e1e79ed49dca3272348bbd7d5f49a9a49e021db9d5912a4932021c",
+      "bytes": 7294,
+      "mode": 384,
+      "mtime_ns": 1785210325540682622,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc01-render-core/slice02-markdown-toc/closing-report.md",
+      "destination": "project-04-tiny-http/arc01-render-core/slice02-markdown-toc/closing-report.md",
+      "sha256": "4b459969869b39a3821d6b1a3c897410f8de3a1826f6a3fb300bd2763f316a36",
+      "bytes": 9857,
+      "mode": 420,
+      "mtime_ns": 1785208142782367717,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc01-render-core/slice02-markdown-toc/ledger.md",
+      "destination": "project-04-tiny-http/arc01-render-core/slice02-markdown-toc/ledger.md",
+      "sha256": "e68c595bb11e0587d2d12bfefbdf231490c3cf2bef6046c8a485d94e22d43ace",
+      "bytes": 11287,
+      "mode": 384,
+      "mtime_ns": 1785210314539563629,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc01-render-core/slice02-markdown-toc/slice-doc.md",
+      "destination": "project-04-tiny-http/arc01-render-core/slice02-markdown-toc/slice-doc.md",
+      "sha256": "6bfe69483bb18dc4200ab83d832c2fa632be7727833122c57a0124a1691aad38",
+      "bytes": 7904,
+      "mode": 384,
+      "mtime_ns": 1785206500494476380,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc01-render-core/slice03-wiki-article-context/cc-prompt.md",
+      "destination": "project-04-tiny-http/arc01-render-core/slice03-wiki-article-context/cc-prompt.md",
+      "sha256": "c1a3bbcbc9a2a6d6f5a949424b0265cca88d6738ae566ccc90679e649c0783b3",
+      "bytes": 4310,
+      "mode": 384,
+      "mtime_ns": 1785211164904692098,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc01-render-core/slice03-wiki-article-context/cdc-verification.md",
+      "destination": "project-04-tiny-http/arc01-render-core/slice03-wiki-article-context/cdc-verification.md",
+      "sha256": "43ec4d31ffe63b2fa8c3fe9e4f7a1e24b0d1e4a5e43984b0ce746ce163cffcbb",
+      "bytes": 6462,
+      "mode": 384,
+      "mtime_ns": 1785214948049557874,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc01-render-core/slice03-wiki-article-context/closing-report.md",
+      "destination": "project-04-tiny-http/arc01-render-core/slice03-wiki-article-context/closing-report.md",
+      "sha256": "912aa9b81e6c2b3cee331bc10756dec06a237b2ebab5354379a71b2ca16ae770",
+      "bytes": 10769,
+      "mode": 420,
+      "mtime_ns": 1785213278034644812,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc01-render-core/slice03-wiki-article-context/ledger.md",
+      "destination": "project-04-tiny-http/arc01-render-core/slice03-wiki-article-context/ledger.md",
+      "sha256": "f2ac65b01185d2ed8db39bfb1bb923234b494c1b5e5841f7bed6fd92e33a5a12",
+      "bytes": 14439,
+      "mode": 384,
+      "mtime_ns": 1785214934014596215,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc01-render-core/slice03-wiki-article-context/slice-doc.md",
+      "destination": "project-04-tiny-http/arc01-render-core/slice03-wiki-article-context/slice-doc.md",
+      "sha256": "634c9f671d5422c4352de83a3c21d95e9bc7b0665e0ac62be6cba950ac7209c3",
+      "bytes": 7238,
+      "mode": 384,
+      "mtime_ns": 1785211164238621000,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/arc-plan.md",
+      "destination": "archive/docs/tiny-http/arc02-routes-static-export/arc-plan.md",
+      "sha256": "a5d8e1de092fe3c0ea79281dcd46e2aba8efd5e9fee7c16a7fc1931bc2ac95cc",
+      "bytes": 7114,
+      "mode": 384,
+      "mtime_ns": 1785277861466325936,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/closing-report.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/closing-report.md",
+      "sha256": "1e1b6d424acd8bb2645d03428df955374dc6f19c9ace67ec2d08c3f947b4ece0",
+      "bytes": 5366,
+      "mode": 384,
+      "mtime_ns": 1785277874782913481,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/slice01-site-index-home/cc-prompt.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/slice01-site-index-home/cc-prompt.md",
+      "sha256": "1cbfcb80e60cddd93b3f1e397b7d4367472fbf71d72196d6b0f0bd171b9b7e4f",
+      "bytes": 3865,
+      "mode": 384,
+      "mtime_ns": 1785216126403236659,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/slice01-site-index-home/cdc-verification.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/slice01-site-index-home/cdc-verification.md",
+      "sha256": "648e3198eb0fa303d1fc6945579c42c1cf73fbb5e7d6169968779dd1f42824b9",
+      "bytes": 4283,
+      "mode": 384,
+      "mtime_ns": 1785218295936036925,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/slice01-site-index-home/closing-report.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/slice01-site-index-home/closing-report.md",
+      "sha256": "9a2985c9e4d4f9a3d94d057e356cd1ee104b237bd0eebff29f51f412dbce4d61",
+      "bytes": 8198,
+      "mode": 420,
+      "mtime_ns": 1785217649320485645,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/slice01-site-index-home/ledger.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/slice01-site-index-home/ledger.md",
+      "sha256": "54f337887b655d8e7f5b4066f50e58b613bea4db789459b025685a20a8b55057",
+      "bytes": 8813,
+      "mode": 384,
+      "mtime_ns": 1785218285748898565,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/slice01-site-index-home/slice-doc.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/slice01-site-index-home/slice-doc.md",
+      "sha256": "9c5d674d9fd283c9ac4fdeeb78c4d221474f26d9dcd2edb7f255d864bbf50b81",
+      "bytes": 5351,
+      "mode": 384,
+      "mtime_ns": 1785216124829328534,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/slice02-browse-category/cc-prompt.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/slice02-browse-category/cc-prompt.md",
+      "sha256": "93885834a0c3274a1b5c82c16fc98218b85508fa7b9bb3a826587ce6ed69e75c",
+      "bytes": 3220,
+      "mode": 384,
+      "mtime_ns": 1785218606613680087,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/slice02-browse-category/cdc-verification.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/slice02-browse-category/cdc-verification.md",
+      "sha256": "2da8a5087e50ac0d20ada1f1d97adae70060708fffa652cfefd843bf7e7d3c44",
+      "bytes": 4777,
+      "mode": 384,
+      "mtime_ns": 1785271737332432820,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/slice02-browse-category/closing-report.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/slice02-browse-category/closing-report.md",
+      "sha256": "dfa30df7dfc10c73ff15c01e7537122fb397ff05ac31820691914b7a85a7fb6f",
+      "bytes": 8076,
+      "mode": 420,
+      "mtime_ns": 1785270194551462507,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/slice02-browse-category/ledger.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/slice02-browse-category/ledger.md",
+      "sha256": "78655151391c40e561c65f6521aa440dfddb31fbc5a8e2b7188069935f2d7d3f",
+      "bytes": 10389,
+      "mode": 384,
+      "mtime_ns": 1785271727894952179,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/slice02-browse-category/slice-doc.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/slice02-browse-category/slice-doc.md",
+      "sha256": "22a409c4fbb70e5dc86668d48383a5b2b6950447899ef7c4dde3519bb4be04e6",
+      "bytes": 5943,
+      "mode": 384,
+      "mtime_ns": 1785218605862449779,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/slice03-standalone-pages/cc-prompt.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/slice03-standalone-pages/cc-prompt.md",
+      "sha256": "60b4070b713563dc1434fc45665d3979ad329148b75882219309a77f226c4b66",
+      "bytes": 3299,
+      "mode": 384,
+      "mtime_ns": 1785272262914932686,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/slice03-standalone-pages/cdc-verification.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/slice03-standalone-pages/cdc-verification.md",
+      "sha256": "c7e8e2758fb144b5fead82598af8d8433ebcdad658248ce9f09d78b1be23745c",
+      "bytes": 3811,
+      "mode": 384,
+      "mtime_ns": 1785274829328568378,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/slice03-standalone-pages/closing-report.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/slice03-standalone-pages/closing-report.md",
+      "sha256": "d0a4ae59bf0660535c4d2a6832901c3873bd45551baf540e5f74b0aa44246acf",
+      "bytes": 7040,
+      "mode": 420,
+      "mtime_ns": 1785273927902073190,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/slice03-standalone-pages/ledger.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/slice03-standalone-pages/ledger.md",
+      "sha256": "dc5422992f868fa8fc08d7c7e8044db4c54f38b286af4d11b3210d9401a19ec5",
+      "bytes": 9468,
+      "mode": 384,
+      "mtime_ns": 1785274816125117275,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/slice03-standalone-pages/slice-doc.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/slice03-standalone-pages/slice-doc.md",
+      "sha256": "ee40fb4839af78019f8e72e374b3f954bcde0ba23cf7c3a084e745ada3989155",
+      "bytes": 5932,
+      "mode": 384,
+      "mtime_ns": 1785272262218804433,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/slice04-static-export/cc-prompt.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/slice04-static-export/cc-prompt.md",
+      "sha256": "48fc6346036531ba2e1da3d2baf18a6e4a19cc1ad4f43999ec90fac96623fe59",
+      "bytes": 3412,
+      "mode": 384,
+      "mtime_ns": 1785275616136153503,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/slice04-static-export/cdc-verification.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/slice04-static-export/cdc-verification.md",
+      "sha256": "619c96c5f254a84f0dfe3e6f6a3c933a608d8274b5d7dbf566f0bf1bd2688501",
+      "bytes": 4457,
+      "mode": 384,
+      "mtime_ns": 1785277874473126465,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/slice04-static-export/closing-report.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/slice04-static-export/closing-report.md",
+      "sha256": "888f60d0f226812389e33c3d13935916fd44d2d486642e8a61060c6e20ddc38a",
+      "bytes": 8391,
+      "mode": 420,
+      "mtime_ns": 1785277165540308783,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/slice04-static-export/ledger.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/slice04-static-export/ledger.md",
+      "sha256": "9a8130e6e53e21d882aedd6b405ef552bb2ef9a1306feeb5229200c9c97a1abe",
+      "bytes": 9340,
+      "mode": 384,
+      "mtime_ns": 1785277861468714057,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc02-routes-static-export/slice04-static-export/slice-doc.md",
+      "destination": "project-04-tiny-http/arc02-routes-static-export/slice04-static-export/slice-doc.md",
+      "sha256": "c0cf937eb924bc71523e0aab61461ce5b0599dd4acbf58ef83cdf193005de6a2",
+      "bytes": 6195,
+      "mode": 384,
+      "mtime_ns": 1785275615202887976,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc03-tiny-http-server/arc-plan.md",
+      "destination": "archive/docs/tiny-http/arc03-tiny-http-server/arc-plan.md",
+      "sha256": "57deee226351b0ad72be1d0670982bf7185e43c52e35bde5c532476dba90b12b",
+      "bytes": 6516,
+      "mode": 384,
+      "mtime_ns": 1785299804033167924,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc03-tiny-http-server/closing-report.md",
+      "destination": "project-04-tiny-http/arc03-tiny-http-server/closing-report.md",
+      "sha256": "39fac1c5550b636ac540dcdd69ee637fa96b1855c766db1e221c91d9068bb786",
+      "bytes": 6374,
+      "mode": 384,
+      "mtime_ns": 1785299803253329555,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc03-tiny-http-server/slice01-route-map-server/cc-prompt.md",
+      "destination": "project-04-tiny-http/arc03-tiny-http-server/slice01-route-map-server/cc-prompt.md",
+      "sha256": "298f65ecccbbadcaf1bebb4c1a426d9aac16b47d284db2573129d8d5df51d6db",
+      "bytes": 3515,
+      "mode": 384,
+      "mtime_ns": 1785278716533336125,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc03-tiny-http-server/slice01-route-map-server/cdc-verification.md",
+      "destination": "project-04-tiny-http/arc03-tiny-http-server/slice01-route-map-server/cdc-verification.md",
+      "sha256": "5b390c9413a517c79c97da5abd8dbe08ff58b25d395399a29652a25f14626602",
+      "bytes": 5229,
+      "mode": 384,
+      "mtime_ns": 1785294679732738755,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc03-tiny-http-server/slice01-route-map-server/closing-report.md",
+      "destination": "project-04-tiny-http/arc03-tiny-http-server/slice01-route-map-server/closing-report.md",
+      "sha256": "a9029da661a2aa3502076bfc5024a07420ae12c9038afa4bed71739f46b0d8c5",
+      "bytes": 6289,
+      "mode": 420,
+      "mtime_ns": 1785284048860298624,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc03-tiny-http-server/slice01-route-map-server/ledger.md",
+      "destination": "project-04-tiny-http/arc03-tiny-http-server/slice01-route-map-server/ledger.md",
+      "sha256": "fbddea2d81f3091ae92382b197dfa31e0f7fc1c368a82dc9d339f7a984e11883",
+      "bytes": 9951,
+      "mode": 384,
+      "mtime_ns": 1785294670807802363,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc03-tiny-http-server/slice01-route-map-server/slice-doc.md",
+      "destination": "project-04-tiny-http/arc03-tiny-http-server/slice01-route-map-server/slice-doc.md",
+      "sha256": "7f7ca500408d94dbcf39b5f0fe888c6b1a06fcc50fd06bc43a98df604ddbdf0e",
+      "bytes": 6076,
+      "mode": 384,
+      "mtime_ns": 1785278715873321315,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc03-tiny-http-server/slice02-hardening/cc-prompt.md",
+      "destination": "project-04-tiny-http/arc03-tiny-http-server/slice02-hardening/cc-prompt.md",
+      "sha256": "046915af1022c17e1a08c6d6f6c181388534c6f7f1f0e7bc0383323cee29dd4e",
+      "bytes": 3310,
+      "mode": 384,
+      "mtime_ns": 1785295034775423646,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc03-tiny-http-server/slice02-hardening/cdc-verification.md",
+      "destination": "project-04-tiny-http/arc03-tiny-http-server/slice02-hardening/cdc-verification.md",
+      "sha256": "6b6b770e045744276bd6b018cefbb3e201f7bd8879709776f6b3ad24cd2b47e9",
+      "bytes": 7362,
+      "mode": 384,
+      "mtime_ns": 1785299802900411509,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc03-tiny-http-server/slice02-hardening/closing-report.md",
+      "destination": "project-04-tiny-http/arc03-tiny-http-server/slice02-hardening/closing-report.md",
+      "sha256": "a56a4e83429922b5010d67b27cad1b2b43b55195675279ceed59efb78665bd1e",
+      "bytes": 7957,
+      "mode": 420,
+      "mtime_ns": 1785298714313901748,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc03-tiny-http-server/slice02-hardening/ledger.md",
+      "destination": "project-04-tiny-http/arc03-tiny-http-server/slice02-hardening/ledger.md",
+      "sha256": "8275e1b4d1a394fa19e782e18f8e4b17614c11558532981e43b5283e19195c66",
+      "bytes": 7309,
+      "mode": 384,
+      "mtime_ns": 1785299803664271290,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc03-tiny-http-server/slice02-hardening/slice-doc.md",
+      "destination": "project-04-tiny-http/arc03-tiny-http-server/slice02-hardening/slice-doc.md",
+      "sha256": "cd024a6818d8447557a9c0107e4709fcdc9d65c8b8bda1869ab3ad9ff136f8f0",
+      "bytes": 5689,
+      "mode": 384,
+      "mtime_ns": 1785295033583694214,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc04-pagefind-search/arc-plan.md",
+      "destination": "archive/docs/tiny-http/arc04-pagefind-search/arc-plan.md",
+      "sha256": "19bb7eb7963d286728529d2d7cce2bfa7bd79fa5ea3e364d6de9a38d0a85416a",
+      "bytes": 12502,
+      "mode": 384,
+      "mtime_ns": 1787333346412948823,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc04-pagefind-search/cdc-verification.md",
+      "destination": "project-04-tiny-http/arc04-pagefind-search/cdc-verification.md",
+      "sha256": "fccf774511cc4820b4cdfc3b8f84f582ccb35b599358b0c8544eae243ecaa391",
+      "bytes": 4686,
+      "mode": 420,
+      "mtime_ns": 1787342446780431771,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc04-pagefind-search/closing-report.md",
+      "destination": "project-04-tiny-http/arc04-pagefind-search/closing-report.md",
+      "sha256": "0458e345140b14d1012bf521734aed636e0d79e9d7de8a4f6587773ae890cc1e",
+      "bytes": 8221,
+      "mode": 420,
+      "mtime_ns": 1787342446870525062,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc04-pagefind-search/slice01-index-and-bundle/cc-prompt.md",
+      "destination": "project-04-tiny-http/arc04-pagefind-search/slice01-index-and-bundle/cc-prompt.md",
+      "sha256": "1d963fd4816b2366e544c2c9c6986ea375d5f9a2089d389646fde270bc01d188",
+      "bytes": 4830,
+      "mode": 384,
+      "mtime_ns": 1785301294454286641,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc04-pagefind-search/slice01-index-and-bundle/cdc-verification.md",
+      "destination": "project-04-tiny-http/arc04-pagefind-search/slice01-index-and-bundle/cdc-verification.md",
+      "sha256": "4aecac34ebeef4e1a79cfe1367eb56ad8e144b14227e0b97d66e16ec2a7bbcdc",
+      "bytes": 10518,
+      "mode": 384,
+      "mtime_ns": 1785304778948349515,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc04-pagefind-search/slice01-index-and-bundle/closing-report.md",
+      "destination": "project-04-tiny-http/arc04-pagefind-search/slice01-index-and-bundle/closing-report.md",
+      "sha256": "7321ff093b92b257b6d472ef6a02117d827c17419dfd1c72914026c7784d72e5",
+      "bytes": 10981,
+      "mode": 420,
+      "mtime_ns": 1785303456354681110,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc04-pagefind-search/slice01-index-and-bundle/ledger.md",
+      "destination": "project-04-tiny-http/arc04-pagefind-search/slice01-index-and-bundle/ledger.md",
+      "sha256": "3a0f2028f92f133951d942feeeef1baca335cdbfb173f06345f3a06414cbd421",
+      "bytes": 12986,
+      "mode": 384,
+      "mtime_ns": 1785304769503917981,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc04-pagefind-search/slice01-index-and-bundle/slice-doc.md",
+      "destination": "project-04-tiny-http/arc04-pagefind-search/slice01-index-and-bundle/slice-doc.md",
+      "sha256": "591804d7a6017a65a33816c6523f128da398a5f8eda6be89b3c752f6316acb15",
+      "bytes": 7675,
+      "mode": 384,
+      "mtime_ns": 1785301293565690513,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc04-pagefind-search/slice02-client-and-facets/cc-prompt.md",
+      "destination": "project-04-tiny-http/arc04-pagefind-search/slice02-client-and-facets/cc-prompt.md",
+      "sha256": "4e75153c93e6bdd32e26b21bbb6ad40d71b07afa28861a01127c92cbd4b01704",
+      "bytes": 5727,
+      "mode": 384,
+      "mtime_ns": 1787325373257608696,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc04-pagefind-search/slice02-client-and-facets/cdc-verification.md",
+      "destination": "project-04-tiny-http/arc04-pagefind-search/slice02-client-and-facets/cdc-verification.md",
+      "sha256": "e602b8dd07bda7cb2bcda8ccc02240092f11cbd27467aecc5fea2d3404419ad5",
+      "bytes": 6826,
+      "mode": 420,
+      "mtime_ns": 1787325217716616674,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc04-pagefind-search/slice02-client-and-facets/closing-report.md",
+      "destination": "project-04-tiny-http/arc04-pagefind-search/slice02-client-and-facets/closing-report.md",
+      "sha256": "6489072445a795dc16f6723847df8f8cf808d04a271ddf7e0562a5e6173c5144",
+      "bytes": 12778,
+      "mode": 420,
+      "mtime_ns": 1787325166072545147,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc04-pagefind-search/slice02-client-and-facets/ledger.md",
+      "destination": "project-04-tiny-http/arc04-pagefind-search/slice02-client-and-facets/ledger.md",
+      "sha256": "716d1620aa7f7a549fd3cf14c9535974022d59c85b48c092385e794a6484f42c",
+      "bytes": 12104,
+      "mode": 384,
+      "mtime_ns": 1787325141162662334,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc04-pagefind-search/slice02-client-and-facets/slice-doc.md",
+      "destination": "project-04-tiny-http/arc04-pagefind-search/slice02-client-and-facets/slice-doc.md",
+      "sha256": "8cdd63df7f7c85b5a8a6857e729f58fd1b692e66f1b1ecb879980c1234b667ba",
+      "bytes": 10873,
+      "mode": 384,
+      "mtime_ns": 1787325217631358851,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/cc-prompt.md",
+      "destination": "project-04-tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/cc-prompt.md",
+      "sha256": "f610daa31f2eaf8061916409ee1a52f604eb6f05ed84b1194359bc000c798acf",
+      "bytes": 3506,
+      "mode": 420,
+      "mtime_ns": 1787325276793179294,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/cdc-verification.md",
+      "destination": "project-04-tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/cdc-verification.md",
+      "sha256": "a047013685dc642c065e59df67ae7f992b362f35a35ea63b48995caf8ad410cb",
+      "bytes": 4237,
+      "mode": 420,
+      "mtime_ns": 1787331816474289376,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/closing-report.md",
+      "destination": "project-04-tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/closing-report.md",
+      "sha256": "b7355cdb95fb60d7c90660fa4a1d9f902afc121e62e44085b9f77d0364cb37e6",
+      "bytes": 3939,
+      "mode": 420,
+      "mtime_ns": 1787331816748889208,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/ledger.md",
+      "destination": "project-04-tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/ledger.md",
+      "sha256": "365a19498fc003fc5e271c008941cc161425d12fb54122668ce9cabfc5a0b63e",
+      "bytes": 5188,
+      "mode": 420,
+      "mtime_ns": 1787331816562152859,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/slice-doc.md",
+      "destination": "project-04-tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/slice-doc.md",
+      "sha256": "9dd2128a61eb756301b6954b103d57c988749fa69847db3e5fc68f9c2899e3c2",
+      "bytes": 6028,
+      "mode": 420,
+      "mtime_ns": 1787331816651372385,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc05-news-blog-content-type/arc-plan.md",
+      "destination": "archive/docs/tiny-http/arc05-news-blog-content-type/arc-plan.md",
+      "sha256": "80b7fea550a642bb30c90e7b3593aac98aa95f27bcc79a92fc3a3c675b70e527",
+      "bytes": 6692,
+      "mode": 420,
+      "mtime_ns": 1787343464981640780,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc05-news-blog-content-type/slice01-news-model-and-post/cc-prompt.md",
+      "destination": "project-04-tiny-http/arc05-news-blog-content-type/slice01-news-model-and-post/cc-prompt.md",
+      "sha256": "206bdbd2b09551ca45f9c3a747f976cc5e40935a84398ed9dd9b4c9837b21e86",
+      "bytes": 2637,
+      "mode": 420,
+      "mtime_ns": 1787343465069525731,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc05-news-blog-content-type/slice01-news-model-and-post/ledger.md",
+      "destination": "project-04-tiny-http/arc05-news-blog-content-type/slice01-news-model-and-post/ledger.md",
+      "sha256": "14808b2c48bc43bd948058a0d082dcd7dd984b5c2cb326ae8302633b062b20f2",
+      "bytes": 2498,
+      "mode": 420,
+      "mtime_ns": 1787343465158510558,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/arc05-news-blog-content-type/slice01-news-model-and-post/slice-doc.md",
+      "destination": "project-04-tiny-http/arc05-news-blog-content-type/slice01-news-model-and-post/slice-doc.md",
+      "sha256": "e17ea089e7ec680ddc6cfe5ebfd799ed16f93bd9341969ba99722f4b9ec6ca15",
+      "bytes": 3554,
+      "mode": 420,
+      "mtime_ns": 1787343465247372718,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/design-delta.md",
+      "destination": "project-04-tiny-http/design-delta.md",
+      "sha256": "891021d322db56492a2c376cfcda01106e15ceffcd3e34a3c7e576e657a47760",
+      "bytes": 13081,
+      "mode": 384,
+      "mtime_ns": 1785301268358329532,
+      "tracked": true
+    },
+    {
+      "source": "docs/tiny-http/project-plan.md",
+      "destination": "archive/docs/tiny-http/project-plan.md",
+      "sha256": "b769168f5993d592569a990df472d4fe997a170faefe637e21b6151a915b8d89",
+      "bytes": 17147,
+      "mode": 384,
+      "mtime_ns": 1787343438312750569,
+      "tracked": true
+    },
+    {
+      "source": "odm.toml",
+      "destination": "archive/odm.toml",
+      "sha256": "6de876c6e6134c8e29625a877c2bf247acb946c89b9addca42f7d86370268e84",
+      "bytes": 312,
+      "mode": 420,
+      "mtime_ns": 1773801617155408166,
+      "tracked": true
+    }
+  ]
+}

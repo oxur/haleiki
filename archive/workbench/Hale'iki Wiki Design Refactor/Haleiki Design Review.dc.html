@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="design_doc_mode" content="canvas">
+  <link rel="stylesheet" href="assets/css/haleiki.css">
+  <style>
+    @keyframes hlk-none { from { opacity: 1; } to { opacity: 1; } }
+  </style>
+</helmet>
+
+<div data-theme="{{ theme }}" style="min-height:100vh; background:var(--surface-ground); color:var(--text-primary); font-family:var(--font-body); transition:background .3s ease,color .3s ease;">
+
+  <!-- ══ REVIEW HEADER ══ -->
+  <header style="max-width:1180px; margin:0 auto; padding:var(--space-2xl) var(--space-l) var(--space-l); display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:var(--space-m);">
+    <div style="max-width:64ch;">
+      <div style="font-family:var(--font-mono); font-size:var(--step--2); text-transform:uppercase; letter-spacing:0.14em; color:var(--accent-text); margin-bottom:var(--space-s);">Hale&#699;iki · Design Unification Review</div>
+      <h1 style="font-family:var(--font-display); font-size:var(--step-4); font-weight:700; letter-spacing:-0.02em; line-height:1.05; color:var(--text-primary); margin-bottom:var(--space-s);">One house, two dialects</h1>
+      <p style="font-family:var(--font-body); font-size:var(--step-1); color:var(--text-secondary); line-height:1.55; font-variation-settings:'opsz' 24;">The fifteen mockups are beautiful — but they drifted into two overlapping design systems: the <em>wiki</em> set (home, concept, category, browse, attribution) and the <em>news&nbsp;+&nbsp;search</em> set. This board flags where they disagree, and shows the unified resolution rendered live from the new single stylesheet.</p>
+    </div>
+    <div class="theme-toggle" role="radiogroup" aria-label="Theme" style="align-self:flex-start;">
+      <button class="theme-toggle-option {{ dayClass }}" onclick="{{ setDay }}">&#9728; Day</button>
+      <button class="theme-toggle-option {{ nightClass }}" onclick="{{ setNight }}">&#9790; Night</button>
+    </div>
+  </header>
+
+  <div style="max-width:1180px; margin:0 auto; padding:0 var(--space-l) var(--space-3xl);">
+
+    <!-- ══ SHARED / UNIQUE MAP ══ -->
+    <section style="margin-bottom:var(--space-2xl);">
+      <div style="font-family:var(--font-mono); font-size:var(--step--2); text-transform:uppercase; letter-spacing:0.1em; color:var(--text-tertiary); margin-bottom:var(--space-xs);">01 · Anatomy</div>
+      <h2 style="font-family:var(--font-display); font-size:var(--step-2); font-weight:700; letter-spacing:-0.015em; margin-bottom:var(--space-m); color:var(--text-primary);">Shared shell, unique cores</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:var(--space-m);">
+        <div style="background:var(--surface-primary); border:1px solid var(--border-subtle); border-radius:var(--radius-l); padding:var(--space-m);">
+          <div style="font-family:var(--font-mono); font-size:var(--step--2); color:var(--accent-text); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:var(--space-2xs);">Shared shell → base.jinja</div>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:var(--space-3xs); font-family:var(--font-display); font-size:var(--step--1); color:var(--text-secondary);">
+            <li>Top navigation + search + theme toggle</li>
+            <li>Breadcrumb</li>
+            <li>Site footer</li>
+            <li>Page header (overline · title · stats)</li>
+            <li>Tokens · prose · tags · code blocks · callouts</li>
+          </ul>
+        </div>
+        <div style="background:var(--surface-primary); border:1px solid var(--border-subtle); border-radius:var(--radius-l); padding:var(--space-m);">
+          <div style="font-family:var(--font-mono); font-size:var(--step--2); color:var(--accent-text); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:var(--space-2xs);">Wiki cores</div>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:var(--space-3xs); font-family:var(--font-display); font-size:var(--step--1); color:var(--text-secondary);">
+            <li><strong style="color:var(--text-primary);">Home</strong> — hero · category grid · featured · tiers</li>
+            <li><strong style="color:var(--text-primary);">Concept</strong> — TOC · quick-def · prereqs · relationships · info card</li>
+            <li><strong style="color:var(--text-primary);">Category / Browse</strong> — tier sections · article rows</li>
+            <li><strong style="color:var(--text-primary);">Attribution / About</strong> — license cards · trust levels</li>
+          </ul>
+        </div>
+        <div style="background:var(--surface-primary); border:1px solid var(--border-subtle); border-radius:var(--radius-l); padding:var(--space-m);">
+          <div style="font-family:var(--font-mono); font-size:var(--step--2); color:var(--accent-text); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:var(--space-2xs);">News + search cores</div>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:var(--space-3xs); font-family:var(--font-display); font-size:var(--step--1); color:var(--text-secondary);">
+            <li><strong style="color:var(--text-primary);">News front</strong> — hero card · secondary grid · compact list</li>
+            <li><strong style="color:var(--text-primary);">News post</strong> — post header · prose · prev/next</li>
+            <li><strong style="color:var(--text-primary);">Archive / Tags / Categories</strong> — post rows · pills</li>
+            <li><strong style="color:var(--text-primary);">Search</strong> — facet filters · result cards</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ WORST OFFENDERS ══ -->
+    <section>
+      <div style="font-family:var(--font-mono); font-size:var(--step--2); text-transform:uppercase; letter-spacing:0.1em; color:var(--text-tertiary); margin-bottom:var(--space-xs);">02 · Worst offenders</div>
+      <h2 style="font-family:var(--font-display); font-size:var(--step-2); font-weight:700; letter-spacing:-0.015em; margin-bottom:var(--space-2xs); color:var(--text-primary);">Where the two dialects disagree</h2>
+      <p style="font-family:var(--font-body); font-size:var(--step-0); color:var(--text-secondary); max-width:60ch; margin-bottom:var(--space-l);">Each pair below is rendered live: <strong style="color:var(--text-primary);">Before</strong> reproduces the mockups as-drawn; <strong style="color:var(--text-primary);">After</strong> is the unified stylesheet. My recommendation is marked on each.</p>
+
+      <!-- OFFENDER 1: two footers + license contradiction -->
+      <article style="margin-bottom:var(--space-2xl);">
+        <div style="display:flex; align-items:baseline; gap:var(--space-s); flex-wrap:wrap; margin-bottom:var(--space-s);">
+          <span style="font-family:var(--font-mono); font-size:var(--step-1); font-weight:600; color:var(--accent-text);">A</span>
+          <h3 style="font-family:var(--font-display); font-size:var(--step-1); font-weight:600; color:var(--text-primary);">Two footers — and they disagree on the content license</h3>
+        </div>
+        <p style="font-family:var(--font-body); font-size:var(--step--1); color:var(--text-secondary); max-width:70ch; margin-bottom:var(--space-m);">The wiki footer says content is <strong style="color:var(--accent-text);">CC BY-SA 4.0</strong>; the news/search footer says <strong style="color:var(--accent-text);">CC0</strong>. It also swaps the tagline and the whole link set. This is a factual contradiction a reader will notice — it needs a single source of truth (the <code style="font-family:var(--font-mono);">site.profile</code> context).</p>
+        <div style="display:grid; grid-template-columns:1fr; gap:var(--space-m);">
+          <div style="border:1px solid var(--error-border); border-radius:var(--radius-l); overflow:hidden;">
+            <div style="font-family:var(--font-mono); font-size:var(--step--2); text-transform:uppercase; letter-spacing:0.08em; color:var(--error-border); padding:var(--space-2xs) var(--space-s); border-bottom:1px solid var(--border-subtle);">Before · wiki footer (CC BY-SA 4.0, Privacy/Terms)</div>
+            <div style="transform:scale(0.62); transform-origin:top left; width:161%; margin-bottom:-38%;">
+              <footer class="site-footer">
+                <div class="footer-inner" style="padding-block:var(--space-l);">
+                  <div class="footer-top" style="padding-bottom:var(--space-m);">
+                    <div class="footer-brand-col"><span class="footer-brand-link"><span class="brand-mark">H</span><span class="brand-name">Haleiki</span></span><p class="footer-tagline">A knowledge base for encyclopedic exploration</p></div>
+                    <div class="footer-columns">
+                      <div class="footer-col"><div class="footer-col-title">Knowledge Base</div><ul class="footer-col-list"><li><a href="#">Front Page</a></li><li><a href="#">Browse</a></li><li><a href="#">Random</a></li></ul></div>
+                      <div class="footer-col"><div class="footer-col-title">Resources</div><ul class="footer-col-list"><li><a href="#">About</a></li><li><a href="#">Attribution</a></li></ul></div>
+                      <div class="footer-col"><div class="footer-col-title">Community</div><ul class="footer-col-list"><li><a href="#">GitHub</a></li></ul></div>
+                    </div>
+                  </div>
+                  <div class="footer-content-notice">Wiki content licensed under CC BY-SA 4.0, unless otherwise stated.</div>
+                  <div class="footer-bottom"><span class="footer-copyright">© 2026 Oxur Contributors · Apache-2.0 / MIT</span><ul class="footer-meta-links"><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li></ul></div>
+                </div>
+              </footer>
+            </div>
+          </div>
+          <div style="border:1px solid var(--accent-primary); border-radius:var(--radius-l); overflow:hidden;">
+            <div style="font-family:var(--font-mono); font-size:var(--step--2); text-transform:uppercase; letter-spacing:0.08em; color:var(--accent-text); padding:var(--space-2xs) var(--space-s); border-bottom:1px solid var(--border-subtle);">After · one footer, license from context · recommend <strong>CC BY-SA 4.0</strong> (matches Attribution page)</div>
+            <div style="transform:scale(0.62); transform-origin:top left; width:161%; margin-bottom:-40%;">
+              <footer class="site-footer">
+                <div class="footer-inner" style="padding-block:var(--space-l);">
+                  <div class="footer-top" style="padding-bottom:var(--space-m);">
+                    <div class="footer-brand-col"><span class="footer-brand-link"><span class="brand-mark">H</span><span class="brand-name">Haleiki</span></span><p class="footer-tagline">A house of knowledge — a read-only wiki for structured, sourced content.</p></div>
+                    <div class="footer-columns">
+                      <div class="footer-col"><div class="footer-col-title">Knowledge Base</div><ul class="footer-col-list"><li><a href="#">Front Page</a></li><li><a href="#">Browse</a></li><li><a href="#">Categories</a></li><li><a href="#">Random</a></li></ul></div>
+                      <div class="footer-col"><div class="footer-col-title">About</div><ul class="footer-col-list"><li><a href="#">About This Wiki</a></li><li><a href="#">Attribution</a></li><li><a href="#">News</a></li></ul></div>
+                      <div class="footer-col"><div class="footer-col-title">Development</div><ul class="footer-col-list"><li><a href="#">GitHub <span class="ext">&#8599;</span></a></li><li><a href="#">Discussions <span class="ext">&#8599;</span></a></li><li><a href="#">Changelog <span class="ext">&#8599;</span></a></li></ul></div>
+                    </div>
+                  </div>
+                  <div class="footer-content-notice">Wiki content licensed under CC BY-SA 4.0, unless otherwise stated.</div>
+                  <div class="footer-bottom"><span class="footer-copyright">© 2026 Oxur Contributors · Apache-2.0 / MIT</span><ul class="footer-meta-links"><li><a href="#">Built with Haleiki</a></li><li><a href="#">Privacy</a></li></ul></div>
+                </div>
+              </footer>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- OFFENDER 2: two topnavs -->
+      <article style="margin-bottom:var(--space-2xl);">
+        <div style="display:flex; align-items:baseline; gap:var(--space-s); flex-wrap:wrap; margin-bottom:var(--space-s);">
+          <span style="font-family:var(--font-mono); font-size:var(--step-1); font-weight:600; color:var(--accent-text);">B</span>
+          <h3 style="font-family:var(--font-display); font-size:var(--step-1); font-weight:600; color:var(--text-primary);">Two top navs — dead search box vs. live one, and three different &ldquo;active&rdquo; conventions</h3>
+        </div>
+        <p style="font-family:var(--font-body); font-size:var(--step--1); color:var(--text-secondary); max-width:70ch; margin-bottom:var(--space-m);">The wiki pages ship an <em>empty</em> search slot (a commented-out placeholder) and only Browse/About links. The news/search pages have a real search field, a fuller link set, and an active state — but spelled three ways (<code style="font-family:var(--font-mono);">.active</code>, <code style="font-family:var(--font-mono);">.active-link</code>, and a bare current link). Unify to one bar with a working search and <code style="font-family:var(--font-mono);">aria-current</code>.</p>
+        <div style="display:grid; grid-template-columns:1fr; gap:var(--space-m);">
+          <div style="border:1px solid var(--error-border); border-radius:var(--radius-l); overflow:hidden;">
+            <div style="font-family:var(--font-mono); font-size:var(--step--2); text-transform:uppercase; letter-spacing:0.08em; color:var(--error-border); padding:var(--space-2xs) var(--space-s); border-bottom:1px solid var(--border-subtle);">Before · wiki topnav (empty search, no active state)</div>
+            <nav class="topnav" style="position:static;">
+              <a href="#" class="topnav-brand"><span class="brand-mark">H</span> Haleiki</a>
+              <div class="search-container"></div>
+              <div class="topnav-links"><a href="#">Browse</a><a href="#">About</a></div>
+              <div class="theme-toggle"><button class="theme-toggle-option active">&#9728;</button><button class="theme-toggle-option">&#9790;</button></div>
+            </nav>
+          </div>
+          <div style="border:1px solid var(--accent-primary); border-radius:var(--radius-l); overflow:hidden;">
+            <div style="font-family:var(--font-mono); font-size:var(--step--2); text-transform:uppercase; letter-spacing:0.08em; color:var(--accent-text); padding:var(--space-2xs) var(--space-s); border-bottom:1px solid var(--border-subtle);">After · one topnav, live search, single active convention</div>
+            <nav class="topnav" style="position:static;">
+              <a href="#" class="topnav-brand"><span class="brand-mark">H</span> Haleiki</a>
+              <div class="search-container">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.5"/><line x1="10.5" y1="10.5" x2="15" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <input type="text" class="search-input" placeholder="Search Haleiki…">
+                <span class="search-shortcut">&#8984;K</span>
+              </div>
+              <div class="topnav-links"><a href="#">Browse</a><a href="#">Categories</a><a href="#" class="active" aria-current="page">News</a><a href="#">About</a></div>
+              <div class="theme-toggle"><button class="theme-toggle-option active">&#9728;</button><button class="theme-toggle-option">&#9790;</button></div>
+            </nav>
+          </div>
+        </div>
+      </article>
+
+      <!-- OFFENDER 3: category-card class collision -->
+      <article style="margin-bottom:var(--space-2xl);">
+        <div style="display:flex; align-items:baseline; gap:var(--space-s); flex-wrap:wrap; margin-bottom:var(--space-s);">
+          <span style="font-family:var(--font-mono); font-size:var(--step-1); font-weight:600; color:var(--accent-text);">C</span>
+          <h3 style="font-family:var(--font-display); font-size:var(--step-1); font-weight:600; color:var(--text-primary);">Same class name, two different components</h3>
+        </div>
+        <p style="font-family:var(--font-body); font-size:var(--step--1); color:var(--text-secondary); max-width:70ch; margin-bottom:var(--space-m);">Both the home page and the news &ldquo;Posts by Category&rdquo; page define <code style="font-family:var(--font-mono);">.category-card</code> / <code style="font-family:var(--font-mono);">.category-grid</code> — with <em>different</em> inner markup. In one stylesheet they'd overwrite each other. Fix: the home component keeps the canonical name; the news variant is namespaced <code style="font-family:var(--font-mono);">.news-cat-card</code>. Both shown below, now coexisting.</p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:var(--space-m);">
+          <div>
+            <div style="font-family:var(--font-mono); font-size:var(--step--2); color:var(--text-tertiary); margin-bottom:var(--space-2xs);">.category-card — home (wiki)</div>
+            <div class="category-card">
+              <div class="category-card-header"><a href="#" class="category-card-title">Memory Management</a><span class="category-card-count">14</span></div>
+              <p class="category-card-desc">Allocation, ownership, and reclamation strategies across languages.</p>
+              <ul class="category-card-articles"><li><a href="#">Mark-and-Sweep</a></li><li><a href="#">Reference Counting</a></li><li><a href="#">RAII</a></li></ul>
+            </div>
+          </div>
+          <div>
+            <div style="font-family:var(--font-mono); font-size:var(--step--2); color:var(--text-tertiary); margin-bottom:var(--space-2xs);">.news-cat-card — news (namespaced)</div>
+            <div class="news-cat-card">
+              <div class="news-cat-card-top"><div class="news-cat-card-name"><a href="#">Architecture</a></div><span class="news-cat-card-badge">12 posts</span></div>
+              <p class="news-cat-card-desc">Design decisions, system architecture, and technical direction.</p>
+              <div class="news-cat-card-recent"><div class="news-cat-card-recent-title">Recent</div><a href="#">Introducing Concept Cards</a><a href="#">Project Architecture v0.3</a></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- OFFENDER 4: disabled hero search -->
+      <article style="margin-bottom:var(--space-2xl);">
+        <div style="display:flex; align-items:baseline; gap:var(--space-s); flex-wrap:wrap; margin-bottom:var(--space-s);">
+          <span style="font-family:var(--font-mono); font-size:var(--step-1); font-weight:600; color:var(--accent-text);">D</span>
+          <h3 style="font-family:var(--font-display); font-size:var(--step-1); font-weight:600; color:var(--text-primary);">The home hero search is disabled — it reads as broken</h3>
+        </div>
+        <p style="font-family:var(--font-body); font-size:var(--step--1); color:var(--text-secondary); max-width:70ch; margin-bottom:var(--space-m);">The home layout ships <code style="font-family:var(--font-mono);">&lt;input disabled&gt;</code>, so the primary call-to-action looks greyed-out and dead. Recommend making it a real control that focuses/links to the search page (search is client-side, so it can be live from first paint).</p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:var(--space-m); align-items:start;">
+          <div style="border:1px solid var(--error-border); border-radius:var(--radius-l); padding:var(--space-m);">
+            <div style="font-family:var(--font-mono); font-size:var(--step--2); text-transform:uppercase; letter-spacing:0.08em; color:var(--error-border); margin-bottom:var(--space-s);">Before · disabled</div>
+            <div class="hero-search"><input type="text" class="hero-search-input" placeholder="Search articles…" disabled style="opacity:0.55; cursor:not-allowed;"></div>
+          </div>
+          <div style="border:1px solid var(--accent-primary); border-radius:var(--radius-l); padding:var(--space-m);">
+            <div style="font-family:var(--font-mono); font-size:var(--step--2); text-transform:uppercase; letter-spacing:0.08em; color:var(--accent-text); margin-bottom:var(--space-s);">After · live control</div>
+            <div class="hero-search">
+              <span class="hero-search-icon"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.5"/><line x1="10.5" y1="10.5" x2="15" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              <input type="text" class="hero-search-input" placeholder="Search 90 articles…">
+              <span class="hero-search-shortcut">&#8984;K</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- OFFENDER 5: trust on news -->
+      <article style="margin-bottom:var(--space-xl);">
+        <div style="display:flex; align-items:baseline; gap:var(--space-s); flex-wrap:wrap; margin-bottom:var(--space-s);">
+          <span style="font-family:var(--font-mono); font-size:var(--step-1); font-weight:600; color:var(--accent-text);">E</span>
+          <h3 style="font-family:var(--font-display); font-size:var(--step-1); font-weight:600; color:var(--text-primary);">A question for you: should the trust bar sit on news posts?</h3>
+        </div>
+        <p style="font-family:var(--font-body); font-size:var(--step--1); color:var(--text-secondary); max-width:72ch; margin-bottom:var(--space-m);">You asked to wire the trust bar into concept, source <em>and</em> news posts. It's built and ready for all three. But epistemic trust describes the <em>sourcing of knowledge</em> — a launch announcement isn't &ldquo;credible vs. speculative&rdquo; the way a concept card is. My recommendation: trust bar on <strong style="color:var(--text-primary);">concept + source only</strong>, and give news posts a plain author/date meta line instead. Both are wired — your call. Trust bar shown here (credible = sage):</p>
+        <div style="border:1px solid var(--border-subtle); border-radius:var(--radius-l); overflow:hidden;" data-trust="credible">
+          <div class="trust-bar">
+            <div class="trust-bar-label"><span class="trust-glyph"><svg width="1em" height="1em" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2a6 6 0 0 1 0 12V2z" fill="currentColor"/><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span><span>Credible</span></div>
+            <div class="trust-bar-desc">Well-sourced content drawn from established reference works.</div>
+            <a href="#" class="trust-bar-link">What does this mean?</a>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- ══ LIVE PROOF ══ -->
+    <section style="margin-top:var(--space-2xl);">
+      <div style="font-family:var(--font-mono); font-size:var(--step--2); text-transform:uppercase; letter-spacing:0.1em; color:var(--text-tertiary); margin-bottom:var(--space-xs);">03 · Proof</div>
+      <h2 style="font-family:var(--font-display); font-size:var(--step-2); font-weight:700; letter-spacing:-0.015em; margin-bottom:var(--space-2xs); color:var(--text-primary);">The unified stylesheet, rendering real pages</h2>
+      <p style="font-family:var(--font-body); font-size:var(--step-0); color:var(--text-secondary); max-width:60ch; margin-bottom:var(--space-l);">Every panel above and the fragments below are painted by <code style="font-family:var(--font-mono);">assets/css/haleiki.css</code> — the single file that will back the minijinja templates. Toggle day/night up top to see the OKLCH themes swap.</p>
+
+      <!-- concept fragment -->
+      <div style="border:1px solid var(--border-subtle); border-radius:var(--radius-l); padding:var(--space-l); margin-bottom:var(--space-m); background:var(--surface-ground);">
+        <div style="font-family:var(--font-mono); font-size:var(--step--2); color:var(--text-tertiary); margin-bottom:var(--space-s);">Concept page — header · quick definition · relationships</div>
+        <header class="article-header">
+          <div class="article-overline"><span class="trust-glyph" style="color:var(--accent-text);"><svg width="1em" height="1em" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2a6 6 0 0 1 0 12V2z" fill="currentColor"/><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span> <span class="trust-overline">Credible</span> · Concept</div>
+          <h1 class="article-title">Mark-and-Sweep</h1>
+          <div class="article-meta"><span class="tag">Memory Management</span><span class="tag">Garbage Collection</span><span class="tag">Intermediate</span></div>
+        </header>
+        <div class="quick-definition" style="margin-top:var(--space-m);">
+          <div class="quick-definition-label">Quick Definition</div>
+          <p>A garbage-collection algorithm that reclaims memory in two phases: marking all reachable objects from the roots, then sweeping the heap to free the unmarked ones.</p>
+        </div>
+        <div class="relationships">
+          <div class="relationship-group"><div class="relationship-type">Contrasts With</div><p><a href="#">Reference Counting</a> — incremental, but cannot reclaim cycles without help; mark-and-sweep handles cycles naturally.</p></div>
+        </div>
+      </div>
+
+      <!-- news front fragment -->
+      <div style="border:1px solid var(--border-subtle); border-radius:var(--radius-l); padding:var(--space-l); background:var(--surface-ground);">
+        <div style="font-family:var(--font-mono); font-size:var(--step--2); color:var(--text-tertiary); margin-bottom:var(--space-s);">News front — hero card + compact list</div>
+        <article class="hero-card">
+          <div class="post-date">March 19, 2026</div>
+          <h2 class="post-title"><a href="#">Welcome to Haleiki</a></h2>
+          <span class="post-category">Announcement</span>
+          <p class="post-excerpt">A new kind of knowledge base built on the principle that structured knowledge deserves beautiful, navigable presentation — perceptually uniform colour, a geometric type scale, and intrinsic layout.</p>
+          <a href="#" class="read-more">Read more &#8594;</a>
+        </article>
+        <ul class="compact-list" style="margin-top:var(--space-m);">
+          <li class="compact-row"><span class="compact-date">Mar 12</span><span class="compact-title"><a href="#">The Fetch Pipeline: From Wikipedia to Markdown</a></span><span class="compact-category">Content</span><span class="compact-arrow">&#8594;</span></li>
+          <li class="compact-row"><span class="compact-date">Mar 10</span><span class="compact-title"><a href="#">Introducing Concept Cards</a></span><span class="compact-category">Architecture</span><span class="compact-arrow">&#8594;</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <footer style="margin-top:var(--space-2xl); padding-top:var(--space-l); border-top:1px solid var(--border-subtle); font-family:var(--font-mono); font-size:var(--step--2); color:var(--text-tertiary);">
+      Unified stylesheet → <strong style="color:var(--text-secondary);">assets/css/haleiki.css</strong> · minijinja templates land next in <strong style="color:var(--text-secondary);">templates/</strong>
+    </footer>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { theme: 'day' };
+  renderVals() {
+    const t = this.state.theme;
+    return {
+      theme: t,
+      dayClass: t === 'day' ? 'active' : '',
+      nightClass: t === 'night' ? 'active' : '',
+      setDay: () => this.setState({ theme: 'day' }),
+      setNight: () => this.setState({ theme: 'night' }),
+    };
+  }
+}
+</script>
+</body>
+</html>
