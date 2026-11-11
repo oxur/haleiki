@@ -43,40 +43,46 @@ Two first-class content types:
 
 The Rust CLI (pre-build layer) parses all content, builds a relationship graph (petgraph), validates references, computes derived data (see-also groups, breadcrumbs, prerequisite chains, category indices), and writes graph-derived JSON for the build layer.
 
-## Design Documents
+## Planning and Historical Design
 
-Design docs are managed with ODM (`odm.toml` config) in `docs/design/`, organized by state folders (01-draft, 02-under-review, ..., 06-final). View them with `./bin/odm show <number>`.
+Planning lives on the orphan `planning` branch, checked out at
+`.worktrees/planning/` (Operator-requested migration, 2026-11-11). Start with
+that worktree's `README.md` and `AGENTS.md`. Load the current
+`collaboration-framework` skill and its project-management `guides/README.md`
+before planning or closing work; the migration used installed version 3.0.1.
 
-Key docs:
+- `project01-demo-site/`: historical source acquisition and demo pipeline.
+- `project02-concept-cards/`: historical pilot, corpus extraction and backlinks.
+- `project03-cobalt-site-build/`: historical M1–M8 Cobalt site build.
+- `project-04-tiny-http/`: active tiny_http/minijinja pivot. This spelling follows
+  the Operator's explicit `project-<next index>-tiny-http` request.
 
-- **0001** — Architecture document (draft)
-- **0002** — Demo site design document (under review)
+Use `project-plan.md`, `arc-plan.md`, `slice-plan.md` and a sibling `ledger.md`
+at each scale. Durable supporting outputs default to the owning slice's
+`artifacts/` directory. Original `slice-doc.md`, issued prompts and verification
+records remain preserved; new follow-ups use `cc-prompt-iterationNN.md`.
 
-Working documents (not committed): `workbench/`
+The planning worktree's `archive/` preserves all former `docs/design/`,
+`docs/dev/`, and ignored `workbench/` content, including ODM originals and assets.
+`migration-manifest.json` maps old paths to byte-preserved payloads. ODM state
+folders are historical evidence, not the active planning layout. Older project
+reconstructions are finding aids, with no inferred independent acceptance.
 
-### tiny_http pivot planning (branch `framework-base/tiny-http`)
+### tiny_http pivot (source branch `framework-base/tiny-http`)
 
-Planning artefacts for the tiny_http/minijinja pivot live under `docs/tiny-http/`
-using the collaboration-framework **arc/slice tree**, without a version-numbered
-directory (operator override of the canonical `docs/design-vX.Y.Z/` default, per
-`PROJECT-MANAGEMENT.md` Part VI):
-
-```
-docs/tiny-http/
-  design-delta.md            architecture of the pivot
-  project-plan.md            roadmap (6 arcs) + project ledger
-  arcNN-<slug>/
-    arc-plan.md
-    sliceNN-<slug>/{slice-doc,ledger,cc-prompt,closing-report,cdc-verification}.md
-```
+Read `.worktrees/planning/project-04-tiny-http/project-plan.md` and its ledger.
+Arcs 01–04 retain their recorded closure; Arc 05 Slice 01 is still held at the
+Operator discussion gate for authoring location, URLs, frontmatter and fixtures.
+Arc 06 remains roadmap-level. Migration does not authorize feature implementation.
 
 Confirmed decisions: deployment = **both** (static export default + hardened
 tiny_http self-host); **news/blog** content type in scope; **Pagefind** search
 is intended after the 2026-07-29 operator reversal (do not reintroduce the
 superseded custom JSON search-index plan); **minijinja replaces Cobalt/Liquid**
-using Claude Design's refactor templates in `workbench/Hale'iki Wiki Design
-Refactor/` (these are authoritative; the `main` design integration is
-abandoned).
+using Claude Design's refactor inputs preserved in the planning worktree at
+`archive/workbench/Hale'iki Wiki Design Refactor/` and the adjacent ZIP (which
+also retains the original `templates/` tree). Current shipped templates live
+in source `templates/`; the `main` design integration is abandoned.
 
 **Known gotcha — `&#x2f;` in fully-interpolated hrefs.** minijinja's HTML
 auto-escaper escapes `/` to `&#x2f;` inside an attribute value that is a *single*

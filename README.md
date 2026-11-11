@@ -78,13 +78,11 @@ Warm/cool dual-theme aesthetic built on a semantic design token architecture. DM
 
 ## Project Status
 
-This project is in early development. Formal design docs are managed here:
-
-- [haleiki/blob/main/docs/design/](https://github.com/oxur/haleiki/blob/main/docs/design/index.md)
-
-Development plan docs are here:
-
-- [haleiki/blob/main/docs/dev](https://github.com/oxur/haleiki/tree/main/docs/dev/)
+This project is in early development. Plans and historical design/development
+records live on the orphan `planning` branch, checked out locally at
+`.worktrees/planning/`. Start with that worktree's `README.md` for the chronological
+project index and archive. The active pivot is `project-04-tiny-http/`;
+its news/blog arc is awaiting content-model decisions.
 
 Design mockups for key page types in the wiki are availale for viewing here:
 
