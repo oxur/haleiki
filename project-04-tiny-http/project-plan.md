@@ -11,10 +11,10 @@ related: [project01-demo-site, project02-concept-cards]
 > The project plan-of-record: the arc roadmap for pivoting the Haleiki wiki
 > off Cobalt/Liquid onto a minijinja + tiny_http stack, on branch
 > `framework-base/tiny-http`. Architecture lives in
-> [`design-delta.md`](./design-delta.md); this file is the plan and the ledger.
+> [`design-delta.md`](./design-delta.md); this file is the plan, with a sibling ledger.
 >
-> Layout: framework arc/slice tree, no version directory (operator override,
-> per `docs/PROJECT-MANAGEMENT.md` Part VI). Status: **active** · 2026-08-21.
+> Layout: `.worktrees/planning/project-04-tiny-http/` on orphan branch `planning`
+> (migrated 2026-11-11). Historical status: **active** · 2026-08-21.
 
 ---
 
@@ -47,7 +47,8 @@ through a Rust-native minijinja + tiny_http stack, with:
 - Any move away from read-only (no logins, edits, comments; not a CMS).
 
 The architecture, the reuse/change/new breakdown, and the binding context
-contract (`workbench/Hale'iki Wiki Design Refactor/templates/README.md`) are in
+contract (source checkout `templates/README.md`; original retained in the archived
+design ZIP) are in
 [`design-delta.md`](./design-delta.md).
 
 ## 2. The arc roadmap

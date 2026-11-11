@@ -112,6 +112,29 @@ index and succeeded with Git metadata permission. Git registers the resulting
 worktree correctly; the desktop app's managed-worktree attachment API rejects
 the relocated repository-local path. Use its explicit filesystem path.
 
+## Final post-removal receipts
+
+Self-checked on 2026-11-11, after preserving all originals in planning commit
+`60f09d5` and removing the exact manifest-listed source files:
+
+```text
+PASS: 181 byte-identical payloads; original present=0, pinned Git original=117, formerly ignored/untracked=64
+PASS: complete tracked population (117); existing local roots covered
+PASS: 46 project/arc ledger rows extracted without changes
+PASS: 285 links in authored/canonical Markdown; historical links retained as-is
+PASS: implementation, fixtures, assets and CI unchanged from migration baseline
+PASS: orphan planning history; no implementation ancestry
+```
+
+`git diff --check` passed for the source cleanup. The scoped source commit is
+`166ef2e` (`Move planning records off the tiny_http source branch`): 117 tracked
+originals removed, three source guidance/ignore files updated, no other tracked
+changes. All four old content roots (`docs/design`, `docs/dev`, `docs/tiny-http`,
+`workbench`) were removed after byte/hash checks against committed archive blobs.
+Retired `odm.toml` is also preserved and removed from the source branch.
+Source status was clean after commit. Final planning receipts are committed
+separately from the preservation commit; neither branch has been pushed.
+
 ## Remaining boundaries
 
 - Only the checked-out `framework-base/tiny-http` source branch is cleaned;
