@@ -3,7 +3,7 @@ project: project02-concept-cards
 status: historical-reconstructed
 depends-on: ["project01-demo-site"]
 blocks: []
-related: ["project03-cobalt-site-build", "project-04-tiny-http"]
+related: ["project03-cobalt-site-build", "project04-tiny-http"]
 ---
 
 # Concept-card extraction

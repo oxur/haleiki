@@ -960,7 +960,7 @@
     },
     {
       "source": "docs/tiny-http/arc01-render-core/closing-report.md",
-      "destination": "project-04-tiny-http/arc01-render-core/closing-report.md",
+      "destination": "project04-tiny-http/arc01-render-core/closing-report.md",
       "sha256": "2a692d6772d8fd34aafe42a2d9359fdd9aaabadf8d047b15cfb3315f1c5418bf",
       "bytes": 5840,
       "mode": 384,
@@ -969,7 +969,7 @@
     },
     {
       "source": "docs/tiny-http/arc01-render-core/slice01-minijinja-shell/cc-prompt.md",
-      "destination": "project-04-tiny-http/arc01-render-core/slice01-minijinja-shell/cc-prompt.md",
+      "destination": "project04-tiny-http/arc01-render-core/slice01-minijinja-shell/cc-prompt.md",
       "sha256": "0cccbfbcdb754089c099cb7d822285e6b66f10f331bc270eb8ffcec089506f68",
       "bytes": 3789,
       "mode": 384,
@@ -978,7 +978,7 @@
     },
     {
       "source": "docs/tiny-http/arc01-render-core/slice01-minijinja-shell/cdc-verification.md",
-      "destination": "project-04-tiny-http/arc01-render-core/slice01-minijinja-shell/cdc-verification.md",
+      "destination": "project04-tiny-http/arc01-render-core/slice01-minijinja-shell/cdc-verification.md",
       "sha256": "f9773899817aa9a37d7cd5bea08b903a4f175ca89793e2cc2e96e7e067085c1b",
       "bytes": 8329,
       "mode": 384,
@@ -987,7 +987,7 @@
     },
     {
       "source": "docs/tiny-http/arc01-render-core/slice01-minijinja-shell/closing-report.md",
-      "destination": "project-04-tiny-http/arc01-render-core/slice01-minijinja-shell/closing-report.md",
+      "destination": "project04-tiny-http/arc01-render-core/slice01-minijinja-shell/closing-report.md",
       "sha256": "11aa48eb2c91f9da8f5e104847692efa9d14213e286544250d2d545200ed0810",
       "bytes": 8857,
       "mode": 420,
@@ -996,7 +996,7 @@
     },
     {
       "source": "docs/tiny-http/arc01-render-core/slice01-minijinja-shell/ledger.md",
-      "destination": "project-04-tiny-http/arc01-render-core/slice01-minijinja-shell/ledger.md",
+      "destination": "project04-tiny-http/arc01-render-core/slice01-minijinja-shell/ledger.md",
       "sha256": "224c8630fabd633da92a1244c520bddbd548241606d867ceacaa656eb468ab76",
       "bytes": 10209,
       "mode": 384,
@@ -1005,7 +1005,7 @@
     },
     {
       "source": "docs/tiny-http/arc01-render-core/slice01-minijinja-shell/slice-doc.md",
-      "destination": "project-04-tiny-http/arc01-render-core/slice01-minijinja-shell/slice-doc.md",
+      "destination": "project04-tiny-http/arc01-render-core/slice01-minijinja-shell/slice-doc.md",
       "sha256": "0fbe31a45eff2f64ae2540041dfa861202c8a77f6fecd3ac47ec02f4171d8722",
       "bytes": 4041,
       "mode": 384,
@@ -1014,7 +1014,7 @@
     },
     {
       "source": "docs/tiny-http/arc01-render-core/slice02-markdown-toc/cc-prompt.md",
-      "destination": "project-04-tiny-http/arc01-render-core/slice02-markdown-toc/cc-prompt.md",
+      "destination": "project04-tiny-http/arc01-render-core/slice02-markdown-toc/cc-prompt.md",
       "sha256": "176efd3ec7853191e8217e0bca07772976811b933002646a5527b5622a4848b3",
       "bytes": 4084,
       "mode": 384,
@@ -1023,7 +1023,7 @@
     },
     {
       "source": "docs/tiny-http/arc01-render-core/slice02-markdown-toc/cdc-verification.md",
-      "destination": "project-04-tiny-http/arc01-render-core/slice02-markdown-toc/cdc-verification.md",
+      "destination": "project04-tiny-http/arc01-render-core/slice02-markdown-toc/cdc-verification.md",
       "sha256": "2de798e7b6e1e79ed49dca3272348bbd7d5f49a9a49e021db9d5912a4932021c",
       "bytes": 7294,
       "mode": 384,
@@ -1032,7 +1032,7 @@
     },
     {
       "source": "docs/tiny-http/arc01-render-core/slice02-markdown-toc/closing-report.md",
-      "destination": "project-04-tiny-http/arc01-render-core/slice02-markdown-toc/closing-report.md",
+      "destination": "project04-tiny-http/arc01-render-core/slice02-markdown-toc/closing-report.md",
       "sha256": "4b459969869b39a3821d6b1a3c897410f8de3a1826f6a3fb300bd2763f316a36",
       "bytes": 9857,
       "mode": 420,
@@ -1041,7 +1041,7 @@
     },
     {
       "source": "docs/tiny-http/arc01-render-core/slice02-markdown-toc/ledger.md",
-      "destination": "project-04-tiny-http/arc01-render-core/slice02-markdown-toc/ledger.md",
+      "destination": "project04-tiny-http/arc01-render-core/slice02-markdown-toc/ledger.md",
       "sha256": "e68c595bb11e0587d2d12bfefbdf231490c3cf2bef6046c8a485d94e22d43ace",
       "bytes": 11287,
       "mode": 384,
@@ -1050,7 +1050,7 @@
     },
     {
       "source": "docs/tiny-http/arc01-render-core/slice02-markdown-toc/slice-doc.md",
-      "destination": "project-04-tiny-http/arc01-render-core/slice02-markdown-toc/slice-doc.md",
+      "destination": "project04-tiny-http/arc01-render-core/slice02-markdown-toc/slice-doc.md",
       "sha256": "6bfe69483bb18dc4200ab83d832c2fa632be7727833122c57a0124a1691aad38",
       "bytes": 7904,
       "mode": 384,
@@ -1059,7 +1059,7 @@
     },
     {
       "source": "docs/tiny-http/arc01-render-core/slice03-wiki-article-context/cc-prompt.md",
-      "destination": "project-04-tiny-http/arc01-render-core/slice03-wiki-article-context/cc-prompt.md",
+      "destination": "project04-tiny-http/arc01-render-core/slice03-wiki-article-context/cc-prompt.md",
       "sha256": "c1a3bbcbc9a2a6d6f5a949424b0265cca88d6738ae566ccc90679e649c0783b3",
       "bytes": 4310,
       "mode": 384,
@@ -1068,7 +1068,7 @@
     },
     {
       "source": "docs/tiny-http/arc01-render-core/slice03-wiki-article-context/cdc-verification.md",
-      "destination": "project-04-tiny-http/arc01-render-core/slice03-wiki-article-context/cdc-verification.md",
+      "destination": "project04-tiny-http/arc01-render-core/slice03-wiki-article-context/cdc-verification.md",
       "sha256": "43ec4d31ffe63b2fa8c3fe9e4f7a1e24b0d1e4a5e43984b0ce746ce163cffcbb",
       "bytes": 6462,
       "mode": 384,
@@ -1077,7 +1077,7 @@
     },
     {
       "source": "docs/tiny-http/arc01-render-core/slice03-wiki-article-context/closing-report.md",
-      "destination": "project-04-tiny-http/arc01-render-core/slice03-wiki-article-context/closing-report.md",
+      "destination": "project04-tiny-http/arc01-render-core/slice03-wiki-article-context/closing-report.md",
       "sha256": "912aa9b81e6c2b3cee331bc10756dec06a237b2ebab5354379a71b2ca16ae770",
       "bytes": 10769,
       "mode": 420,
@@ -1086,7 +1086,7 @@
     },
     {
       "source": "docs/tiny-http/arc01-render-core/slice03-wiki-article-context/ledger.md",
-      "destination": "project-04-tiny-http/arc01-render-core/slice03-wiki-article-context/ledger.md",
+      "destination": "project04-tiny-http/arc01-render-core/slice03-wiki-article-context/ledger.md",
       "sha256": "f2ac65b01185d2ed8db39bfb1bb923234b494c1b5e5841f7bed6fd92e33a5a12",
       "bytes": 14439,
       "mode": 384,
@@ -1095,7 +1095,7 @@
     },
     {
       "source": "docs/tiny-http/arc01-render-core/slice03-wiki-article-context/slice-doc.md",
-      "destination": "project-04-tiny-http/arc01-render-core/slice03-wiki-article-context/slice-doc.md",
+      "destination": "project04-tiny-http/arc01-render-core/slice03-wiki-article-context/slice-doc.md",
       "sha256": "634c9f671d5422c4352de83a3c21d95e9bc7b0665e0ac62be6cba950ac7209c3",
       "bytes": 7238,
       "mode": 384,
@@ -1113,7 +1113,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/closing-report.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/closing-report.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/closing-report.md",
       "sha256": "1e1b6d424acd8bb2645d03428df955374dc6f19c9ace67ec2d08c3f947b4ece0",
       "bytes": 5366,
       "mode": 384,
@@ -1122,7 +1122,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/slice01-site-index-home/cc-prompt.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/slice01-site-index-home/cc-prompt.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/slice01-site-index-home/cc-prompt.md",
       "sha256": "1cbfcb80e60cddd93b3f1e397b7d4367472fbf71d72196d6b0f0bd171b9b7e4f",
       "bytes": 3865,
       "mode": 384,
@@ -1131,7 +1131,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/slice01-site-index-home/cdc-verification.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/slice01-site-index-home/cdc-verification.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/slice01-site-index-home/cdc-verification.md",
       "sha256": "648e3198eb0fa303d1fc6945579c42c1cf73fbb5e7d6169968779dd1f42824b9",
       "bytes": 4283,
       "mode": 384,
@@ -1140,7 +1140,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/slice01-site-index-home/closing-report.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/slice01-site-index-home/closing-report.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/slice01-site-index-home/closing-report.md",
       "sha256": "9a2985c9e4d4f9a3d94d057e356cd1ee104b237bd0eebff29f51f412dbce4d61",
       "bytes": 8198,
       "mode": 420,
@@ -1149,7 +1149,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/slice01-site-index-home/ledger.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/slice01-site-index-home/ledger.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/slice01-site-index-home/ledger.md",
       "sha256": "54f337887b655d8e7f5b4066f50e58b613bea4db789459b025685a20a8b55057",
       "bytes": 8813,
       "mode": 384,
@@ -1158,7 +1158,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/slice01-site-index-home/slice-doc.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/slice01-site-index-home/slice-doc.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/slice01-site-index-home/slice-doc.md",
       "sha256": "9c5d674d9fd283c9ac4fdeeb78c4d221474f26d9dcd2edb7f255d864bbf50b81",
       "bytes": 5351,
       "mode": 384,
@@ -1167,7 +1167,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/slice02-browse-category/cc-prompt.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/slice02-browse-category/cc-prompt.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/slice02-browse-category/cc-prompt.md",
       "sha256": "93885834a0c3274a1b5c82c16fc98218b85508fa7b9bb3a826587ce6ed69e75c",
       "bytes": 3220,
       "mode": 384,
@@ -1176,7 +1176,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/slice02-browse-category/cdc-verification.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/slice02-browse-category/cdc-verification.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/slice02-browse-category/cdc-verification.md",
       "sha256": "2da8a5087e50ac0d20ada1f1d97adae70060708fffa652cfefd843bf7e7d3c44",
       "bytes": 4777,
       "mode": 384,
@@ -1185,7 +1185,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/slice02-browse-category/closing-report.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/slice02-browse-category/closing-report.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/slice02-browse-category/closing-report.md",
       "sha256": "dfa30df7dfc10c73ff15c01e7537122fb397ff05ac31820691914b7a85a7fb6f",
       "bytes": 8076,
       "mode": 420,
@@ -1194,7 +1194,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/slice02-browse-category/ledger.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/slice02-browse-category/ledger.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/slice02-browse-category/ledger.md",
       "sha256": "78655151391c40e561c65f6521aa440dfddb31fbc5a8e2b7188069935f2d7d3f",
       "bytes": 10389,
       "mode": 384,
@@ -1203,7 +1203,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/slice02-browse-category/slice-doc.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/slice02-browse-category/slice-doc.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/slice02-browse-category/slice-doc.md",
       "sha256": "22a409c4fbb70e5dc86668d48383a5b2b6950447899ef7c4dde3519bb4be04e6",
       "bytes": 5943,
       "mode": 384,
@@ -1212,7 +1212,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/slice03-standalone-pages/cc-prompt.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/slice03-standalone-pages/cc-prompt.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/slice03-standalone-pages/cc-prompt.md",
       "sha256": "60b4070b713563dc1434fc45665d3979ad329148b75882219309a77f226c4b66",
       "bytes": 3299,
       "mode": 384,
@@ -1221,7 +1221,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/slice03-standalone-pages/cdc-verification.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/slice03-standalone-pages/cdc-verification.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/slice03-standalone-pages/cdc-verification.md",
       "sha256": "c7e8e2758fb144b5fead82598af8d8433ebcdad658248ce9f09d78b1be23745c",
       "bytes": 3811,
       "mode": 384,
@@ -1230,7 +1230,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/slice03-standalone-pages/closing-report.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/slice03-standalone-pages/closing-report.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/slice03-standalone-pages/closing-report.md",
       "sha256": "d0a4ae59bf0660535c4d2a6832901c3873bd45551baf540e5f74b0aa44246acf",
       "bytes": 7040,
       "mode": 420,
@@ -1239,7 +1239,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/slice03-standalone-pages/ledger.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/slice03-standalone-pages/ledger.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/slice03-standalone-pages/ledger.md",
       "sha256": "dc5422992f868fa8fc08d7c7e8044db4c54f38b286af4d11b3210d9401a19ec5",
       "bytes": 9468,
       "mode": 384,
@@ -1248,7 +1248,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/slice03-standalone-pages/slice-doc.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/slice03-standalone-pages/slice-doc.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/slice03-standalone-pages/slice-doc.md",
       "sha256": "ee40fb4839af78019f8e72e374b3f954bcde0ba23cf7c3a084e745ada3989155",
       "bytes": 5932,
       "mode": 384,
@@ -1257,7 +1257,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/slice04-static-export/cc-prompt.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/slice04-static-export/cc-prompt.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/slice04-static-export/cc-prompt.md",
       "sha256": "48fc6346036531ba2e1da3d2baf18a6e4a19cc1ad4f43999ec90fac96623fe59",
       "bytes": 3412,
       "mode": 384,
@@ -1266,7 +1266,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/slice04-static-export/cdc-verification.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/slice04-static-export/cdc-verification.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/slice04-static-export/cdc-verification.md",
       "sha256": "619c96c5f254a84f0dfe3e6f6a3c933a608d8274b5d7dbf566f0bf1bd2688501",
       "bytes": 4457,
       "mode": 384,
@@ -1275,7 +1275,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/slice04-static-export/closing-report.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/slice04-static-export/closing-report.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/slice04-static-export/closing-report.md",
       "sha256": "888f60d0f226812389e33c3d13935916fd44d2d486642e8a61060c6e20ddc38a",
       "bytes": 8391,
       "mode": 420,
@@ -1284,7 +1284,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/slice04-static-export/ledger.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/slice04-static-export/ledger.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/slice04-static-export/ledger.md",
       "sha256": "9a8130e6e53e21d882aedd6b405ef552bb2ef9a1306feeb5229200c9c97a1abe",
       "bytes": 9340,
       "mode": 384,
@@ -1293,7 +1293,7 @@
     },
     {
       "source": "docs/tiny-http/arc02-routes-static-export/slice04-static-export/slice-doc.md",
-      "destination": "project-04-tiny-http/arc02-routes-static-export/slice04-static-export/slice-doc.md",
+      "destination": "project04-tiny-http/arc02-routes-static-export/slice04-static-export/slice-doc.md",
       "sha256": "c0cf937eb924bc71523e0aab61461ce5b0599dd4acbf58ef83cdf193005de6a2",
       "bytes": 6195,
       "mode": 384,
@@ -1311,7 +1311,7 @@
     },
     {
       "source": "docs/tiny-http/arc03-tiny-http-server/closing-report.md",
-      "destination": "project-04-tiny-http/arc03-tiny-http-server/closing-report.md",
+      "destination": "project04-tiny-http/arc03-tiny-http-server/closing-report.md",
       "sha256": "39fac1c5550b636ac540dcdd69ee637fa96b1855c766db1e221c91d9068bb786",
       "bytes": 6374,
       "mode": 384,
@@ -1320,7 +1320,7 @@
     },
     {
       "source": "docs/tiny-http/arc03-tiny-http-server/slice01-route-map-server/cc-prompt.md",
-      "destination": "project-04-tiny-http/arc03-tiny-http-server/slice01-route-map-server/cc-prompt.md",
+      "destination": "project04-tiny-http/arc03-tiny-http-server/slice01-route-map-server/cc-prompt.md",
       "sha256": "298f65ecccbbadcaf1bebb4c1a426d9aac16b47d284db2573129d8d5df51d6db",
       "bytes": 3515,
       "mode": 384,
@@ -1329,7 +1329,7 @@
     },
     {
       "source": "docs/tiny-http/arc03-tiny-http-server/slice01-route-map-server/cdc-verification.md",
-      "destination": "project-04-tiny-http/arc03-tiny-http-server/slice01-route-map-server/cdc-verification.md",
+      "destination": "project04-tiny-http/arc03-tiny-http-server/slice01-route-map-server/cdc-verification.md",
       "sha256": "5b390c9413a517c79c97da5abd8dbe08ff58b25d395399a29652a25f14626602",
       "bytes": 5229,
       "mode": 384,
@@ -1338,7 +1338,7 @@
     },
     {
       "source": "docs/tiny-http/arc03-tiny-http-server/slice01-route-map-server/closing-report.md",
-      "destination": "project-04-tiny-http/arc03-tiny-http-server/slice01-route-map-server/closing-report.md",
+      "destination": "project04-tiny-http/arc03-tiny-http-server/slice01-route-map-server/closing-report.md",
       "sha256": "a9029da661a2aa3502076bfc5024a07420ae12c9038afa4bed71739f46b0d8c5",
       "bytes": 6289,
       "mode": 420,
@@ -1347,7 +1347,7 @@
     },
     {
       "source": "docs/tiny-http/arc03-tiny-http-server/slice01-route-map-server/ledger.md",
-      "destination": "project-04-tiny-http/arc03-tiny-http-server/slice01-route-map-server/ledger.md",
+      "destination": "project04-tiny-http/arc03-tiny-http-server/slice01-route-map-server/ledger.md",
       "sha256": "fbddea2d81f3091ae92382b197dfa31e0f7fc1c368a82dc9d339f7a984e11883",
       "bytes": 9951,
       "mode": 384,
@@ -1356,7 +1356,7 @@
     },
     {
       "source": "docs/tiny-http/arc03-tiny-http-server/slice01-route-map-server/slice-doc.md",
-      "destination": "project-04-tiny-http/arc03-tiny-http-server/slice01-route-map-server/slice-doc.md",
+      "destination": "project04-tiny-http/arc03-tiny-http-server/slice01-route-map-server/slice-doc.md",
       "sha256": "7f7ca500408d94dbcf39b5f0fe888c6b1a06fcc50fd06bc43a98df604ddbdf0e",
       "bytes": 6076,
       "mode": 384,
@@ -1365,7 +1365,7 @@
     },
     {
       "source": "docs/tiny-http/arc03-tiny-http-server/slice02-hardening/cc-prompt.md",
-      "destination": "project-04-tiny-http/arc03-tiny-http-server/slice02-hardening/cc-prompt.md",
+      "destination": "project04-tiny-http/arc03-tiny-http-server/slice02-hardening/cc-prompt.md",
       "sha256": "046915af1022c17e1a08c6d6f6c181388534c6f7f1f0e7bc0383323cee29dd4e",
       "bytes": 3310,
       "mode": 384,
@@ -1374,7 +1374,7 @@
     },
     {
       "source": "docs/tiny-http/arc03-tiny-http-server/slice02-hardening/cdc-verification.md",
-      "destination": "project-04-tiny-http/arc03-tiny-http-server/slice02-hardening/cdc-verification.md",
+      "destination": "project04-tiny-http/arc03-tiny-http-server/slice02-hardening/cdc-verification.md",
       "sha256": "6b6b770e045744276bd6b018cefbb3e201f7bd8879709776f6b3ad24cd2b47e9",
       "bytes": 7362,
       "mode": 384,
@@ -1383,7 +1383,7 @@
     },
     {
       "source": "docs/tiny-http/arc03-tiny-http-server/slice02-hardening/closing-report.md",
-      "destination": "project-04-tiny-http/arc03-tiny-http-server/slice02-hardening/closing-report.md",
+      "destination": "project04-tiny-http/arc03-tiny-http-server/slice02-hardening/closing-report.md",
       "sha256": "a56a4e83429922b5010d67b27cad1b2b43b55195675279ceed59efb78665bd1e",
       "bytes": 7957,
       "mode": 420,
@@ -1392,7 +1392,7 @@
     },
     {
       "source": "docs/tiny-http/arc03-tiny-http-server/slice02-hardening/ledger.md",
-      "destination": "project-04-tiny-http/arc03-tiny-http-server/slice02-hardening/ledger.md",
+      "destination": "project04-tiny-http/arc03-tiny-http-server/slice02-hardening/ledger.md",
       "sha256": "8275e1b4d1a394fa19e782e18f8e4b17614c11558532981e43b5283e19195c66",
       "bytes": 7309,
       "mode": 384,
@@ -1401,7 +1401,7 @@
     },
     {
       "source": "docs/tiny-http/arc03-tiny-http-server/slice02-hardening/slice-doc.md",
-      "destination": "project-04-tiny-http/arc03-tiny-http-server/slice02-hardening/slice-doc.md",
+      "destination": "project04-tiny-http/arc03-tiny-http-server/slice02-hardening/slice-doc.md",
       "sha256": "cd024a6818d8447557a9c0107e4709fcdc9d65c8b8bda1869ab3ad9ff136f8f0",
       "bytes": 5689,
       "mode": 384,
@@ -1419,7 +1419,7 @@
     },
     {
       "source": "docs/tiny-http/arc04-pagefind-search/cdc-verification.md",
-      "destination": "project-04-tiny-http/arc04-pagefind-search/cdc-verification.md",
+      "destination": "project04-tiny-http/arc04-pagefind-search/cdc-verification.md",
       "sha256": "fccf774511cc4820b4cdfc3b8f84f582ccb35b599358b0c8544eae243ecaa391",
       "bytes": 4686,
       "mode": 420,
@@ -1428,7 +1428,7 @@
     },
     {
       "source": "docs/tiny-http/arc04-pagefind-search/closing-report.md",
-      "destination": "project-04-tiny-http/arc04-pagefind-search/closing-report.md",
+      "destination": "project04-tiny-http/arc04-pagefind-search/closing-report.md",
       "sha256": "0458e345140b14d1012bf521734aed636e0d79e9d7de8a4f6587773ae890cc1e",
       "bytes": 8221,
       "mode": 420,
@@ -1437,7 +1437,7 @@
     },
     {
       "source": "docs/tiny-http/arc04-pagefind-search/slice01-index-and-bundle/cc-prompt.md",
-      "destination": "project-04-tiny-http/arc04-pagefind-search/slice01-index-and-bundle/cc-prompt.md",
+      "destination": "project04-tiny-http/arc04-pagefind-search/slice01-index-and-bundle/cc-prompt.md",
       "sha256": "1d963fd4816b2366e544c2c9c6986ea375d5f9a2089d389646fde270bc01d188",
       "bytes": 4830,
       "mode": 384,
@@ -1446,7 +1446,7 @@
     },
     {
       "source": "docs/tiny-http/arc04-pagefind-search/slice01-index-and-bundle/cdc-verification.md",
-      "destination": "project-04-tiny-http/arc04-pagefind-search/slice01-index-and-bundle/cdc-verification.md",
+      "destination": "project04-tiny-http/arc04-pagefind-search/slice01-index-and-bundle/cdc-verification.md",
       "sha256": "4aecac34ebeef4e1a79cfe1367eb56ad8e144b14227e0b97d66e16ec2a7bbcdc",
       "bytes": 10518,
       "mode": 384,
@@ -1455,7 +1455,7 @@
     },
     {
       "source": "docs/tiny-http/arc04-pagefind-search/slice01-index-and-bundle/closing-report.md",
-      "destination": "project-04-tiny-http/arc04-pagefind-search/slice01-index-and-bundle/closing-report.md",
+      "destination": "project04-tiny-http/arc04-pagefind-search/slice01-index-and-bundle/closing-report.md",
       "sha256": "7321ff093b92b257b6d472ef6a02117d827c17419dfd1c72914026c7784d72e5",
       "bytes": 10981,
       "mode": 420,
@@ -1464,7 +1464,7 @@
     },
     {
       "source": "docs/tiny-http/arc04-pagefind-search/slice01-index-and-bundle/ledger.md",
-      "destination": "project-04-tiny-http/arc04-pagefind-search/slice01-index-and-bundle/ledger.md",
+      "destination": "project04-tiny-http/arc04-pagefind-search/slice01-index-and-bundle/ledger.md",
       "sha256": "3a0f2028f92f133951d942feeeef1baca335cdbfb173f06345f3a06414cbd421",
       "bytes": 12986,
       "mode": 384,
@@ -1473,7 +1473,7 @@
     },
     {
       "source": "docs/tiny-http/arc04-pagefind-search/slice01-index-and-bundle/slice-doc.md",
-      "destination": "project-04-tiny-http/arc04-pagefind-search/slice01-index-and-bundle/slice-doc.md",
+      "destination": "project04-tiny-http/arc04-pagefind-search/slice01-index-and-bundle/slice-doc.md",
       "sha256": "591804d7a6017a65a33816c6523f128da398a5f8eda6be89b3c752f6316acb15",
       "bytes": 7675,
       "mode": 384,
@@ -1482,7 +1482,7 @@
     },
     {
       "source": "docs/tiny-http/arc04-pagefind-search/slice02-client-and-facets/cc-prompt.md",
-      "destination": "project-04-tiny-http/arc04-pagefind-search/slice02-client-and-facets/cc-prompt.md",
+      "destination": "project04-tiny-http/arc04-pagefind-search/slice02-client-and-facets/cc-prompt.md",
       "sha256": "4e75153c93e6bdd32e26b21bbb6ad40d71b07afa28861a01127c92cbd4b01704",
       "bytes": 5727,
       "mode": 384,
@@ -1491,7 +1491,7 @@
     },
     {
       "source": "docs/tiny-http/arc04-pagefind-search/slice02-client-and-facets/cdc-verification.md",
-      "destination": "project-04-tiny-http/arc04-pagefind-search/slice02-client-and-facets/cdc-verification.md",
+      "destination": "project04-tiny-http/arc04-pagefind-search/slice02-client-and-facets/cdc-verification.md",
       "sha256": "e602b8dd07bda7cb2bcda8ccc02240092f11cbd27467aecc5fea2d3404419ad5",
       "bytes": 6826,
       "mode": 420,
@@ -1500,7 +1500,7 @@
     },
     {
       "source": "docs/tiny-http/arc04-pagefind-search/slice02-client-and-facets/closing-report.md",
-      "destination": "project-04-tiny-http/arc04-pagefind-search/slice02-client-and-facets/closing-report.md",
+      "destination": "project04-tiny-http/arc04-pagefind-search/slice02-client-and-facets/closing-report.md",
       "sha256": "6489072445a795dc16f6723847df8f8cf808d04a271ddf7e0562a5e6173c5144",
       "bytes": 12778,
       "mode": 420,
@@ -1509,7 +1509,7 @@
     },
     {
       "source": "docs/tiny-http/arc04-pagefind-search/slice02-client-and-facets/ledger.md",
-      "destination": "project-04-tiny-http/arc04-pagefind-search/slice02-client-and-facets/ledger.md",
+      "destination": "project04-tiny-http/arc04-pagefind-search/slice02-client-and-facets/ledger.md",
       "sha256": "716d1620aa7f7a549fd3cf14c9535974022d59c85b48c092385e794a6484f42c",
       "bytes": 12104,
       "mode": 384,
@@ -1518,7 +1518,7 @@
     },
     {
       "source": "docs/tiny-http/arc04-pagefind-search/slice02-client-and-facets/slice-doc.md",
-      "destination": "project-04-tiny-http/arc04-pagefind-search/slice02-client-and-facets/slice-doc.md",
+      "destination": "project04-tiny-http/arc04-pagefind-search/slice02-client-and-facets/slice-doc.md",
       "sha256": "8cdd63df7f7c85b5a8a6857e729f58fd1b692e66f1b1ecb879980c1234b667ba",
       "bytes": 10873,
       "mode": 384,
@@ -1527,7 +1527,7 @@
     },
     {
       "source": "docs/tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/cc-prompt.md",
-      "destination": "project-04-tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/cc-prompt.md",
+      "destination": "project04-tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/cc-prompt.md",
       "sha256": "f610daa31f2eaf8061916409ee1a52f604eb6f05ed84b1194359bc000c798acf",
       "bytes": 3506,
       "mode": 420,
@@ -1536,7 +1536,7 @@
     },
     {
       "source": "docs/tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/cdc-verification.md",
-      "destination": "project-04-tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/cdc-verification.md",
+      "destination": "project04-tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/cdc-verification.md",
       "sha256": "a047013685dc642c065e59df67ae7f992b362f35a35ea63b48995caf8ad410cb",
       "bytes": 4237,
       "mode": 420,
@@ -1545,7 +1545,7 @@
     },
     {
       "source": "docs/tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/closing-report.md",
-      "destination": "project-04-tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/closing-report.md",
+      "destination": "project04-tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/closing-report.md",
       "sha256": "b7355cdb95fb60d7c90660fa4a1d9f902afc121e62e44085b9f77d0364cb37e6",
       "bytes": 3939,
       "mode": 420,
@@ -1554,7 +1554,7 @@
     },
     {
       "source": "docs/tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/ledger.md",
-      "destination": "project-04-tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/ledger.md",
+      "destination": "project04-tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/ledger.md",
       "sha256": "365a19498fc003fc5e271c008941cc161425d12fb54122668ce9cabfc5a0b63e",
       "bytes": 5188,
       "mode": 420,
@@ -1563,7 +1563,7 @@
     },
     {
       "source": "docs/tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/slice-doc.md",
-      "destination": "project-04-tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/slice-doc.md",
+      "destination": "project04-tiny-http/arc04-pagefind-search/slice03-browser-js-tooling-policy/slice-doc.md",
       "sha256": "9dd2128a61eb756301b6954b103d57c988749fa69847db3e5fc68f9c2899e3c2",
       "bytes": 6028,
       "mode": 420,
@@ -1581,7 +1581,7 @@
     },
     {
       "source": "docs/tiny-http/arc05-news-blog-content-type/slice01-news-model-and-post/cc-prompt.md",
-      "destination": "project-04-tiny-http/arc05-news-blog-content-type/slice01-news-model-and-post/cc-prompt.md",
+      "destination": "project04-tiny-http/arc05-news-blog-content-type/slice01-news-model-and-post/cc-prompt.md",
       "sha256": "206bdbd2b09551ca45f9c3a747f976cc5e40935a84398ed9dd9b4c9837b21e86",
       "bytes": 2637,
       "mode": 420,
@@ -1590,7 +1590,7 @@
     },
     {
       "source": "docs/tiny-http/arc05-news-blog-content-type/slice01-news-model-and-post/ledger.md",
-      "destination": "project-04-tiny-http/arc05-news-blog-content-type/slice01-news-model-and-post/ledger.md",
+      "destination": "project04-tiny-http/arc05-news-blog-content-type/slice01-news-model-and-post/ledger.md",
       "sha256": "14808b2c48bc43bd948058a0d082dcd7dd984b5c2cb326ae8302633b062b20f2",
       "bytes": 2498,
       "mode": 420,
@@ -1599,7 +1599,7 @@
     },
     {
       "source": "docs/tiny-http/arc05-news-blog-content-type/slice01-news-model-and-post/slice-doc.md",
-      "destination": "project-04-tiny-http/arc05-news-blog-content-type/slice01-news-model-and-post/slice-doc.md",
+      "destination": "project04-tiny-http/arc05-news-blog-content-type/slice01-news-model-and-post/slice-doc.md",
       "sha256": "e17ea089e7ec680ddc6cfe5ebfd799ed16f93bd9341969ba99722f4b9ec6ca15",
       "bytes": 3554,
       "mode": 420,
@@ -1608,7 +1608,7 @@
     },
     {
       "source": "docs/tiny-http/design-delta.md",
-      "destination": "project-04-tiny-http/design-delta.md",
+      "destination": "project04-tiny-http/design-delta.md",
       "sha256": "891021d322db56492a2c376cfcda01106e15ceffcd3e34a3c7e576e657a47760",
       "bytes": 13081,
       "mode": 384,
@@ -1632,6 +1632,14 @@
       "mode": 420,
       "mtime_ns": 1773801617155408166,
       "tracked": true
+    }
+  ],
+  "path_renames": [
+    {
+      "date": "2026-11-11",
+      "from": "project-04-tiny-http",
+      "to": "project04-tiny-http",
+      "reason": "Operator corrected the project directory to canonical naming."
     }
   ]
 }

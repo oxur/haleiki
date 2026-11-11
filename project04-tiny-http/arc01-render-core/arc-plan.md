@@ -69,7 +69,7 @@ statuses and evidence are retained there.
 ### Migration — 2026-11-11
 
 Moved from `docs/tiny-http/` to orphan branch `planning`, worktree
-`.worktrees/planning/project-04-tiny-http/`. The embedded ledger now lives in sibling
+`.worktrees/planning/project04-tiny-http/`. The embedded ledger now lives in sibling
 `ledger.md`; row text and acceptance states are unchanged. See the
 [byte-preserved August plan](../../archive/docs/tiny-http/arc01-render-core/arc-plan.md). Existing issued prompts, ledgers, close reports,
 verification records and `slice-doc.md` documents retain their bytes.

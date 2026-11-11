@@ -63,7 +63,7 @@ def main():
             assert files == expected, f'Current source population differs: {prefix}'
     print(f'PASS: complete tracked population ({len(expected_tracked)}); existing local roots covered')
 
-    pivot = root / 'project-04-tiny-http'
+    pivot = root / 'project04-tiny-http'
     ledger_rows = 0
     for original in (root / 'archive/docs/tiny-http').rglob('*plan.md'):
         relative = original.relative_to(root / 'archive/docs/tiny-http')

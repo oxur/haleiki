@@ -12,13 +12,13 @@ Framework loaded: collaboration-framework **3.0.1**, from the Operator-named ins
 | [01 — Demo site](project01-demo-site/project-plan.md) | March–May 2026 | Best-effort historical map; phases 1–5 detailed, later scope retained as carryover |
 | [02 — Concept cards](project02-concept-cards/project-plan.md) | May 3, 2026 | Pilot, corpus extraction and backlink backfill; historical acceptance not reconstructed |
 | [03 — Cobalt site build](project03-cobalt-site-build/project-plan.md) | May 3–8, 2026 | M1–M8 mapped to three coarse arcs; superseded rendering lineage |
-| [04 — tiny_http pivot](project-04-tiny-http/project-plan.md) | July–August 2026; unfinished | Real framework records retained; Arcs 01–04 closed, Arc 05 gated, Arc 06 roadmap only |
+| [04 — tiny_http pivot](project04-tiny-http/project-plan.md) | July–August 2026; unfinished | Real framework records retained; Arcs 01–04 closed, Arc 05 gated, Arc 06 roadmap only |
 
 The first three projects are finding aids, not newly approved implementation work.
 Their arc grouping is approximate; historical milestone identities and subjects
 remain visible in slice plans and the [Git history map](history-commits.txt).
 There are no fabricated success reports, reviewer decisions, dates or prompts.
-The special `project-04-tiny-http` spelling follows the Operator's requested name.
+All projects use the canonical `projectNN-<slug>` naming convention.
 
 ## Original records and path resolution
 
@@ -43,7 +43,7 @@ Source branches other than `framework-base/tiny-http` are not rewritten.
 
 ## Resume point
 
-Read the [tiny_http project plan](project-04-tiny-http/project-plan.md), its [ledger](project-04-tiny-http/ledger.md),
+Read the [tiny_http project plan](project04-tiny-http/project-plan.md), its [ledger](project04-tiny-http/ledger.md),
 then Arc 05 and its Slice 01 `slice-plan.md`. Discuss the four Operator decisions
 before issuing a current-path follow-up prompt or writing news implementation.
 The earlier discussion recommended `demo/news/*.md`, `/news/<slug>/`, required

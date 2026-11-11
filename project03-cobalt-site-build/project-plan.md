@@ -3,7 +3,7 @@ project: project03-cobalt-site-build
 status: historical-reconstructed
 depends-on: ["project01-demo-site", "project02-concept-cards"]
 blocks: []
-related: ["project-04-tiny-http"]
+related: ["project04-tiny-http"]
 ---
 
 # Cobalt templates and static site build

@@ -1,5 +1,5 @@
 ---
-project: project-04-tiny-http
+project: project04-tiny-http
 status: active
 depends-on: [project03-cobalt-site-build]
 blocks: []
@@ -13,7 +13,7 @@ related: [project01-demo-site, project02-concept-cards]
 > `framework-base/tiny-http`. Architecture lives in
 > [`design-delta.md`](./design-delta.md); this file is the plan, with a sibling ledger.
 >
-> Layout: `.worktrees/planning/project-04-tiny-http/` on orphan branch `planning`
+> Layout: `.worktrees/planning/project04-tiny-http/` on orphan branch `planning`
 > (migrated 2026-11-11). Historical status: **active** · 2026-08-21.
 
 ---
@@ -110,11 +110,17 @@ statuses and evidence are retained there.
 
 ## 5. Version history
 
+### Directory-name correction — 2026-11-11
+
+The Operator renamed the project to `project04-tiny-http`. Current links,
+project relationships, manifest destinations and the verifier were repointed;
+archived payloads, issued prompts and ledger rows remain unchanged.
+
 
 ### Migration — 2026-11-11
 
 Moved from `docs/tiny-http/` to orphan branch `planning`, worktree
-`.worktrees/planning/project-04-tiny-http/`. The embedded ledger now lives in sibling
+`.worktrees/planning/project04-tiny-http/`. The embedded ledger now lives in sibling
 `ledger.md`; row text and acceptance states are unchanged. See the
 [byte-preserved August plan](../archive/docs/tiny-http/project-plan.md). Existing issued prompts, ledgers, close reports,
 verification records and `slice-doc.md` documents retain their bytes.
@@ -232,8 +238,8 @@ planned deep; Arcs 02–06 roadmap-level pending *plan late, plan deep*.
 
 The existing CDC + CC workflow and `cdc-verification.md` records are retained.
 Operator authorization covers this migration only; it does not start Arc 05 code.
-The directory spelling `project-04-tiny-http` follows the Operator's explicit
-`project-<next index>-tiny-http` request; other projects use `projectNN-<slug>`.
+The directory spelling `project04-tiny-http` follows the canonical
+`projectNN-<slug>` convention after the Operator corrected its name on 2026-11-11.
 Arcs 01–04 remain historically closed. Arc 05 Slice 01 remains open and requires
 Operator confirmation of authoring location, URL model, frontmatter and fixtures
 before coding. Arc 06 remains roadmap-level, with no invented directory/open set.

@@ -146,3 +146,12 @@ separately from the preservation commit; neither branch has been pushed.
 - Unknown historical validation/acceptance remains unknown. The lightweight
   project/arc grouping is a finding aid, not a retroactive claim that those
   exact units were formally planned or independently closed at the time.
+
+## Directory-name correction — 2026-11-11
+
+After the initial migration, the Operator renamed `project-04-tiny-http`
+to canonical `project04-tiny-http` (rename commit `504536e`). Current
+navigation, metadata, source-checkout guidance, 69 manifest destination
+paths and the verifier now use the corrected directory. The initial-layout
+description above remains the historical record of the original migration.
+Payload hashes, issued prompts, archive contents and ledger rows are unchanged.
