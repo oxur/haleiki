@@ -81,7 +81,7 @@ Warm/cool dual-theme aesthetic built on a semantic design token architecture. DM
 This project is in early development. Plans and historical design/development
 records live on the orphan `planning` branch, checked out locally at
 `.worktrees/planning/`. Start with that worktree's `README.md` for the chronological
-project index and archive. The active pivot is `project-04-tiny-http/`;
+project index and archive. The active pivot is `project04-tiny-http/`;
 its news/blog arc is awaiting content-model decisions.
 
 Design mockups for key page types in the wiki are availale for viewing here:

@@ -54,8 +54,7 @@ before planning or closing work; the migration used installed version 3.0.1.
 - `project01-demo-site/`: historical source acquisition and demo pipeline.
 - `project02-concept-cards/`: historical pilot, corpus extraction and backlinks.
 - `project03-cobalt-site-build/`: historical M1–M8 Cobalt site build.
-- `project-04-tiny-http/`: active tiny_http/minijinja pivot. This spelling follows
-  the Operator's explicit `project-<next index>-tiny-http` request.
+- `project04-tiny-http/`: active tiny_http/minijinja pivot.
 
 Use `project-plan.md`, `arc-plan.md`, `slice-plan.md` and a sibling `ledger.md`
 at each scale. Durable supporting outputs default to the owning slice's
@@ -70,7 +69,7 @@ reconstructions are finding aids, with no inferred independent acceptance.
 
 ### tiny_http pivot (source branch `framework-base/tiny-http`)
 
-Read `.worktrees/planning/project-04-tiny-http/project-plan.md` and its ledger.
+Read `.worktrees/planning/project04-tiny-http/project-plan.md` and its ledger.
 Arcs 01–04 retain their recorded closure; Arc 05 Slice 01 is still held at the
 Operator discussion gate for authoring location, URLs, frontmatter and fixtures.
 Arc 06 remains roadmap-level. Migration does not authorize feature implementation.
