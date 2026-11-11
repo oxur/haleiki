@@ -44,16 +44,20 @@ Source branches other than `framework-base/tiny-http` are not rewritten.
 ## Resume point
 
 Read the [tiny_http project plan](project04-tiny-http/project-plan.md), its [ledger](project04-tiny-http/ledger.md),
-then Arc 05 and its Slice 01 `slice-plan.md`. Discuss the four Operator decisions
-before issuing a current-path follow-up prompt or writing news implementation.
-The earlier discussion recommended `demo/news/*.md`, `/news/<slug>/`, required
-type/title/date/category/tags, optional author/excerpt and one minimal fixture;
-the Operator has not confirmed these choices. The 2026-11-11 cleanup does not
-provide that confirmation.
+then Arc 05 and its Slice 01 `slice-plan.md`. The Operator separately approved
+the four content-model decisions and Autonomous Mode through end of Arc 05 on
+2026-11-11. The current assignment is
+`arc05-news-blog-content-type/slice01-news-model-and-post/cc-prompt-iteration01.md`
+(relative to `project04-tiny-http`). Later archive/taxonomy/feed/search decisions
+remain discussion-gated; Arc 06 is outside execution authority. The migration
+itself did not provide this separate approval.
 
 ## Migration checks
 
-Run `python3 verify-migration.py --source ../..` here. It checks every retained
+At the migration baseline, run `python3 verify-migration.py --source ../..` here.
+This checker is frozen migration evidence, not a new-development gate: it
+expects the original live ledgers and unchanged source. Do not weaken it after
+Arc 05 development legitimately changes those inputs. It checks every retained
 payload, current original bytes if still present (or pinned Git bytes after removal),
 unchanged tiny_http ledger rows, canonical links, and source-code/fixture stability.
 See [migration report](migration-report.md) for outcomes and limitations.

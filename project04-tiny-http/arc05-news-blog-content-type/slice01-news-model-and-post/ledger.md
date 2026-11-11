@@ -21,3 +21,11 @@
 ## What Worked
 
 _Filled at close._
+
+## Current authority note — 2026-11-11
+
+F-1's original reference to the slice-doc decision log now resolves through
+the canonical `slice-plan.md` Operator decision log and numbered assignment;
+the issued `slice-doc.md` remains unchanged history. All eight row criteria,
+statuses and original verification descriptions are preserved. Preparation
+does not independently close F-1 or any implementation/gate row.

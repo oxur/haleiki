@@ -110,6 +110,14 @@ statuses and evidence are retained there.
 
 ## 5. Version history
 
+### v1.9 — 2026-11-11 (Arc 05 execution authority)
+
+Arc 05 Slice 01 preparation reconciled the previous migration-only resume
+wording with the Operator's separate content-model and Autonomous approvals.
+The roadmap and all project acceptance rows are unchanged; execution stops
+at Arc 05 or earlier unresolved discussion gates. Current source-grounded
+assignment and actual contributor attribution live in the arc/slice plans.
+
 ### Directory-name correction — 2026-11-11
 
 The Operator renamed the project to `project04-tiny-http`. Current links,
@@ -237,12 +245,17 @@ planned deep; Arcs 02–06 roadmap-level pending *plan late, plan deep*.
 ## Workflow, paths and resume gate
 
 The existing CDC + CC workflow and `cdc-verification.md` records are retained.
-Operator authorization covers this migration only; it does not start Arc 05 code.
+The migration authorization alone did not start Arc 05 code. Separately, the
+Operator approved Autonomous Mode through the end of Arc 05 on 2026-11-11;
+see the arc plan authorization and canonical Slice 01 decision log/current
+assignment. No external action or Arc 06 execution is authorized.
 The directory spelling `project04-tiny-http` follows the canonical
 `projectNN-<slug>` convention after the Operator corrected its name on 2026-11-11.
-Arcs 01–04 remain historically closed. Arc 05 Slice 01 remains open and requires
-Operator confirmation of authoring location, URL model, frontmatter and fixtures
-before coding. Arc 06 remains roadmap-level, with no invented directory/open set.
+Arcs 01–04 remain historically closed. Arc 05 Slice 01 remains open for
+implementation/independent acceptance; its authoring location, URL model,
+frontmatter and fixture decisions are now approved. Later archive, taxonomy,
+feed and search discussion gates remain open. Arc 06 remains roadmap-level,
+with no invented directory/open set.
 Future assignments must use current paths and preserve the original issued prompt.
 Durable slice outputs default to that slice's `artifacts/` directory.
 

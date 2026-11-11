@@ -2,7 +2,7 @@
 
 > The arc plan-of-record: add Haleiki's news/blog surface to the tiny_http pivot.
 > Part of the tiny_http project ([`../project-plan.md`](../project-plan.md)).
-> Status: **active** · 2026-08-21.
+> Status: **active** · v1.1 · 2026-11-11; initial plan 2026-08-21.
 
 ---
 
@@ -61,12 +61,13 @@ Confirmed:
 - Trust bars stay off news posts unless the operator explicitly reverses the
   design-review note in `templates/README.md`.
 
-Discussion-gated:
+Resolved on 2026-11-11 (was discussion-gated): authoring location and post URL
+model; minimum/optional frontmatter; and existing content versus minimal demo
+fixtures. The canonical Slice 01 decision log retains the approved example
+and the four Operator decisions; original issued history stays unchanged.
 
-- Authoring location and post URL model, after CC shows concrete sample paths.
-- Minimum required frontmatter and optional fields, after CC shows concrete demo
-  posts.
-- Whether demo news fixtures are existing content or minimal test/demo fixtures.
+Still discussion-gated:
+
 - Archive pagination shape and date granularity, after the first archive render.
 - Tag/category vocabulary and descriptions, after the first taxonomy render.
 - Whether `/news/feed.xml` is delivered in Arc 05 or deferred with the visible
@@ -99,6 +100,13 @@ statuses and evidence are retained there.
 
 ## 6. Version History
 
+### v1.1 — 2026-11-11 (Slice 01 assignment preparation)
+
+Retained the parent's Autonomous authorization and Slice 01 approvals,
+reconciled the initial gate list, and issued the source-grounded numbered
+assignment. Existing E-1…E-7 and F-1…F-8 remain open. No implementation or
+composition acceptance is inferred from this preparation.
+
 
 ### Migration — 2026-11-11
 
@@ -118,3 +126,60 @@ wiki updates and related news items. Opens a three-slice path: news model + post
 route, news listing/archive/taxonomy surfaces, then sink parity plus feed/search
 disposition and arc close. Discussion gates are explicit so product/design
 choices happen with rendered examples in hand.
+
+## Autonomous execution authorization — 2026-11-11
+
+The Operator approved all four Slice 01 content-model recommendations and
+authorized Autonomous Mode through the end of Arc 05, including slice iterations,
+independent review, local scoped commits, arc composition and CDC retrospectives.
+Stop at unresolved product/design discussion gates; do not open Arc 06.
+No pushing, merging, publishing, external messages or deployment is authorized.
+
+| Role | Explicitly approved provider/model/settings | Assignment |
+|------|--------------------------------------------|------------|
+| CDC, planning and independent implementation review | OpenAI contributor tool, `gpt-6.1-sol`, reasoning `high` | Dedicated coordinator context; context ID recorded at handoff |
+| CC, source implementation and attested evidence | OpenAI contributor tool, `gpt-6-luna`, reasoning `high` | Dedicated implementation context, assigned by CDC |
+
+Both exact model overrides and High reasoning are advertised by the live
+contributor tool. No substitutions/default inheritance are authorized. The
+parent chat relays progress and Operator decisions; substantive coordination is
+handed to the explicitly selected CDC context. CDC reviews CC's implementation;
+self-repair by a reviewer requires a separate verifier for affected changes.
+Use the existing `cdc-verification.md` convention. Arc-scale acceptance requires
+fresh composition evidence and the applicable independent/Operator gate.
+
+Source checkout: `/Users/oubiwann/lab/oxur/haleiki`, suitable dedicated non-default
+branch `framework-base/tiny-http`, clean baseline
+`75d2593d51c986346f0239bed36a248ac5b4e6f7`.
+Planning checkout: `/Users/oubiwann/lab/oxur/haleiki/.worktrees/planning`, branch
+`planning`; baseline before this authorization `89213a1`.
+CDC owns planning mutation/staging; CC owns source mutation/staging only while
+assigned. Serialize source writes and gates against a stable candidate. Retain
+all prompts and original evidence, existing outputs of unknown ownership, and
+all current acceptance obligations. Do not run push/publish/deploy targets.
+
+Slice 01 decisions are confirmed in its canonical `slice-plan.md`; the original
+issued prompt and `slice-doc.md` remain preserved. CDC must prepare a source-
+grounded `cc-prompt-iteration01.md` under the current prompt-authoring/intake
+contract before assigning CC. Later archive pagination/date grouping, taxonomy
+vocabulary/descriptions, RSS/feed delivery and news search-participation gates
+remain open. Present concrete evidence and recommendations when reaching them.
+
+## Contributor attribution and dispatch — 2026-11-11
+
+CDC: Locke, actual context `01a1ccec-0192-7ea3-81ca-f0ba2dad69a9`.
+Operator requested OpenAI `gpt-6.1-sol`, reasoning `high`; the parent
+reports its spawn request explicitly accepted those settings. This is
+requested/tool-selected attribution, not a claim of independently
+reported backend identity; that identity is unreported.
+
+This CDC context has no native subagent spawn tool. The parent explicitly
+authorized dispatch relay: it will spawn CC as `gpt-6-luna / high` from
+the durable assignment and return actual CC ID/settings/results to Locke.
+No alternate model or user-owned chat route is used. CC is not yet
+dispatched at issuance; the parent owns the next dispatch action.
+
+Current assignment: `slice01-news-model-and-post/cc-prompt-iteration01.md`.
+CC owns source plus its designated `closing-report.md` handoff only; CDC
+owns planning/index work and independently reviews source after CC returns
+mutation ownership. Arc authority remains active across this phase return.
