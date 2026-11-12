@@ -46,10 +46,12 @@ Source branches other than `framework-base/tiny-http` are not rewritten.
 Read the [tiny_http project plan](project04-tiny-http/project-plan.md), its [ledger](project04-tiny-http/ledger.md),
 then Arc 05 and its Slice 01 `slice-plan.md`. The Operator separately approved
 the four content-model decisions and Autonomous Mode through end of Arc 05 on
-2026-11-11. The current assignment is
-`arc05-news-blog-content-type/slice01-news-model-and-post/cc-prompt-iteration01.md`
-(relative to `project04-tiny-http`). Later archive/taxonomy/feed/search decisions
-remain discussion-gated; Arc 06 is outside execution authority. The migration
+2026-11-11. Slice 01 is independently closed at source `5fe3cf46`; its accepted
+final assignment is preserved as
+`arc05-news-blog-content-type/slice01-news-model-and-post/cc-prompt-iteration02.md`
+(relative to `project04-tiny-http`). No CC assignment is active. The arc plan
+contains concrete previews/options for the reserved archive/taxonomy/feed/search
+decisions. Arc 06 is outside execution authority. The migration
 itself did not provide this separate approval.
 
 ## Migration checks

@@ -1,6 +1,13 @@
 # CDC verification — Arc 05 Slice 01
 
-## Current verdict — 2026-11-11
+## Current final verdict — 2026-11-11
+
+**Accepted at `5fe3cf46fa1ea673b0b84f09167e36de8611d3ee`: all eight F rows done,
+R1 resolved.** The historical first review below remains preserved; the final
+correction review, gate receipts and eight-row close are appended after it.
+Arc 05 remains active at its reserved Operator discussion gates.
+
+## Review 01 verdict — 2026-11-11 (historical; superseded below)
 
 **Returned for a bounded test correction; Slice 01 remains open.**
 Current reviewed source: `cb31dc92caa667ce6f3a7133163c3da8749549b1`, clean
@@ -138,3 +145,130 @@ to the next actual discussion gate, retaining all later Operator decisions.
 Next owner: parent dispatches/resumes the same selected CC with iteration 02;
 CC owns only the stated test edit and appends dated evidence to its report.
 CDC makes no concurrent source mutations/gates while CC owns the source tree.
+
+## Correction review 02 and Slice 01 acceptance — 2026-11-11
+
+**Accepted: F-1…F-8 done; R1 resolved.** Reviewed final source
+`5fe3cf46fa1ea673b0b84f09167e36de8611d3ee` on clean
+`framework-base/tiny-http`. Current assignment `cc-prompt-iteration02.md`,
+SHA-256 `af48b57b82ba72758bbab5f2b673ef5ea3a2baaedcffd888a7a75a91a618854f`,
+issued at planning `685a4fa5e64927e5664fe399428160f92e950ca4`.
+Reviewer remains CDC Locke, requested/tool-selected `gpt-6.1-sol / high`;
+implementer remains CC Kierkegaard, requested/tool-selected `gpt-6-luna / high`,
+with actual context IDs above. Backend identities remain unreported.
+CC returned mutation ownership before review; CDC made no source repairs.
+
+I read the complete appended iteration-02 CC report and verified its candidate,
+ownership and reading/readback against the real two-line test change. Exact
+diff from cb31dc92: one file, two assertions replaced, no production/context,
+fixture, template, dependency or route changes. Both assistant commit trailers
+are contiguous. `get("prev")` and `get("next")` now must return Some(Null);
+missing keys return None under the already inspected pinned API and cannot
+pass. The actual-context renderer test ran fresh and passed. R1 is resolved as
+a test-discrimination correction; it never indicated a production omission.
+
+### Retained evidence, with explicit applicability
+
+The independent cb31dc92 observations in Review 01 are retained at their original
+revision/date, not relabelled as new runs: approval/fixture/corpus scan,
+parser/strict-date/optional/body/duplicate controls, route collisions and
+namespace coexistence, search population, real 294-page export, twelve CLI
+specimens and actual directory-permission rejection. The only delta is the
+two assertion replacements in the renderer test; all relevant production code,
+content, templates, runtime dependencies and caller behavior are identical.
+No new finding invalidates those inputs or methods. Therefore that evidence
+remains applicable to F-1…F-6 and the unchanged relationship policy. F-5/F-7's
+corrected assertion and all mandatory final gates were independently rerun.
+
+### Fresh independent final-candidate gates
+
+All commands ran serially with absolute cwd `/Users/oubiwann/lab/oxur/haleiki`
+and the authorized escalation for live-root/build/local-bind operations. Source
+HEAD and clean status were checked before each command and after completion.
+No sandbox denial, bind failure, compile failure, test failure or lint failure
+occurred in this final pass. Full raw commands/outputs/exits are retained in
+`artifacts/cdc-final-gates.log`; earlier failures/review evidence remain intact.
+
+| Exact command | Exit | Independent result |
+|---|---|---|
+| `cargo test --all-features --workspace news::tests::` | 0 | 4 passed, 0 failed, 420 filtered; actual-context presence/null plus real-template safety/absence checks |
+| `cargo test --no-default-features --workspace` | 0 | 132 unit passed, 0 failed, 1 ignored; export_cli 1 passed, search_cli 1 passed; demo-only integration targets selected zero and are not counted as tested behavior |
+| `cargo outdated --root-deps-only --ignore-external-rel` | 0 | Query succeeded; 12 packages list newer Latest releases, Compat column is `---` in every row. The minijinja loader warning refers to version 3.1.0 from the query, not proof of a current 2.21.0 rendering fault. No pins changed |
+| `make check` | 0 | Native Clippy, format and debug build passed. Unit: 416 passed, 0 failed, 8 ignored. Integrations: demo_fetch 14 passed/3 ignored; demo_status 3 passed; export_cli 1 passed; search_cli 1 passed. Final “All checks passed (build + lint + test)” observed |
+| `git diff --check` and candidate/source scope inspection | 0 | Source remains clean at final HEAD; only the two named assertions differ from the first reviewed candidate |
+
+The 416/8 split is now independently observed, superseding the earlier relay's
+incorrect 415 progress count without erasing the correction history. Across
+the full Make test run this is 435 passed and 11 retained ignores; no new ignore
+was introduced. The no-default warnings are four unused imports, two each in
+`tools/tests/demo_fetch.rs` and `demo_status.rs`. I inspected their actual
+unconditional imports and `#[cfg(feature="demo")]` test bodies and verified
+those files and Cargo manifests are byte-unchanged from the pre-Arc-05 source
+baseline 75d2593. This substantiates the existing feature-gating cause without
+claiming a separate historical baseline execution. They are disclosed existing
+warnings, not hidden or fixed outside the approved one-file correction.
+
+Before Make cleanup and before restoration, both the source bin and original
+backup were checked as regular non-symlink uid-501-owned files, initially mode
+0755, hash `4df7d22f32bbeb7bcde62c62e100917987199fc71729179f85b877a1c3405f6e`.
+The bin directory contained only the known `haleiki` executable. After Make,
+the unchanged owned backup was reverified before restoring its bytes/mode;
+the final source bin hash again matches. Unknown outputs were not overwritten.
+Browser assets, harness and shared browser/search behavior are unchanged, so
+the browser gates are not triggered for this test-only correction. Their arc-
+composition obligations remain open; no historical browser green is inherited.
+The frozen migration verifier was neither used as a development gate nor edited.
+
+### Final eight-row walk
+
+| Row | Final status and independent evidence |
+|---|---|
+| F-1 | done — canonical Operator log and exact approved fixture/URL/frontmatter checked; no approval inferred from migration |
+| F-2 | done — full 753-file demo/zero-file content scan, 91 sources/186 concepts/one news post, one news/blog match, no read errors; sole fixture remains the approved maintainer example |
+| F-3 | done — parser/model/accessor/body/identity/optional checks reproduced, real full corpus parses/exports; current full suite passes |
+| F-4 | done — strict missing/null/wrong-shape/tag/date/duplicate/fence/UTF-8 controls reproduced, independent CLI specimens and real unreadable-directory error; current full suite passes |
+| F-5 | done — real template/metadata escaping/body-safe evidence retained, corrected real-context renderer suite reproduced fresh; no global escape change |
+| F-6 | done — exact shared route set, positive bare-slug coexistence and negative segmented-concept collision, Pagefind preservation and real export retained; current full suite re-exercises route/sink tests |
+| F-7 | done — explicit present-null prev/next assertions corrected and reproduced, related remains exact [], absent byline/nav/related and no trust bar checked; sole-demo-post policy documented |
+| F-8 | done — required native full gate freshly reproduced on 5fe3cf46 with exact results above, plus no-default matrix/direct dependency query |
+
+Eight rows at open, eight done at close, zero deferred/no-op/open rows. Original
+criterion text and IDs are unchanged. Original `cc-prompt.md`, iteration 01,
+iteration 02 and `slice-doc.md` retain issued bytes. CC's reports/failures and
+the unsuccessful first review are preserved as separately attributed history.
+
+### Bubble-up, artifacts and scale boundary
+
+Slice 01 delivered the exact piece assigned by the arc plan: a strict first-
+class model, one approved post through the real post template and shared route
+pipeline, with both actual export and sink-resolution evidence. Scope diff:
+no promised slice behavior omitted; no listing, archive, taxonomy, feed or news
+Pagefind participation silently added. The current future-surface links are
+the disclosed boundaries of the accepted direct-post increment.
+
+Arc-plan change assessment: no structural/scope amendment is required; update
+routine slice/E-1 status and preserve the four existing product discussion
+gates. E-2…E-7 and project P-5/P-10 remain open. This acceptance does not prove
+the full news route set, full sink composition or arc closure. No Arc 06 is opened.
+The required closing analysis is `cdc-retrospective.md`, linked from the report.
+
+Supporting outputs are the two CDC logs and the explicitly illustrative gate
+preview HTML/PNG, its exact context JSON and render script under `artifacts/`.
+The previews address the existing Operator gates using unchanged templates;
+their native rendering and screenshot are design evidence, not new product
+routes or accepted composition. All canonical close/prompt documents remain
+in the slice root. Next owner is the Operator, through the parent relay, for
+the concrete decisions recorded in the arc plan's pending-decision packet.
+
+### Planning-record assembly receipt
+
+The first CDC record updater exited 1 on an assertion while parsing F-2,
+because its existing verification command contains pipe characters inside a
+code span. No ledger had been written at that point; already-created CDC
+records/artifacts were retained. Recovery matched only the exact existing
+status/evidence delimiter and checked all eight original criterion/verification/
+significance/origin prefixes byte-for-byte before accepting the update. A
+subsequent planning diff check reported an extra final blank line in this CDC
+record; it was corrected. Preview HTML inherited insignificant template
+trailing whitespace, normalized in the review wrapper and reproduction script.
+These were planning-record assembly corrections, not source/gate failures.

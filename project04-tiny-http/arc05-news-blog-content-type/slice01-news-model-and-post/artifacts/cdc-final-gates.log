@@ -1,0 +1,783 @@
+
+COMMAND ['cargo', 'test', '--all-features', '--workspace', 'news::tests::']
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.17s
+     Running unittests src/main.rs (target/debug/deps/haleiki-28e1375ab239fb1a)
+
+running 4 tests
+test news::tests::test_render_post_escapes_metadata_and_keeps_only_markdown_body_html_safe ... ok
+test news::tests::test_post_context_serializes_empty_navigation_and_related_collection_explicitly ... ok
+test news::tests::test_render_post_missing_slug_returns_config_error ... ok
+test news::tests::test_render_post_uses_real_template_and_expected_fields ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 420 filtered out; finished in 0.06s
+
+     Running tests/demo_fetch.rs (target/debug/deps/demo_fetch-94bd4d6489481bad)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 17 filtered out; finished in 0.00s
+
+     Running tests/demo_status.rs (target/debug/deps/demo_status-2287329d74955e24)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running tests/export_cli.rs (target/debug/deps/export_cli-26b5cd5e5ed072c1)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests/search_cli.rs (target/debug/deps/search_cli-3589e9f1be87caa6)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+
+EXIT 0
+
+COMMAND ['cargo', 'test', '--no-default-features', '--workspace']
+warning: unused import: `assert_cmd::Command`
+ --> tools/tests/demo_fetch.rs:3:5
+  |
+3 | use assert_cmd::Command;
+  |     ^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `predicates::prelude::*`
+ --> tools/tests/demo_fetch.rs:4:5
+  |
+4 | use predicates::prelude::*;
+  |     ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `assert_cmd::Command`
+ --> tools/tests/demo_status.rs:3:5
+  |
+3 | use assert_cmd::Command;
+  |     ^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `predicates::prelude::*`
+ --> tools/tests/demo_status.rs:4:5
+  |
+4 | use predicates::prelude::*;
+  |     ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `haleiki` (test "demo_fetch") generated 2 warnings (run `cargo fix --test "demo_fetch" -p haleiki` to apply 2 suggestions)
+warning: `haleiki` (test "demo_status") generated 2 warnings (run `cargo fix --test "demo_status" -p haleiki` to apply 2 suggestions)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.15s
+     Running unittests src/main.rs (target/debug/deps/haleiki-599ea0e5f82c1601)
+
+running 133 tests
+test export::tests::test_export_path_references_no_liquid_templates ... ok
+test article::tests::test_render_path_references_no_liquid_templates ... ok
+test article::tests::test_concept_title_appends_disambiguator_when_present ... ok
+test article::tests::test_assemble_concept_page_data_matches_abelian_group_frontmatter ... ok
+test article::tests::test_concept_facts_includes_all_three_types_in_order_when_present ... ok
+test generator::tests::test_attribution_json_grouped_by_project ... ok
+test article::tests::test_render_source_vimalamitra_full_chrome ... ok
+test generator::tests::test_build_trust_levels ... ok
+test article::tests::test_render_concept_escaping_holds_at_page_scale ... ok
+test generator::tests::test_generate_creates_all_files ... ok
+test article::tests::test_render_concept_abelian_group_full_chrome ... ok
+test graph::tests::test_breadcrumbs_concept ... ok
+test graph::tests::test_breadcrumbs_source ... ok
+test graph::tests::test_build_graph_edge_count ... ok
+test graph::tests::test_build_graph_node_count ... ok
+test graph::tests::test_category_index ... ok
+test graph::tests::test_orphans_source_only_provenance_edges ... ok
+test generator::tests::test_profile_json_nested_shape ... ok
+test graph::tests::test_see_also_excludes_provenance ... ok
+test generator::tests::test_provenance_json_bidirectional ... ok
+test graph::tests::test_stats ... ok
+test graph::tests::test_title_case ... ok
+test markdown::tests::test_render_markdown_commonmark_basics ... ok
+test markdown::tests::test_render_markdown_gfm_table ... ok
+test markdown::tests::test_render_markdown_heading_ids_are_deterministic_and_deduped ... ok
+test markdown::tests::test_render_markdown_fenced_and_inline_code_plain_and_escaped ... ok
+test markdown::tests::test_render_markdown_html_passes_through_safe_context_intact ... ok
+test markdown::tests::test_render_markdown_math_preserved_and_code_dollar_untouched ... ok
+test markdown::tests::test_render_markdown_real_demo_source_body ... ok
+test markdown::tests::test_render_markdown_toc_matches_document_order_and_anchors ... ok
+test markdown::tests::test_render_markdown_real_demo_concept_body ... ok
+test news::tests::test_post_context_serializes_empty_navigation_and_related_collection_explicitly ... ok
+test news::tests::test_render_post_escapes_metadata_and_keeps_only_markdown_body_html_safe ... ok
+test generator::tests::test_build_featured_real_demo_corpus_ranked_by_typed_indegree ... ok
+test news::tests::test_render_post_uses_real_template_and_expected_fields ... ok
+test page::tests::test_render_404_chrome ... ok
+test news::tests::test_render_post_missing_slug_returns_config_error ... ok
+test page::tests::test_render_about_full_chrome ... ok
+test page::tests::test_render_browse_category_path_references_no_liquid_templates ... ok
+test page::tests::test_render_attribution_escaping_holds_at_page_scale ... ok
+test page::tests::test_render_attribution_full_chrome ... ok
+test page::tests::test_render_browse_escaping_holds_at_page_scale ... ok
+test page::tests::test_render_about_safe_body_stays_unescaped ... ok
+test page::tests::test_render_browse_full_chrome ... ok
+test page::tests::test_render_category_escaping_holds_at_page_scale ... ok
+test page::tests::test_render_home_path_references_no_liquid_templates ... ok
+test page::tests::test_render_home_escaping_holds_at_page_scale ... ok
+test page::tests::test_render_category_mathematics_full_chrome ... ok
+test page::tests::test_render_standalone_pages_path_references_no_liquid_templates ... ok
+test parser::tests::test_news_date_accepts_gregorian_leap_and_month_boundaries ... ok
+test parser::tests::test_parse_corpus_demo ... ignored, requires demo corpus on disk
+test parser::tests::test_parse_frontmatter_concept_card ... ok
+test parser::tests::test_parse_frontmatter_missing_delimiter_returns_error ... ok
+test parser::tests::test_parse_frontmatter_source_page ... ok
+test parser::tests::test_parse_news_allows_empty_tags_and_absent_optional_fields ... ok
+test parser::tests::test_parse_news_missing_directory_is_empty ... ok
+test parser::tests::test_parse_news_model_derives_identity_and_retains_optional_data ... ok
+test parser::tests::test_parse_news_normalizes_blank_optional_strings_to_absence ... ok
+test parser::tests::test_parse_news_optional_fields_reject_non_string_non_null_values ... ok
+test parser::tests::test_parse_news_present_non_directory_is_an_io_error ... ok
+test parser::tests::test_parse_news_reads_only_direct_regular_markdown_files ... ok
+test parser::tests::test_parse_news_rejects_noncanonical_or_impossible_dates ... ok
+test parser::tests::test_parse_news_rejects_wrong_type_blank_required_text_and_empty_slugs ... ok
+test parser::tests::test_parse_news_required_fields_reject_missing_null_and_wrong_shapes ... ok
+test parser::tests::test_parse_news_requires_initial_frontmatter_and_closing_fence ... ok
+test parser::tests::test_parse_news_slug_is_filename_derived_and_duplicates_fail_with_both_paths ... ok
+test parser::tests::test_parse_profile_struct ... ok
+test parser::tests::test_parse_taxonomy_struct ... ok
+test page::tests::test_render_home_full_chrome ... ok
+test render::tests::test_active_nav_block_capture_marks_topnav_item ... ok
+test parser::tests::test_parse_corpus_retains_body_for_real_demo_source_and_concept ... ok
+test page::tests::test_render_search_empty_shell ... ok
+test render::tests::test_assemble_site_context_browse_categories_grouped_by_subcategory ... ok
+test render::tests::test_assemble_site_context_attribution_shapes_and_counts ... ok
+test render::tests::test_base_jinja_renders_chrome_from_profile ... ok
+test render::tests::test_assemble_site_context_home_categories_order_and_shape ... ok
+test render::tests::test_environment_loads_and_renders_404_template ... ok
+test render::tests::test_escaping_safe_vs_autoescaped_fields ... ok
+test render::tests::test_assemble_site_context_shapes_for_known_demo_slug ... ok
+test render::tests::test_resolve_profile_sample_yaml_parses_full_shape ... ok
+test render::tests::test_assemble_site_context_stats_match_demo_corpus_counts ... ok
+test render::tests::test_build_category_page_data_mathematics_grouped_by_tier ... ok
+test render::tests::test_resolve_profile_demo_yaml_migrated_and_parse_corpus_unaffected ... ok
+test search::tests::test_concept_record_has_filters_meta_and_url ... ok
+test search::tests::test_leading_excerpt_truncates_on_a_word_boundary ... ok
+test search::tests::test_markdown_to_plain_text_strips_tags_and_unescapes_entities ... ok
+test search::tests::test_search_never_shells_out_to_an_external_pagefind_binary ... ok
+test search::tests::test_build_records_count_matches_corpus_size ... ok
+test search::tests::test_build_records_is_sorted_by_slug_for_determinism ... ok
+test server::tests::test_access_log_line_formats_method_path_status_length ... ok
+test server::tests::test_build_response_sets_allow_header_for_405 ... ok
+test server::tests::test_build_response_sets_content_type_length_and_nosniff_headers ... ok
+test server::tests::test_content_type_for_covers_every_allowlisted_extension ... ok
+test search::tests::test_source_record_trust_filter_uses_profile_default_bucket ... ok
+test server::tests::test_guarded_returns_500_on_panic_and_does_not_propagate ... ok
+test search::tests::test_source_record_has_filters_meta_and_url ... ok
+test server::tests::test_guarded_passes_through_a_normal_response_unchanged ... ok
+test server::tests::test_handle_head_matches_get_status_and_content_length_with_empty_body ... ok
+test server::tests::test_handle_rejects_unsupported_methods_with_405_and_allow_header ... ok
+test search::tests::test_build_index_writes_the_expected_bundle_files ... ok
+test export::tests::test_export_site_internal_links_resolve_to_real_files ... ok
+test export::tests::test_export_site_written_pages_match_renderers ... ok
+test export::tests::test_export_site_cleans_before_write ... ok
+test export::tests::test_export_site_writes_complete_tree_with_correct_counts ... ok
+test server::tests::test_news_route_coexists_with_concept_and_source_sharing_bare_slug ... ok
+test server::tests::test_render_routes_rejects_news_collision_with_legacy_concept_path ... ok
+test export::tests::test_export_site_copies_asset_allowlist_only ... ok
+test server::tests::test_live_server_survives_a_panicking_request_and_serves_the_next ... ok
+test server::tests::test_live_server_smoke_ephemeral_port ... ok
+test server::tests::test_render_routes_returns_full_route_set ... ok
+test server::tests::test_handle_body_matches_exported_file_for_same_route ... ok
+test server::tests::test_handle_request_pagefind_traversal_and_missing_file_404 ... ok
+test server::tests::test_handle_request_serves_pagefind_bundle_file_kinds ... ok
+test server::tests::test_server_path_references_no_liquid_templates ... ok
+test validator::tests::test_count_forward_refs ... ok
+test validator::tests::test_validate_bidirectional_mismatch_warning ... ok
+test server::tests::test_live_server_serves_pagefind_js_and_404s_a_traversal ... ok
+test validator::tests::test_validate_clean_corpus_no_errors ... ok
+test validator::tests::test_validate_dangling_provenance_error ... ok
+test validator::tests::test_validate_missing_concept_card_error ... ok
+test validator::tests::test_validate_orphan_concept_warning ... ok
+test validator::tests::test_validate_orphan_source_warning ... ok
+test validator::tests::test_validate_skipped_source_not_orphan ... ok
+test validator::tests::test_validate_unknown_category_error ... ok
+test validator::tests::test_validate_unknown_tier_error ... ok
+test server::tests::test_live_hardened_server_serves_every_route_asset_404_405_and_head ... ok
+test server::tests::test_resolve_returns_200_for_every_page_route_kind ... ok
+test server::tests::test_resolve_returns_404_for_unknown_path ... ok
+test server::tests::test_resolve_serves_assets_with_correct_content_type ... ok
+test server::tests::test_resolve_trailing_slash_both_forms_resolve_the_same_route ... ok
+test export::tests::test_export_site_is_deterministic_across_repeated_exports ... ok
+test server::tests::test_resolve_body_matches_exported_file_for_same_route ... ok
+test server::tests::test_serve_returns_a_clear_error_on_an_invalid_bind_address ... ok
+
+test result: ok. 132 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 22.93s
+
+     Running tests/demo_fetch.rs (target/debug/deps/demo_fetch-0b5d44932b34da53)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/demo_status.rs (target/debug/deps/demo_status-46a3ec4459fe22bb)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/export_cli.rs (target/debug/deps/export_cli-3345147534f83a9b)
+
+running 1 test
+test test_export_cli_produces_site_from_demo_content ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.36s
+
+     Running tests/search_cli.rs (target/debug/deps/search_cli-8ceb19e6c4f9bc9c)
+
+running 1 test
+test test_search_cli_writes_pagefind_bundle_from_demo_content ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.28s
+
+
+EXIT 0
+
+COMMAND ['cargo', 'outdated', '--root-deps-only', '--ignore-external-rel']
+warning: Feature loader of package minijinja has been obsolete in version 3.1.0
+haleiki
+================
+Name        Project  Compat  Latest   Kind    Platform
+----        -------  ------  ------   ----    --------
+clap        4.6.4    ---     4.6.7    Normal  ---
+comrak      0.54.0   ---     0.59.0   Normal  ---
+ego-tree    0.11.0   ---     0.11.1   Normal  ---
+globset     0.4.19   ---     0.4.21   Normal  ---
+htmd        0.5.5    ---     0.5.6    Normal  ---
+minijinja   2.21.0   ---     3.1.0    Normal  ---
+pagefind    1.5.2    ---     1.6.0    Normal  ---
+reqwest     0.13.4   ---     0.13.5   Normal  ---
+scraper     0.26.0   ---     0.29.0   Normal  ---
+serde_json  1.0.151  ---     1.0.154  Normal  ---
+thiserror   2.0.19   ---     2.0.21   Normal  ---
+tokio       1.53.1   ---     1.54.1   Normal  ---
+
+EXIT 0
+
+COMMAND ['make', 'check']
+[1;34mChecking for outdated dependencies...[0m
+haleiki
+================
+Name        Project  Compat  Latest   Kind    Platform
+----        -------  ------  ------   ----    --------
+clap        4.6.4    ---     4.6.7    Normal  ---
+comrak      0.54.0   ---     0.59.0   Normal  ---
+ego-tree    0.11.0   ---     0.11.1   Normal  ---
+globset     0.4.19   ---     0.4.21   Normal  ---
+htmd        0.5.5    ---     0.5.6    Normal  ---
+minijinja   2.21.0   ---     3.1.0    Normal  ---
+pagefind    1.5.2    ---     1.6.0    Normal  ---
+reqwest     0.13.4   ---     0.13.5   Normal  ---
+scraper     0.26.0   ---     0.29.0   Normal  ---
+serde_json  1.0.151  ---     1.0.154  Normal  ---
+thiserror   2.0.19   ---     2.0.21   Normal  ---
+tokio       1.53.1   ---     1.54.1   Normal  ---
+
+[1;32m✓ All dependencies up to date[0m
+[1;34mRunning linter checks...[0m
+[1;36m• Running clippy...[0m
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.27s
+[1;32m✓ Clippy passed[0m
+[1;36m• Checking code formatting...[0m
+[1;32m✓ Format check passed[0m
+[1;34mCleaning bin directory...[0m
+[1;32m✓ Clean complete[0m
+[1;34mCreating bin directory...[0m
+[1;32m✓ Directory created[0m
+[1;34mBuilding Haleiki in debug mode...[0m
+[1;36m• Compiling workspace...[0m
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.20s
+[1;36m• Copying binaries to ./bin/[0m
+  [1;32m✓[0m haleiki
+[1;32m✓ Build complete[0m
+[1;36m→ Binaries available in ./bin/[0m
+[1;34mRunning tests...[0m
+[1;36m• Running all workspace tests...[0m
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.14s
+     Running unittests src/main.rs (target/debug/deps/haleiki-28e1375ab239fb1a)
+
+running 424 tests
+test demo::clean::tests::test_clean_article_real_html ... ignored
+test article::tests::test_render_path_references_no_liquid_templates ... ok
+test demo::clean::tests::test_clean_html_handles_empty_body ... ok
+test demo::clean::tests::test_clean_html_handles_html_fragment ... ok
+test demo::clean::tests::test_clean_html_multiple_removals_in_same_document ... ok
+test demo::clean::tests::test_clean_html_preserves_figures ... ok
+test demo::clean::tests::test_clean_html_preserves_export_noprint_styles ... ok
+test demo::clean::tests::test_clean_html_preserves_headings ... ok
+test demo::clean::tests::test_clean_html_preserves_inline_links ... ok
+test demo::clean::tests::test_clean_html_preserves_infobox ... ok
+test demo::clean::tests::test_clean_html_preserves_lists ... ok
+test demo::clean::tests::test_clean_html_preserves_paragraphs ... ok
+test demo::clean::tests::test_clean_html_preserves_nested_content_in_preserved_elements ... ok
+test demo::clean::tests::test_clean_html_preserves_shortdescription ... ok
+test demo::clean::tests::test_clean_html_preserves_tables ... ok
+test demo::clean::tests::test_clean_html_removes_ambox_banners ... ok
+test demo::clean::tests::test_clean_html_removes_catlinks ... ok
+test demo::clean::tests::test_clean_html_removes_citation_superscripts ... ok
+test demo::clean::tests::test_clean_html_removes_edit_sections ... ok
+test demo::clean::tests::test_clean_html_removes_external_links_section ... ok
+test demo::clean::tests::test_clean_html_removes_hatnotes ... ok
+test demo::clean::tests::test_clean_html_removes_navboxes ... ok
+test demo::clean::tests::test_clean_html_removes_navbar_div ... ok
+test demo::clean::tests::test_clean_html_removes_noprint_citation_needed ... ok
+test demo::clean::tests::test_clean_html_removes_noprint_when_tag ... ok
+test demo::clean::tests::test_clean_html_removes_references_section ... ok
+test demo::clean::tests::test_clean_html_removes_sidebar_tables ... ok
+test demo::clean::tests::test_clean_html_removes_style_and_script ... ok
+test demo::clean::tests::test_clean_html_unwraps_mw_entity_arrow ... ok
+test demo::clean::tests::test_clean_html_unwraps_mw_entity_copyright ... ok
+test demo::clean::tests::test_clean_html_removes_toc ... ok
+test demo::convert::tests::test_alt_from_filename_no_encoding_unchanged ... ok
+test demo::convert::tests::test_alt_from_filename_percent_encoded_spaces ... ok
+test demo::convert::tests::test_alt_from_filename_percent_encoded_parens ... ok
+test demo::convert::tests::test_alt_from_filename_percent_encoded_utf8 ... ok
+test demo::convert::tests::test_clean_converter_artifacts_decodes_entities ... ok
+test demo::convert::tests::test_convert_all_articles_processes_finals ... ignored
+test demo::convert::tests::test_convert_article_real ... ignored
+test demo::convert::tests::test_clean_converter_artifacts_removes_html_comments ... ok
+test demo::convert::tests::test_ensure_img_alt_from_figcaption_sets_alt ... ok
+test demo::clean::tests::test_clean_html_unwraps_mw_entity_nbsp ... ok
+test demo::convert::tests::test_ensure_img_alt_from_filename_fallback ... ok
+test demo::convert::tests::test_ensure_img_alt_from_title_attribute ... ok
+test demo::convert::tests::test_ensure_img_alt_preserves_existing_nonempty ... ok
+test demo::convert::tests::test_fix_tables_adds_missing_separator ... ok
+test demo::convert::tests::test_fix_tables_preserves_existing_separator ... ok
+test demo::convert::tests::test_fix_tables_preserves_non_table_content ... ok
+test demo::convert::tests::test_ensure_img_alt_produces_valid_markdown_image ... ok
+test demo::convert::tests::test_html_to_markdown_basic_paragraph ... ok
+test demo::convert::tests::test_html_to_markdown_blockquote ... ok
+test demo::convert::tests::test_html_to_markdown_bold_and_italic ... ok
+test demo::convert::tests::test_html_to_markdown_heading ... ok
+test demo::convert::tests::test_html_to_markdown_code_block ... ok
+test demo::clean::tests::test_clean_html_preserves_code_blocks ... ok
+test demo::convert::tests::test_html_to_markdown_image ... ok
+test demo::convert::tests::test_html_to_markdown_link ... ok
+test demo::convert::tests::test_html_to_markdown_ordered_list ... ok
+test demo::convert::tests::test_html_to_markdown_pandoc_basic ... ignored
+test demo::convert::tests::test_normalize_heading_levels_caps_at_h6 ... ok
+test demo::convert::tests::test_normalize_heading_levels_ignores_hash_in_content ... ok
+test demo::convert::tests::test_normalize_heading_levels_no_shift_when_no_h1 ... ok
+test demo::convert::tests::test_html_to_markdown_unordered_list ... ok
+test demo::convert::tests::test_normalize_heading_levels_shifts_when_h1_present ... ok
+test demo::convert::tests::test_html_to_markdown_full_article_fragment ... ok
+test demo::convert::tests::test_normalize_image_syntax_preserves_good_images ... ok
+test demo::convert::tests::test_html_to_markdown_table ... ok
+test demo::convert::tests::test_normalize_image_syntax_whitespace_alt ... ok
+test demo::convert::tests::test_normalize_links_removes_empty_title ... ok
+test demo::convert::tests::test_normalize_image_syntax_empty_alt ... ok
+test demo::convert::tests::test_post_process_ends_with_single_newline ... ok
+test demo::convert::tests::test_post_process_normalizes_blank_lines ... ok
+test demo::convert::tests::test_post_process_trims_trailing_whitespace ... ok
+test demo::convert::tests::test_preprocess_definition_lists_multiple_terms ... ok
+test demo::convert::tests::test_preprocess_definition_lists_basic ... ok
+test demo::convert::tests::test_preprocess_definition_lists_no_dl_passes_through ... ok
+test demo::convert::tests::test_preprocess_math_alt_fallback ... ok
+test demo::convert::tests::test_preprocess_math_inline_produces_dollar_latex ... ok
+test demo::convert::tests::test_preprocess_math_block_produces_double_dollar ... ok
+test demo::convert::tests::test_preprocess_syntaxhighlight_block_with_lang ... ok
+test demo::convert::tests::test_preprocess_math_entity_encoded_data_mw ... ok
+test demo::convert::tests::test_preprocess_math_no_backslash_escaping ... ok
+test demo::convert::tests::test_preprocess_syntaxhighlight_block_without_lang ... ok
+test demo::convert::tests::test_preprocess_math_multiple_on_same_page ... ok
+test demo::convert::tests::test_preprocess_syntaxhighlight_multiline_preserves_whitespace ... ok
+test demo::convert::tests::test_preprocess_syntaxhighlight_entity_encoded_data_mw ... ok
+test demo::convert::tests::test_preprocess_syntaxhighlight_inline ... ok
+test demo::convert::tests::test_remove_empty_links ... ok
+test demo::convert::tests::test_remove_empty_links_preserves_non_empty ... ok
+test demo::convert::tests::test_preprocess_syntaxhighlight_with_transclusion_typeof ... ok
+test demo::fetch::tests::test_chrono_now_iso8601_format ... ok
+test demo::fetch::tests::test_fetch_meta_roundtrip ... ok
+test demo::fetch::tests::test_fetch_meta_serializes_to_json ... ok
+test demo::fetch::tests::test_is_wikimedia_project_commons ... ok
+test demo::fetch::tests::test_is_wikimedia_project_french_wikipedia ... ok
+test demo::fetch::tests::test_is_wikimedia_project_rigpawiki_is_not ... ok
+test demo::convert::tests::test_syntaxhighlight_produces_fenced_code_after_markdown_conversion ... ok
+test demo::fetch::tests::test_is_wikimedia_project_german_wikinews ... ok
+test demo::fetch::tests::test_is_wikimedia_project_generic_mediawiki_is_not ... ok
+test demo::fetch::tests::test_is_wikimedia_project_simple_wikipedia ... ok
+test demo::fetch::tests::test_is_wikimedia_project_wikibooks ... ok
+test demo::fetch::tests::test_is_wikimedia_project_wikipedia ... ok
+test demo::fetch::tests::test_is_wikimedia_project_wikiquote ... ok
+test demo::fetch::tests::test_parse_revision_id_numeric_only ... ok
+test demo::fetch::tests::test_parse_revision_id_none ... ok
+test demo::fetch::tests::test_parse_revision_id_standard_etag ... ok
+test demo::fetch::tests::test_parse_revision_id_unquoted ... ok
+test demo::fetch::tests::test_staging_html_path_exists_check ... ok
+test demo::fetch::tests::test_staging_html_path_format ... ok
+test demo::fetch::tests::test_staging_meta_path_format ... ok
+test demo::fetch::tests::test_url_encode_title_diacritics_percent_encoded ... ok
+test demo::fetch::tests::test_url_encode_title_ascii_passthrough ... ok
+test demo::fetch::tests::test_url_encode_title_parentheses_encoded ... ok
+test demo::fetch::tests::test_url_encode_title_unreserved_chars_passthrough ... ok
+test demo::fetch::tests::test_url_encode_title_spaces_become_plus ... ok
+test demo::frontmatter::tests::test_build_frontmatter_author_rigpawiki ... ok
+test demo::frontmatter::tests::test_build_frontmatter_author_wikibooks ... ok
+test demo::frontmatter::tests::test_build_frontmatter_author_wikipedia ... ok
+test demo::frontmatter::tests::test_build_frontmatter_classification ... ok
+test demo::frontmatter::tests::test_build_frontmatter_date_from_fetch_timestamp ... ok
+test demo::frontmatter::tests::test_build_frontmatter_core_fields ... ok
+test demo::frontmatter::tests::test_build_frontmatter_extraction_status ... ok
+test demo::frontmatter::tests::test_build_frontmatter_no_subcategory ... ok
+test demo::frontmatter::tests::test_build_frontmatter_original_source ... ok
+test demo::frontmatter::tests::test_build_frontmatter_license_override ... ok
+test demo::frontmatter::tests::test_build_frontmatter_original_source_url_rigpawiki ... ok
+test demo::frontmatter::tests::test_build_frontmatter_original_source_url_wikipedia ... ok
+test demo::frontmatter::tests::test_build_original_url_rigpawiki_with_spaces ... ok
+test demo::frontmatter::tests::test_build_original_url_rigpawiki ... ok
+test demo::frontmatter::tests::test_build_original_url_wikibooks ... ok
+test demo::frontmatter::tests::test_build_original_url_wikipedia_with_parens ... ok
+test demo::frontmatter::tests::test_build_original_url_wikipedia ... ok
+test demo::frontmatter::tests::test_inject_frontmatter_real_article ... ignored
+test demo::frontmatter::tests::test_full_source_page_structure ... ok
+test demo::frontmatter::tests::test_serialize_frontmatter_roundtrip_parseable ... ok
+test demo::manifest::tests::test_api_url_default_project_wikipedia ... ok
+test demo::frontmatter::tests::test_serialize_frontmatter_has_delimiters ... ok
+test demo::manifest::tests::test_api_url_overridden_project ... ok
+test demo::manifest::tests::test_api_url_rigpawiki_contains_encoded_title ... ok
+test demo::manifest::tests::test_api_url_rigpawiki_uses_action_parse ... ok
+test demo::frontmatter::tests::test_serialize_frontmatter_contains_required_fields ... ok
+test demo::frontmatter::tests::test_serialize_frontmatter_skips_empty_optional_fields ... ok
+test demo::manifest::tests::test_api_url_title_with_parentheses ... ok
+test demo::manifest::tests::test_api_url_wikimedia_uses_rest_api ... ok
+test demo::manifest::tests::test_effective_license_no_override_returns_default ... ok
+test demo::manifest::tests::test_article_subcategory_optional ... ok
+test demo::manifest::tests::test_article_subcategory_present ... ok
+test demo::manifest::tests::test_effective_license_with_override_returns_override ... ok
+test demo::manifest::tests::test_encode_title_for_path_diacritics_encoded ... ok
+test demo::manifest::tests::test_effective_project_with_override_returns_override ... ok
+test demo::manifest::tests::test_effective_project_no_override_returns_default ... ok
+test demo::manifest::tests::test_encode_title_for_path_hash_encoded ... ok
+test demo::manifest::tests::test_encode_title_for_path_parentheses_preserved ... ok
+test demo::manifest::tests::test_encode_title_for_path_simple ... ok
+test demo::manifest::tests::test_encode_title_for_path_slash ... ok
+test demo::manifest::tests::test_from_file_nonexistent_file_returns_error ... ok
+test demo::manifest::tests::test_from_file_valid_manifest_has_expected_articles ... ok
+test demo::manifest::tests::test_from_file_defaults_populated ... ok
+test demo::manifest::tests::test_from_file_non_default_project_overrides ... ok
+test demo::manifest::tests::test_from_file_taxonomy_has_categories_and_tiers ... ok
+test demo::manifest::tests::test_title_to_slug_index_contains_all_articles ... ok
+test demo::manifest::tests::test_serde_roundtrip_preserves_data ... ok
+test demo::manifest::tests::test_title_to_slug_index_lookup_case_insensitive ... ok
+test demo::manifest::tests::test_title_to_slug_index_lookup_with_underscores ... ok
+test demo::manifest::tests::test_title_to_slug_index_parenthetical_title ... ok
+test demo::manifest::tests::test_validate_empty_articles_detected ... ok
+test demo::manifest::tests::test_validate_duplicate_slugs_detected ... ok
+test demo::manifest::tests::test_validate_duplicate_titles_detected ... ok
+test demo::manifest::tests::test_validate_empty_slug_detected ... ok
+test demo::manifest::tests::test_validate_empty_title_detected ... ok
+test demo::manifest::tests::test_validate_slug_with_spaces_detected ... ok
+test demo::manifest::tests::test_validate_slug_with_uppercase_detected ... ok
+test demo::manifest::tests::test_validate_subcategory_cross_category_warns ... ok
+test demo::manifest::tests::test_validate_subcategory_uppercase_warns ... ok
+test demo::manifest::tests::test_validate_unknown_category_detected ... ok
+test demo::manifest::tests::test_validate_unknown_tier_detected ... ok
+test demo::manifest::tests::test_validate_valid_manifest_returns_no_issues ... ok
+test demo::manifest::tests::test_from_file_valid_manifest_parses_successfully ... ok
+test demo::manifest::tests::test_validation_issue_display_with_article ... ok
+test demo::manifest::tests::test_validation_issue_display_without_article ... ok
+test demo::media::tests::test_build_commons_url_non_wikimedia ... ok
+test demo::media::tests::test_build_commons_url_filename_with_spaces ... ok
+test demo::media::tests::test_build_commons_url_protocol_relative_non_wikimedia ... ok
+test demo::media::tests::test_build_commons_url_wikimedia_image ... ok
+test demo::media::tests::test_check_skip_force_exclude_always_wins ... ok
+test demo::media::tests::test_build_image_lookup_separates_downloaded_and_skipped ... ok
+test demo::media::tests::test_check_skip_force_include_overrides_pattern ... ok
+test demo::media::tests::test_detect_format_case_insensitive ... ok
+test demo::media::tests::test_detect_format_jpeg ... ok
+test demo::media::tests::test_check_skip_no_match_not_skipped ... ok
+test demo::media::tests::test_detect_format_jpg ... ok
+test demo::media::tests::test_detect_format_png ... ok
+test demo::media::tests::test_check_skip_matching_pattern ... ok
+test demo::media::tests::test_detect_format_svg ... ok
+test demo::media::tests::test_detect_format_unknown ... ok
+test demo::media::tests::test_extract_filename_original_url ... ok
+test demo::media::tests::test_extract_filename_svg_thumbnail ... ok
+test demo::media::tests::test_extract_filename_thumbnail_url ... ok
+test demo::media::tests::test_extract_filename_with_query_params ... ok
+test demo::media::tests::test_extract_images_captures_figcaption ... ok
+test demo::media::tests::test_extract_images_applies_skip_patterns ... ok
+test demo::media::tests::test_extract_images_finds_img_elements ... ok
+test demo::media::tests::test_is_svg_url_false_for_png ... ok
+test demo::media::tests::test_extract_images_deduplicates ... ok
+test demo::media::tests::test_is_svg_url_true ... ok
+test demo::media::tests::test_extract_images_skips_data_uris ... ok
+test demo::media::tests::test_is_svg_url_thumbnail_of_svg ... ok
+test demo::media::tests::test_media_entry_from_extracted_downloaded ... ok
+test demo::media::tests::test_media_entry_from_extracted_no_local_path_returns_none ... ok
+test demo::media::tests::test_media_entry_from_extracted_skipped_returns_none ... ok
+test demo::media::tests::test_parse_retry_after_value_empty_returns_none ... ok
+test demo::media::tests::test_parse_retry_after_value_date_returns_none ... ok
+test demo::media::tests::test_media_manifest_serialization_roundtrip ... ok
+test demo::media::tests::test_parse_retry_after_value_large ... ok
+test demo::media::tests::test_parse_retry_after_value_seconds ... ok
+test demo::media::tests::test_resolve_download_url_protocol_relative ... ok
+test demo::media::tests::test_resolve_download_url_relative_path ... ok
+test demo::media::tests::test_resolve_download_url_raster_gets_thumbnail ... ok
+test demo::media::tests::test_resolve_download_url_rigpa_wiki_root_relative ... ok
+test demo::media::tests::test_resolve_download_url_rigpa_wiki_non_thumb ... ok
+test demo::media::tests::test_resolve_download_url_svg_gets_original ... ok
+test demo::media::tests::test_resolve_raster_thumbnail_from_existing_thumb ... ok
+test demo::media::tests::test_resolve_svg_original_already_original ... ok
+test demo::media::tests::test_resolve_svg_original_from_thumbnail ... ok
+test demo::media::tests::test_rewrite_article_images_real ... ignored
+test demo::media::tests::test_resolve_raster_thumbnail_from_original ... ok
+test demo::media::tests::test_rewrite_image_sources_no_changes_when_maps_empty ... ok
+test demo::media::tests::test_rewrite_image_sources_mixed_downloaded_and_skipped ... ok
+test demo::media::tests::test_rewrite_image_sources_preserves_non_image_content ... ok
+test demo::media::tests::test_rewrite_image_sources_removes_skipped_figure ... ok
+test demo::media::tests::test_rewrite_image_sources_removes_skipped_img ... ok
+test demo::media::tests::test_rewrite_image_sources_skipped_removes_figure ... ok
+test demo::media::tests::test_rewrite_image_sources_unwraps_wikipedia_file_description ... ok
+test demo::media::tests::test_rewrite_image_sources_rewrites_downloaded ... ok
+test demo::manifest::tests::test_validate_real_manifest_passes ... ok
+test demo::media::tests::test_strip_thumbnail_path_non_thumb_returns_none ... ok
+test demo::media::tests::test_staging_final_path ... ok
+test demo::media::tests::test_rewrite_image_sources_unwraps_rigpa_wiki_file_description ... ok
+test demo::media::tests::test_strip_thumbnail_path_rigpa_wiki_returns_original ... ok
+test demo::media::tests::test_strip_thumbnail_path_wikimedia_returns_original ... ok
+test demo::rewrite::tests::test_classify_absolute_non_self_reference ... ok
+test demo::rewrite::tests::test_classify_absolute_self_reference_not_in_manifest ... ok
+test demo::rewrite::tests::test_classify_anchor_only_kept ... ok
+test demo::rewrite::tests::test_classify_case_insensitive_matching ... ok
+test demo::rewrite::tests::test_classify_external_http_kept ... ok
+test demo::rewrite::tests::test_classify_absolute_self_reference_in_manifest ... ok
+test demo::rewrite::tests::test_classify_external_rigpawiki_preserves_fragment ... ok
+test demo::rewrite::tests::test_classify_external_wiki_link_wikipedia_uses_wiki_path ... ok
+test demo::rewrite::tests::test_classify_parsoid_red_link_unwrapped ... ok
+test demo::rewrite::tests::test_classify_external_wiki_link_rigpawiki_uses_index_php ... ok
+test demo::rewrite::tests::test_classify_red_link_alternate_param_order ... ok
+test demo::rewrite::tests::test_classify_red_link_unwrapped ... ok
+test demo::rewrite::tests::test_classify_rigpa_normal_link_not_unwrapped ... ok
+test demo::rewrite::tests::test_classify_protocol_relative_made_absolute ... ok
+test demo::rewrite::tests::test_classify_rigpa_red_link_unwrapped ... ok
+test demo::rewrite::tests::test_classify_wiki_link_in_manifest_preserves_fragment ... ok
+test demo::rewrite::tests::test_classify_wiki_link_not_in_manifest_made_absolute ... ok
+test demo::rewrite::tests::test_classify_wiki_link_in_manifest_rewritten_to_haleiki ... ok
+test demo::rewrite::tests::test_classify_wiki_link_not_in_manifest_preserves_fragment ... ok
+test demo::rewrite::tests::test_classify_wiki_link_with_parens_in_manifest ... ok
+test demo::rewrite::tests::test_extract_wiki_title_action_link_returns_none ... ok
+test demo::rewrite::tests::test_extract_wiki_title_external_returns_none ... ok
+test demo::rewrite::tests::test_extract_wiki_title_index_php_action_edit_returns_none ... ok
+test demo::rewrite::tests::test_extract_wiki_title_index_php_basic ... ok
+test demo::rewrite::tests::test_extract_wiki_title_index_php_file_namespace_returns_none ... ok
+test demo::rewrite::tests::test_extract_wiki_title_index_php_percent_encoded ... ok
+test demo::rewrite::tests::test_extract_wiki_title_relative_link ... ok
+test demo::rewrite::tests::test_extract_wiki_title_standard_wiki_link ... ok
+test demo::rewrite::tests::test_extract_wiki_title_with_percent_encoding ... ok
+test demo::rewrite::tests::test_extract_wiki_title_with_parentheses ... ok
+test demo::rewrite::tests::test_is_mediawiki_red_link_false_no_redlink ... ok
+test demo::rewrite::tests::test_is_mediawiki_red_link_false_normal_link ... ok
+test demo::rewrite::tests::test_is_mediawiki_red_link_true ... ok
+test demo::rewrite::tests::test_normalize_wiki_title_lowercases ... ok
+test demo::rewrite::tests::test_normalize_wiki_title_trims ... ok
+test demo::rewrite::tests::test_rewrite_article_real_html ... ignored
+test demo::rewrite::tests::test_normalize_wiki_title_underscores_to_spaces ... ok
+test demo::rewrite::tests::test_rewrite_links_anchor_only_preserved ... ok
+test demo::rewrite::tests::test_rewrite_links_internal_link ... ok
+test demo::rewrite::tests::test_rewrite_links_multiple_links_in_same_paragraph ... ok
+test demo::rewrite::tests::test_rewrite_links_external_url_preserved ... ok
+test demo::rewrite::tests::test_rewrite_links_external_wiki_link ... ok
+test demo::rewrite::tests::test_rewrite_links_protocol_relative ... ok
+test demo::rewrite::tests::test_split_fragment_with_fragment ... ok
+test demo::rewrite::tests::test_split_fragment_no_fragment ... ok
+test demo::rewrite::tests::test_rewrite_links_red_link_unwrapped ... ok
+test demo::rewrite::tests::test_url_decode_basic_no_encoding ... ok
+test demo::rewrite::tests::test_url_decode_basic_plus ... ok
+test demo::rewrite::tests::test_url_decode_basic_multibyte_utf8 ... ok
+test demo::rewrite::tests::test_url_decode_basic_spaces ... ok
+test demo::status::tests::test_format_bytes_bytes ... ok
+test demo::status::tests::test_format_bytes_kilobytes ... ok
+test demo::status::tests::test_format_bytes_megabytes ... ok
+test export::tests::test_export_path_references_no_liquid_templates ... ok
+test article::tests::test_concept_facts_includes_all_three_types_in_order_when_present ... ok
+test article::tests::test_concept_title_appends_disambiguator_when_present ... ok
+test article::tests::test_assemble_concept_page_data_matches_abelian_group_frontmatter ... ok
+test generator::tests::test_attribution_json_grouped_by_project ... ok
+test article::tests::test_render_concept_abelian_group_full_chrome ... ok
+test generator::tests::test_build_trust_levels ... ok
+test article::tests::test_render_concept_escaping_holds_at_page_scale ... ok
+test generator::tests::test_generate_creates_all_files ... ok
+test article::tests::test_render_source_vimalamitra_full_chrome ... ok
+test generator::tests::test_profile_json_nested_shape ... ok
+test graph::tests::test_breadcrumbs_concept ... ok
+test graph::tests::test_breadcrumbs_source ... ok
+test graph::tests::test_build_graph_edge_count ... ok
+test graph::tests::test_build_graph_node_count ... ok
+test graph::tests::test_category_index ... ok
+test graph::tests::test_see_also_excludes_provenance ... ok
+test graph::tests::test_orphans_source_only_provenance_edges ... ok
+test graph::tests::test_title_case ... ok
+test graph::tests::test_stats ... ok
+test markdown::tests::test_render_markdown_fenced_and_inline_code_plain_and_escaped ... ok
+test markdown::tests::test_render_markdown_commonmark_basics ... ok
+test markdown::tests::test_render_markdown_gfm_table ... ok
+test markdown::tests::test_render_markdown_heading_ids_are_deterministic_and_deduped ... ok
+test markdown::tests::test_render_markdown_math_preserved_and_code_dollar_untouched ... ok
+test markdown::tests::test_render_markdown_html_passes_through_safe_context_intact ... ok
+test generator::tests::test_provenance_json_bidirectional ... ok
+test markdown::tests::test_render_markdown_toc_matches_document_order_and_anchors ... ok
+test markdown::tests::test_render_markdown_real_demo_concept_body ... ok
+test markdown::tests::test_render_markdown_real_demo_source_body ... ok
+test news::tests::test_render_post_escapes_metadata_and_keeps_only_markdown_body_html_safe ... ok
+test news::tests::test_post_context_serializes_empty_navigation_and_related_collection_explicitly ... ok
+test generator::tests::test_build_featured_real_demo_corpus_ranked_by_typed_indegree ... ok
+test news::tests::test_render_post_missing_slug_returns_config_error ... ok
+test news::tests::test_render_post_uses_real_template_and_expected_fields ... ok
+test page::tests::test_render_404_chrome ... ok
+test page::tests::test_render_about_full_chrome ... ok
+test page::tests::test_render_browse_category_path_references_no_liquid_templates ... ok
+test page::tests::test_render_about_safe_body_stays_unescaped ... ok
+test page::tests::test_render_attribution_escaping_holds_at_page_scale ... ok
+test page::tests::test_render_attribution_full_chrome ... ok
+test page::tests::test_render_browse_escaping_holds_at_page_scale ... ok
+test page::tests::test_render_category_escaping_holds_at_page_scale ... ok
+test page::tests::test_render_browse_full_chrome ... ok
+test page::tests::test_render_home_path_references_no_liquid_templates ... ok
+test page::tests::test_render_category_mathematics_full_chrome ... ok
+test page::tests::test_render_standalone_pages_path_references_no_liquid_templates ... ok
+test parser::tests::test_news_date_accepts_gregorian_leap_and_month_boundaries ... ok
+test parser::tests::test_parse_corpus_demo ... ignored, requires demo corpus on disk
+test page::tests::test_render_home_escaping_holds_at_page_scale ... ok
+test parser::tests::test_parse_frontmatter_concept_card ... ok
+test parser::tests::test_parse_frontmatter_missing_delimiter_returns_error ... ok
+test parser::tests::test_parse_frontmatter_source_page ... ok
+test parser::tests::test_parse_news_allows_empty_tags_and_absent_optional_fields ... ok
+test parser::tests::test_parse_news_missing_directory_is_empty ... ok
+test parser::tests::test_parse_news_model_derives_identity_and_retains_optional_data ... ok
+test parser::tests::test_parse_news_normalizes_blank_optional_strings_to_absence ... ok
+test parser::tests::test_parse_news_optional_fields_reject_non_string_non_null_values ... ok
+test parser::tests::test_parse_news_present_non_directory_is_an_io_error ... ok
+test parser::tests::test_parse_news_reads_only_direct_regular_markdown_files ... ok
+test page::tests::test_render_search_empty_shell ... ok
+test parser::tests::test_parse_corpus_retains_body_for_real_demo_source_and_concept ... ok
+test parser::tests::test_parse_news_rejects_wrong_type_blank_required_text_and_empty_slugs ... ok
+test parser::tests::test_parse_news_requires_initial_frontmatter_and_closing_fence ... ok
+test parser::tests::test_parse_news_rejects_noncanonical_or_impossible_dates ... ok
+test parser::tests::test_parse_profile_struct ... ok
+test parser::tests::test_parse_taxonomy_struct ... ok
+test parser::tests::test_parse_news_slug_is_filename_derived_and_duplicates_fail_with_both_paths ... ok
+test render::tests::test_active_nav_block_capture_marks_topnav_item ... ok
+test page::tests::test_render_home_full_chrome ... ok
+test parser::tests::test_parse_news_required_fields_reject_missing_null_and_wrong_shapes ... ok
+test render::tests::test_assemble_site_context_browse_categories_grouped_by_subcategory ... ok
+test render::tests::test_assemble_site_context_shapes_for_known_demo_slug ... ok
+test render::tests::test_assemble_site_context_home_categories_order_and_shape ... ok
+test render::tests::test_base_jinja_renders_chrome_from_profile ... ok
+test render::tests::test_environment_loads_and_renders_404_template ... ok
+test render::tests::test_assemble_site_context_attribution_shapes_and_counts ... ok
+test render::tests::test_escaping_safe_vs_autoescaped_fields ... ok
+test render::tests::test_resolve_profile_sample_yaml_parses_full_shape ... ok
+test render::tests::test_build_category_page_data_mathematics_grouped_by_tier ... ok
+test render::tests::test_assemble_site_context_stats_match_demo_corpus_counts ... ok
+test render::tests::test_resolve_profile_demo_yaml_migrated_and_parse_corpus_unaffected ... ok
+test search::tests::test_concept_record_has_filters_meta_and_url ... ok
+test search::tests::test_leading_excerpt_truncates_on_a_word_boundary ... ok
+test search::tests::test_markdown_to_plain_text_strips_tags_and_unescapes_entities ... ok
+test search::tests::test_search_never_shells_out_to_an_external_pagefind_binary ... ok
+test search::tests::test_build_records_count_matches_corpus_size ... ok
+test search::tests::test_build_records_is_sorted_by_slug_for_determinism ... ok
+test server::tests::test_access_log_line_formats_method_path_status_length ... ok
+test server::tests::test_build_response_sets_allow_header_for_405 ... ok
+test server::tests::test_build_response_sets_content_type_length_and_nosniff_headers ... ok
+test server::tests::test_content_type_for_covers_every_allowlisted_extension ... ok
+test search::tests::test_source_record_has_filters_meta_and_url ... ok
+test server::tests::test_guarded_returns_500_on_panic_and_does_not_propagate ... ok
+test search::tests::test_source_record_trust_filter_uses_profile_default_bucket ... ok
+test server::tests::test_guarded_passes_through_a_normal_response_unchanged ... ok
+test server::tests::test_handle_head_matches_get_status_and_content_length_with_empty_body ... ok
+test server::tests::test_handle_rejects_unsupported_methods_with_405_and_allow_header ... ok
+test search::tests::test_build_index_writes_the_expected_bundle_files ... ok
+test export::tests::test_export_site_copies_asset_allowlist_only ... ok
+test export::tests::test_export_site_cleans_before_write ... ok
+test export::tests::test_export_site_internal_links_resolve_to_real_files ... ok
+test export::tests::test_export_site_written_pages_match_renderers ... ok
+test server::tests::test_news_route_coexists_with_concept_and_source_sharing_bare_slug ... ok
+test export::tests::test_export_site_writes_complete_tree_with_correct_counts ... ok
+test server::tests::test_render_routes_rejects_news_collision_with_legacy_concept_path ... ok
+test server::tests::test_live_server_smoke_ephemeral_port ... ok
+test server::tests::test_live_server_survives_a_panicking_request_and_serves_the_next ... ok
+test server::tests::test_render_routes_returns_full_route_set ... ok
+test server::tests::test_handle_request_pagefind_traversal_and_missing_file_404 ... ok
+test server::tests::test_handle_request_serves_pagefind_bundle_file_kinds ... ok
+test server::tests::test_live_server_serves_pagefind_js_and_404s_a_traversal ... ok
+test server::tests::test_server_path_references_no_liquid_templates ... ok
+test validator::tests::test_count_forward_refs ... ok
+test validator::tests::test_validate_bidirectional_mismatch_warning ... ok
+test validator::tests::test_validate_clean_corpus_no_errors ... ok
+test validator::tests::test_validate_dangling_provenance_error ... ok
+test validator::tests::test_validate_missing_concept_card_error ... ok
+test validator::tests::test_validate_orphan_concept_warning ... ok
+test validator::tests::test_validate_orphan_source_warning ... ok
+test validator::tests::test_validate_skipped_source_not_orphan ... ok
+test validator::tests::test_validate_unknown_category_error ... ok
+test validator::tests::test_validate_unknown_tier_error ... ok
+test server::tests::test_live_hardened_server_serves_every_route_asset_404_405_and_head ... ok
+test server::tests::test_handle_body_matches_exported_file_for_same_route ... ok
+test server::tests::test_resolve_returns_200_for_every_page_route_kind ... ok
+test server::tests::test_resolve_returns_404_for_unknown_path ... ok
+test server::tests::test_resolve_serves_assets_with_correct_content_type ... ok
+test server::tests::test_resolve_trailing_slash_both_forms_resolve_the_same_route ... ok
+test export::tests::test_export_site_is_deterministic_across_repeated_exports ... ok
+test server::tests::test_resolve_body_matches_exported_file_for_same_route ... ok
+test server::tests::test_serve_returns_a_clear_error_on_an_invalid_bind_address ... ok
+
+test result: ok. 416 passed; 0 failed; 8 ignored; 0 measured; 0 filtered out; finished in 22.79s
+
+     Running tests/demo_fetch.rs (target/debug/deps/demo_fetch-94bd4d6489481bad)
+
+running 17 tests
+test test_demo_fetch_batch_live ... ignored
+test test_demo_fetch_rigpawiki_article_live ... ignored
+test test_demo_fetch_single_article_live ... ignored
+test test_demo_fetch_article_and_tier_conflict ... ok
+test test_demo_fetch_tier_and_category_combined_dry_run ... ok
+test test_demo_fetch_dry_run_rigpawiki_shows_project ... ok
+test test_demo_fetch_category_filter_dry_run ... ok
+test test_demo_fetch_batch_dry_run_shows_would_fetch_count ... ok
+test test_demo_fetch_dry_run_single_article ... ok
+test test_demo_fetch_batch_dry_run_shows_both_api_styles ... ok
+test test_demo_fetch_dry_run_rigpawiki_uses_action_parse ... ok
+test test_demo_fetch_batch_dry_run ... ok
+test test_demo_fetch_batch_dry_run_shows_urls ... ok
+test test_demo_fetch_tier_filter_dry_run ... ok
+test test_demo_fetch_unknown_slug_fails ... ok
+test test_demo_fetch_unknown_tier_fails ... ok
+test test_demo_fetch_unknown_category_fails ... ok
+
+test result: ok. 14 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 0.76s
+
+     Running tests/demo_status.rs (target/debug/deps/demo_status-2287329d74955e24)
+
+running 3 tests
+test test_demo_status_shows_media_section ... ok
+test test_demo_status_shows_rigpawiki_project ... ok
+test test_demo_status_prints_article_table ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/export_cli.rs (target/debug/deps/export_cli-26b5cd5e5ed072c1)
+
+running 1 test
+test test_export_cli_produces_site_from_demo_content ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.90s
+
+     Running tests/search_cli.rs (target/debug/deps/search_cli-3589e9f1be87caa6)
+
+running 1 test
+test test_search_cli_writes_pagefind_bundle_from_demo_content ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.35s
+
+[1;32m✓ All tests passed[0m
+
+[1;32m✓ All checks passed (build + lint + test)[0m
+
+
+EXIT 0

@@ -96,8 +96,11 @@ the recomposition arc that closes the branch as a clean Cobalt replacement.
   (custom JSON index → Pagefind) on 2026-07-29 — see v1.4 below.
 - **Arc 05 — News / blog content type:** **active** (see
   [`arc05-news-blog-content-type/arc-plan.md`](./arc05-news-blog-content-type/arc-plan.md)).
-  Slice 01 is open to settle the news/blog content model and render one post
-  before the broader index/archive/taxonomy surfaces are implemented.
+  Slice 01 is independently closed at source `5fe3cf46` with all F rows done
+  and CDC retrospective complete. Slice 02 source work awaits the reserved
+  archive/taxonomy choices, with concrete native-template previews in the arc
+  plan. Feed/search and arc composition remain open; no project DoD row is
+  closed by inheriting this child acceptance.
 - **Arc 06:** roadmap-level only, by design. It is planned deep when it becomes
   the active work; findings from earlier arcs bubble up and may reshape it
   before then.
@@ -109,6 +112,13 @@ See the sibling [ledger.md](./ledger.md). All original row IDs, criteria,
 statuses and evidence are retained there.
 
 ## 5. Version history
+
+### v1.10 — 2026-11-11 (Arc 05 Slice 01 bubble-up)
+
+The strict one-post increment is accepted with native gates and retrospective.
+The arc roadmap and project ledger are unchanged; remaining discussion and
+composition gates are explicit in the Arc 05 packet. This is child progress,
+not Arc 05 or project acceptance.
 
 ### v1.9 — 2026-11-11 (Arc 05 execution authority)
 
@@ -251,10 +261,10 @@ see the arc plan authorization and canonical Slice 01 decision log/current
 assignment. No external action or Arc 06 execution is authorized.
 The directory spelling `project04-tiny-http` follows the canonical
 `projectNN-<slug>` convention after the Operator corrected its name on 2026-11-11.
-Arcs 01–04 remain historically closed. Arc 05 Slice 01 remains open for
-implementation/independent acceptance; its authoring location, URL model,
-frontmatter and fixture decisions are now approved. Later archive, taxonomy,
-feed and search discussion gates remain open. Arc 06 remains roadmap-level,
+Arcs 01–04 remain historically closed. Arc 05 Slice 01 is now independently
+closed; its authoring location, URL model, frontmatter and fixture decisions
+remain approved. Later archive, taxonomy, feed and search discussion gates
+remain open, with concrete options in the arc-plan decision packet. Arc 06 remains roadmap-level,
 with no invented directory/open set.
 Future assignments must use current paths and preserve the original issued prompt.
 Durable slice outputs default to that slice's `artifacts/` directory.

@@ -8,7 +8,7 @@ findings dispositioned.
 
 | ID | Criterion | Verify | Significance | Origin | Status | Evidence |
 |----|-----------|--------|--------------|--------|--------|----------|
-| E-1 | Slice 01 (news model + post route) closed | ptr: `slice01-news-model-and-post/cdc-verification.md` | correctness | arc-plan | open | |
+| E-1 | Slice 01 (news model + post route) closed | ptr: `slice01-news-model-and-post/cdc-verification.md` | correctness | arc-plan | done | accepted child at source 5fe3cf46; CDC final row walk and retrospective complete; no composition inheritance |
 | E-2 | Slice 02 (news index + archives + taxonomy views) closed | ptr: slice02 cdc-verification | correctness | arc-plan | open | |
 | E-3 | Slice 03 (sink parity + feed/search disposition + arc close) closed | ptr: slice03 cdc-verification | correctness | arc-plan | open | |
 | E-4 | The full news/blog route set renders from real/demo posts: `/news/`, at least one post route, `/news/archive/`, `/news/tags/`, and `/news/categories/` | reproduce at arc scale: build/export, inspect route files and rendered HTML | serious | project-plan P-10 | open | |

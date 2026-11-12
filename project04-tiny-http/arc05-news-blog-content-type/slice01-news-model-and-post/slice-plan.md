@@ -4,7 +4,9 @@ The preserved [slice-doc.md](./slice-doc.md) is this slice's original plan.
 Read it in full with [ledger.md](./ledger.md) and [cc-prompt.md](./cc-prompt.md).
 This canonical filename is an entrypoint, not a replacement or reduced contract.
 
-Status: open; four content-model decisions approved by the Operator on 2026-11-11.
+Status: **closed** — CDC accepted F-1…F-8 on 2026-11-11 at source
+`5fe3cf46fa1ea673b0b84f09167e36de8611d3ee`. The four content-model decisions
+remain approved; later Arc 05 discussion gates remain open.
 Source checkout: `/Users/oubiwann/lab/oxur/haleiki`, branch
 `framework-base/tiny-http`; migration baseline `ffe2dd78994e`.
 Historical `docs/tiny-http/` references map to this project's root. Source-code,
@@ -72,7 +74,7 @@ taxonomy surface, RSS/feed or news-search implementation is assigned by Slice 01
 |---|---|---|---|
 | `cc-prompt.md` | 2026-08-21 original record | Initial one-post assignment; initial discussion gate | Preserved; no CC implementation started; superseded by iteration 01 after approvals |
 | `cc-prompt-iteration01.md` | 2026-11-11 | `cc-prompt.md`; approved model decisions, live source grounding, intake/ownership and discriminating tests | Returned by CC at `cb31dc92`; independently reviewed, one test-oracle correction R1 required; evidence retained in cdc-verification.md |
-| `cc-prompt-iteration02.md` | 2026-11-11 | `cc-prompt-iteration01.md`; CDC R1 requires Some(Null) versus None discrimination for prev/next | Current; issued to parent to resume explicitly selected CC, source edit confined to the existing context-serialization test |
+| `cc-prompt-iteration02.md` | 2026-11-11 | `cc-prompt-iteration01.md`; CDC R1 requires Some(Null) versus None discrimination for prev/next | Accepted at `5fe3cf46`; one-file/two-assertion test correction independently reviewed, renderer and full gates reproduced |
 
 Current project-relative path:
 `arc05-news-blog-content-type/slice01-news-model-and-post/cc-prompt-iteration02.md`.
@@ -127,7 +129,7 @@ Retrospectives/verification records will be authored at actual closing, not
 pre-filled at this phase. Autonomous authority continues through dispatch
 and review; this phase return is not Slice 01 or Arc 05 closure.
 
-## Current execution state — independent review 01, 2026-11-11
+## Execution history — independent review 01, 2026-11-11
 
 CC Kierkegaard (`01a1ccf7-3e7c-7ab2-ae59-72c9be8f457b`) was explicitly
 requested/tool-selected as OpenAI `gpt-6-luna / high`, implemented iteration
@@ -154,3 +156,33 @@ New supporting artifact `artifacts/cdc-review01-focused.log` retains exact
 independent commands/outputs and real-export invocation for review/replay;
 it meets an evidence-retention need not served by the CC attestation.
 No closing retrospective or slice/arc completion is claimed at this stage.
+
+## Final closure and next gate — 2026-11-11
+
+CDC accepted the current iteration-02 assignment after independently reviewing
+its exact two-assertion delta and running fresh renderer/no-default/direct
+dependency/native Make gates. Evidence retained from review 01 remains at its
+original cb31dc92 attribution, with explicit applicability to unchanged
+production at 5fe3cf46. All eight F rows are done; R1 is resolved. The
+mandatory closing retrospective is `cdc-retrospective.md`; the independent
+final row walk and bubble-up are in `cdc-verification.md`. CC reports remain
+attestations; the CDC verdict is separately attributed. No active CC assignment
+remains, and CDC owns the stable source/planning handback.
+
+The native first archive/taxonomy/index examples are deliberately illustrative
+outputs of unchanged templates, under `artifacts/gate-preview.html` and PNG;
+exact contexts and a render script preserve the model-to-render provenance.
+They answer the next reserved discussion gates, not runtime route acceptance.
+The unpaged/category/tag studies use only the approved post. The pagination
+alternative explicitly labels synthetic layout rows. No extra corpus content
+or product routes were authored. These four files serve the concrete
+Operator choice required by arc-plan section 3; the two raw CDC logs serve
+independent verification retention.
+
+Arc E-1 is now done; E-2…E-7 and project acceptance rows remain open. See
+the arc-plan pending-decision packet for recommendations and alternatives.
+Source implementation of Slice 02 is held for the archive/taxonomy decisions;
+feed and search choices are also presented but remain unapproved. No Slice 02
+CC prompt or Arc 06 open set has been issued. Arc authority continues after
+the Operator decisions. The planning close commit is the commit containing
+these records (resolve with git log); its actual hash is returned to the parent.

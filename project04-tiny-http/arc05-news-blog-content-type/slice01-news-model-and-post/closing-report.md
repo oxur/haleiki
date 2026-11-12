@@ -115,3 +115,90 @@ The existing post template intentionally links to future `/news/`, category and 
 - **Discoveries:** no authored news/blog frontmatter existed at baseline. The repository's existing source/concept graph and Pagefind custom-record pipeline stay separate from the added post map. The shipping template contains future-surface links, so the single-post capability is usable through its direct URL while navigation taxonomy/archive behavior remains unresolved by design.
 - **Scope-as-specified / scope-as-delivered:** delivered the approved single-post increment within the explicit file allowlist. No listing, archive, taxonomy, feed, search inclusion, trust bar, visual redesign or Arc06 cleanup was added. One route collision with a legacy segmented concept slug is now diagnosed rather than overwritten.
 - **Handoff:** source mutation ownership is now returned explicitly to CDC Locke through the parent relay. Source HEAD and tree are stable and clean at `cb31dc92caa667ce6f3a7133163c3da8749549b1`. CDC owns independent reproduction, acceptance, planning staging/commit and all later ledger/retrospective updates. This report remains the only CC-created planning change and is unstaged.
+
+## Iteration 02 — R1 explicit-null test correction (2026-11-11)
+
+### Assignment and intake
+
+Current assignment: `cc-prompt-iteration02.md`, read in full (160 lines), SHA-256 `af48b57b82ba72758bbab5f2b673ef5ea3a2baaedcffd888a7a75a91a618854f`. It is the active, bounded test-only correction. `cc-prompt-iteration01.md`, its report above, and the review record remain unchanged.
+
+- At intake, SOURCE `/Users/oubiwann/lab/oxur/haleiki` was branch `framework-base/tiny-http`, HEAD `cb31dc92caa667ce6f3a7133163c3da8749549b1`, clean. PLANNING `/Users/oubiwann/lab/oxur/haleiki/.worktrees/planning` was branch `planning`, HEAD `685a4fa5e64927e5664fe399428160f92e950ca4`, clean. The only change allowed to source in this pass was the existing serialization test in `tools/src/news.rs`; planning ownership is limited to appending this report.
+- Dispatch and tool selection remain OpenAI `gpt-6-luna / high`, actual CC context `01a1ccf7-3e7c-7ab2-ae59-72c9be8f457b` (Kierkegaard). CDC Locke remains `gpt-6.1-sol / high`, context `01a1ccec-0192-7ea3-81ca-f0ba2dad69a9`. Backend identities were not reported.
+
+### Required reading and retained findings
+
+| Required item | Loaded extent/state |
+|---|---|
+| Iteration-02 assignment | Full 160 lines at planning issuance `685a4fa5e64927e5664fe399428160f92e950ca4`. Its single-path allowlist, four commands, binary-preservation condition, R1 repair, retained-evidence rule and all-row-open status governed this pass. |
+| Slice plan and ledger | `slice-plan.md` full, 156 lines; `ledger.md` full, 35 lines, both at iteration-02 issuance. All F-1…F-8 statuses remain open. |
+| CDC independent review | `cdc-verification.md` full, 140 lines at issuance. R1 is a test false-positive only: bracket indexing returns a static JSON Null for a missing key; CDC found the production `PostContext` fields present. Its independent parser/render/route/search/export/CLI/permission evidence and limitations were read as prior-revision evidence, not recast as fresh CC runs. |
+| Iteration-01 report and assignment | `closing-report.md` full, 117 lines, recovered in contiguous bounded reads after a truncated combined read; iteration-01 assignment full, lines 1–376, recovered/read across ranges 1–200 and 201–376. The prior report/failure history is preserved verbatim above. |
+| Repository instructions | Source `AGENTS.md` full, 122 lines; planning `AGENTS.md` full, 24 lines. Existing source branch, model, project and gate boundaries remain binding. |
+| Test and pinned source | `tools/src/news.rs` full, 195 lines at `cb31dc92`; Cargo.lock's complete `serde_json` 1.0.151 package block, lines 3001–3012; pinned registry `value/index.rs` lines 178–220 and `value/mod.rs` get API/doc section lines 260–330. The index API returns `&NULL` when the key lookup is absent; `Value::get` returns `None`, whereas an explicitly serialized null is `Some(&Value::Null)`. |
+| Corrective/intake guidance | Prompt-authoring guide “Required reading and CC intake” lines 297–398 and “Corrective iterations” 441–474; independent-verification “Evidence During Correction Review” lines 80–106; validation-gates “Proportionate Proof” lines 27–50. Each full named section was loaded. |
+| Retained iteration-01 normative reading | Still available in this same CC context and recorded in the report above: Collaboration Framework v3.0.1; Autonomous/model/ownership and agent-coordination contracts; Rust v2.0 entrypoint and full 2,188-line anti-patterns chapter plus applicable Rust guides; testing and work-verification guides; project-management planning/iteration contracts. These are retained as prior reads, not claimed as reread in this correction. |
+
+The intake readback is narrow: only `value.get("prev")`/`get("next")` paired with `Some(&serde_json::Value::Null)` proves that both keys exist and contain null. If either key is omitted, `get` yields `None`, which cannot equal `Some(Null)`. Square-bracket indexing cannot establish this because its pinned behavior intentionally maps the missing-key case to `Null`. The correction keeps serialization of the real `PostContext::from_post` fixture and leaves the `related == []` assertion and rendered no-byline/no-navigation/no-related checks intact. Production behavior, context struct, fixtures and product decisions do not change.
+
+### Correction, commit and current state
+
+Changed exactly the two assertions in the named existing test. Source commit: `5fe3cf46fa1ea673b0b84f09167e36de8611d3ee`, parent `cb31dc92caa667ce6f3a7133163c3da8749549b1`, subject `test(news): assert explicit null context keys`; exact changed path: `tools/src/news.rs` only (2 insertions, 2 deletions). Required Codex and Billo AI trailers are contiguous. Source is clean at that commit. No production code, fixture, template, dependency or other path changed. The assignment hash remains as listed above; planning issuance remains `685a4fa5e64927e5664fe399428160f92e950ca4` until CDC commits its report update.
+
+### Fresh gates and retained independent evidence
+
+| Check on the corrected candidate | Result |
+|---|---|
+| `cargo test --all-features --workspace news::tests::` | Exit 0; all 4 renderer tests passed, 0 failed, 420 filtered. This includes the actual-context Some(Null) assertions, unchanged `related=[]`, and real-template absence controls. |
+| `cargo test --no-default-features --workspace` | Exit 0; unit tests 132 passed, 0 failed, 1 ignored. `demo_fetch` and `demo_status` selected 0 each under these features; `export_cli` and `search_cli` each ran 1 and passed. Existing unused-import warnings in the two zero-selected integration targets remain outside this one-file scope. |
+| `cargo outdated --root-deps-only --ignore-external-rel` | Exit 0. Stderr: `warning: Feature loader of package minijinja has been obsolete in version 3.1.0`. Stdout lists newer root versions of clap, comrak, ego-tree, globset, htmd, minijinja, pagefind, reqwest, scraper, serde_json, thiserror and tokio. No dependency was changed. The Make wrapper's “All dependencies up to date” banner does not cancel this direct version report. |
+| Pre-`make check` binary preservation check | Both `bin/haleiki` and `/private/tmp/haleiki-slice01-original-bin` were regular non-symlink files, uid 501, mode 0755; both SHA-256 values matched the required `4df7d22f32bbeb7bcde62c62e100917987199fc71729179f85b877a1c3405f6e`. |
+| `make check` | Exit 0. Clippy, formatting and debug build passed; all-feature unit tests 416 passed, 0 failed, 8 ignored; `demo_fetch` 14 passed/3 ignored, `demo_status` 3 passed, `export_cli` 1 passed and `search_cli` 1 passed. Ended “All checks passed (build + lint + test)”. |
+| Post-run binary restoration | Rechecked the backup as regular, non-symlink, uid 501 and the expected hash before copying it back. Restored `bin/haleiki`; both files again hash to the expected value. |
+| `git diff --check` | Exit 0 before commit and on the clean committed tree. Cached diff check also exited 0 and contained only `tools/src/news.rs`. |
+
+No test, compile, lint, permission or sandbox failure occurred in iteration 02; the combined reading output truncation was recovered with bounded reads. The earlier implementation and first-gate failures remain documented in the preceding iteration-01 section and were not erased or counted as failures of this correction.
+
+CDC's recorded evidence at `cb31dc92` remains a prior independent review, not a fresh CC run: strict parser and data results (F-1…F-4), unchanged route and namespace behavior (F-6), and its exact real-export/CLI/permission controls are not invalidated by this two-assertion test-only change. Their original source revision, methods, populations and limits remain in `cdc-verification.md`. The renderer/context claim (F-5/F-7) was rerun here with the corrected oracle; F-8's no-default, direct dependency query and full `make check` were freshly run on the corrected candidate. CDC decides whether the unaffected evidence remains applicable after inspecting this diff.
+
+### F-row accounting, scope and handback
+
+All eight rows remain open; these are CC attestations only.
+
+- **F-1/F-2:** retain CDC's independent approval-log and full-corpus audit at `cb31dc92`; this test-only correction changes neither approval nor authored content.
+- **F-3/F-4:** retain CDC's independent parser/data evidence at `cb31dc92`; no parser or fixture changed.
+- **F-5:** corrected serialized-context test and the four-test renderer suite passed on this candidate; CDC's prior real-template/escaping evidence is retained as recorded.
+- **F-6:** retain CDC's independent route-set, collision, positive namespace, search and real-export evidence; route/source behavior is unchanged.
+- **F-7:** `get` now rejects omission for both navigation keys; explicit null/null plus the unchanged empty related list and rendered absence checks passed fresh. The independent reviewer must inspect the actual correction.
+- **F-8:** no-default suite, direct outdated query and required `make check` passed fresh; full counts and binary preservation are recorded above.
+
+The applied change follows ID-30's distinction between `Option` absence and explicit serialized null, using the pinned `Value::get` API. It repairs a discriminating oracle in the existing fixture, not production behavior. The correction is bounded to the review finding; no new behavior, fixture, tool, or evidence artifact was introduced. News listing/archive/taxonomy/feed/search participation and all later discussion gates remain held. Browser checks were not triggered because no browser assets or harness behavior changed.
+
+Iteration-02 artifact inventory: no new artifact beyond this appended canonical report section. Source ownership is returned to CDC Locke through the parent relay; the stable source candidate is clean at `5fe3cf46fa1ea673b0b84f09167e36de8611d3ee`. Planning remains at `685a4fa5e64927e5664fe399428160f92e950ca4` with only this report modified by CC. CDC owns staging/committing the report, independent reproduction, acceptance and ledger updates. No F row is declared accepted here.
+
+**Arc bubble-up:** Slice01's single-post capability and scope are unchanged. The correction closes a test-oracle ambiguity about explicit nulls; CDC's review found no production defect. Delivery remains exactly the approved single post and route. The later news navigation surfaces and all Arc05 composition gates remain open.
+
+## CDC closing disposition — 2026-11-11 (Locke)
+
+Independent acceptance: F-1…F-8 done at source
+`5fe3cf46fa1ea673b0b84f09167e36de8611d3ee`; R1 resolved. The full
+verification/retained-evidence assessment is in [cdc-verification.md](./cdc-verification.md).
+The required closing analysis is [cdc-retrospective.md](./cdc-retrospective.md).
+This attributed CDC appendix does not rewrite or promote the CC attestations
+above. Source and candidate ownership have returned to CDC; there is no
+active CC assignment. Planning input to this final review was `685a4fa`;
+the local close commit containing this appendix is reported separately.
+
+Final supporting-artifact inventory: `artifacts/cdc-review01-focused.log`,
+`artifacts/cdc-final-gates.log`, `artifacts/gate-preview.html`,
+`artifacts/gate-preview.png`, `artifacts/gate-contexts.json`, and
+`artifacts/render-gate-examples.py`. The two logs retain independent
+verification; the four draft-design outputs make the reserved archive/taxonomy
+and visible-feed-link choices concrete. No illustration is a product route,
+editorial post or composition acceptance. Canonical prompts/close documents
+remain in the slice root and are excluded from this supporting inventory.
+
+Bubble-up confirmed: the single-post capability is delivered; arc structure
+and scope remain unchanged. E-1 rolls up the accepted child. Other arc and
+project rows remain open pending their own work/composition. Current next
+owner is the Operator via parent relay for the existing discussion gates;
+recommendations and concrete renders are in the arc-plan packet.

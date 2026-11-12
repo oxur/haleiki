@@ -2,7 +2,7 @@
 
 > The arc plan-of-record: add Haleiki's news/blog surface to the tiny_http pivot.
 > Part of the tiny_http project ([`../project-plan.md`](../project-plan.md)).
-> Status: **active** · v1.1 · 2026-11-11; initial plan 2026-08-21.
+> Status: **active**, Slice 01 closed; awaiting reserved Operator decisions · v1.2 · 2026-11-11; initial plan 2026-08-21.
 
 ---
 
@@ -47,7 +47,7 @@ across export/server/search/feed decisions and closes the arc.
 
 | Slice | Scope | Load-bearing for |
 |-------|-------|------------------|
-| **01 — news model + post route** | Define the news authoring/frontmatter model, parse demo news posts, render one real post through `news-post.jinja`, and choose the post URL/date/display conventions with operator confirmation from concrete examples. | 02, 03, arc close |
+| **01 — news model + post route (closed 2026-11-11)** | Define the news authoring/frontmatter model, parse demo news posts, render one real post through `news-post.jinja`, and choose the post URL/date/display conventions with operator confirmation from concrete examples. | 02, 03, arc close |
 | **02 — news index + archives + taxonomy views** | Assemble the `news.*` context for `news-index`, `news-archive`, `news-tags`, and `news-categories`; implement date grouping, category/tag counts, and listing routes. Use rendered examples to settle archive pagination, taxonomy descriptions, and visual/content copy questions. | 03, arc close |
 | **03 — sink parity + feed/search disposition + arc close** | Prove the full news/blog surface renders in static export and `haleiki serve`; decide and implement or defer `/news/feed.xml`; decide whether news posts participate in Pagefind search now or in Arc 06; run project gates and write the arc closing report. | project close |
 
@@ -99,6 +99,14 @@ See the sibling [ledger.md](./ledger.md). All original row IDs, criteria,
 statuses and evidence are retained there.
 
 ## 6. Version History
+
+### v1.2 — 2026-11-11 (Slice 01 accepted; next discussion gates)
+
+Slice 01 closed at source 5fe3cf46 after independent correction review, full
+native gates and CDC retrospective. E-1 now records the accepted child; all
+composition and remaining slice rows stay open. No structural/scope change is
+needed. Native-template draft renders make the existing archive/taxonomy
+discussion gates concrete; feed/search dispositions are proposed, not approved.
 
 ### v1.1 — 2026-11-11 (Slice 01 assignment preparation)
 
@@ -184,7 +192,7 @@ CC owns source plus its designated `closing-report.md` handoff only; CDC
 owns planning/index work and independently reviews source after CC returns
 mutation ownership. Arc authority remains active across this phase return.
 
-## Slice 01 review status — 2026-11-11
+## Slice 01 review history — 2026-11-11 (superseded by final acceptance)
 
 CC Kierkegaard, context `01a1ccf7-3e7c-7ab2-ae59-72c9be8f457b`, explicitly
 requested/tool-selected `gpt-6-luna / high`, returned clean source `cb31dc92`
@@ -195,3 +203,55 @@ repair or arc scope change is indicated. E-1 and all other open arc rows stay
 open until actual slice acceptance/composition. Later product gates remain
 unchanged. Actual attribution and candidate evidence are in the slice records;
 backend identities remain unreported.
+
+## Final Slice 01 acceptance and pending Operator decision packet — 2026-11-11
+
+Slice 01 is independently accepted at source
+`5fe3cf46fa1ea673b0b84f09167e36de8611d3ee` (CC source commits cb31dc92 and
+5fe3cf46). All F-1…F-8 are done, R1 resolved, and the slice retrospective is
+complete. E-1 is done; E-2…E-7 and project P-5/P-10 remain open. No arc close,
+arc retrospective or fresh independent arc composition gate is claimed.
+
+The already approved authoring/URL/frontmatter/one-fixture decisions are not
+being reopened. The following are the reserved section-3 decisions, now with
+concrete native minijinja renders of the unchanged shipped templates:
+
+- [Open all decision previews](./slice01-news-model-and-post/artifacts/gate-preview.html)
+- [Chromium capture](./slice01-news-model-and-post/artifacts/gate-preview.png)
+- [Exact illustrative contexts](./slice01-news-model-and-post/artifacts/gate-contexts.json)
+- [Render reproduction script](./slice01-news-model-and-post/artifacts/render-gate-examples.py)
+
+**These are draft context renders, not implemented routes or approval.** The
+unpaged archive and taxonomy use only the approved post. The paged alternative
+uses a clearly labelled synthetic 41-post scenario: page 2 has the real post
+plus 19 layout-only rows. No synthetic Markdown entered the corpus. The index
+preview exposes the current unconditional RSS link. The screenshot was visually
+inspected in cached Chromium (six frames including the surrounding review
+document); this is preview QA, not the required product browser/composition gate.
+
+| Gate | CDC recommendation, awaiting Operator decision | Concrete alternative / tradeoff |
+|---|---|---|
+| G1 — archive pagination/date granularity | `/news/archive/` lists all posts on one page, newest first, grouped by calendar month with year in the heading (e.g. August 2026); `pagination: null`, so no pager. This is Archive A and fits the current one-post maintainer log. | Archive B uses 20 posts per page, monthly headings within each page, page 1 at `/news/archive/` and later pages at `/news/archive/page/<n>/`. B bounds page size but adds route/boundary behavior. Neither changes stable post URLs. |
+| G2 — taxonomy vocabulary/descriptions | Keep author-driven, open-ended news labels, separate from wiki taxonomy. Demo currently has only category **Project Updates**, tags **search**, **pagefind**, **tiny-http**; do not seed extra labels. Proposed category description: **Changes to Haleiki, its demo wiki, and supporting tools.** Curated descriptions are optional; absent descriptions stay empty. Tags use their existing names without invented descriptions. | A controlled vocabulary/description catalogue can be explicitly selected, but would add authoring policy beyond today's required nonempty category/string-list tags. The preview shows exactly the current one-category/three-tag result. |
+| G3 — RSS/feed disposition | Defer feed delivery with a documented re-entry condition: choose a canonical published site URL and implement/test feed output. Hide the visible **Subscribe via RSS** link while no feed exists. The current profile supplies no canonical public base URL, and the index template currently renders that link unconditionally. | Deliver `/news/feed.xml` in Slice 03 after the Operator supplies/chooses the canonical site URL and intended RSS contract. Keeping a visible dead feed link is not a recommended disposition. |
+| G4 — Pagefind news participation | Include news posts in Arc 05 Slice 03, with `type=news` and news category metadata. Do not invent wiki tier or epistemic-trust classifications for announcements; omit those news-only inapplicable filters. Existing source/concept records and facets must remain intact. | Defer news search to Arc 06, explicitly retaining source/concept-only results until that later authorized work. The current post is rendered but intentionally absent from Pagefind. |
+
+All four recommendations are unapproved. G1/G2 decisions are needed before
+source implementation of Slice 02. G3/G4 can be answered now or retained for
+their later Slice 03 gate; approval of G1/G2 alone does not settle them. A feed
+deferral requires the visible-link handling above (or an explicit alternative).
+
+After G1/G2 resolution, CDC will record the Operator's choices and prepare the
+source-grounded Slice 02 open set/prompt, then parent resumes the selected CC
+`gpt-6-luna / high`. Existing singular category/tag post links must acquire real
+matching targets alongside the plural index views. The literal “1 posts” copy
+visible in the unchanged templates should receive ordinary singular/plural
+handling in that slice; these previews do not silently repair it. Prev/next
+and related-post multi-post policy and complete sink composition still need
+their assigned later evidence. Browser/native gates and a separately attributed
+independent arc composition review remain mandatory before any arc close.
+
+No dependent source default has been selected. Arc 05 authority remains active
+across this discussion boundary; no Arc 06, push, merge, publication or deployment
+is authorized. Next action owner: Operator through parent relay. CDC owns the
+stable source/planning trees while awaiting that decision.
