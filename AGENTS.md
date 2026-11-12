@@ -70,9 +70,11 @@ reconstructions are finding aids, with no inferred independent acceptance.
 ### tiny_http pivot (source branch `framework-base/tiny-http`)
 
 Read `.worktrees/planning/project04-tiny-http/project-plan.md` and its ledger.
-Arcs 01–04 retain their recorded closure; Arc 05 Slice 01 is still held at the
-Operator discussion gate for authoring location, URLs, frontmatter and fixtures.
-Arc 06 remains roadmap-level. Migration does not authorize feature implementation.
+Arcs 01–04 retain their recorded closure. The Operator approved all four Arc 05
+Slice 01 content-model decisions on 2026-11-11; see the canonical decision log
+and current numbered assignment in the planning worktree. Archive, taxonomy,
+feed and news-search discussion gates remain held; Arc 06 remains roadmap-level.
+Migration alone did not authorize feature implementation.
 
 Confirmed decisions: deployment = **both** (static export default + hardened
 tiny_http self-host); **news/blog** content type in scope; **Pagefind** search

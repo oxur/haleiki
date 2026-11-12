@@ -72,6 +72,20 @@ haleiki build && cobalt build
 haleiki dev
 ```
 
+## News posts
+
+News posts are dated maintainer updates authored as Markdown in demo/news/.
+Each post requires type: news, a nonempty title, a strict YYYY-MM-DD
+date, a nonempty category, and a tags list (which may be empty).
+author and excerpt are optional. The filename determines the stable
+/news/<slug>/ URL.
+
+From the repository root, run haleiki export --content-dir demo --out-dir _site
+to export the demo site. The approved example is available at
+/news/search-lands-in-the-demo-wiki/. Slice 01 currently renders individual
+post routes; the /news/ listing, archive, category/tag pages and feed are not
+implemented yet.
+
 ## Design
 
 Warm/cool dual-theme aesthetic built on a semantic design token architecture. DM Sans for headings, Source Serif 4 for body prose, IBM Plex Mono for code. OKLCH color throughout. Fluid typography and Every Layout compositional primitives — zero media queries for layout.
@@ -82,7 +96,7 @@ This project is in early development. Plans and historical design/development
 records live on the orphan `planning` branch, checked out locally at
 `.worktrees/planning/`. Start with that worktree's `README.md` for the chronological
 project index and archive. The active pivot is `project04-tiny-http/`;
-its news/blog arc is awaiting content-model decisions.
+its news/blog arc is implementing the approved single-post increment.
 
 Design mockups for key page types in the wiki are availale for viewing here:
 

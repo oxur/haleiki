@@ -27,6 +27,10 @@ fn test_export_cli_produces_site_from_demo_content() {
     assert!(out_dir.join("category/mathematics/index.html").exists());
     assert!(out_dir.join("abelian-group/index.html").exists());
     assert!(out_dir.join("source/vimalamitra/index.html").exists());
+    let news_post = out_dir.join("news/search-lands-in-the-demo-wiki/index.html");
+    assert!(news_post.exists());
+    let news_html = std::fs::read_to_string(news_post).expect("news post is readable");
+    assert!(news_html.contains("Search Lands in the Demo Wiki"));
     assert!(out_dir.join("assets/css/haleiki.css").exists());
     assert!(!out_dir.join("assets/ai").exists());
 

@@ -303,6 +303,13 @@ mod tests {
         let corpus = demo_corpus();
         let records = build_records(&corpus);
         assert_eq!(records.len(), corpus.concepts.len() + corpus.sources.len());
+        assert!(corpus.news.contains_key("search-lands-in-the-demo-wiki"));
+        assert!(
+            records
+                .iter()
+                .all(|record| !record.url.starts_with("/news/")),
+            "news posts are not indexed by this slice"
+        );
     }
 
     // G-1 (no-shell-out half): search.rs never invokes an external pagefind

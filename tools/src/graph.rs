@@ -635,6 +635,7 @@ mod tests {
         Corpus {
             sources,
             concepts,
+            news: HashMap::new(),
             taxonomy: Taxonomy {
                 categories: vec![TaxonomyEntry {
                     name: "math".to_string(),

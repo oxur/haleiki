@@ -14,6 +14,7 @@ use tiny_http::{Header, Method, Response, Server};
 
 use crate::article;
 use crate::graph::HaleikiGraph;
+use crate::news;
 use crate::page;
 use crate::parser;
 use crate::render;
@@ -103,6 +104,20 @@ pub fn render_routes(content_dir: &Path, templates_dir: &Path) -> Result<SiteRou
     for slug in source_slugs {
         let html = article::render_source(&env, &site, &corpus, slug)?;
         pages.insert(format!("/source/{slug}/"), html);
+    }
+
+    let mut news_slugs: Vec<&String> = corpus.news.keys().collect();
+    news_slugs.sort();
+    for slug in news_slugs {
+        let post = &corpus.news[slug];
+        let route = post.url().to_owned();
+        if pages.contains_key(&route) {
+            anyhow::bail!(
+                "news route collision at {route:?} for news slug {slug:?}; an existing page already uses this route"
+            );
+        }
+        let html = news::render_post(&env, &site, &corpus, slug)?;
+        pages.insert(route, html);
     }
 
     let not_found = page::render_404(&env, &site)?;
@@ -587,6 +602,7 @@ mod tests {
         );
         expected.extend(corpus.concepts.keys().map(|slug| format!("/{slug}/")));
         expected.extend(corpus.sources.keys().map(|slug| format!("/source/{slug}/")));
+        expected.extend(corpus.news.values().map(|post| post.url().to_owned()));
 
         let actual: HashSet<String> = routes.pages.keys().cloned().collect();
         assert_eq!(actual, expected);
@@ -609,6 +625,7 @@ mod tests {
             "/category/mathematics/",
             "/abelian-group/",
             "/source/vimalamitra/",
+            "/news/search-lands-in-the-demo-wiki/",
         ] {
             let expected_body = routes
                 .pages
@@ -622,6 +639,95 @@ mod tests {
                 expected_body.as_bytes(),
                 "path {path} body should match the rendered route"
             );
+        }
+    }
+
+    #[test]
+    fn test_render_routes_rejects_news_collision_with_legacy_concept_path() {
+        let dir = assert_fs::TempDir::new().expect("temporary directory");
+        let demo = demo_dir();
+        std::fs::copy(demo.join("taxonomy.yaml"), dir.path().join("taxonomy.yaml"))
+            .expect("copy taxonomy");
+        std::fs::copy(demo.join("profile.yaml"), dir.path().join("profile.yaml"))
+            .expect("copy profile");
+        let news_dir = dir.path().join("news");
+        std::fs::create_dir_all(&news_dir).expect("news directory");
+        std::fs::write(
+            news_dir.join("search-lands-in-the-demo-wiki.md"),
+            "---\ntype: news\ntitle: Search Lands\ndate: '2026-08-21'\ncategory: Project Updates\ntags: []\n---\nBody\n",
+        )
+        .expect("news post");
+        let concepts_dir = dir.path().join("concepts");
+        std::fs::create_dir_all(&concepts_dir).expect("concept directory");
+        let mut legacy = std::fs::read_to_string(demo.join("concepts/abelian-group.md"))
+            .expect("read a complete concept fixture");
+        legacy = legacy.replace(
+            "slug: \"abelian-group\"",
+            "slug: \"news/search-lands-in-the-demo-wiki\"",
+        );
+        legacy = legacy.replace(
+            "derived_from:\n  - slug: \"group-mathematics\"\n    title: \"Group (mathematics)\"\n  - slug: \"abstract-algebra\"\n    title: \"Abstract algebra\"",
+            "derived_from: []",
+        );
+        std::fs::write(concepts_dir.join("legacy.md"), legacy).expect("legacy concept");
+
+        let error = render_routes(dir.path(), &templates_dir())
+            .expect_err("route collision must be rejected")
+            .to_string();
+        assert!(
+            error.contains("/news/search-lands-in-the-demo-wiki/"),
+            "{error}"
+        );
+        assert!(error.contains("news route collision"), "{error}");
+    }
+
+    #[test]
+    fn test_news_route_coexists_with_concept_and_source_sharing_bare_slug() {
+        let dir = assert_fs::TempDir::new().expect("temporary directory");
+        let demo = demo_dir();
+        std::fs::copy(demo.join("taxonomy.yaml"), dir.path().join("taxonomy.yaml"))
+            .expect("copy taxonomy");
+        std::fs::copy(demo.join("profile.yaml"), dir.path().join("profile.yaml"))
+            .expect("copy profile");
+
+        let news_dir = dir.path().join("news");
+        std::fs::create_dir_all(&news_dir).expect("news directory");
+        std::fs::write(
+            news_dir.join("search-lands-in-the-demo-wiki.md"),
+            "---\ntype: news\ntitle: Search Lands\ndate: '2026-08-21'\ncategory: Project Updates\ntags: []\n---\nBody\n",
+        )
+        .expect("news post");
+
+        let concepts_dir = dir.path().join("concepts");
+        std::fs::create_dir_all(&concepts_dir).expect("concept directory");
+        let mut concept = std::fs::read_to_string(demo.join("concepts/abelian-group.md"))
+            .expect("read a complete concept fixture");
+        concept = concept.replace(
+            "slug: \"abelian-group\"",
+            "slug: \"search-lands-in-the-demo-wiki\"",
+        );
+        concept = concept.replace(
+            "derived_from:\n  - slug: \"group-mathematics\"\n    title: \"Group (mathematics)\"\n  - slug: \"abstract-algebra\"\n    title: \"Abstract algebra\"",
+            "derived_from: []",
+        );
+        std::fs::write(concepts_dir.join("same-slug.md"), concept)
+            .expect("concept with bare news slug");
+
+        let sources_dir = dir.path().join("sources");
+        std::fs::create_dir_all(&sources_dir).expect("source directory");
+        std::fs::write(
+            sources_dir.join("same-slug.md"),
+            "---\ntitle: Same Slug Source\nslug: search-lands-in-the-demo-wiki\npage_type: source\ncategory: mathematics\nsubcategory: algebra\ntier: intermediate\nkeywords: []\ntags: []\nextraction_status: complete\nconcepts_generated: []\nstatus: published\n---\nSource body\n",
+        )
+        .expect("source with bare news slug");
+
+        let routes = render_routes(dir.path(), &templates_dir()).expect("routes render");
+        for path in [
+            "/news/search-lands-in-the-demo-wiki/",
+            "/search-lands-in-the-demo-wiki/",
+            "/source/search-lands-in-the-demo-wiki/",
+        ] {
+            assert!(routes.pages.contains_key(path), "missing route {path}");
         }
     }
 
@@ -731,6 +837,10 @@ mod tests {
             ("/category/mathematics/", "category/mathematics/index.html"),
             ("/abelian-group/", "abelian-group/index.html"),
             ("/source/vimalamitra/", "source/vimalamitra/index.html"),
+            (
+                "/news/search-lands-in-the-demo-wiki/",
+                "news/search-lands-in-the-demo-wiki/index.html",
+            ),
         ] {
             let served = resolve(path, &routes, &assets);
             let exported = std::fs::read(out.join(exported_rel)).unwrap();
@@ -1023,6 +1133,7 @@ mod tests {
             "/category/mathematics/",
             "/abelian-group/",
             "/source/vimalamitra/",
+            "/news/search-lands-in-the-demo-wiki/",
         ] {
             let (status, headers, _) = http_request(port, "GET", path);
             assert_eq!(status, 200, "GET {path}");

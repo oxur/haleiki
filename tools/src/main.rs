@@ -17,6 +17,7 @@ mod graph;
 #[allow(dead_code)]
 mod markdown;
 mod merger;
+mod news;
 #[allow(dead_code)]
 mod page;
 #[allow(dead_code)]

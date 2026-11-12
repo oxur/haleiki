@@ -568,6 +568,7 @@ mod tests {
         let corpus = Corpus {
             sources,
             concepts,
+            news: HashMap::new(),
             taxonomy: make_taxonomy(),
             profile: None,
         };
@@ -591,6 +592,7 @@ mod tests {
         let corpus = Corpus {
             sources,
             concepts: HashMap::new(),
+            news: HashMap::new(),
             taxonomy: make_taxonomy(),
             profile: None,
         };
@@ -608,6 +610,7 @@ mod tests {
         let corpus = Corpus {
             sources,
             concepts: HashMap::new(),
+            news: HashMap::new(),
             taxonomy: make_taxonomy(),
             profile: None,
         };
@@ -628,6 +631,7 @@ mod tests {
         let corpus = Corpus {
             sources: HashMap::new(),
             concepts,
+            news: HashMap::new(),
             taxonomy: make_taxonomy(),
             profile: None,
         };
@@ -654,6 +658,7 @@ mod tests {
         let corpus = Corpus {
             sources: HashMap::new(),
             concepts,
+            news: HashMap::new(),
             taxonomy: make_taxonomy(),
             profile: None,
         };
@@ -673,6 +678,7 @@ mod tests {
         let corpus = Corpus {
             sources,
             concepts: HashMap::new(),
+            news: HashMap::new(),
             taxonomy: make_taxonomy(),
             profile: None,
         };
@@ -693,6 +699,7 @@ mod tests {
         let corpus = Corpus {
             sources: HashMap::new(),
             concepts,
+            news: HashMap::new(),
             taxonomy: make_taxonomy(),
             profile: None,
         };
@@ -716,6 +723,7 @@ mod tests {
         let corpus = Corpus {
             sources,
             concepts: HashMap::new(),
+            news: HashMap::new(),
             taxonomy: make_taxonomy(),
             profile: None,
         };
@@ -740,6 +748,7 @@ mod tests {
         let corpus = Corpus {
             sources,
             concepts: HashMap::new(),
+            news: HashMap::new(),
             taxonomy: make_taxonomy(),
             profile: None,
         };
@@ -770,6 +779,7 @@ mod tests {
         let corpus = Corpus {
             sources,
             concepts,
+            news: HashMap::new(),
             taxonomy: make_taxonomy(),
             profile: None,
         };
