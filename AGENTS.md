@@ -15,9 +15,11 @@
   actual tiny_http closure records and all open project-level composition gates.
 - Arc 05 has separate Operator authorization for Autonomous Mode through its end
   (2026-11-11), with explicit CDC/CC model selections in its arc plan. Slice 01
-  content-model decisions are approved in the canonical slice plan; use its
-  current numbered prompt. Later archive/taxonomy/feed/search discussion gates
-  remain open. Migration alone was not implementation approval; do not open Arc 06.
+  content-model decisions are approved in the canonical Slice 01 plan; read
+  the arc plan for the current Slice 02 assignment. The Operator also approved all G1–G4 archive/taxonomy/
+  RSS-deferral/news-search recommendations on 2026-11-11; read the arc-plan
+  actual approval record. Migration alone was not implementation approval;
+  do not open Arc 06 or inherit project/arc acceptance from child records.
 - Future durable slice outputs default to the owning slice's `artifacts/`.
 - Every assistant-authored commit includes both contiguous trailers:
   `Co-authored-by: Codex <noreply@openai.com>`

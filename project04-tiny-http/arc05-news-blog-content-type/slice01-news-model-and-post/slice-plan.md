@@ -6,7 +6,8 @@ This canonical filename is an entrypoint, not a replacement or reduced contract.
 
 Status: **closed** — CDC accepted F-1…F-8 on 2026-11-11 at source
 `5fe3cf46fa1ea673b0b84f09167e36de8611d3ee`. The four content-model decisions
-remain approved; later Arc 05 discussion gates remain open.
+remain approved; the later G1–G4 gates were separately approved afterward,
+as recorded in the governing arc plan. Its current Slice 02 assignment applies.
 Source checkout: `/Users/oubiwann/lab/oxur/haleiki`, branch
 `framework-base/tiny-http`; migration baseline `ffe2dd78994e`.
 Historical `docs/tiny-http/` references map to this project's root. Source-code,
@@ -24,6 +25,7 @@ Artifacts: retain existing locations; new supporting outputs default to `artifac
 ## Version history
 
 - 2026-11-11: added canonical plan entrypoint during the Operator-authorized migration.
+- 2026-11-11: later G1–G4 approval is recorded in the arc plan; Slice 02 opened.
 - 2026-11-11: retained Operator decision log and issued source-grounded iteration 01;
   recorded actual CDC attribution, parent dispatch route, ownership and readiness.
 

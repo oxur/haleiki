@@ -12,7 +12,7 @@ Framework loaded: collaboration-framework **3.0.1**, from the Operator-named ins
 | [01 — Demo site](project01-demo-site/project-plan.md) | March–May 2026 | Best-effort historical map; phases 1–5 detailed, later scope retained as carryover |
 | [02 — Concept cards](project02-concept-cards/project-plan.md) | May 3, 2026 | Pilot, corpus extraction and backlink backfill; historical acceptance not reconstructed |
 | [03 — Cobalt site build](project03-cobalt-site-build/project-plan.md) | May 3–8, 2026 | M1–M8 mapped to three coarse arcs; superseded rendering lineage |
-| [04 — tiny_http pivot](project04-tiny-http/project-plan.md) | July–August 2026; unfinished | Real framework records retained; Arcs 01–04 closed, Arc 05 gated, Arc 06 roadmap only |
+| [04 — tiny_http pivot](project04-tiny-http/project-plan.md) | July–August 2026; unfinished | Real framework records retained; Arcs 01–04 closed, Arc 05 active, Arc 06 roadmap only |
 
 The first three projects are finding aids, not newly approved implementation work.
 Their arc grouping is approximate; historical milestone identities and subjects
@@ -44,14 +44,18 @@ Source branches other than `framework-base/tiny-http` are not rewritten.
 ## Resume point
 
 Read the [tiny_http project plan](project04-tiny-http/project-plan.md), its [ledger](project04-tiny-http/ledger.md),
-then Arc 05 and its Slice 01 `slice-plan.md`. The Operator separately approved
+then Arc 05 and its current Slice 02 `slice-plan.md`. The Operator separately approved
 the four content-model decisions and Autonomous Mode through end of Arc 05 on
 2026-11-11. Slice 01 is independently closed at source `5fe3cf46`; its accepted
 final assignment is preserved as
 `arc05-news-blog-content-type/slice01-news-model-and-post/cc-prompt-iteration02.md`
-(relative to `project04-tiny-http`). No CC assignment is active. The arc plan
-contains concrete previews/options for the reserved archive/taxonomy/feed/search
-decisions. Arc 06 is outside execution authority. The migration
+(relative to `project04-tiny-http`). The Operator has now approved all four
+archive/taxonomy/feed-deferral/news-search recommendations; see the actual
+approval record in the arc plan. Current ready-for-CC assignment:
+`arc05-news-blog-content-type/slice02-news-index-archives-taxonomy/cc-prompt.md`
+(relative to `project04-tiny-http`). Parent resumes the explicitly selected CC;
+CDC independently reviews after source ownership returns.
+Arc 06 is outside execution authority. The migration
 itself did not provide this separate approval.
 
 ## Migration checks

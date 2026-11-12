@@ -97,10 +97,12 @@ the recomposition arc that closes the branch as a clean Cobalt replacement.
 - **Arc 05 — News / blog content type:** **active** (see
   [`arc05-news-blog-content-type/arc-plan.md`](./arc05-news-blog-content-type/arc-plan.md)).
   Slice 01 is independently closed at source `5fe3cf46` with all F rows done
-  and CDC retrospective complete. Slice 02 source work awaits the reserved
-  archive/taxonomy choices, with concrete native-template previews in the arc
-  plan. Feed/search and arc composition remain open; no project DoD row is
-  closed by inheriting this child acceptance.
+  and CDC retrospective complete. The Operator approved G1–G4 from the
+  concrete packet on 2026-11-11: all-post month/year archive, open news
+  taxonomy, RSS deferral/hidden link, and Slice 03 news Pagefind inclusion.
+  Slice 02 is open with its full source-grounded packet ready for CC dispatch;
+  implementation/composition remain open.
+  No project DoD row is closed by inheriting this child acceptance.
 - **Arc 06:** roadmap-level only, by design. It is planned deep when it becomes
   the active work; findings from earlier arcs bubble up and may reshape it
   before then.
@@ -112,6 +114,13 @@ See the sibling [ledger.md](./ledger.md). All original row IDs, criteria,
 statuses and evidence are retained there.
 
 ## 5. Version history
+
+### v1.11 — 2026-11-11 (Arc 05 G1–G4 approval)
+
+Actual Operator answer “Approve all four recommendations” resolves the
+reserved product gates. Arc 05 continues through Slice 02 and Slice 03 under
+unchanged models, independent gates and local-only authority; feed delivery
+is explicitly deferred, with hidden link and named re-entry condition.
 
 ### v1.10 — 2026-11-11 (Arc 05 Slice 01 bubble-up)
 
@@ -263,8 +272,11 @@ The directory spelling `project04-tiny-http` follows the canonical
 `projectNN-<slug>` convention after the Operator corrected its name on 2026-11-11.
 Arcs 01–04 remain historically closed. Arc 05 Slice 01 is now independently
 closed; its authoring location, URL model, frontmatter and fixture decisions
-remain approved. Later archive, taxonomy, feed and search discussion gates
-remain open, with concrete options in the arc-plan decision packet. Arc 06 remains roadmap-level,
+remain approved. The Operator separately approved all G1–G4 archive, taxonomy,
+feed-deferral and search recommendations; the arc-plan approval record governs
+dependent implementation. Current assignment:
+`arc05-news-blog-content-type/slice02-news-index-archives-taxonomy/cc-prompt.md`.
+Arc/slice completion still requires its own evidence. Arc 06 remains roadmap-level,
 with no invented directory/open set.
 Future assignments must use current paths and preserve the original issued prompt.
 Durable slice outputs default to that slice's `artifacts/` directory.
