@@ -29,3 +29,7 @@ the canonical `slice-plan.md` Operator decision log and numbered assignment;
 the issued `slice-doc.md` remains unchanged history. All eight row criteria,
 statuses and original verification descriptions are preserved. Preparation
 does not independently close F-1 or any implementation/gate row.
+
+Independent review 01: see `cdc-verification.md`. R1 affects F-5/F-7
+test discrimination; full F-8 reproduction awaits the corrected candidate.
+Current assignment is `cc-prompt-iteration02.md`; every F row remains open.

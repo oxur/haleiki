@@ -71,10 +71,11 @@ taxonomy surface, RSS/feed or news-search implementation is assigned by Slice 01
 | Assignment | Issued | Predecessor / reason | Disposition |
 |---|---|---|---|
 | `cc-prompt.md` | 2026-08-21 original record | Initial one-post assignment; initial discussion gate | Preserved; no CC implementation started; superseded by iteration 01 after approvals |
-| `cc-prompt-iteration01.md` | 2026-11-11 | `cc-prompt.md`; approved model decisions, live source grounding, intake/ownership and discriminating tests | Current, issued to parent for explicit `gpt-6-luna / high` CC dispatch; implementation not yet started |
+| `cc-prompt-iteration01.md` | 2026-11-11 | `cc-prompt.md`; approved model decisions, live source grounding, intake/ownership and discriminating tests | Returned by CC at `cb31dc92`; independently reviewed, one test-oracle correction R1 required; evidence retained in cdc-verification.md |
+| `cc-prompt-iteration02.md` | 2026-11-11 | `cc-prompt-iteration01.md`; CDC R1 requires Some(Null) versus None discrimination for prev/next | Current; issued to parent to resume explicitly selected CC, source edit confined to the existing context-serialization test |
 
 Current project-relative path:
-`arc05-news-blog-content-type/slice01-news-model-and-post/cc-prompt-iteration01.md`.
+`arc05-news-blog-content-type/slice01-news-model-and-post/cc-prompt-iteration02.md`.
 Replacing the unstarted original prompt is not an executed correction round;
 the five-refinement limit remains intact. Preserve every issued prompt.
 
@@ -125,3 +126,31 @@ original slice-doc: `e17ea089e7ec680ddc6cfe5ebfd799ed16f93bd9341969ba99722f4b9ec
 Retrospectives/verification records will be authored at actual closing, not
 pre-filled at this phase. Autonomous authority continues through dispatch
 and review; this phase return is not Slice 01 or Arc 05 closure.
+
+## Current execution state — independent review 01, 2026-11-11
+
+CC Kierkegaard (`01a1ccf7-3e7c-7ab2-ae59-72c9be8f457b`) was explicitly
+requested/tool-selected as OpenAI `gpt-6-luna / high`, implemented iteration
+01 and returned source ownership at clean `cb31dc92caa667ce6f3a7133163c3da8749549b1`.
+Backend identity remains unreported. This supersedes the earlier preparation
+note that no CC context had yet been assigned; the issuance record is retained.
+
+CDC Locke independently reviewed all source changes and the full CC report,
+reproduced focused parser/renderer/route/search/export checks, exported the
+real post, and exercised independent strict-input and permission controls.
+See `cdc-verification.md` for exact source, commands, populations, evidence
+strength/limits and R1. Current serialized fields are present, but the prior
+test accepts missing keys as null; test-only correction is required before
+acceptance. All eight F rows remain open; full native gates await the final
+corrected candidate. No source repair was authored by CDC.
+
+Iteration 02 is the first review-driven refinement after the first executed
+implementation pass; it does not reset the five-refinement limit. Parent
+owns dispatch/resume; the same selected CC will own only its allowed test
+edit, gates and an appended report section while active. CDC holds source
+operations during that ownership, then resumes independent verification.
+
+New supporting artifact `artifacts/cdc-review01-focused.log` retains exact
+independent commands/outputs and real-export invocation for review/replay;
+it meets an evidence-retention need not served by the CC attestation.
+No closing retrospective or slice/arc completion is claimed at this stage.
