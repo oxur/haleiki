@@ -170,8 +170,8 @@ mod tests {
         let value =
             serde_json::to_value(PostContext::from_post(post)).expect("post context serializes");
 
-        assert!(value["prev"].is_null());
-        assert!(value["next"].is_null());
+        assert_eq!(value.get("prev"), Some(&serde_json::Value::Null));
+        assert_eq!(value.get("next"), Some(&serde_json::Value::Null));
         assert_eq!(value["related"], serde_json::json!([]));
 
         let site = site_context(&corpus, &dir.path().join("profile.yaml"));
