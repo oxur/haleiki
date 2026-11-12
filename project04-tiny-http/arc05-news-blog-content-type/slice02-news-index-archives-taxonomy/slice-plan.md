@@ -1,6 +1,6 @@
 # Slice 02 — News index, archives and taxonomy
 
-Status: **open / ready for CC dispatch** · v1.0 · 2026-11-11.
+Status: **open / Wegener identity receipt resolved; ready for parent execution release** · v1.1 · 2026-11-11.
 Parent: [Arc 05](../arc-plan.md); acceptance: [ledger.md](./ledger.md).
 Current assignment: [cc-prompt.md](./cc-prompt.md).
 
@@ -165,7 +165,7 @@ These are preparation observations, not passing candidate gates.
 
 | Assignment | Issued | Predecessor / reason | Disposition |
 |---|---|---|---|
-| `cc-prompt.md` | 2026-11-11 | New roadmap Slice 02, accepted Slice 01 and actual G1–G4 approval | Ready for parent to resume selected CC; implementation not yet started |
+| `cc-prompt.md` | 2026-11-11 | New roadmap Slice 02, accepted Slice 01 and actual G1–G4 approval | Issued at 3dd96710; closed-context resume stopped before execution on reported runtime mismatch; fresh selected Wegener receipt resolved, ready for parent release at this transition commit (record below) |
 
 Current project-relative path:
 `arc05-news-blog-content-type/slice02-news-index-archives-taxonomy/cc-prompt.md`.
@@ -175,3 +175,90 @@ Once issued, preserve it; corrections use the next unused `cc-prompt-iterationNN
 
 - v1.0 — 2026-11-11: full open set after actual G1–G4 approval; no ledger row
   closed at preparation. Existing three-slice roadmap retained.
+
+## Dispatch incident and replacement attribution — 2026-11-11
+
+This bounded record supersedes only the intended **current CC context identity
+and dispatch/ownership state** in the original assignment and earlier plan prose.
+The issued `cc-prompt.md` remains byte-preserved at SHA-256
+`d7cd497a0c5bf15f42c94aa5e350eeda327f3bdd1f4341e7de75c9b2e07ae123`.
+Its source contract, reading/intake, allowlists, ten open rows, gates, independent
+review, iteration budget and approved role/model/scope are unchanged. This is
+dispatch restoration, not a fallback, source correction or new implementation
+iteration; do not rewrite or renumber the prompt.
+
+1. **Attempted resume:** parent resumed closed CC Kierkegaard
+   `01a1ccf7-3e7c-7ab2-ae59-72c9be8f457b` for the explicitly approved
+   `gpt-6-luna / high` role. Parent relays that the resumed context reported
+   actual runtime **gpt-6.1-sol**, a mismatch. That context stopped **before any
+   edits, builds, staging or gates**, then parent closed it. This is a runtime
+   observation reported for this resume; it does not retroactively establish
+   the runtime used for Slice 01 or replace its historical requested/tool-
+   selected attribution and unreported-backend qualification. CDC did not
+   independently inspect a backend identity signal.
+2. **Replacement dispatch:** parent freshly spawned CC **Wegener**,
+   actual context `01a1cd4e-04c4-7301-a4e6-adffa21314b3`, explicitly selecting
+   **OpenAI gpt-6-luna, reasoning high**. Requested/tool-selected settings are
+   thus recorded. The replacement's own observable identity report is **pending**
+   parent relay; no compatible runtime/backend identity is inferred from the
+   spawn selection alone. Parent asked it to report identity first and hold
+   dependent implementation until the mismatch is resolved and transition recorded.
+3. **Stable boundary independently checked by CDC:** source is clean
+   `framework-base/tiny-http` at
+   `5fe3cf46fa1ea673b0b84f09167e36de8611d3ee`; planning was clean `planning`
+   at `3dd96710fda047430e1a942eacb581b2aa6c5dcf` before these two plan edits.
+   Parent reports no CC writes; CDC observes no source/planning dirty changes
+   at intake. No implementation gate ran in this metadata-only recording pass.
+4. **Current ownership:** CDC Locke remains the same explicitly selected
+   `gpt-6.1-sol / high` coordinator/reviewer and owns source mutation/index/gate
+   hold plus planning mutation/index while replacement identity is pending.
+   Wegener may perform **read-only contract intake** against the pinned source,
+   qualifying issuance 3dd96710 versus this later metadata transition. It has
+   no release to edit/build/stage/run source gates yet. CDC will not touch the
+   CC-designated closing report. Parent remains relay/dispatch, without file
+   mutation. No abandoned context retains source ownership.
+5. **Release condition / next owner:** parent relays Wegener's observable
+   identity/settings result to CDC. Resolve the actual signal without inventing
+   a backend claim, record the resulting disposition in these existing plans,
+   then explicitly release Wegener to the unchanged assignment. On release it
+   exclusively owns source mutation/index/builds/scanners/servers and only the
+   designated Slice 02 closing report and `artifacts/cc-*`; CDC keeps those inputs
+   stable until explicit handback. CDC then independently reviews; no source
+   acceptance, staffing/model substitution or gate waiver follows from this record.
+
+Version v1.1 — 2026-11-11: preserve failed resume observation and replace the
+intended implementer with explicitly selected fresh Wegener, held for identity
+resolution. All F rows and existing higher-scale gates remain open.
+
+## Replacement identity resolution and execution release — 2026-11-11
+
+After the held dispatch record above, parent relayed Wegener's actual receipt:
+
+- Context **01a1cd4e-04c4-7301-a4e6-adffa21314b3**, nickname **Wegener**.
+- Explicit tool spawn **OpenAI gpt-6-luna / reasoning high accepted**.
+- Wegener reports **no system/runtime backend identity exposed**. Actual backend
+  identity remains **unknown**, not independently confirmed as Luna and not a
+  conflicting Sol report. The Operator relay states this satisfies the available
+  explicit-selection requirement; no provider/model/settings fallback is selected.
+- Wegener observed clean planning 3dd96710 and source 5fe3cf46 at its intake,
+  verified the issued prompt SHA-256 d7cd497a… (full hash above), and maintained
+  the implementation hold while conducting read-only intake.
+
+CDC accepts this receipt at its actual strength. The earlier resumed-context
+Sol report remains a separately attributed dispatch incident only; it does not
+alter historical Slice 01 attribution or claim an exposed backend there.
+
+**Release:** after this two-plan transition is committed and parent relays the
+new planning HEAD plus execution release to Wegener, CC may execute the unchanged
+Slice 02 `cc-prompt.md`. No further product/model approval is needed. Until that
+relay the hold remains. Reload this current slice plan and the arc transition
+sections, qualify issuance 3dd96710 versus this metadata commit in the intake
+report, and finish the complete required intake before dependent edits.
+
+Upon that release, Wegener exclusively owns source mutation/index/builds/gates/
+scanners/servers plus only this slice's `closing-report.md` and `artifacts/cc-*`.
+CDC owns all remaining planning/index, leaves that report and source inputs stable
+until explicit handback, then independently reviews. No other CC is active or
+retains mutation ownership. All ten F rows remain open; no implementation/gate
+result is supplied by this dispatch receipt. Arc scope, no-external-action limits,
+preserved prompt, independent review and five-refinement limit remain unchanged.
